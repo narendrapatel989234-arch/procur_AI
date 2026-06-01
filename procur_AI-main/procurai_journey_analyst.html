@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ProcurAI — Analyst Journey Map</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #ffffff;
+  padding: 36px 32px 48px 32px;
+  color: #1a1a1a;
+}
+h1 { font-size:17px; font-weight:700; color:#1a1a1a; margin-bottom:3px; }
+.sub { font-size:11px; color:#888; margin-bottom:28px; }
+
+/* Outer scroll wrapper */
+.scroll { overflow-x:auto; }
+
+table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: 2200px;
+}
+
+/* Stage header cells */
+.stage-header {
+  background: #3c2f9e;
+  color: #fff;
+  text-align: center;
+  padding: 12px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  vertical-align: middle;
+  border: 1px solid #2d2278;
+  width: 170px;
+}
+.stage-header .stage-num {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  opacity: 0.7;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.stage-header .stage-path {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.18);
+  border-radius: 10px;
+  padding: 1px 7px;
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+.stage-header.routine { background: #085041; border-color:#064035; }
+.stage-header.complex { background: #534AB7; border-color:#3c2f9e; }
+.stage-header.shared  { background: #1a1a2e; border-color:#111124; }
+
+/* Layer label cells */
+.layer-label {
+  background: #f7f7f7;
+  font-size: 10px;
+  font-weight: 700;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 10px 12px;
+  vertical-align: middle;
+  border: 1px solid #e5e5e5;
+  width: 120px;
+  white-space: nowrap;
+}
+
+/* Data cells */
+td.cell {
+  vertical-align: top;
+  padding: 9px 10px;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: #2a2a2a;
+  border: 1px solid #e8e8e8;
+  width: 170px;
+}
+
+/* Row color theming */
+tr.row-goal td.cell       { background: #f0edfe; }
+tr.row-actions td.cell    { background: #fafafa; }
+tr.row-system td.cell     { background: #e8f8f3; }
+tr.row-touch td.cell      { background: #f0f8ff; }
+tr.row-thoughts td.cell   { background: #fffde8; }
+tr.row-emotions td.cell   { background: #fff0f6; }
+tr.row-intensity td.cell  { background: #f8f8f8; }
+tr.row-pain td.cell       { background: #fff2f2; }
+tr.row-opp td.cell        { background: #f0fff4; }
+
+/* Emotion intensity pills */
+.intensity {
+  display:inline-block;
+  font-size:10px;
+  font-weight:700;
+  padding:3px 9px;
+  border-radius:12px;
+  letter-spacing:0.3px;
+}
+.int-low    { background:#d4edda; color:#155724; }
+.int-medium { background:#fff3cd; color:#856404; }
+.int-high   { background:#f8d7da; color:#721c24; }
+.int-mh     { background:#fde8d4; color:#7d3c00; }
+.int-dual   { font-size:9px; }
+
+/* Pain / opp bullets */
+.bullet { padding-left:10px; }
+.bullet li { list-style:disc; margin-bottom:3px; font-size:10px; }
+
+/* Fork indicator */
+.fork-label {
+  text-align:center;
+  font-size:10px;
+  font-weight:700;
+  color:#888;
+  padding:6px 0 2px 0;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+/* Emotion row special */
+.emotion-word {
+  font-weight:600;
+  color:#c0392b;
+  font-style:italic;
+}
+
+/* Emotion arc row */
+tr.row-arc td {
+  padding: 0;
+  height: 56px;
+  vertical-align: middle;
+  border: 1px solid #e8e8e8;
+  background: #fcfcfc;
+}
+.arc-label {
+  font-size:10px;
+  font-weight:700;
+  color:#888;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  padding:0 12px;
+  white-space:nowrap;
+}
+
+/* Legend */
+.legend {
+  margin-top:32px;
+  padding-top:20px;
+  border-top:1.5px solid #e5e5e5;
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.legend-title { font-size:10px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:0.5px; }
+.legend-item { display:flex; align-items:center; gap:6px; font-size:10px; color:#555; }
+.lswatch { width:16px; height:12px; border-radius:3px; border:1px solid rgba(0,0,0,0.1); }
+
+/* Action type tag */
+.atype {
+  display:inline-block;
+  font-size:9px;
+  font-weight:700;
+  padding:1px 5px;
+  border-radius:3px;
+  margin-right:3px;
+  text-transform:uppercase;
+  letter-spacing:0.3px;
+}
+.atype-user   { background:#dce9fb; color:#1a4a8a; }
+.atype-ai     { background:#d5f5e3; color:#1d6a3e; }
+.atype-assist { background:#f9ebf0; color:#7d1a3e; }
+</style>
+</head>
+<body>
+
+<h1>ProcurAI — User Journey Map: Procurement Analyst</h1>
+<div class="sub">Journey A &nbsp;·&nbsp; Merged forked map: Shared stages → Routine path &amp; Complex path &nbsp;·&nbsp; 9 experience layers &nbsp;·&nbsp; 11 stages total</div>
+
+<div class="scroll">
+<table>
+<thead>
+<tr>
+  <th class="layer-label" style="background:#1a1a2e;color:#fff;border-color:#111">Experience Layer</th>
+  <!-- SHARED -->
+  <th class="stage-header shared"><span class="stage-num">Stage 1 · Shared</span>Entry &amp; Orientation<span class="stage-path">Both paths</span></th>
+  <th class="stage-header shared"><span class="stage-num">Stage 2 · Shared</span>Procurement Initiation<span class="stage-path">Both paths</span></th>
+  <th class="stage-header shared"><span class="stage-num">Stage 3 · Shared</span>AI-Assisted PR Creation<span class="stage-path">Both paths</span></th>
+  <th class="stage-header shared"><span class="stage-num">Stage 4 · Shared</span>Classification &amp; Approval Monitoring<span class="stage-path">Both paths</span></th>
+  <!-- ROUTINE -->
+  <th class="stage-header routine"><span class="stage-num">Stage 5R · Routine</span>Vendor Selection<span class="stage-path">Routine only</span></th>
+  <th class="stage-header routine"><span class="stage-num">Stage 6R · Routine</span>PO Generation &amp; Closure<span class="stage-path">Routine only</span></th>
+  <!-- COMPLEX -->
+  <th class="stage-header complex"><span class="stage-num">Stage 5C · Complex</span>RFP Creation &amp; Management<span class="stage-path">Complex only</span></th>
+  <th class="stage-header complex"><span class="stage-num">Stage 6C · Complex</span>Proposal Management<span class="stage-path">Complex only</span></th>
+  <th class="stage-header complex"><span class="stage-num">Stage 7C · Complex</span>Evaluation &amp; Vendor Selection<span class="stage-path">Complex only</span></th>
+  <th class="stage-header complex"><span class="stage-num">Stage 8C · Complex</span>SoW Drafting &amp; Compliance<span class="stage-path">Complex only</span></th>
+  <th class="stage-header complex"><span class="stage-num">Stage 9C · Complex</span>PO Generation &amp; Closure<span class="stage-path">Complex only</span></th>
+</tr>
+</thead>
+<tbody>
+
+<!-- GOAL -->
+<tr class="row-goal">
+  <td class="layer-label">1. User Goal</td>
+  <td class="cell">Understand current state of active requests and identify what needs attention today</td>
+  <td class="cell">Start a new procurement request quickly and accurately with minimal manual effort</td>
+  <td class="cell">Confirm PR is accurate and complete, then submit with confidence</td>
+  <td class="cell">Know PR is correctly classified and understand where it sits in approval without chasing</td>
+  <td class="cell">Select best vendor from AI recommendations confidently and submit for final approval</td>
+  <td class="cell">Confirm PO is correctly generated and procurement lifecycle is fully closed</td>
+  <td class="cell">Produce a comprehensive RFP and get it approved for distribution</td>
+  <td class="cell">Collect all vendor proposals and ensure AI extraction is complete and accurate</td>
+  <td class="cell">Compare all vendors using AI evaluation and make a well-supported vendor selection</td>
+  <td class="cell">Finalize a compliant, contract-ready SoW with minimal manual effort and submit for approval</td>
+  <td class="cell">Confirm PO generated after signed SoW, verify sync, and close lifecycle cleanly</td>
+</tr>
+
+<!-- ACTIONS -->
+<tr class="row-actions">
+  <td class="layer-label">2. User Actions</td>
+  <td class="cell"><span class="atype atype-user">User</span>Log in → land on Dashboard → scan active requests table → review KPI cards → identify priority items</td>
+  <td class="cell"><span class="atype atype-user">User</span>Click New Request → select entry mode (chat / form / doc upload) → describe need → upload documents</td>
+  <td class="cell"><span class="atype atype-user">User</span>Review AI PR draft → edit incorrect fields → resolve duplicate alert → confirm and submit PR</td>
+  <td class="cell"><span class="atype atype-user">User</span>Review AI classification + reasoning → monitor lifecycle progress → respond to manager clarification if returned</td>
+  <td class="cell"><span class="atype atype-user">User</span>Review AI vendor list → expand justification per vendor → select preferred vendor → submit for approval</td>
+  <td class="cell"><span class="atype atype-user">User</span>Monitor approval outcome → open PO tab → verify line items + vendor details → confirm ERP sync</td>
+  <td class="cell"><span class="atype atype-user">User</span>Review AI RFP draft → edit sections → configure scoring criteria → manage vendor shortlist → submit for approval</td>
+  <td class="cell"><span class="atype atype-user">User</span>Upload received vendor proposals → link each to vendor → monitor extraction status → handle failures</td>
+  <td class="cell"><span class="atype atype-user">User</span>Review AI evaluation report → inspect comparative grid → adjust weights if needed → review negotiation brief → finalize vendor</td>
+  <td class="cell"><span class="atype atype-user">User</span>Review AI SoW variants → select/merge template → edit sections → resolve compliance findings → submit for approval</td>
+  <td class="cell"><span class="atype atype-user">User</span>Upload signed SoW → review auto-generated PO summary → verify ERP sync status</td>
+</tr>
+
+<!-- SYSTEM -->
+<tr class="row-system">
+  <td class="layer-label">3. System Interactions</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Role-aware Dashboard loads with personal KPIs pre-filtered → SLA at-risk requests surfaced → pending actions ranked by urgency</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Parses chat intent → asks contextual clarification → triggers doc extraction on upload → pre-fills form fields → shows confidence indicators</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Validates field completeness → flags missing/low-confidence fields → checks for duplicate PRs → generates PR with unique ID → triggers workflow orchestration</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Classifies PR as Routine or Complex with reasoning → routes to correct approval chain → updates lifecycle stage + SLA status in real time</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Surfaces recommended vendors with confidence scores + citations immediately after PR approval → runs inline compliance check → submission triggers approval workflow</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Manager approval triggers PO generation → ERP/SharePoint sync runs automatically → lifecycle status updates to Closed on successful sync</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Generates RFP draft from approved PR context immediately after complex classification → section writing assist on demand → version history tracked → submission triggers approval</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Triggers extraction immediately on each upload → processes proposal data → updates status per vendor (Processing / Complete / Failed) → flags failures with error reason</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Generates complete scored evaluation report after all extractions complete → produces comparative analysis → flags low-confidence scores → vendor finalization triggers SoW generation automatically</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Generates multiple SoW variants immediately after vendor finalization → runs compliance validation automatically → flags issues with severity ratings → suggests fallback language per clause</td>
+  <td class="cell"><span class="atype atype-ai">AI Auto</span>Signed SoW upload triggers PO generation immediately → validates PO data → runs ERP/SharePoint sync → updates lifecycle status to Closed on successful sync</td>
+</tr>
+
+<!-- TOUCHPOINTS -->
+<tr class="row-touch">
+  <td class="layer-label">4. Touchpoints</td>
+  <td class="cell">Login screen · Dashboard · Active Requests table · KPI cards · SLA indicators · New Request entry</td>
+  <td class="cell">New Request (nav) · Chat interface · Structured form · Document upload · AI extraction preview · Intent selection</td>
+  <td class="cell">PR draft preview · Field confidence indicators · Duplicate detection alert · Submit action · PR Detail (Overview tab)</td>
+  <td class="cell">PR Detail (Overview tab) · Lifecycle stage progress · AI classification badge · Classification reasoning · Activity &amp; Audit tab · SLA indicator</td>
+  <td class="cell">PR Detail (Sourcing tab — Routine) · Vendor recommendation list · Confidence scores · Citation expandable · Compliance result · Submit for approval</td>
+  <td class="cell">PR Detail (PO tab) · PO summary · Line items · ERP sync status · Lifecycle closure confirmation · Purchase Orders global list</td>
+  <td class="cell">PR Detail (Sourcing tab — Complex) · RFP rich text editor · Scoring criteria config · Vendor shortlist · Version history · Submit for approval</td>
+  <td class="cell">PR Detail (Proposals tab) · File upload · Vendor-to-proposal linking · Extraction status indicators · Failure handling / manual fallback</td>
+  <td class="cell">PR Detail (Evaluation tab) · AI evaluation report · Comparative analysis grid · Scoring weight adjustment · Negotiation Intelligence panel · Vendor finalization action</td>
+  <td class="cell">PR Detail (SoW &amp; Contract tab) · SoW variant selection · Rich text editor · Compliance validation panel · Severity badges · One-click apply fallback · Version history · Approval submission</td>
+  <td class="cell">PR Detail (SoW tab — signed upload) · PR Detail (PO tab) · PO summary · ERP sync status · Lifecycle closure confirmation · Purchase Orders global list</td>
+</tr>
+
+<!-- THOUGHTS -->
+<tr class="row-thoughts">
+  <td class="layer-label">5. User Thoughts</td>
+  <td class="cell">"What needs my attention right now? Where are my active requests? How do I start a new one?"</td>
+  <td class="cell">"Should I use chat or form? Will AI understand what I need? What information is required upfront?"</td>
+  <td class="cell">"Did AI get this right? Which fields need my attention? Is this a duplicate of something already submitted?"</td>
+  <td class="cell">"Was it classified correctly? Who has it now? Is it stuck? What happens next? Will it miss SLA?"</td>
+  <td class="cell">"Is this the right vendor? Can I trust the recommendation? What if I want someone not on the list?"</td>
+  <td class="cell">"Is the PO correct? Has everything synced? Is this officially done and closed?"</td>
+  <td class="cell">"Is this RFP comprehensive enough? Have I covered all evaluation criteria? Is the shortlist correct?"</td>
+  <td class="cell">"Has every vendor responded? Did AI extract everything correctly? What do I do if extraction fails?"</td>
+  <td class="cell">"Can I trust this score? What is driving the recommendation? Am I making the right call on a close decision?"</td>
+  <td class="cell">"Are these clauses right for this vendor? Is anything legally risky? Which variant should I use?"</td>
+  <td class="cell">"Is the PO correct? Has everything synced properly? Is this finally closed?"</td>
+</tr>
+
+<!-- EMOTIONS -->
+<tr class="row-emotions">
+  <td class="layer-label">6. User Emotions</td>
+  <td class="cell"><span class="emotion-word">Neutral, mildly uncertain</span></td>
+  <td class="cell"><span class="emotion-word">Curious, slightly cautious</span></td>
+  <td class="cell"><span class="emotion-word">Cautiously optimistic, uncertain about AI accuracy</span></td>
+  <td class="cell"><span class="emotion-word">Waiting, mildly frustrated if delayed</span></td>
+  <td class="cell"><span class="emotion-word">Engaged, analytically focused</span></td>
+  <td class="cell"><span class="emotion-word">Relieved (success) / Anxious (sync failure)</span></td>
+  <td class="cell"><span class="emotion-word">Engaged, under mild pressure</span></td>
+  <td class="cell"><span class="emotion-word">Operationally focused, mildly anxious about completeness</span></td>
+  <td class="cell"><span class="emotion-word">Analytical, high cognitive load, uncertain on close decisions</span></td>
+  <td class="cell"><span class="emotion-word">Focused, anxious about compliance risk</span></td>
+  <td class="cell"><span class="emotion-word">Relieved at closure / Anxious if sync fails</span></td>
+</tr>
+
+<!-- INTENSITY -->
+<tr class="row-intensity">
+  <td class="layer-label">7. Emotion Intensity</td>
+  <td class="cell"><span class="intensity int-low">Low</span></td>
+  <td class="cell"><span class="intensity int-medium">Medium</span></td>
+  <td class="cell"><span class="intensity int-mh">Medium–High</span></td>
+  <td class="cell"><span class="intensity int-mh">Medium–High</span></td>
+  <td class="cell"><span class="intensity int-medium">Medium</span></td>
+  <td class="cell"><span class="intensity int-low">Low</span> <span class="intensity int-high int-dual">/ High if failure</span></td>
+  <td class="cell"><span class="intensity int-medium">Medium</span></td>
+  <td class="cell"><span class="intensity int-medium">Medium</span></td>
+  <td class="cell"><span class="intensity int-high">High</span></td>
+  <td class="cell"><span class="intensity int-high">High</span></td>
+  <td class="cell"><span class="intensity int-low">Low</span> <span class="intensity int-high int-dual">/ High if failure</span></td>
+</tr>
+
+<!-- PAIN POINTS -->
+<tr class="row-pain">
+  <td class="layer-label">8. Pain Points</td>
+  <td class="cell"><ul class="bullet">
+    <li>No clear priority order on Dashboard</li>
+    <li>Overwhelming for new users</li>
+    <li>No guided empty state</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Uncertainty between entry modes</li>
+    <li>Unclear required fields upfront</li>
+    <li>Anxiety about AI extraction accuracy</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Hard to spot AI errors at a glance</li>
+    <li>No signal for which fields need review</li>
+    <li>Duplicate submission risk</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>No visibility into approval delay reasons</li>
+    <li>Unclear SLA countdown</li>
+    <li>No easy way to dispute misclassification</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>No reasoning behind recommendations</li>
+    <li>Unable to add vendor not in system</li>
+    <li>Compliance result unclear</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>ERP sync failure with no clear recovery</li>
+    <li>No visible confirmation of full lifecycle closure</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Generic AI sections need heavy rewriting</li>
+    <li>No guidance on evaluation criteria best practices</li>
+    <li>Shortlist limited to system vendors only</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Manual upload friction for multiple proposals</li>
+    <li>No vendor response tracking</li>
+    <li>Extraction failure with no recovery path</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Black-box scoring without explanations</li>
+    <li>Low-confidence flags without actionable guidance</li>
+    <li>No weight adjustment without IT support</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Compliance findings hard to action without legal knowledge</li>
+    <li>Clause library hard to search</li>
+    <li>Version confusion with multiple drafts</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>ERP sync failure blocking closure</li>
+    <li>No clear full-lifecycle completion confirmation</li>
+    <li>PO data errors discovered only after generation</li>
+  </ul></td>
+</tr>
+
+<!-- OPPORTUNITIES -->
+<tr class="row-opp">
+  <td class="layer-label">9. Opportunities</td>
+  <td class="cell"><ul class="bullet">
+    <li>AI-prioritized task queue</li>
+    <li>Pending action badges per row</li>
+    <li>Guided empty state for new users</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Dual-mode: chat builds form simultaneously</li>
+    <li>Smart field defaults by category</li>
+    <li>Confidence signals on extracted data</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Highlighted low-confidence fields</li>
+    <li>Inline edit on AI draft</li>
+    <li>Duplicate alert with link to similar PR</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Real-time approval stage indicator</li>
+    <li>SLA countdown with at-risk alert</li>
+    <li>One-click classification dispute</li>
+    <li>Estimated approval time indicator</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Expandable AI justification per vendor</li>
+    <li>Manual vendor search and add</li>
+    <li>Clear compliance pass/fail badge</li>
+    <li>Quick compare for top vendors</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Clear closure confirmation card</li>
+    <li>Plain-language sync error with retry</li>
+    <li>Procurement closure summary</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>AI writing assist per section</li>
+    <li>Evaluation criteria templates by category</li>
+    <li>Manual vendor add to shortlist</li>
+    <li>RFP completeness indicator</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Batch upload support</li>
+    <li>Vendor response checklist</li>
+    <li>Manual data entry fallback</li>
+    <li>File format guidance upfront</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Per-criterion score breakdown with citations</li>
+    <li>User-adjustable weights inline</li>
+    <li>Negotiation brief as side panel during comparison</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>Severity-ranked findings with one-click playbook</li>
+    <li>Clause search by intent</li>
+    <li>Visual diff between SoW versions</li>
+    <li>AI recommendation on best-fit variant</li>
+  </ul></td>
+  <td class="cell"><ul class="bullet">
+    <li>PO data preview before finalization</li>
+    <li>Clear closure confirmation card</li>
+    <li>Sync failure recovery guide</li>
+    <li>Auto-link to PO in global list</li>
+  </ul></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<!-- Emotion Arc -->
+<div style="margin-top:24px;padding:16px 20px;background:#fafafa;border:1px solid #e5e5e5;border-radius:8px;">
+  <div style="font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Emotion Arc</div>
+  <div style="display:flex;gap:0;align-items:flex-end;height:60px;margin-bottom:6px;">
+    <!-- Routine -->
+    <div style="display:flex;gap:2px;align-items:flex-end;margin-right:16px;">
+      <div style="width:80px;text-align:center"><div style="height:16px;background:#d4edda;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#888">S1 Low</div></div>
+      <div style="width:80px;text-align:center"><div style="height:28px;background:#fff3cd;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#888">S2 Med</div></div>
+      <div style="width:80px;text-align:center"><div style="height:42px;background:#fde8d4;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#888">S3 Med-H</div></div>
+      <div style="width:80px;text-align:center"><div style="height:42px;background:#fde8d4;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#888">S4 Med-H</div></div>
+      <div style="width:80px;text-align:center;border-left:2px dashed #9fe1cb;padding-left:4px"><div style="height:28px;background:#fff3cd;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#085041;font-weight:700">S5R Med</div></div>
+      <div style="width:80px;text-align:center"><div style="height:16px;background:#d4edda;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#085041;font-weight:700">S6R Low</div></div>
+    </div>
+    <!-- Complex -->
+    <div style="display:flex;gap:2px;align-items:flex-end;border-left:2px dashed #c4bef5;padding-left:16px;">
+      <div style="width:80px;text-align:center"><div style="height:28px;background:#fff3cd;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#534AB7;font-weight:700">S5C Med</div></div>
+      <div style="width:80px;text-align:center"><div style="height:28px;background:#fff3cd;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#534AB7;font-weight:700">S6C Med</div></div>
+      <div style="width:80px;text-align:center"><div style="height:56px;background:#f8d7da;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#534AB7;font-weight:700">S7C High</div></div>
+      <div style="width:80px;text-align:center"><div style="height:56px;background:#f8d7da;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#534AB7;font-weight:700">S8C High</div></div>
+      <div style="width:80px;text-align:center"><div style="height:16px;background:#d4edda;border-radius:4px 4px 0 0;margin-bottom:2px;"></div><div style="font-size:9px;color:#534AB7;font-weight:700">S9C Low</div></div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#aaa;margin-top:4px;">Peaks: S3 (AI trust uncertainty) · S4 (approval wait) · S7C (vendor decision) · S8C (compliance anxiety) &nbsp;|&nbsp; Valleys: S1 (neutral entry) · S6R / S9C (relief at closure)</div>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <span class="legend-title">Legend</span>
+  <div class="legend-item"><div class="lswatch" style="background:#f0edfe;border-color:#c4bef5"></div>User Goal</div>
+  <div class="legend-item"><div class="lswatch" style="background:#e8f8f3;border-color:#9fe1cb"></div>System (AI automatic)</div>
+  <div class="legend-item"><div class="lswatch" style="background:#fffde8;border-color:#f5d87a"></div>User Thoughts</div>
+  <div class="legend-item"><div class="lswatch" style="background:#fff0f6;border-color:#f5c0d0"></div>Emotions</div>
+  <div class="legend-item"><div class="lswatch" style="background:#fff2f2;border-color:#f5b7b1"></div>Pain Points</div>
+  <div class="legend-item"><div class="lswatch" style="background:#f0fff4;border-color:#9fe1cb"></div>Opportunities</div>
+  <div class="legend-item"><div class="lswatch" style="background:#1a1a2e"></div>Shared stages (both paths)</div>
+  <div class="legend-item"><div class="lswatch" style="background:#085041"></div>Routine path</div>
+  <div class="legend-item"><div class="lswatch" style="background:#534AB7"></div>Complex path</div>
+</div>
+
+</body>
+</html>

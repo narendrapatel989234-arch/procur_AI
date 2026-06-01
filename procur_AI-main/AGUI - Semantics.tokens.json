@@ -1,0 +1,3312 @@
+{
+  "AGUI | Semantics": {
+    "bg": {
+      "default": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.0}",
+        "description": "App-level page background",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.999}"
+          }
+        }
+      },
+      "surface-1": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.25}",
+        "description": "Primary surface — cards, panels, modals",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.25}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.950}"
+          }
+        }
+      },
+      "surface-2": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.50}",
+        "description": "Secondary surface — sidebars",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.50}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.900}"
+          }
+        }
+      },
+      "surface-3": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.50}",
+        "description": "Tertiary surface — grouped rows",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.50}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.800}"
+          }
+        }
+      },
+      "surface-4": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.100}",
+        "description": "Dense UI, table rows",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.100}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.750}"
+          }
+        }
+      },
+      "surface-5": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.150}",
+        "description": "Dividers, skeleton backgrounds",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.150}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.700}"
+          }
+        }
+      },
+      "overlay": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.md}",
+        "description": "Scrim behind modals",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.md}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.md}"
+          }
+        }
+      },
+      "input": {
+        "type": "color",
+        "value": "{AGUI | Semantics.bg.surface-1}",
+        "description": "Input field background",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.bg.surface-1}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.800}"
+          }
+        }
+      },
+      "tooltip": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.900}",
+        "description": "Tooltip background",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.900}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+          }
+        }
+      },
+      "modal": {
+        "type": "color",
+        "value": "{AGUI | Semantics.bg.surface-1}",
+        "description": "Modal surface",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.bg.surface-1}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.800}"
+          }
+        }
+      },
+      "sidebar": {
+        "type": "color",
+        "value": "{AGUI | Semantics.bg.surface-2}",
+        "description": "Sidebar / left nav",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.bg.surface-2}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.950}"
+          }
+        }
+      },
+      "hover": {
+        "type": "color",
+        "value": "{AGUI | Semantics.bg.surface-4}",
+        "description": "Hover state overlay",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.bg.surface-4}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.600}"
+          }
+        }
+      },
+      "pressed": {
+        "type": "color",
+        "value": "{AGUI | Semantics.bg.surface-5}",
+        "description": "Pressed state overlay",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.bg.surface-5}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.500}"
+          }
+        }
+      },
+      "selected": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.violet.100}",
+        "description": "Selected state",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.violet.100}",
+            "Dark Mode": "{AGUI | Primitives.colors.violet.900}"
+          }
+        }
+      },
+      "disabled": {
+        "type": "color",
+        "value": "{AGUI | Semantics.bg.surface-4}",
+        "description": "Disabled element background",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.bg.surface-4}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.750}"
+          }
+        }
+      },
+      "code": {
+        "type": "color",
+        "value": "{AGUI | Semantics.bg.default}",
+        "description": "Code block background",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.bg.default}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.750}"
+          }
+        }
+      },
+      "message-ai": {
+        "type": "color",
+        "value": "{AGUI | Semantics.bg.surface-1}",
+        "description": "AI message bubble",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.bg.surface-1}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.800}"
+          }
+        }
+      },
+      "message-user": {
+        "type": "color",
+        "value": "{AGUI | Semantics.bg.surface-4}",
+        "description": "User message bubble",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.bg.surface-4}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.700}"
+          }
+        }
+      }
+    },
+    "text": {
+      "primary": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.900}",
+        "description": "Primary body text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.900}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.25}"
+          }
+        }
+      },
+      "secondary": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.700}",
+        "description": "Secondary text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.100}"
+          }
+        }
+      },
+      "tertiary": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.600}",
+        "description": "Tertiary / metadata text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.600}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.300}"
+          }
+        }
+      },
+      "disabled": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.500}",
+        "description": "Disabled text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.500}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.450}"
+          }
+        }
+      },
+      "placeholder": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.600}",
+        "description": "Input placeholder",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.600}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.400}"
+          }
+        }
+      },
+      "on-inverse": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.0}",
+        "description": "Text on inverted surfaces",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.900}"
+          }
+        }
+      },
+      "on-primary": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.0}",
+        "description": "Text on primary action",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+          }
+        }
+      },
+      "on-accent": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.0}",
+        "description": "Text on accent",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+          }
+        }
+      },
+      "on-destructive": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.0}",
+        "description": "Text on destructive",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+          }
+        }
+      },
+      "accent": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.violet.700}",
+        "description": "Accent / brand text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.violet.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.violet.200}"
+          }
+        }
+      },
+      "link": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.sky.700}",
+        "description": "Hyperlink text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.sky.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.sky.500}"
+          }
+        }
+      },
+      "success": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.green.700}",
+        "description": "Success text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.green.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.green.500}"
+          }
+        }
+      },
+      "warning": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.amber.700}",
+        "description": "Warning text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.amber.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.amber.500}"
+          }
+        }
+      },
+      "error": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.red.700}",
+        "description": "Error text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.red.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.red.200}"
+          }
+        }
+      },
+      "info": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.sky.700}",
+        "description": "Info text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.sky.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.sky.500}"
+          }
+        }
+      },
+      "ai": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.accent}",
+        "description": "AI accent text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.accent}",
+            "Dark Mode": "{AGUI | Semantics.text.accent}"
+          }
+        }
+      },
+      "code": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.900}",
+        "description": "Inline code text",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.900}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.25}"
+          }
+        }
+      }
+    },
+    "icon": {
+      "primary": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.primary}",
+        "description": "Primary icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.primary}",
+            "Dark Mode": "{AGUI | Semantics.text.primary}"
+          }
+        }
+      },
+      "secondary": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.secondary}",
+        "description": "Secondary icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.secondary}",
+            "Dark Mode": "{AGUI | Semantics.text.secondary}"
+          }
+        }
+      },
+      "tertiary": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.tertiary}",
+        "description": "Tertiary icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.tertiary}",
+            "Dark Mode": "{AGUI | Semantics.text.tertiary}"
+          }
+        }
+      },
+      "on-primary": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.on-primary}",
+        "description": "Icon on primary bg",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.on-primary}",
+            "Dark Mode": "{AGUI | Semantics.text.on-primary}"
+          }
+        }
+      },
+      "on-secondary": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.blue.500}",
+        "description": "Icon on secondary bg",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+            "Dark Mode": "{AGUI | Primitives.colors.blue.500}"
+          }
+        }
+      },
+      "on-inverse": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.on-inverse}",
+        "description": "Icon on inverse surface",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.on-inverse}",
+            "Dark Mode": "{AGUI | Semantics.text.on-inverse}"
+          }
+        }
+      },
+      "disabled": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.disabled}",
+        "description": "Disabled icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.disabled}",
+            "Dark Mode": "{AGUI | Semantics.text.disabled}"
+          }
+        }
+      },
+      "accent": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.accent}",
+        "description": "Accent icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.accent}",
+            "Dark Mode": "{AGUI | Semantics.text.accent}"
+          }
+        }
+      },
+      "link": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.link}",
+        "description": "Link icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.link}",
+            "Dark Mode": "{AGUI | Semantics.text.link}"
+          }
+        }
+      },
+      "success": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.success}",
+        "description": "Success icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.success}",
+            "Dark Mode": "{AGUI | Semantics.text.success}"
+          }
+        }
+      },
+      "warning": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.warning}",
+        "description": "Warning icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.warning}",
+            "Dark Mode": "{AGUI | Semantics.text.warning}"
+          }
+        }
+      },
+      "error": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.error}",
+        "description": "Error icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.error}",
+            "Dark Mode": "{AGUI | Semantics.text.error}"
+          }
+        }
+      },
+      "info": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.info}",
+        "description": "Info icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.info}",
+            "Dark Mode": "{AGUI | Semantics.text.info}"
+          }
+        }
+      },
+      "ai": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.ai}",
+        "description": "AI icon",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.ai}",
+            "Dark Mode": "{AGUI | Semantics.text.ai}"
+          }
+        }
+      }
+    },
+    "border": {
+      "subtle": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.150}",
+        "description": "Subtle dividers",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.150}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.750}"
+          }
+        }
+      },
+      "default": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.200}",
+        "description": "Default border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.200}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.700}"
+          }
+        }
+      },
+      "strong": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.400}",
+        "description": "Strong border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.400}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.500}"
+          }
+        }
+      },
+      "hover": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.violet.500}",
+        "description": "Border on hover",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.violet.500}",
+            "Dark Mode": "{AGUI | Primitives.colors.violet.500}"
+          }
+        }
+      },
+      "focus": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.violet.500}",
+        "description": "Focus ring border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.violet.500}",
+            "Dark Mode": "{AGUI | Primitives.colors.violet.500}"
+          }
+        }
+      },
+      "disabled": {
+        "type": "color",
+        "value": "{AGUI | Semantics.border.subtle}",
+        "description": "Disabled border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.border.subtle}",
+            "Dark Mode": "{AGUI | Semantics.border.subtle}"
+          }
+        }
+      },
+      "error": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.error}",
+        "description": "Error border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.error}",
+            "Dark Mode": "{AGUI | Semantics.text.error}"
+          }
+        }
+      },
+      "success": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.success}",
+        "description": "Success border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.success}",
+            "Dark Mode": "{AGUI | Semantics.text.success}"
+          }
+        }
+      },
+      "warning": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.warning}",
+        "description": "Warning border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.warning}",
+            "Dark Mode": "{AGUI | Semantics.text.warning}"
+          }
+        }
+      },
+      "info": {
+        "type": "color",
+        "value": "{AGUI | Semantics.text.info}",
+        "description": "Info border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.text.info}",
+            "Dark Mode": "{AGUI | Semantics.text.info}"
+          }
+        }
+      },
+      "input": {
+        "type": "color",
+        "value": "{AGUI | Semantics.border.default}",
+        "description": "Input resting border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.border.default}",
+            "Dark Mode": "{AGUI | Semantics.border.default}"
+          }
+        }
+      },
+      "input-focus": {
+        "type": "color",
+        "value": "{AGUI | Semantics.border.focus}",
+        "description": "Input focused border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.border.focus}",
+            "Dark Mode": "{AGUI | Semantics.border.focus}"
+          }
+        }
+      },
+      "divider": {
+        "type": "color",
+        "value": "{AGUI | Semantics.border.input}",
+        "description": "Section divider",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.border.input}",
+            "Dark Mode": "{AGUI | Semantics.border.input}"
+          }
+        }
+      }
+    },
+    "action": {
+      "primary": {
+        "bg": {
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.500}"
+              }
+            }
+          },
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.600}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.600}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.450}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.700}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.700}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.400}"
+              }
+            }
+          },
+          "focus": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.400}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.300}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.300}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.700}"
+              }
+            }
+          }
+        },
+        "text": {
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "focus": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.450}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.450}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.600}"
+              }
+            }
+          }
+        }
+      },
+      "secondary": {
+        "bg": {
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.800}"
+              }
+            }
+          }
+        },
+        "text": {
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+              }
+            }
+          },
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.600}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.600}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.200}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.700}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.700}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.100}"
+              }
+            }
+          },
+          "focus": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.450}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.450}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.600}"
+              }
+            }
+          }
+        },
+        "border": {
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+              }
+            }
+          },
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.600}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.600}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.200}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.700}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.700}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.100}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.450}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.450}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.600}"
+              }
+            }
+          }
+        },
+        "icon": {
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.600}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.600}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.200}"
+              }
+            }
+          },
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.450}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.450}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.600}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.700}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.700}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.100}"
+              }
+            }
+          },
+          "focus": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+              }
+            }
+          }
+        }
+      },
+      "text-action": {
+        "bg": {
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.50}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.50}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.800}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.100}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.100}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.750}"
+              }
+            }
+          },
+          "focus": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          }
+        },
+        "text": {
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+              }
+            }
+          },
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.600}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.600}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.200}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.700}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.700}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.100}"
+              }
+            }
+          },
+          "focus": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.400}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.400}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.400}"
+              }
+            }
+          }
+        },
+        "border": {
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.700}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.700}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.100}"
+              }
+            }
+          }
+        },
+        "icon": {
+          "focus": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.700}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.700}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.100}"
+              }
+            }
+          },
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.600}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.600}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.200}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.450}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.450}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.600}"
+              }
+            }
+          },
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.blue.500}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+                "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+              }
+            }
+          }
+        }
+      },
+      "destructive": {
+        "bg": {
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.red.700}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.red.700}",
+                "Dark Mode": "{AGUI | Primitives.colors.red.700}"
+              }
+            }
+          },
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.red.900}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.red.900}",
+                "Dark Mode": "{AGUI | Primitives.colors.red.500}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.red.900}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.red.900}",
+                "Dark Mode": "{AGUI | Primitives.colors.red.500}"
+              }
+            }
+          },
+          "focus": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.red.700}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.red.700}",
+                "Dark Mode": "{AGUI | Primitives.colors.red.500}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.150}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.150}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.700}"
+              }
+            }
+          }
+        },
+        "text": {
+          "default": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "hover": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "pressed": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "focus": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.0}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.0}"
+              }
+            }
+          },
+          "disabled": {
+            "type": "color",
+            "value": "{AGUI | Primitives.colors.neutral.400}",
+            "description": "",
+            "$extensions": {
+              "mode": {
+                "Light Mode": "{AGUI | Primitives.colors.neutral.400}",
+                "Dark Mode": "{AGUI | Primitives.colors.neutral.400}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "focus-ring": {
+      "default": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.violet.700}",
+        "description": "Default focus ring",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.violet.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.violet.500}"
+          }
+        }
+      },
+      "destructive": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.red.700}",
+        "description": "Destructive focus ring",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.red.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.red.500}"
+          }
+        }
+      },
+      "offset": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.50}",
+        "description": "Focus ring offset bg",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.50}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.50}"
+          }
+        }
+      }
+    },
+    "status": {
+      "success": {
+        "bg": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.green.50}",
+          "description": "Success bg subtle",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.green.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.green.900}"
+            }
+          }
+        },
+        "bg-strong": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.green.100}",
+          "description": "Success bg strong",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.green.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.green.700}"
+            }
+          }
+        },
+        "text": {
+          "type": "color",
+          "value": "{AGUI | Semantics.text.success}",
+          "description": "Success text",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.text.success}",
+              "Dark Mode": "{AGUI | Semantics.text.success}"
+            }
+          }
+        },
+        "icon": {
+          "type": "color",
+          "value": "{AGUI | Semantics.status.success.text}",
+          "description": "Success icon",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.status.success.text}",
+              "Dark Mode": "{AGUI | Semantics.status.success.text}"
+            }
+          }
+        },
+        "border": {
+          "type": "color",
+          "value": "{AGUI | Semantics.status.success.text}",
+          "description": "Success border",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.status.success.text}",
+              "Dark Mode": "{AGUI | Semantics.status.success.bg-strong}"
+            }
+          }
+        }
+      },
+      "warning": {
+        "bg": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.amber.50}",
+          "description": "Warning bg subtle",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.amber.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.amber.900}"
+            }
+          }
+        },
+        "bg-strong": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.amber.100}",
+          "description": "Warning bg strong",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.amber.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.amber.700}"
+            }
+          }
+        },
+        "text": {
+          "type": "color",
+          "value": "{AGUI | Semantics.text.warning}",
+          "description": "Warning text",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.text.warning}",
+              "Dark Mode": "{AGUI | Semantics.text.warning}"
+            }
+          }
+        },
+        "icon": {
+          "type": "color",
+          "value": "{AGUI | Semantics.status.warning.text}",
+          "description": "Warning icon",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.status.warning.text}",
+              "Dark Mode": "{AGUI | Semantics.status.warning.text}"
+            }
+          }
+        },
+        "border": {
+          "type": "color",
+          "value": "{AGUI | Semantics.status.warning.text}",
+          "description": "Warning border",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.status.warning.text}",
+              "Dark Mode": "{AGUI | Semantics.status.warning.bg-strong}"
+            }
+          }
+        }
+      },
+      "error": {
+        "bg": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.red.50}",
+          "description": "Error bg subtle",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.red.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.red.900}"
+            }
+          }
+        },
+        "bg-strong": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.red.100}",
+          "description": "Error bg strong",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.red.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.red.700}"
+            }
+          }
+        },
+        "text": {
+          "type": "color",
+          "value": "{AGUI | Semantics.text.error}",
+          "description": "Error text",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.text.error}",
+              "Dark Mode": "{AGUI | Semantics.text.error}"
+            }
+          }
+        },
+        "icon": {
+          "type": "color",
+          "value": "{AGUI | Semantics.status.error.text}",
+          "description": "Error icon",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.status.error.text}",
+              "Dark Mode": "{AGUI | Semantics.status.error.text}"
+            }
+          }
+        },
+        "border": {
+          "type": "color",
+          "value": "{AGUI | Semantics.status.error.text}",
+          "description": "Error border",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.status.error.text}",
+              "Dark Mode": "{AGUI | Semantics.status.error.bg-strong}"
+            }
+          }
+        }
+      },
+      "info": {
+        "bg": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.sky.50}",
+          "description": "Info bg subtle",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.sky.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.sky.900}"
+            }
+          }
+        },
+        "bg-strong": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.sky.100}",
+          "description": "Info bg strong",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.sky.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.sky.700}"
+            }
+          }
+        },
+        "text": {
+          "type": "color",
+          "value": "{AGUI | Semantics.text.info}",
+          "description": "Info text",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.text.info}",
+              "Dark Mode": "{AGUI | Semantics.text.info}"
+            }
+          }
+        },
+        "icon": {
+          "type": "color",
+          "value": "{AGUI | Semantics.status.info.text}",
+          "description": "Info icon",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.status.info.text}",
+              "Dark Mode": "{AGUI | Semantics.status.info.text}"
+            }
+          }
+        },
+        "border": {
+          "type": "color",
+          "value": "{AGUI | Semantics.status.info.text}",
+          "description": "Info border",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.status.info.text}",
+              "Dark Mode": "{AGUI | Semantics.status.info.bg-strong}"
+            }
+          }
+        }
+      }
+    },
+    "accent": {
+      "violet": {
+        "default": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.500}",
+          "description": "Violet accent default",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.500}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.500}"
+            }
+          }
+        },
+        "subtle": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.50}",
+          "description": "Violet accent subtle bg",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.700}"
+            }
+          }
+        },
+        "hover": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.700}",
+          "description": "Violet accent hover",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.300}"
+            }
+          }
+        },
+        "on-violet": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.neutral.0}",
+          "description": "On violet bg",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.neutral.0}",
+              "Dark Mode": "{AGUI | Primitives.colors.neutral.900}"
+            }
+          }
+        }
+      },
+      "cyan": {
+        "default": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.700}",
+          "description": "Cyan accent default",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.500}"
+            }
+          }
+        },
+        "subtle": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.50}",
+          "description": "Cyan accent subtle bg",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.700}"
+            }
+          }
+        },
+        "hover": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.700}",
+          "description": "Cyan accent hover",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.300}"
+            }
+          }
+        },
+        "on-cyan": {
+          "type": "color",
+          "value": "{AGUI | Semantics.accent.violet.on-violet}",
+          "description": "On cyan bg",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.accent.violet.on-violet}",
+              "Dark Mode": "{AGUI | Semantics.accent.violet.on-violet}"
+            }
+          }
+        }
+      },
+      "magenta": {
+        "default": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.500}",
+          "description": "Magenta accent default",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.500}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.500}"
+            }
+          }
+        },
+        "subtle": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.50}",
+          "description": "Magenta accent subtle bg",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.700}"
+            }
+          }
+        },
+        "hover": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.700}",
+          "description": "Magenta accent hover",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.300}"
+            }
+          }
+        },
+        "on-magenta": {
+          "type": "color",
+          "value": "{AGUI | Semantics.accent.violet.on-violet}",
+          "description": "On magenta bg",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Semantics.accent.violet.on-violet}",
+              "Dark Mode": "{AGUI | Semantics.accent.violet.on-violet}"
+            }
+          }
+        }
+      }
+    },
+    "ai": {
+      "cursor": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.violet.700}",
+        "description": "AI streaming cursor",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.violet.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.violet.300}"
+          }
+        }
+      },
+      "agent": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.cyan.700}",
+        "description": "Agent identity color",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.cyan.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.cyan.300}"
+          }
+        }
+      },
+      "thinking-bg": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.violet.50}",
+        "description": "Thinking block bg",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.violet.50}",
+            "Dark Mode": "{AGUI | Primitives.colors.violet.900}"
+          }
+        }
+      },
+      "thinking-border": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.violet.700}",
+        "description": "Thinking block border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.violet.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.violet.300}"
+          }
+        }
+      },
+      "tool-bg": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.neutral.100}",
+        "description": "Tool execution bg",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.neutral.100}",
+            "Dark Mode": "{AGUI | Primitives.colors.neutral.800}"
+          }
+        }
+      },
+      "tool-success": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.green.700}",
+        "description": "Tool success",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.green.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.green.200}"
+          }
+        }
+      },
+      "tool-error": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.red.700}",
+        "description": "Tool error",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.red.700}",
+            "Dark Mode": "{AGUI | Primitives.colors.red.200}"
+          }
+        }
+      },
+      "citation-bg": {
+        "type": "color",
+        "value": "{AGUI | Semantics.ai.thinking-bg}",
+        "description": "Citation chip bg",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.ai.thinking-bg}",
+            "Dark Mode": "{AGUI | Semantics.ai.thinking-bg}"
+          }
+        }
+      },
+      "citation-border": {
+        "type": "color",
+        "value": "{AGUI | Semantics.ai.cursor}",
+        "description": "Citation chip border",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.ai.cursor}",
+            "Dark Mode": "{AGUI | Semantics.ai.cursor}"
+          }
+        }
+      },
+      "glow": {
+        "type": "color",
+        "value": "{AGUI | Primitives.colors.violet.500}",
+        "description": "AI glow — same both modes",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.colors.violet.500}",
+            "Dark Mode": "{AGUI | Primitives.colors.violet.500}"
+          }
+        }
+      }
+    },
+    "typography": {
+      "display": {
+        "lg": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.6xl}",
+          "description": "Display large — hero (60px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.6xl}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.6xl}"
+            }
+          }
+        },
+        "sm": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.5xl}",
+          "description": "Display small — sub-hero (48px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.5xl}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.5xl}"
+            }
+          }
+        }
+      },
+      "heading": {
+        "h1": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.4xl}",
+          "description": "H1 page title (36px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.4xl}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.4xl}"
+            }
+          }
+        },
+        "h2": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.3xl}",
+          "description": "H2 section header (28px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.3xl}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.3xl}"
+            }
+          }
+        },
+        "h3": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.2xl}",
+          "description": "H3 sub-section (24px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.2xl}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.2xl}"
+            }
+          }
+        },
+        "h4": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.xl}",
+          "description": "H4 card title (20px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.xl}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.xl}"
+            }
+          }
+        },
+        "h5": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.lg}",
+          "description": "H5 group header (18px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.lg}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.lg}"
+            }
+          }
+        },
+        "h6": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.md}",
+          "description": "H6 inline title (16px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.md}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.md}"
+            }
+          }
+        }
+      },
+      "body": {
+        "lg": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.lg}",
+          "description": "Body large (18px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.lg}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.lg}"
+            }
+          }
+        },
+        "md": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.md}",
+          "description": "Body medium — default (16px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.md}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.md}"
+            }
+          }
+        },
+        "sm": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.base}",
+          "description": "Body small (14px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.base}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.base}"
+            }
+          }
+        },
+        "xs": {
+          "type": "dimension",
+          "value": "{AGUI | Primitives.typography.font-size.sm}",
+          "description": "Body XS — metadata (12px)",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.typography.font-size.sm}",
+              "Dark Mode": "{AGUI | Primitives.typography.font-size.sm}"
+            }
+          }
+        }
+      }
+    },
+    "radius": {
+      "none": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.none}",
+        "description": "No radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.none}",
+            "Dark Mode": "{AGUI | Primitives.radius.none}"
+          }
+        }
+      },
+      "full": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.full}",
+        "description": "Full / pill radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.full}",
+            "Dark Mode": "{AGUI | Primitives.radius.full}"
+          }
+        }
+      },
+      "button": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.md}",
+        "description": "Button border radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.md}",
+            "Dark Mode": "{AGUI | Semantics.radius.md}"
+          }
+        }
+      },
+      "input": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.sm}",
+        "description": "Input border radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.sm}",
+            "Dark Mode": "{AGUI | Semantics.radius.sm}"
+          }
+        }
+      },
+      "card": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.xl}",
+        "description": "Card border radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.xl}",
+            "Dark Mode": "{AGUI | Semantics.radius.xl}"
+          }
+        }
+      },
+      "modal": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.xl}",
+        "description": "Modal border radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.xl}",
+            "Dark Mode": "{AGUI | Semantics.radius.xl}"
+          }
+        }
+      },
+      "badge": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.full}",
+        "description": "",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.full}",
+            "Dark Mode": "{AGUI | Semantics.radius.full}"
+          }
+        }
+      },
+      "chip": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.md}",
+        "description": "Chip border radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.md}",
+            "Dark Mode": "{AGUI | Semantics.radius.md}"
+          }
+        }
+      },
+      "message": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.xl}",
+        "description": "Message bubble radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.xl}",
+            "Dark Mode": "{AGUI | Semantics.radius.xl}"
+          }
+        }
+      },
+      "avatar": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.full}",
+        "description": "",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.full}",
+            "Dark Mode": "{AGUI | Semantics.radius.full}"
+          }
+        }
+      },
+      "tooltip": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.sm}",
+        "description": "Tooltip border radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.sm}",
+            "Dark Mode": "{AGUI | Semantics.radius.sm}"
+          }
+        }
+      },
+      "xs": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.xs}",
+        "description": "XS radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.xs}",
+            "Dark Mode": "{AGUI | Primitives.radius.xs}"
+          }
+        }
+      },
+      "icon-button": {
+        "type": "dimension",
+        "value": "{AGUI | Semantics.radius.md}",
+        "description": "Icon button radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Semantics.radius.md}",
+            "Dark Mode": "{AGUI | Semantics.radius.md}"
+          }
+        }
+      },
+      "sm": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.sm}",
+        "description": "SM radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.sm}",
+            "Dark Mode": "{AGUI | Primitives.radius.sm}"
+          }
+        }
+      },
+      "md": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.md}",
+        "description": "MD radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.md}",
+            "Dark Mode": "{AGUI | Primitives.radius.md}"
+          }
+        }
+      },
+      "base": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.base}",
+        "description": "Base radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.base}",
+            "Dark Mode": "{AGUI | Primitives.radius.base}"
+          }
+        }
+      },
+      "lg": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.lg}",
+        "description": "LG radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.lg}",
+            "Dark Mode": "{AGUI | Primitives.radius.lg}"
+          }
+        }
+      },
+      "xl": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.xl}",
+        "description": "XL radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.xl}",
+            "Dark Mode": "{AGUI | Primitives.radius.xl}"
+          }
+        }
+      },
+      "2xl": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.2xl}",
+        "description": "2XL radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.2xl}",
+            "Dark Mode": "{AGUI | Primitives.radius.2xl}"
+          }
+        }
+      },
+      "3xl": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.radius.3xl}",
+        "description": "3XL radius",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.radius.3xl}",
+            "Dark Mode": "{AGUI | Primitives.radius.3xl}"
+          }
+        }
+      }
+    },
+    "spacing": {
+      "button-padding-x": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.lg}",
+        "description": "Button horizontal padding",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.lg}",
+            "Dark Mode": "{AGUI | Primitives.spacing.lg}"
+          }
+        }
+      },
+      "button-padding-y": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.sm}",
+        "description": "Button vertical padding",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.sm}",
+            "Dark Mode": "{AGUI | Primitives.spacing.sm}"
+          }
+        }
+      },
+      "button-icon-gap": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.sm}",
+        "description": "Button icon-label gap",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.sm}",
+            "Dark Mode": "{AGUI | Primitives.spacing.sm}"
+          }
+        }
+      },
+      "input-padding-x": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.md}",
+        "description": "Input horizontal padding",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.md}",
+            "Dark Mode": "{AGUI | Primitives.spacing.md}"
+          }
+        }
+      },
+      "input-padding-y": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.sm}",
+        "description": "Input vertical padding",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.sm}",
+            "Dark Mode": "{AGUI | Primitives.spacing.sm}"
+          }
+        }
+      },
+      "input-label-gap": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.xs}",
+        "description": "Label to input gap",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.xs}",
+            "Dark Mode": "{AGUI | Primitives.spacing.xs}"
+          }
+        }
+      },
+      "input-helper-gap": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.xs}",
+        "description": "Input to helper text gap",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.xs}",
+            "Dark Mode": "{AGUI | Primitives.spacing.xs}"
+          }
+        }
+      },
+      "card-padding": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.2xl}",
+        "description": "Card internal padding",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.2xl}",
+            "Dark Mode": "{AGUI | Primitives.spacing.2xl}"
+          }
+        }
+      },
+      "card-gap": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.lg}",
+        "description": "Card section gap",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.lg}",
+            "Dark Mode": "{AGUI | Primitives.spacing.lg}"
+          }
+        }
+      },
+      "card-header-gap": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.sm}",
+        "description": "Card header gap",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.sm}",
+            "Dark Mode": "{AGUI | Primitives.spacing.sm}"
+          }
+        }
+      },
+      "message-padding": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.md}",
+        "description": "Message bubble padding",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.md}",
+            "Dark Mode": "{AGUI | Primitives.spacing.md}"
+          }
+        }
+      },
+      "message-gap": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.sm}",
+        "description": "Gap between messages",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.sm}",
+            "Dark Mode": "{AGUI | Primitives.spacing.sm}"
+          }
+        }
+      },
+      "message-avatar-gap": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.sm}",
+        "description": "Avatar to message gap",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.sm}",
+            "Dark Mode": "{AGUI | Primitives.spacing.sm}"
+          }
+        }
+      },
+      "layout-page-margin": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.2xl}",
+        "description": "Page horizontal margin",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.2xl}",
+            "Dark Mode": "{AGUI | Primitives.spacing.2xl}"
+          }
+        }
+      },
+      "layout-section-gap": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.2xl}",
+        "description": "Page section gap",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.2xl}",
+            "Dark Mode": "{AGUI | Primitives.spacing.2xl}"
+          }
+        }
+      },
+      "layout-sidebar-pad": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.2xl}",
+        "description": "Sidebar padding",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.2xl}",
+            "Dark Mode": "{AGUI | Primitives.spacing.2xl}"
+          }
+        }
+      },
+      "layout-modal-pad": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.2xl}",
+        "description": "Modal padding",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.2xl}",
+            "Dark Mode": "{AGUI | Primitives.spacing.2xl}"
+          }
+        }
+      },
+      "layout-menu-level-gap": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.spacing.sm}",
+        "description": "Nav menu indent",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.spacing.sm}",
+            "Dark Mode": "{AGUI | Primitives.spacing.sm}"
+          }
+        }
+      },
+      "focus-ring-width": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.border-width.md}",
+        "description": "Focus ring width",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.border-width.md}",
+            "Dark Mode": "{AGUI | Primitives.border-width.md}"
+          }
+        }
+      },
+      "focus-ring-offset": {
+        "type": "dimension",
+        "value": "{AGUI | Primitives.border-width.md}",
+        "description": "Focus ring offset",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.border-width.md}",
+            "Dark Mode": "{AGUI | Primitives.border-width.md}"
+          }
+        }
+      }
+    },
+    "opacity": {
+      "transparent": {
+        "type": "number",
+        "value": "{AGUI | Primitives.opacity.0%}",
+        "description": "Fully transparent",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.opacity.0%}",
+            "Dark Mode": "{AGUI | Primitives.opacity.0%}"
+          }
+        }
+      },
+      "scrim-light": {
+        "type": "number",
+        "value": "{AGUI | Primitives.opacity.40%}",
+        "description": "Light scrim",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.opacity.40%}",
+            "Dark Mode": "{AGUI | Primitives.opacity.40%}"
+          }
+        }
+      },
+      "scrim-medium": {
+        "type": "number",
+        "value": "{AGUI | Primitives.opacity.50%}",
+        "description": "Medium scrim",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.opacity.50%}",
+            "Dark Mode": "{AGUI | Primitives.opacity.50%}"
+          }
+        }
+      },
+      "scrim-heavy": {
+        "type": "number",
+        "value": "{AGUI | Primitives.opacity.75%}",
+        "description": "Heavy scrim",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.opacity.75%}",
+            "Dark Mode": "{AGUI | Primitives.opacity.75%}"
+          }
+        }
+      },
+      "disabled": {
+        "type": "number",
+        "value": "{AGUI | Primitives.opacity.40%}",
+        "description": "Disabled element opacity",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.opacity.40%}",
+            "Dark Mode": "{AGUI | Primitives.opacity.40%}"
+          }
+        }
+      },
+      "hover-overlay": {
+        "type": "number",
+        "value": "{AGUI | Primitives.opacity.8%}",
+        "description": "Hover overlay alpha",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.opacity.8%}",
+            "Dark Mode": "{AGUI | Primitives.opacity.8%}"
+          }
+        }
+      },
+      "pressed-overlay": {
+        "type": "number",
+        "value": "{AGUI | Primitives.opacity.16%}",
+        "description": "Pressed overlay alpha",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.opacity.16%}",
+            "Dark Mode": "{AGUI | Primitives.opacity.16%}"
+          }
+        }
+      },
+      "focus-ring": {
+        "type": "number",
+        "value": "{AGUI | Primitives.opacity.25%}",
+        "description": "Focus ring alpha",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.opacity.25%}",
+            "Dark Mode": "{AGUI | Primitives.opacity.25%}"
+          }
+        }
+      },
+      "opaque": {
+        "type": "number",
+        "value": "{AGUI | Primitives.opacity.100%}",
+        "description": "Fully opaque",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.opacity.100%}",
+            "Dark Mode": "{AGUI | Primitives.opacity.100%}"
+          }
+        }
+      }
+    },
+    "shadow": {
+      "xs": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.xs}",
+        "description": "XS shadow",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.xs}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.xs}"
+          }
+        }
+      },
+      "sm": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.sm}",
+        "description": "SM shadow",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.sm}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.sm}"
+          }
+        }
+      },
+      "md": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.md}",
+        "description": "MD shadow",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.md}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.md}"
+          }
+        }
+      },
+      "lg": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.lg}",
+        "description": "LG shadow",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.lg}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.lg}"
+          }
+        }
+      },
+      "xl": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.xl}",
+        "description": "XL shadow",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.xl}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.xl}"
+          }
+        }
+      },
+      "2xl": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.2xl}",
+        "description": "2XL shadow",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.2xl}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.2xl}"
+          }
+        }
+      },
+      "inner": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.inner}",
+        "description": "Inner shadow",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.inner}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.inner}"
+          }
+        }
+      },
+      "focus-ring": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.focus-outer}",
+        "description": "Focus ring shadow",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.focus-outer}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.focus-outer}"
+          }
+        }
+      },
+      "glow-ai": {
+        "type": "color",
+        "value": "{AGUI | Primitives.shadow.color.light.glow-ai}",
+        "description": "AI glow",
+        "$extensions": {
+          "mode": {
+            "Light Mode": "{AGUI | Primitives.shadow.color.light.glow-ai}",
+            "Dark Mode": "{AGUI | Primitives.shadow.color.dark.glow-ai}"
+          }
+        }
+      }
+    },
+    "charts": {
+      "blue": {
+        "25": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.25}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.25}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.25}"
+            }
+          }
+        },
+        "50": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.50}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.25}"
+            }
+          }
+        },
+        "100": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.100}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.50}"
+            }
+          }
+        },
+        "150": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.150}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.150}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.50}"
+            }
+          }
+        },
+        "200": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.200}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.200}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.100}"
+            }
+          }
+        },
+        "300": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.300}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.300}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.150}"
+            }
+          }
+        },
+        "400": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.400}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.400}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.200}"
+            }
+          }
+        },
+        "450": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.450}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.450}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.300}"
+            }
+          }
+        },
+        "500": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.500}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.500}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.400}"
+            }
+          }
+        },
+        "600": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.600}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.600}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.450}"
+            }
+          }
+        },
+        "700": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.700}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.500}"
+            }
+          }
+        },
+        "750": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.750}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.750}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.600}"
+            }
+          }
+        },
+        "800": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.800}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.800}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.700}"
+            }
+          }
+        },
+        "900": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.900}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.900}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.750}"
+            }
+          }
+        },
+        "950": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.blue.950}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.blue.950}",
+              "Dark Mode": "{AGUI | Primitives.colors.blue.800}"
+            }
+          }
+        }
+      },
+      "yellow": {
+        "25": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.25}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.25}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.25}"
+            }
+          }
+        },
+        "50": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.50}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.25}"
+            }
+          }
+        },
+        "100": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.100}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.50}"
+            }
+          }
+        },
+        "150": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.150}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.150}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.50}"
+            }
+          }
+        },
+        "200": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.200}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.200}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.100}"
+            }
+          }
+        },
+        "300": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.300}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.300}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.150}"
+            }
+          }
+        },
+        "400": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.400}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.400}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.200}"
+            }
+          }
+        },
+        "450": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.450}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.450}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.300}"
+            }
+          }
+        },
+        "500": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.500}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.500}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.400}"
+            }
+          }
+        },
+        "600": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.600}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.600}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.450}"
+            }
+          }
+        },
+        "700": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.700}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.500}"
+            }
+          }
+        },
+        "750": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.750}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.750}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.600}"
+            }
+          }
+        },
+        "800": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.800}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.800}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.700}"
+            }
+          }
+        },
+        "900": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.900}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.900}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.750}"
+            }
+          }
+        },
+        "950": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.yellow.950}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.yellow.950}",
+              "Dark Mode": "{AGUI | Primitives.colors.yellow.800}"
+            }
+          }
+        }
+      },
+      "violet": {
+        "50": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.50}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.50}"
+            }
+          }
+        },
+        "100": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.100}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.50}"
+            }
+          }
+        },
+        "200": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.200}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.200}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.200}"
+            }
+          }
+        },
+        "300": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.300}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.300}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.100}"
+            }
+          }
+        },
+        "500": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.500}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.500}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.300}"
+            }
+          }
+        },
+        "700": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.700}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.500}"
+            }
+          }
+        },
+        "900": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.violet.900}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.violet.900}",
+              "Dark Mode": "{AGUI | Primitives.colors.violet.500}"
+            }
+          }
+        }
+      },
+      "cyan": {
+        "50": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.50}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.50}"
+            }
+          }
+        },
+        "100": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.100}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.50}"
+            }
+          }
+        },
+        "200": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.200}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.200}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.100}"
+            }
+          }
+        },
+        "300": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.300}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.300}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.200}"
+            }
+          }
+        },
+        "500": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.500}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.500}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.300}"
+            }
+          }
+        },
+        "700": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.700}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.500}"
+            }
+          }
+        },
+        "900": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.cyan.900}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.cyan.900}",
+              "Dark Mode": "{AGUI | Primitives.colors.cyan.500}"
+            }
+          }
+        }
+      },
+      "magenta": {
+        "50": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.50}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.50}"
+            }
+          }
+        },
+        "100": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.100}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.50}"
+            }
+          }
+        },
+        "200": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.200}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.200}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.100}"
+            }
+          }
+        },
+        "300": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.300}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.300}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.100}"
+            }
+          }
+        },
+        "500": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.500}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.500}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.200}"
+            }
+          }
+        },
+        "700": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.700}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.300}"
+            }
+          }
+        },
+        "900": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.magenta.900}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.magenta.900}",
+              "Dark Mode": "{AGUI | Primitives.colors.magenta.500}"
+            }
+          }
+        }
+      },
+      "green": {
+        "50": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.green.50}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.green.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.green.50}"
+            }
+          }
+        },
+        "100": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.green.100}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.green.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.green.50}"
+            }
+          }
+        },
+        "200": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.green.200}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.green.200}",
+              "Dark Mode": "{AGUI | Primitives.colors.green.100}"
+            }
+          }
+        },
+        "500": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.green.500}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.green.500}",
+              "Dark Mode": "{AGUI | Primitives.colors.green.200}"
+            }
+          }
+        },
+        "700": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.green.700}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.green.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.green.500}"
+            }
+          }
+        },
+        "900": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.green.900}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.green.900}",
+              "Dark Mode": "{AGUI | Primitives.colors.green.500}"
+            }
+          }
+        }
+      },
+      "red": {
+        "50": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.red.50}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.red.50}",
+              "Dark Mode": "{AGUI | Primitives.colors.red.50}"
+            }
+          }
+        },
+        "100": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.red.100}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.red.100}",
+              "Dark Mode": "{AGUI | Primitives.colors.red.50}"
+            }
+          }
+        },
+        "200": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.red.200}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.red.200}",
+              "Dark Mode": "{AGUI | Primitives.colors.red.100}"
+            }
+          }
+        },
+        "500": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.red.500}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.red.500}",
+              "Dark Mode": "{AGUI | Primitives.colors.red.200}"
+            }
+          }
+        },
+        "700": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.red.700}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.red.700}",
+              "Dark Mode": "{AGUI | Primitives.colors.red.500}"
+            }
+          }
+        },
+        "900": {
+          "type": "color",
+          "value": "{AGUI | Primitives.colors.red.900}",
+          "description": "",
+          "$extensions": {
+            "mode": {
+              "Light Mode": "{AGUI | Primitives.colors.red.900}",
+              "Dark Mode": "{AGUI | Primitives.colors.red.500}"
+            }
+          }
+        }
+      }
+    },
+    "$extensions": {
+      "tokens-bruecke-meta": {
+        "useDTCGKeys": false,
+        "colorMode": "hex",
+        "variableCollections": [
+          "AGUI | Primitives",
+          "AGUI | Semantics"
+        ],
+        "createdAt": "2026-05-28T03:20:11.770Z"
+      }
+    }
+  }
+}

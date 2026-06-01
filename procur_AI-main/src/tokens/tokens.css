@@ -1,0 +1,1449 @@
+/**
+ * ProcurAI Theme CSS Variables
+ * Generated automatically from Figma token exports.
+ */
+
+:root {
+  color-scheme: light dark;
+  
+  /* ==========================================================================
+     Primitive & Semantic Design Tokens
+     ========================================================================== */
+  --colors-blue-25: #e6f0ff; /* Lightest blue tint */
+  --colors-blue-50: #d0e3ff; /* color */
+  --colors-blue-100: #bad6ff; /* color */
+  --colors-blue-150: #8ebbff; /* color */
+  --colors-blue-200: #62a1ff; /* color */
+  --colors-blue-300: #3687ff; /* color */
+  --colors-blue-400: #0a68f5; /* color */
+  --colors-blue-450: #045de0; /* color */
+  --colors-blue-500: #0052cc; /* Brand primary */
+  --colors-blue-600: #0049b7; /* color */
+  --colors-blue-700: #0041a3; /* color */
+  --colors-blue-750: #003c95; /* color */
+  --colors-blue-800: #003688; /* color */
+  --colors-blue-900: #00317b; /* color */
+  --colors-blue-950: #002152; /* Deepest blue, for dark surfaces */
+  --colors-yellow-25: #fff6e6; /* color */
+  --colors-yellow-50: #fff4dd; /* color */
+  --colors-yellow-100: #ffefd3; /* color */
+  --colors-yellow-150: #ffedce; /* color */
+  --colors-yellow-200: #ffe8c0; /* color */
+  --colors-yellow-300: #ffe2a8; /* color */
+  --colors-yellow-400: #ffe1ad; /* color */
+  --colors-yellow-450: #ffd58a; /* color */
+  --colors-yellow-500: #ffc247; /* Pink accent default */
+  --colors-yellow-600: #ffb020; /* color */
+  --colors-yellow-700: #e69c00; /* color */
+  --colors-yellow-750: #cc8800; /* color */
+  --colors-yellow-800: #b37400; /* color */
+  --colors-yellow-900: #996000; /* color */
+  --colors-yellow-950: #7a4a00; /* color */
+  --colors-neutral-0: #ffffff; /* Barely-tinted white */
+  --colors-neutral-25: #fafafa; /* Barely-tinted white */
+  --colors-neutral-50: #f5f5f5; /* color */
+  --colors-neutral-100: #eeeeee; /* color */
+  --colors-neutral-150: #e5e5e5; /* color */
+  --colors-neutral-200: #dddddd; /* color */
+  --colors-neutral-300: #cccccc; /* color */
+  --colors-neutral-400: #a8a8a8; /* color */
+  --colors-neutral-450: #999999; /* color */
+  --colors-neutral-500: #888888; /* color */
+  --colors-neutral-600: #666666; /* color */
+  --colors-neutral-700: #4a4a4a; /* color */
+  --colors-neutral-750: #3d3d3d; /* color */
+  --colors-neutral-800: #2e2e2e; /* color */
+  --colors-neutral-900: #1a1a1a; /* Brand-tinted near-black */
+  --colors-neutral-950: #0f0f0f; /* color */
+  --colors-neutral-999: #000000; /* color */
+  --colors-violet-50: #ededff; /* color */
+  --colors-violet-100: #dcdcff; /* color */
+  --colors-violet-200: #c3c3ff; /* color */
+  --colors-violet-300: #ababff; /* color */
+  --colors-violet-500: #7c7cff; /* AI accent / focus default */
+  --colors-violet-700: #3d3db8; /* color */
+  --colors-violet-900: #1a1a66; /* color */
+  --colors-cyan-50: #e0faf7; /* color */
+  --colors-cyan-100: #c6f3ef; /* color */
+  --colors-cyan-200: #aeeae5; /* color */
+  --colors-cyan-300: #8de3dc; /* color */
+  --colors-cyan-500: #4fd1c5; /* AI agent accent */
+  --colors-cyan-700: #0a7a70; /* color */
+  --colors-cyan-900: #065550; /* color */
+  --colors-green-50: #f0fdf4; /* color */
+  --colors-green-100: #dcfce7; /* color */
+  --colors-green-200: #bbf7d0; /* color */
+  --colors-green-500: #22c55e; /* color */
+  --colors-green-700: #15803d; /* color */
+  --colors-green-900: #14532d; /* color */
+  --colors-amber-50: #fffbeb; /* color */
+  --colors-amber-100: #fef3c7; /* color */
+  --colors-amber-200: #fde68a; /* color */
+  --colors-amber-500: #f59e0b; /* color */
+  --colors-amber-700: #b45309; /* color */
+  --colors-amber-900: #78350f; /* color */
+  --colors-red-50: #fef2f2; /* color */
+  --colors-red-100: #fee2e2; /* color */
+  --colors-red-200: #fecaca; /* color */
+  --colors-red-500: #ef4444; /* color */
+  --colors-red-700: #b91c1c; /* color */
+  --colors-red-900: #7f1d1d; /* color */
+  --colors-sky-50: #f0f9ff; /* color */
+  --colors-sky-100: #dbeafe; /* color */
+  --colors-sky-200: #bfdbfe; /* color */
+  --colors-sky-500: #3b82f6; /* color */
+  --colors-sky-700: #1d4ed8; /* color */
+  --colors-sky-900: #1e3a8a; /* color */
+  --colors-magenta-50: #fde8f2; /* color */
+  --colors-magenta-100: #fac8e2; /* color */
+  --colors-magenta-200: #f499c9; /* color */
+  --colors-magenta-300: #ec6aaf; /* color */
+  --colors-magenta-500: #cc2e7a; /* color */
+  --colors-magenta-700: #861c54; /* color */
+  --colors-magenta-900: #2a0e1c; /* color */
+  --spacing-none: 0px; /* dimension */
+  --spacing-xs: 4px; /* dimension */
+  --spacing-sm: 8px; /* dimension */
+  --spacing-md: 12px; /* dimension */
+  --spacing-lg: 16px; /* Base unit (was --spacing-base in v1) */
+  --spacing-xl: 20px; /* dimension */
+  --spacing-2xl: 24px; /* dimension */
+  --spacing-4xl: 32px; /* dimension */
+  --spacing-5xl: 40px; /* dimension */
+  --spacing-6xl: 48px; /* dimension */
+  --spacing-7xl: 64px; /* dimension */
+  --spacing-8xl: 80px; /* dimension */
+  --spacing-9xl: 96px; /* dimension */
+  --spacing-3xl: 28px; /* dimension */
+  --spacing-2xs: 2px; /* dimension */
+  --radius-none: 0px; /* dimension */
+  --radius-xs: 2px; /* dimension */
+  --radius-sm: 4px; /* dimension */
+  --radius-md: 8px; /* dimension */
+  --radius-base: 12px; /* dimension */
+  --radius-lg: 16px; /* Was 20 in v1; now true intermediate */
+  --radius-xl: 20px; /* Preserves old --radius-lg value */
+  --radius-2xl: 24px; /* dimension */
+  --radius-3xl: 32px; /* dimension */
+  --radius-full: 9999px; /* For circular elements */
+  --border-width-none: 0px; /* dimension */
+  --border-width-xs: 0.5px; /* Hairline for retina/HiDPI */
+  --border-width-sm: 1px; /* Default */
+  --border-width-md: 2px; /* Focus rings, emphasis */
+  --border-width-lg: 4px; /* dimension */
+  --border-width-xl: 8px; /* dimension */
+  --typography-font-family-primary: Inter; /* Primary UI font */
+  --typography-font-family-mono: JetBrains Mono; /* Monospace for code */
+  --typography-font-size-2xs: 8px; /* Mobile floor */
+  --typography-font-size-xs: 10px; /* Was overline/chips */
+  --typography-font-size-sm: 12px; /* Was caption */
+  --typography-font-size-base: 14px; /* Was body-2/3, button */
+  --typography-font-size-md: 16px; /* Was body-1 */
+  --typography-font-size-lg: 18px; /* Was page-title-1 */
+  --typography-font-size-xl: 20px; /* Was h6 */
+  --typography-font-size-2xl: 24px; /* Was h5 */
+  --typography-font-size-3xl: 28px; /* Was h4 */
+  --typography-font-size-4xl: 36px; /* Was h3 */
+  --typography-font-size-5xl: 48px; /* Was h2 */
+  --typography-font-size-6xl: 60px; /* Was h1 */
+  --typography-font-size-7xl: 96px; /* Display/hero */
+  --typography-font-size-8xl: 128px; /* dimension */
+  --typography-font-weight-light: 300; /* string */
+  --typography-font-weight-regular: 400; /* string */
+  --typography-font-weight-medium: 500; /* string */
+  --typography-font-weight-semibold: 600; /* Added in v2 */
+  --typography-font-weight-bold: 700; /* string */
+  --typography-letter-spacing-tight: -0.8px; /* dimension */
+  --typography-letter-spacing-wide: 0.1px; /* dimension */
+  --typography-letter-spacing-wider: 0.2px; /* dimension */
+  --typography-letter-spacing-tighter-3: -3.6px; /* dimension */
+  --typography-letter-spacing-tighter-2: -2.6px; /* dimension */
+  --typography-letter-spacing-tighter-1: -1.3px; /* dimension */
+  --typography-letter-spacing-normal-tight: -0.4px; /* dimension */
+  --typography-letter-spacing-normal: 0px; /* dimension */
+  --typography-line-height-2xs: 12px; /* dimension */
+  --typography-line-height-xs: 15px; /* dimension */
+  --typography-line-height-sm: 18px; /* dimension */
+  --typography-line-height-base: 21px; /* dimension */
+  --typography-line-height-md: 24px; /* dimension */
+  --typography-line-height-lg: 27px; /* dimension */
+  --typography-line-height-xl: 30px; /* dimension */
+  --typography-line-height-2xl: 36px; /* dimension */
+  --typography-line-height-3xl: 42px; /* dimension */
+  --typography-line-height-4xl: 43px; /* dimension */
+  --typography-line-height-5xl: 58px; /* dimension */
+  --typography-line-height-6xl: 72px; /* dimension */
+  --typography-line-height-7xl: 115px; /* dimension */
+  --typography-line-height-8xl: 154px; /* dimension */
+  --opacity-0: 0; /* Fully transparent */
+  --opacity-4: 0.04; /* number */
+  --opacity-8: 0.08; /* number */
+  --opacity-16: 0.16; /* number */
+  --opacity-25: 0.25; /* number */
+  --opacity-40: 0.4; /* number */
+  --opacity-50: 0.5; /* number */
+  --opacity-60: 0.6; /* number */
+  --opacity-75: 0.75; /* number */
+  --opacity-90: 0.9; /* number */
+  --opacity-100: 1; /* Fully opaque */
+  --shadow-color-light-xs: #0e0f250d; /* Light mode xs shadow color */
+  --shadow-color-light-sm: #0e0f251a; /* color */
+  --shadow-color-light-md: #0e0f2533; /* color */
+  --shadow-color-light-lg: #0e0f254d; /* color */
+  --shadow-color-light-xl: #0e0f2566; /* color */
+  --shadow-color-light-2xl: #0e0f2580; /* color */
+  --shadow-color-light-inner: #0e0f25; /* color */
+  --shadow-color-light-focus-outer: #7c7cff33; /* Focus ring outer glow */
+  --shadow-color-light-glow-ai: #7c7cfffc; /* AI element glow in dark mode */
+  --shadow-color-dark-xs: #ffffff0d; /* color */
+  --shadow-color-dark-sm: #ffffff1a; /* color */
+  --shadow-color-dark-md: #00000033; /* color */
+  --shadow-color-dark-lg: #ffffff4d; /* color */
+  --shadow-color-dark-xl: #000000a6; /* color */
+  --shadow-color-dark-2xl: #000000bf; /* color */
+  --shadow-color-dark-inner: #00000066; /* color */
+  --shadow-color-dark-focus-outer: #7c7cff4d; /* color */
+  --shadow-color-dark-glow-ai: #7c7cfffc; /* AI element glow in dark mode */
+  --shadow-offset-y-xs: 1px; /* dimension */
+  --shadow-offset-y-sm: 2px; /* dimension */
+  --shadow-offset-y-md: 4px; /* dimension */
+  --shadow-offset-y-lg: 10px; /* dimension */
+  --shadow-offset-y-xl: 20px; /* dimension */
+  --shadow-offset-y-2xl: 25px; /* dimension */
+  --shadow-blur-xs: 2px; /* dimension */
+  --shadow-blur-sm: 4px; /* dimension */
+  --shadow-blur-md: 8px; /* dimension */
+  --shadow-blur-lg: 16px; /* dimension */
+  --shadow-blur-xl: 25px; /* dimension */
+  --shadow-blur-2xl: 50px; /* dimension */
+  --shadow-spread-xs: 0px; /* dimension */
+  --shadow-spread-sm: -1px; /* dimension */
+  --shadow-spread-md: -2px; /* dimension */
+  --shadow-spread-lg: -3px; /* dimension */
+  --shadow-spread-xl: -5px; /* dimension */
+  --shadow-spread-2xl: -12px; /* dimension */
+  --shadow-offset-x-xs: 1px; /* dimension */
+  --shadow-offset-x-sm: 2px; /* dimension */
+  --shadow-offset-x-md: 4px; /* dimension */
+  --shadow-offset-x-lg: 10px; /* dimension */
+  --shadow-offset-x-xl: 20px; /* dimension */
+  --shadow-offset-x-2xl: 25px; /* dimension */
+  --breakpoint-xs: 320px; /* Small phones */
+  --breakpoint-sm: 640px; /* Large phones */
+  --breakpoint-md: 768px; /* Tablets */
+  --breakpoint-lg: 1024px; /* Small laptops */
+  --breakpoint-xl: 1280px; /* Desktops */
+  --breakpoint-2xl: 1536px; /* Large desktops */
+  --grid-columns-xs: 4px; /* dimension */
+  --grid-columns-sm: 4px; /* dimension */
+  --grid-columns-md: 8px; /* dimension */
+  --grid-columns-lg: 12px; /* dimension */
+  --grid-columns-xl: 12px; /* dimension */
+  --grid-columns-2xl: 12px; /* dimension */
+  --grid-gutter-xs: 16px; /* dimension */
+  --grid-gutter-sm: 16px; /* dimension */
+  --grid-gutter-md: 24px; /* dimension */
+  --grid-gutter-lg: 24px; /* dimension */
+  --grid-gutter-xl: 24px; /* dimension */
+  --grid-gutter-2xl: 32px; /* dimension */
+  --grid-container-sm: 640px; /* dimension */
+  --grid-container-md: 768px; /* dimension */
+  --grid-container-lg: 1024px; /* dimension */
+  --grid-container-xl: 1280px; /* dimension */
+  --grid-container-2xl: 1440px; /* dimension */
+  --grid-container-xs: 320px; /* dimension */
+  --grid-margin-xs: 16px; /* dimension */
+  --grid-margin-sm: 24px; /* dimension */
+  --grid-margin-md: 32px; /* dimension */
+  --grid-margin-lg: 48px; /* dimension */
+  --grid-margin-xl: 64px; /* dimension */
+  --grid-margin-2xl: 80px; /* dimension */
+  --icon-size-xs: 12px; /* dimension */
+  --icon-size-sm: 16px; /* dimension */
+  --icon-size-md: 20px; /* dimension */
+  --icon-size-lg: 24px; /* dimension */
+  --icon-size-xl: 32px; /* dimension */
+  --icon-size-2xl: 48px; /* dimension */
+  --avatar-size-xs: 24px; /* dimension */
+  --avatar-size-sm: 32px; /* dimension */
+  --avatar-size-md: 40px; /* dimension */
+  --avatar-size-lg: 48px; /* dimension */
+  --avatar-size-xl: 64px; /* dimension */
+  --avatar-size-2xl: 96px; /* dimension */
+  --touch-target-comfortable: 48px; /* Android / mobile primary */
+  --touch-target-min: 44px; /* WCAG iOS minimum */
+  --touch-target-large: 56px; /* WCAG iOS minimum */
+  --touch-target-dense: 32px; /* dimension */
+  --typography-styles-2xs-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xs-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-2xs-light-font-style: normal;
+  --typography-styles-2xs-light-font-size: var(--typography-font-size-2xs);
+  --typography-styles-2xs-light-line-height: var(--typography-line-height-2xs);
+  --typography-styles-2xs-light-letter-spacing: var(--typography-letter-spacing-wider);
+  --typography-styles-2xs-light-paragraph-spacing: 0;
+  --typography-styles-2xs-light-paragraph-indent: 0;
+  --typography-styles-2xs-light-text-decoration: NONE;
+  --typography-styles-2xs-light-text-case: ORIGINAL;
+  --typography-styles-2xs-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xs-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-2xs-regular-font-style: normal;
+  --typography-styles-2xs-regular-font-size: var(--typography-font-size-2xs);
+  --typography-styles-2xs-regular-line-height: var(--typography-line-height-2xs);
+  --typography-styles-2xs-regular-letter-spacing: var(--typography-letter-spacing-wider);
+  --typography-styles-2xs-regular-paragraph-spacing: 0;
+  --typography-styles-2xs-regular-paragraph-indent: 0;
+  --typography-styles-2xs-regular-text-decoration: NONE;
+  --typography-styles-2xs-regular-text-case: ORIGINAL;
+  --typography-styles-2xs-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xs-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-2xs-medium-font-style: normal;
+  --typography-styles-2xs-medium-font-size: var(--typography-font-size-2xs);
+  --typography-styles-2xs-medium-line-height: var(--typography-line-height-2xs);
+  --typography-styles-2xs-medium-letter-spacing: var(--typography-letter-spacing-wide);
+  --typography-styles-2xs-medium-paragraph-spacing: 0;
+  --typography-styles-2xs-medium-paragraph-indent: 0;
+  --typography-styles-2xs-medium-text-decoration: NONE;
+  --typography-styles-2xs-medium-text-case: ORIGINAL;
+  --typography-styles-2xs-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xs-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-2xs-semibold-font-style: normal;
+  --typography-styles-2xs-semibold-font-size: var(--typography-font-size-2xs);
+  --typography-styles-2xs-semibold-line-height: var(--typography-line-height-2xs);
+  --typography-styles-2xs-semibold-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-2xs-semibold-paragraph-spacing: 0;
+  --typography-styles-2xs-semibold-paragraph-indent: 0;
+  --typography-styles-2xs-semibold-text-decoration: NONE;
+  --typography-styles-2xs-semibold-text-case: ORIGINAL;
+  --typography-styles-2xs-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xs-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-2xs-bold-font-style: normal;
+  --typography-styles-2xs-bold-font-size: var(--typography-font-size-2xs);
+  --typography-styles-2xs-bold-line-height: var(--typography-line-height-2xs);
+  --typography-styles-2xs-bold-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-2xs-bold-paragraph-spacing: 0;
+  --typography-styles-2xs-bold-paragraph-indent: 0;
+  --typography-styles-2xs-bold-text-decoration: NONE;
+  --typography-styles-2xs-bold-text-case: ORIGINAL;
+  --typography-styles-xs-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-xs-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-xs-light-font-style: normal;
+  --typography-styles-xs-light-font-size: var(--typography-font-size-xs);
+  --typography-styles-xs-light-line-height: var(--typography-line-height-xs);
+  --typography-styles-xs-light-letter-spacing: var(--typography-letter-spacing-wider);
+  --typography-styles-xs-light-paragraph-spacing: 0;
+  --typography-styles-xs-light-paragraph-indent: 0;
+  --typography-styles-xs-light-text-decoration: NONE;
+  --typography-styles-xs-light-text-case: ORIGINAL;
+  --typography-styles-xs-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-xs-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-xs-regular-font-style: normal;
+  --typography-styles-xs-regular-font-size: var(--typography-font-size-xs);
+  --typography-styles-xs-regular-line-height: var(--typography-line-height-xs);
+  --typography-styles-xs-regular-letter-spacing: var(--typography-letter-spacing-wider);
+  --typography-styles-xs-regular-paragraph-spacing: 0;
+  --typography-styles-xs-regular-paragraph-indent: 0;
+  --typography-styles-xs-regular-text-decoration: NONE;
+  --typography-styles-xs-regular-text-case: ORIGINAL;
+  --typography-styles-xs-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-xs-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-xs-medium-font-style: normal;
+  --typography-styles-xs-medium-font-size: var(--typography-font-size-xs);
+  --typography-styles-xs-medium-line-height: var(--typography-line-height-xs);
+  --typography-styles-xs-medium-letter-spacing: var(--typography-letter-spacing-wide);
+  --typography-styles-xs-medium-paragraph-spacing: 0;
+  --typography-styles-xs-medium-paragraph-indent: 0;
+  --typography-styles-xs-medium-text-decoration: NONE;
+  --typography-styles-xs-medium-text-case: ORIGINAL;
+  --typography-styles-xs-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-xs-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-xs-semibold-font-style: normal;
+  --typography-styles-xs-semibold-font-size: var(--typography-font-size-xs);
+  --typography-styles-xs-semibold-line-height: var(--typography-line-height-xs);
+  --typography-styles-xs-semibold-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-xs-semibold-paragraph-spacing: 0;
+  --typography-styles-xs-semibold-paragraph-indent: 0;
+  --typography-styles-xs-semibold-text-decoration: NONE;
+  --typography-styles-xs-semibold-text-case: ORIGINAL;
+  --typography-styles-xs-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-xs-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-xs-bold-font-style: normal;
+  --typography-styles-xs-bold-font-size: var(--typography-font-size-xs);
+  --typography-styles-xs-bold-line-height: var(--typography-line-height-xs);
+  --typography-styles-xs-bold-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-xs-bold-paragraph-spacing: 0;
+  --typography-styles-xs-bold-paragraph-indent: 0;
+  --typography-styles-xs-bold-text-decoration: NONE;
+  --typography-styles-xs-bold-text-case: ORIGINAL;
+  --typography-styles-sm-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-sm-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-sm-light-font-style: normal;
+  --typography-styles-sm-light-font-size: var(--typography-font-size-sm);
+  --typography-styles-sm-light-line-height: var(--typography-line-height-sm);
+  --typography-styles-sm-light-letter-spacing: var(--typography-letter-spacing-wide);
+  --typography-styles-sm-light-paragraph-spacing: 0;
+  --typography-styles-sm-light-paragraph-indent: 0;
+  --typography-styles-sm-light-text-decoration: NONE;
+  --typography-styles-sm-light-text-case: ORIGINAL;
+  --typography-styles-sm-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-sm-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-sm-regular-font-style: normal;
+  --typography-styles-sm-regular-font-size: var(--typography-font-size-sm);
+  --typography-styles-sm-regular-line-height: var(--typography-line-height-sm);
+  --typography-styles-sm-regular-letter-spacing: var(--typography-letter-spacing-wide);
+  --typography-styles-sm-regular-paragraph-spacing: 0;
+  --typography-styles-sm-regular-paragraph-indent: 0;
+  --typography-styles-sm-regular-text-decoration: NONE;
+  --typography-styles-sm-regular-text-case: ORIGINAL;
+  --typography-styles-sm-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-sm-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-sm-medium-font-style: normal;
+  --typography-styles-sm-medium-font-size: var(--typography-font-size-sm);
+  --typography-styles-sm-medium-line-height: var(--typography-line-height-sm);
+  --typography-styles-sm-medium-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-sm-medium-paragraph-spacing: 0;
+  --typography-styles-sm-medium-paragraph-indent: 0;
+  --typography-styles-sm-medium-text-decoration: NONE;
+  --typography-styles-sm-medium-text-case: ORIGINAL;
+  --typography-styles-sm-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-sm-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-sm-semibold-font-style: normal;
+  --typography-styles-sm-semibold-font-size: var(--typography-font-size-sm);
+  --typography-styles-sm-semibold-line-height: var(--typography-line-height-sm);
+  --typography-styles-sm-semibold-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-sm-semibold-paragraph-spacing: 0;
+  --typography-styles-sm-semibold-paragraph-indent: 0;
+  --typography-styles-sm-semibold-text-decoration: NONE;
+  --typography-styles-sm-semibold-text-case: ORIGINAL;
+  --typography-styles-sm-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-sm-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-sm-bold-font-style: normal;
+  --typography-styles-sm-bold-font-size: var(--typography-font-size-sm);
+  --typography-styles-sm-bold-line-height: var(--typography-line-height-sm);
+  --typography-styles-sm-bold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-sm-bold-paragraph-spacing: 0;
+  --typography-styles-sm-bold-paragraph-indent: 0;
+  --typography-styles-sm-bold-text-decoration: NONE;
+  --typography-styles-sm-bold-text-case: ORIGINAL;
+  --typography-styles-base-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-base-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-base-light-font-style: normal;
+  --typography-styles-base-light-font-size: var(--typography-font-size-base);
+  --typography-styles-base-light-line-height: var(--typography-line-height-base);
+  --typography-styles-base-light-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-base-light-paragraph-spacing: 0;
+  --typography-styles-base-light-paragraph-indent: 0;
+  --typography-styles-base-light-text-decoration: NONE;
+  --typography-styles-base-light-text-case: ORIGINAL;
+  --typography-styles-base-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-base-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-base-regular-font-style: normal;
+  --typography-styles-base-regular-font-size: var(--typography-font-size-base);
+  --typography-styles-base-regular-line-height: var(--typography-line-height-base);
+  --typography-styles-base-regular-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-base-regular-paragraph-spacing: 0;
+  --typography-styles-base-regular-paragraph-indent: 0;
+  --typography-styles-base-regular-text-decoration: NONE;
+  --typography-styles-base-regular-text-case: ORIGINAL;
+  --typography-styles-base-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-base-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-base-medium-font-style: normal;
+  --typography-styles-base-medium-font-size: var(--typography-font-size-base);
+  --typography-styles-base-medium-line-height: var(--typography-line-height-base);
+  --typography-styles-base-medium-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-base-medium-paragraph-spacing: 0;
+  --typography-styles-base-medium-paragraph-indent: 0;
+  --typography-styles-base-medium-text-decoration: NONE;
+  --typography-styles-base-medium-text-case: ORIGINAL;
+  --typography-styles-base-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-base-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-base-semibold-font-style: normal;
+  --typography-styles-base-semibold-font-size: var(--typography-font-size-base);
+  --typography-styles-base-semibold-line-height: var(--typography-line-height-base);
+  --typography-styles-base-semibold-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-base-semibold-paragraph-spacing: 0;
+  --typography-styles-base-semibold-paragraph-indent: 0;
+  --typography-styles-base-semibold-text-decoration: NONE;
+  --typography-styles-base-semibold-text-case: ORIGINAL;
+  --typography-styles-base-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-base-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-base-bold-font-style: normal;
+  --typography-styles-base-bold-font-size: var(--typography-font-size-base);
+  --typography-styles-base-bold-line-height: var(--typography-line-height-base);
+  --typography-styles-base-bold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-base-bold-paragraph-spacing: 0;
+  --typography-styles-base-bold-paragraph-indent: 0;
+  --typography-styles-base-bold-text-decoration: NONE;
+  --typography-styles-base-bold-text-case: ORIGINAL;
+  --typography-styles-md-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-md-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-md-light-font-style: normal;
+  --typography-styles-md-light-font-size: var(--typography-font-size-md);
+  --typography-styles-md-light-line-height: var(--typography-line-height-md);
+  --typography-styles-md-light-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-md-light-paragraph-spacing: 0;
+  --typography-styles-md-light-paragraph-indent: 0;
+  --typography-styles-md-light-text-decoration: NONE;
+  --typography-styles-md-light-text-case: ORIGINAL;
+  --typography-styles-md-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-md-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-md-regular-font-style: normal;
+  --typography-styles-md-regular-font-size: var(--typography-font-size-md);
+  --typography-styles-md-regular-line-height: var(--typography-line-height-md);
+  --typography-styles-md-regular-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-md-regular-paragraph-spacing: 0;
+  --typography-styles-md-regular-paragraph-indent: 0;
+  --typography-styles-md-regular-text-decoration: NONE;
+  --typography-styles-md-regular-text-case: ORIGINAL;
+  --typography-styles-md-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-md-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-md-medium-font-style: normal;
+  --typography-styles-md-medium-font-size: var(--typography-font-size-md);
+  --typography-styles-md-medium-line-height: var(--typography-line-height-md);
+  --typography-styles-md-medium-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-md-medium-paragraph-spacing: 0;
+  --typography-styles-md-medium-paragraph-indent: 0;
+  --typography-styles-md-medium-text-decoration: NONE;
+  --typography-styles-md-medium-text-case: ORIGINAL;
+  --typography-styles-md-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-md-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-md-semibold-font-style: normal;
+  --typography-styles-md-semibold-font-size: var(--typography-font-size-md);
+  --typography-styles-md-semibold-line-height: var(--typography-line-height-md);
+  --typography-styles-md-semibold-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-md-semibold-paragraph-spacing: 0;
+  --typography-styles-md-semibold-paragraph-indent: 0;
+  --typography-styles-md-semibold-text-decoration: NONE;
+  --typography-styles-md-semibold-text-case: ORIGINAL;
+  --typography-styles-md-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-md-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-md-bold-font-style: normal;
+  --typography-styles-md-bold-font-size: var(--typography-font-size-md);
+  --typography-styles-md-bold-line-height: var(--typography-line-height-md);
+  --typography-styles-md-bold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-md-bold-paragraph-spacing: 0;
+  --typography-styles-md-bold-paragraph-indent: 0;
+  --typography-styles-md-bold-text-decoration: NONE;
+  --typography-styles-md-bold-text-case: ORIGINAL;
+  --typography-styles-lg-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-lg-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-lg-light-font-style: normal;
+  --typography-styles-lg-light-font-size: var(--typography-font-size-lg);
+  --typography-styles-lg-light-line-height: var(--typography-line-height-lg);
+  --typography-styles-lg-light-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-lg-light-paragraph-spacing: 0;
+  --typography-styles-lg-light-paragraph-indent: 0;
+  --typography-styles-lg-light-text-decoration: NONE;
+  --typography-styles-lg-light-text-case: ORIGINAL;
+  --typography-styles-lg-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-lg-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-lg-regular-font-style: normal;
+  --typography-styles-lg-regular-font-size: var(--typography-font-size-lg);
+  --typography-styles-lg-regular-line-height: var(--typography-line-height-lg);
+  --typography-styles-lg-regular-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-lg-regular-paragraph-spacing: 0;
+  --typography-styles-lg-regular-paragraph-indent: 0;
+  --typography-styles-lg-regular-text-decoration: NONE;
+  --typography-styles-lg-regular-text-case: ORIGINAL;
+  --typography-styles-lg-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-lg-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-lg-medium-font-style: normal;
+  --typography-styles-lg-medium-font-size: var(--typography-font-size-lg);
+  --typography-styles-lg-medium-line-height: var(--typography-line-height-lg);
+  --typography-styles-lg-medium-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-lg-medium-paragraph-spacing: 0;
+  --typography-styles-lg-medium-paragraph-indent: 0;
+  --typography-styles-lg-medium-text-decoration: NONE;
+  --typography-styles-lg-medium-text-case: ORIGINAL;
+  --typography-styles-lg-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-lg-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-lg-semibold-font-style: normal;
+  --typography-styles-lg-semibold-font-size: var(--typography-font-size-lg);
+  --typography-styles-lg-semibold-line-height: var(--typography-line-height-lg);
+  --typography-styles-lg-semibold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-lg-semibold-paragraph-spacing: 0;
+  --typography-styles-lg-semibold-paragraph-indent: 0;
+  --typography-styles-lg-semibold-text-decoration: NONE;
+  --typography-styles-lg-semibold-text-case: ORIGINAL;
+  --typography-styles-lg-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-lg-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-lg-bold-font-style: normal;
+  --typography-styles-lg-bold-font-size: var(--typography-font-size-lg);
+  --typography-styles-lg-bold-line-height: var(--typography-line-height-lg);
+  --typography-styles-lg-bold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-lg-bold-paragraph-spacing: 0;
+  --typography-styles-lg-bold-paragraph-indent: 0;
+  --typography-styles-lg-bold-text-decoration: NONE;
+  --typography-styles-lg-bold-text-case: ORIGINAL;
+  --typography-styles-xl-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-xl-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-xl-light-font-style: normal;
+  --typography-styles-xl-light-font-size: var(--typography-font-size-xl);
+  --typography-styles-xl-light-line-height: var(--typography-line-height-xl);
+  --typography-styles-xl-light-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-xl-light-paragraph-spacing: 0;
+  --typography-styles-xl-light-paragraph-indent: 0;
+  --typography-styles-xl-light-text-decoration: NONE;
+  --typography-styles-xl-light-text-case: ORIGINAL;
+  --typography-styles-xl-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-xl-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-xl-regular-font-style: normal;
+  --typography-styles-xl-regular-font-size: var(--typography-font-size-xl);
+  --typography-styles-xl-regular-line-height: var(--typography-line-height-xl);
+  --typography-styles-xl-regular-letter-spacing: var(--typography-letter-spacing-normal);
+  --typography-styles-xl-regular-paragraph-spacing: 0;
+  --typography-styles-xl-regular-paragraph-indent: 0;
+  --typography-styles-xl-regular-text-decoration: NONE;
+  --typography-styles-xl-regular-text-case: ORIGINAL;
+  --typography-styles-xl-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-xl-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-xl-medium-font-style: normal;
+  --typography-styles-xl-medium-font-size: var(--typography-font-size-xl);
+  --typography-styles-xl-medium-line-height: var(--typography-line-height-xl);
+  --typography-styles-xl-medium-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-xl-medium-paragraph-spacing: 0;
+  --typography-styles-xl-medium-paragraph-indent: 0;
+  --typography-styles-xl-medium-text-decoration: NONE;
+  --typography-styles-xl-medium-text-case: ORIGINAL;
+  --typography-styles-xl-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-xl-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-xl-semibold-font-style: normal;
+  --typography-styles-xl-semibold-font-size: var(--typography-font-size-xl);
+  --typography-styles-xl-semibold-line-height: var(--typography-line-height-xl);
+  --typography-styles-xl-semibold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-xl-semibold-paragraph-spacing: 0;
+  --typography-styles-xl-semibold-paragraph-indent: 0;
+  --typography-styles-xl-semibold-text-decoration: NONE;
+  --typography-styles-xl-semibold-text-case: ORIGINAL;
+  --typography-styles-xl-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-xl-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-xl-bold-font-style: normal;
+  --typography-styles-xl-bold-font-size: var(--typography-font-size-xl);
+  --typography-styles-xl-bold-line-height: var(--typography-line-height-xl);
+  --typography-styles-xl-bold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-xl-bold-paragraph-spacing: 0;
+  --typography-styles-xl-bold-paragraph-indent: 0;
+  --typography-styles-xl-bold-text-decoration: NONE;
+  --typography-styles-xl-bold-text-case: ORIGINAL;
+  --typography-styles-2xl-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xl-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-2xl-light-font-style: normal;
+  --typography-styles-2xl-light-font-size: var(--typography-font-size-2xl);
+  --typography-styles-2xl-light-line-height: var(--typography-line-height-2xl);
+  --typography-styles-2xl-light-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-2xl-light-paragraph-spacing: 0;
+  --typography-styles-2xl-light-paragraph-indent: 0;
+  --typography-styles-2xl-light-text-decoration: NONE;
+  --typography-styles-2xl-light-text-case: ORIGINAL;
+  --typography-styles-2xl-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xl-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-2xl-regular-font-style: normal;
+  --typography-styles-2xl-regular-font-size: var(--typography-font-size-2xl);
+  --typography-styles-2xl-regular-line-height: var(--typography-line-height-2xl);
+  --typography-styles-2xl-regular-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-2xl-regular-paragraph-spacing: 0;
+  --typography-styles-2xl-regular-paragraph-indent: 0;
+  --typography-styles-2xl-regular-text-decoration: NONE;
+  --typography-styles-2xl-regular-text-case: ORIGINAL;
+  --typography-styles-2xl-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xl-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-2xl-medium-font-style: normal;
+  --typography-styles-2xl-medium-font-size: var(--typography-font-size-2xl);
+  --typography-styles-2xl-medium-line-height: var(--typography-line-height-2xl);
+  --typography-styles-2xl-medium-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-2xl-medium-paragraph-spacing: 0;
+  --typography-styles-2xl-medium-paragraph-indent: 0;
+  --typography-styles-2xl-medium-text-decoration: NONE;
+  --typography-styles-2xl-medium-text-case: ORIGINAL;
+  --typography-styles-2xl-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xl-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-2xl-semibold-font-style: normal;
+  --typography-styles-2xl-semibold-font-size: var(--typography-font-size-2xl);
+  --typography-styles-2xl-semibold-line-height: var(--typography-line-height-2xl);
+  --typography-styles-2xl-semibold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-2xl-semibold-paragraph-spacing: 0;
+  --typography-styles-2xl-semibold-paragraph-indent: 0;
+  --typography-styles-2xl-semibold-text-decoration: NONE;
+  --typography-styles-2xl-semibold-text-case: ORIGINAL;
+  --typography-styles-2xl-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-2xl-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-2xl-bold-font-style: normal;
+  --typography-styles-2xl-bold-font-size: var(--typography-font-size-2xl);
+  --typography-styles-2xl-bold-line-height: var(--typography-line-height-2xl);
+  --typography-styles-2xl-bold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-2xl-bold-paragraph-spacing: 0;
+  --typography-styles-2xl-bold-paragraph-indent: 0;
+  --typography-styles-2xl-bold-text-decoration: NONE;
+  --typography-styles-2xl-bold-text-case: ORIGINAL;
+  --typography-styles-3xl-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-3xl-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-3xl-light-font-style: normal;
+  --typography-styles-3xl-light-font-size: var(--typography-font-size-3xl);
+  --typography-styles-3xl-light-line-height: var(--typography-line-height-3xl);
+  --typography-styles-3xl-light-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-3xl-light-paragraph-spacing: 0;
+  --typography-styles-3xl-light-paragraph-indent: 0;
+  --typography-styles-3xl-light-text-decoration: NONE;
+  --typography-styles-3xl-light-text-case: ORIGINAL;
+  --typography-styles-3xl-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-3xl-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-3xl-regular-font-style: normal;
+  --typography-styles-3xl-regular-font-size: var(--typography-font-size-3xl);
+  --typography-styles-3xl-regular-line-height: var(--typography-line-height-3xl);
+  --typography-styles-3xl-regular-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-3xl-regular-paragraph-spacing: 0;
+  --typography-styles-3xl-regular-paragraph-indent: 0;
+  --typography-styles-3xl-regular-text-decoration: NONE;
+  --typography-styles-3xl-regular-text-case: ORIGINAL;
+  --typography-styles-3xl-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-3xl-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-3xl-medium-font-style: normal;
+  --typography-styles-3xl-medium-font-size: var(--typography-font-size-3xl);
+  --typography-styles-3xl-medium-line-height: var(--typography-line-height-3xl);
+  --typography-styles-3xl-medium-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-3xl-medium-paragraph-spacing: 0;
+  --typography-styles-3xl-medium-paragraph-indent: 0;
+  --typography-styles-3xl-medium-text-decoration: NONE;
+  --typography-styles-3xl-medium-text-case: ORIGINAL;
+  --typography-styles-3xl-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-3xl-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-3xl-semibold-font-style: normal;
+  --typography-styles-3xl-semibold-font-size: var(--typography-font-size-3xl);
+  --typography-styles-3xl-semibold-line-height: var(--typography-line-height-3xl);
+  --typography-styles-3xl-semibold-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-3xl-semibold-paragraph-spacing: 0;
+  --typography-styles-3xl-semibold-paragraph-indent: 0;
+  --typography-styles-3xl-semibold-text-decoration: NONE;
+  --typography-styles-3xl-semibold-text-case: ORIGINAL;
+  --typography-styles-3xl-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-3xl-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-3xl-bold-font-style: normal;
+  --typography-styles-3xl-bold-font-size: var(--typography-font-size-3xl);
+  --typography-styles-3xl-bold-line-height: var(--typography-line-height-3xl);
+  --typography-styles-3xl-bold-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-3xl-bold-paragraph-spacing: 0;
+  --typography-styles-3xl-bold-paragraph-indent: 0;
+  --typography-styles-3xl-bold-text-decoration: NONE;
+  --typography-styles-3xl-bold-text-case: ORIGINAL;
+  --typography-styles-4xl-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-4xl-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-4xl-light-font-style: normal;
+  --typography-styles-4xl-light-font-size: var(--typography-font-size-4xl);
+  --typography-styles-4xl-light-line-height: var(--typography-line-height-4xl);
+  --typography-styles-4xl-light-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-4xl-light-paragraph-spacing: 0;
+  --typography-styles-4xl-light-paragraph-indent: 0;
+  --typography-styles-4xl-light-text-decoration: NONE;
+  --typography-styles-4xl-light-text-case: ORIGINAL;
+  --typography-styles-4xl-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-4xl-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-4xl-regular-font-style: normal;
+  --typography-styles-4xl-regular-font-size: var(--typography-font-size-4xl);
+  --typography-styles-4xl-regular-line-height: var(--typography-line-height-4xl);
+  --typography-styles-4xl-regular-letter-spacing: var(--typography-letter-spacing-normal-tight);
+  --typography-styles-4xl-regular-paragraph-spacing: 0;
+  --typography-styles-4xl-regular-paragraph-indent: 0;
+  --typography-styles-4xl-regular-text-decoration: NONE;
+  --typography-styles-4xl-regular-text-case: ORIGINAL;
+  --typography-styles-4xl-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-4xl-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-4xl-medium-font-style: normal;
+  --typography-styles-4xl-medium-font-size: var(--typography-font-size-4xl);
+  --typography-styles-4xl-medium-line-height: var(--typography-line-height-4xl);
+  --typography-styles-4xl-medium-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-4xl-medium-paragraph-spacing: 0;
+  --typography-styles-4xl-medium-paragraph-indent: 0;
+  --typography-styles-4xl-medium-text-decoration: NONE;
+  --typography-styles-4xl-medium-text-case: ORIGINAL;
+  --typography-styles-4xl-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-4xl-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-4xl-semibold-font-style: normal;
+  --typography-styles-4xl-semibold-font-size: var(--typography-font-size-4xl);
+  --typography-styles-4xl-semibold-line-height: var(--typography-line-height-4xl);
+  --typography-styles-4xl-semibold-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-4xl-semibold-paragraph-spacing: 0;
+  --typography-styles-4xl-semibold-paragraph-indent: 0;
+  --typography-styles-4xl-semibold-text-decoration: NONE;
+  --typography-styles-4xl-semibold-text-case: ORIGINAL;
+  --typography-styles-4xl-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-4xl-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-4xl-bold-font-style: normal;
+  --typography-styles-4xl-bold-font-size: var(--typography-font-size-4xl);
+  --typography-styles-4xl-bold-line-height: var(--typography-line-height-4xl);
+  --typography-styles-4xl-bold-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-4xl-bold-paragraph-spacing: 0;
+  --typography-styles-4xl-bold-paragraph-indent: 0;
+  --typography-styles-4xl-bold-text-decoration: NONE;
+  --typography-styles-4xl-bold-text-case: ORIGINAL;
+  --typography-styles-5xl-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-5xl-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-5xl-light-font-style: normal;
+  --typography-styles-5xl-light-font-size: var(--typography-font-size-5xl);
+  --typography-styles-5xl-light-line-height: var(--typography-line-height-5xl);
+  --typography-styles-5xl-light-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-5xl-light-paragraph-spacing: 0;
+  --typography-styles-5xl-light-paragraph-indent: 0;
+  --typography-styles-5xl-light-text-decoration: NONE;
+  --typography-styles-5xl-light-text-case: ORIGINAL;
+  --typography-styles-5xl-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-5xl-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-5xl-regular-font-style: normal;
+  --typography-styles-5xl-regular-font-size: var(--typography-font-size-5xl);
+  --typography-styles-5xl-regular-line-height: var(--typography-line-height-5xl);
+  --typography-styles-5xl-regular-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-5xl-regular-paragraph-spacing: 0;
+  --typography-styles-5xl-regular-paragraph-indent: 0;
+  --typography-styles-5xl-regular-text-decoration: NONE;
+  --typography-styles-5xl-regular-text-case: ORIGINAL;
+  --typography-styles-5xl-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-5xl-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-5xl-medium-font-style: normal;
+  --typography-styles-5xl-medium-font-size: var(--typography-font-size-5xl);
+  --typography-styles-5xl-medium-line-height: var(--typography-line-height-5xl);
+  --typography-styles-5xl-medium-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-5xl-medium-paragraph-spacing: 0;
+  --typography-styles-5xl-medium-paragraph-indent: 0;
+  --typography-styles-5xl-medium-text-decoration: NONE;
+  --typography-styles-5xl-medium-text-case: ORIGINAL;
+  --typography-styles-5xl-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-5xl-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-5xl-semibold-font-style: normal;
+  --typography-styles-5xl-semibold-font-size: var(--typography-font-size-5xl);
+  --typography-styles-5xl-semibold-line-height: var(--typography-line-height-5xl);
+  --typography-styles-5xl-semibold-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-5xl-semibold-paragraph-spacing: 0;
+  --typography-styles-5xl-semibold-paragraph-indent: 0;
+  --typography-styles-5xl-semibold-text-decoration: NONE;
+  --typography-styles-5xl-semibold-text-case: ORIGINAL;
+  --typography-styles-5xl-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-5xl-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-5xl-bold-font-style: normal;
+  --typography-styles-5xl-bold-font-size: var(--typography-font-size-5xl);
+  --typography-styles-5xl-bold-line-height: var(--typography-line-height-5xl);
+  --typography-styles-5xl-bold-letter-spacing: var(--typography-letter-spacing-tighter-1);
+  --typography-styles-5xl-bold-paragraph-spacing: 0;
+  --typography-styles-5xl-bold-paragraph-indent: 0;
+  --typography-styles-5xl-bold-text-decoration: NONE;
+  --typography-styles-5xl-bold-text-case: ORIGINAL;
+  --typography-styles-6xl-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-6xl-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-6xl-light-font-style: normal;
+  --typography-styles-6xl-light-font-size: var(--typography-font-size-6xl);
+  --typography-styles-6xl-light-line-height: var(--typography-line-height-6xl);
+  --typography-styles-6xl-light-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-6xl-light-paragraph-spacing: 0;
+  --typography-styles-6xl-light-paragraph-indent: 0;
+  --typography-styles-6xl-light-text-decoration: NONE;
+  --typography-styles-6xl-light-text-case: ORIGINAL;
+  --typography-styles-6xl-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-6xl-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-6xl-regular-font-style: normal;
+  --typography-styles-6xl-regular-font-size: var(--typography-font-size-6xl);
+  --typography-styles-6xl-regular-line-height: var(--typography-line-height-6xl);
+  --typography-styles-6xl-regular-letter-spacing: var(--typography-letter-spacing-tight);
+  --typography-styles-6xl-regular-paragraph-spacing: 0;
+  --typography-styles-6xl-regular-paragraph-indent: 0;
+  --typography-styles-6xl-regular-text-decoration: NONE;
+  --typography-styles-6xl-regular-text-case: ORIGINAL;
+  --typography-styles-6xl-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-6xl-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-6xl-medium-font-style: normal;
+  --typography-styles-6xl-medium-font-size: var(--typography-font-size-6xl);
+  --typography-styles-6xl-medium-line-height: var(--typography-line-height-6xl);
+  --typography-styles-6xl-medium-letter-spacing: var(--typography-letter-spacing-tighter-1);
+  --typography-styles-6xl-medium-paragraph-spacing: 0;
+  --typography-styles-6xl-medium-paragraph-indent: 0;
+  --typography-styles-6xl-medium-text-decoration: NONE;
+  --typography-styles-6xl-medium-text-case: ORIGINAL;
+  --typography-styles-6xl-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-6xl-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-6xl-semibold-font-style: normal;
+  --typography-styles-6xl-semibold-font-size: var(--typography-font-size-6xl);
+  --typography-styles-6xl-semibold-line-height: var(--typography-line-height-6xl);
+  --typography-styles-6xl-semibold-letter-spacing: var(--typography-letter-spacing-tighter-1);
+  --typography-styles-6xl-semibold-paragraph-spacing: 0;
+  --typography-styles-6xl-semibold-paragraph-indent: 0;
+  --typography-styles-6xl-semibold-text-decoration: NONE;
+  --typography-styles-6xl-semibold-text-case: ORIGINAL;
+  --typography-styles-6xl-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-6xl-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-6xl-bold-font-style: normal;
+  --typography-styles-6xl-bold-font-size: var(--typography-font-size-6xl);
+  --typography-styles-6xl-bold-line-height: var(--typography-line-height-6xl);
+  --typography-styles-6xl-bold-letter-spacing: var(--typography-letter-spacing-tighter-1);
+  --typography-styles-6xl-bold-paragraph-spacing: 0;
+  --typography-styles-6xl-bold-paragraph-indent: 0;
+  --typography-styles-6xl-bold-text-decoration: NONE;
+  --typography-styles-6xl-bold-text-case: ORIGINAL;
+  --typography-styles-7xl-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-7xl-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-7xl-light-font-style: normal;
+  --typography-styles-7xl-light-font-size: var(--typography-font-size-7xl);
+  --typography-styles-7xl-light-line-height: var(--typography-line-height-7xl);
+  --typography-styles-7xl-light-letter-spacing: var(--typography-letter-spacing-tighter-2);
+  --typography-styles-7xl-light-paragraph-spacing: 0;
+  --typography-styles-7xl-light-paragraph-indent: 0;
+  --typography-styles-7xl-light-text-decoration: NONE;
+  --typography-styles-7xl-light-text-case: ORIGINAL;
+  --typography-styles-7xl-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-7xl-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-7xl-regular-font-style: normal;
+  --typography-styles-7xl-regular-font-size: var(--typography-font-size-7xl);
+  --typography-styles-7xl-regular-line-height: var(--typography-line-height-7xl);
+  --typography-styles-7xl-regular-letter-spacing: var(--typography-letter-spacing-tighter-2);
+  --typography-styles-7xl-regular-paragraph-spacing: 0;
+  --typography-styles-7xl-regular-paragraph-indent: 0;
+  --typography-styles-7xl-regular-text-decoration: NONE;
+  --typography-styles-7xl-regular-text-case: ORIGINAL;
+  --typography-styles-7xl-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-7xl-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-7xl-medium-font-style: normal;
+  --typography-styles-7xl-medium-font-size: var(--typography-font-size-7xl);
+  --typography-styles-7xl-medium-line-height: var(--typography-line-height-7xl);
+  --typography-styles-7xl-medium-letter-spacing: var(--typography-letter-spacing-tighter-2);
+  --typography-styles-7xl-medium-paragraph-spacing: 0;
+  --typography-styles-7xl-medium-paragraph-indent: 0;
+  --typography-styles-7xl-medium-text-decoration: NONE;
+  --typography-styles-7xl-medium-text-case: ORIGINAL;
+  --typography-styles-7xl-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-7xl-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-7xl-semibold-font-style: normal;
+  --typography-styles-7xl-semibold-font-size: var(--typography-font-size-7xl);
+  --typography-styles-7xl-semibold-line-height: var(--typography-line-height-7xl);
+  --typography-styles-7xl-semibold-letter-spacing: var(--typography-letter-spacing-tighter-2);
+  --typography-styles-7xl-semibold-paragraph-spacing: 0;
+  --typography-styles-7xl-semibold-paragraph-indent: 0;
+  --typography-styles-7xl-semibold-text-decoration: NONE;
+  --typography-styles-7xl-semibold-text-case: ORIGINAL;
+  --typography-styles-7xl-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-7xl-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-7xl-bold-font-style: normal;
+  --typography-styles-7xl-bold-font-size: var(--typography-font-size-7xl);
+  --typography-styles-7xl-bold-line-height: var(--typography-line-height-7xl);
+  --typography-styles-7xl-bold-letter-spacing: var(--typography-letter-spacing-tighter-2);
+  --typography-styles-7xl-bold-paragraph-spacing: 0;
+  --typography-styles-7xl-bold-paragraph-indent: 0;
+  --typography-styles-7xl-bold-text-decoration: NONE;
+  --typography-styles-7xl-bold-text-case: ORIGINAL;
+  --typography-styles-8xl-light-font-family: var(--typography-font-family-primary);
+  --typography-styles-8xl-light-font-weight: var(--typography-font-weight-light);
+  --typography-styles-8xl-light-font-style: normal;
+  --typography-styles-8xl-light-font-size: var(--typography-font-size-8xl);
+  --typography-styles-8xl-light-line-height: var(--typography-line-height-8xl);
+  --typography-styles-8xl-light-letter-spacing: var(--typography-letter-spacing-tighter-2);
+  --typography-styles-8xl-light-paragraph-spacing: 0;
+  --typography-styles-8xl-light-paragraph-indent: 0;
+  --typography-styles-8xl-light-text-decoration: NONE;
+  --typography-styles-8xl-light-text-case: ORIGINAL;
+  --typography-styles-8xl-regular-font-family: var(--typography-font-family-primary);
+  --typography-styles-8xl-regular-font-weight: var(--typography-font-weight-regular);
+  --typography-styles-8xl-regular-font-style: normal;
+  --typography-styles-8xl-regular-font-size: var(--typography-font-size-8xl);
+  --typography-styles-8xl-regular-line-height: var(--typography-line-height-8xl);
+  --typography-styles-8xl-regular-letter-spacing: var(--typography-letter-spacing-tighter-2);
+  --typography-styles-8xl-regular-paragraph-spacing: 0;
+  --typography-styles-8xl-regular-paragraph-indent: 0;
+  --typography-styles-8xl-regular-text-decoration: NONE;
+  --typography-styles-8xl-regular-text-case: ORIGINAL;
+  --typography-styles-8xl-medium-font-family: var(--typography-font-family-primary);
+  --typography-styles-8xl-medium-font-weight: var(--typography-font-weight-medium);
+  --typography-styles-8xl-medium-font-style: normal;
+  --typography-styles-8xl-medium-font-size: var(--typography-font-size-8xl);
+  --typography-styles-8xl-medium-line-height: var(--typography-line-height-8xl);
+  --typography-styles-8xl-medium-letter-spacing: var(--typography-letter-spacing-tighter-3);
+  --typography-styles-8xl-medium-paragraph-spacing: 0;
+  --typography-styles-8xl-medium-paragraph-indent: 0;
+  --typography-styles-8xl-medium-text-decoration: NONE;
+  --typography-styles-8xl-medium-text-case: ORIGINAL;
+  --typography-styles-8xl-semibold-font-family: var(--typography-font-family-primary);
+  --typography-styles-8xl-semibold-font-weight: var(--typography-font-weight-semibold);
+  --typography-styles-8xl-semibold-font-style: normal;
+  --typography-styles-8xl-semibold-font-size: var(--typography-font-size-8xl);
+  --typography-styles-8xl-semibold-line-height: var(--typography-line-height-8xl);
+  --typography-styles-8xl-semibold-letter-spacing: var(--typography-letter-spacing-tighter-3);
+  --typography-styles-8xl-semibold-paragraph-spacing: 0;
+  --typography-styles-8xl-semibold-paragraph-indent: 0;
+  --typography-styles-8xl-semibold-text-decoration: NONE;
+  --typography-styles-8xl-semibold-text-case: ORIGINAL;
+  --typography-styles-8xl-bold-font-family: var(--typography-font-family-primary);
+  --typography-styles-8xl-bold-font-weight: var(--typography-font-weight-bold);
+  --typography-styles-8xl-bold-font-style: normal;
+  --typography-styles-8xl-bold-font-size: var(--typography-font-size-8xl);
+  --typography-styles-8xl-bold-line-height: var(--typography-line-height-8xl);
+  --typography-styles-8xl-bold-letter-spacing: var(--typography-letter-spacing-tighter-3);
+  --typography-styles-8xl-bold-paragraph-spacing: 0;
+  --typography-styles-8xl-bold-paragraph-indent: 0;
+  --typography-styles-8xl-bold-text-decoration: NONE;
+  --typography-styles-8xl-bold-text-case: ORIGINAL;
+  --effect-styles-shadow-xs: var(--shadow-offset-x-xs) var(--shadow-offset-y-xs) 2px var(--shadow-spread-xs) var(--shadow-xs); /* shadow */
+  --effect-styles-shadow-sm: var(--shadow-offset-x-sm) var(--shadow-offset-y-sm) 4px var(--shadow-spread-sm) var(--shadow-sm); /* shadow */
+  --effect-styles-shadow-md: var(--shadow-offset-x-md) var(--shadow-offset-y-md) 8px var(--shadow-spread-md) var(--shadow-md); /* shadow */
+  --effect-styles-shadow-lg: var(--shadow-offset-x-lg) var(--shadow-offset-y-lg) 16px var(--shadow-spread-lg) var(--shadow-lg); /* shadow */
+  --effect-styles-shadow-xl: var(--shadow-offset-x-xl) var(--shadow-offset-y-xl) 25px var(--shadow-spread-xl) var(--shadow-xl); /* shadow */
+  --effect-styles-shadow-2xl: var(--shadow-offset-x-2xl) var(--shadow-offset-y-2xl) 50px var(--shadow-spread-2xl) var(--shadow-2xl); /* shadow */
+  --effect-styles-shadow-inner: inset 0px 2px 4px 0px var(--shadow-inner); /* shadow */
+  --effect-styles-shadow-focus-outer: 0px 0px 0px 4px var(--shadow-focus-ring); /* shadow */
+  --effect-styles-shadow-glow-ai: 0px 0px 24px 0px var(--shadow-glow-ai); /* shadow */
+  --color-styles-gradient-2: [object Object],[object Object],[object Object],[object Object]; /* gradient */
+  --color-styles-gradient-1: [object Object],[object Object],[object Object],[object Object]; /* gradient */
+  --color-styles-component-dev-title: #ffbc47; /* color */
+  --color-styles-component-white: #ffffff; /* color */
+  --color-styles-component-border: #7b61ff; /* color */
+  --bg-default: var(--colors-neutral-0); /* App-level page background */
+  --bg-surface-1: var(--colors-neutral-25); /* Primary surface — cards, panels, modals */
+  --bg-surface-2: var(--colors-neutral-50); /* Secondary surface — sidebars */
+  --bg-surface-3: var(--colors-neutral-50); /* Tertiary surface — grouped rows */
+  --bg-surface-4: var(--colors-neutral-100); /* Dense UI, table rows */
+  --bg-surface-5: var(--colors-neutral-150); /* Dividers, skeleton backgrounds */
+  --bg-overlay: var(--shadow-color-light-md); /* Scrim behind modals */
+  --bg-input: var(--bg-surface-1); /* Input field background */
+  --bg-tooltip: var(--colors-neutral-900); /* Tooltip background */
+  --bg-modal: var(--bg-surface-1); /* Modal surface */
+  --bg-sidebar: var(--bg-surface-2); /* Sidebar / left nav */
+  --bg-hover: var(--bg-surface-4); /* Hover state overlay */
+  --bg-pressed: var(--bg-surface-5); /* Pressed state overlay */
+  --bg-selected: var(--colors-violet-100); /* Selected state */
+  --bg-disabled: var(--bg-surface-4); /* Disabled element background */
+  --bg-code: var(--bg-default); /* Code block background */
+  --bg-message-ai: var(--bg-surface-1); /* AI message bubble */
+  --bg-message-user: var(--bg-surface-4); /* User message bubble */
+  --text-primary: var(--colors-neutral-900); /* Primary body text */
+  --text-secondary: var(--colors-neutral-700); /* Secondary text */
+  --text-tertiary: var(--colors-neutral-600); /* Tertiary / metadata text */
+  --text-disabled: var(--colors-neutral-500); /* Disabled text */
+  --text-placeholder: var(--colors-neutral-600); /* Input placeholder */
+  --text-on-inverse: var(--colors-neutral-0); /* Text on inverted surfaces */
+  --text-on-primary: var(--colors-neutral-0); /* Text on primary action */
+  --text-on-accent: var(--colors-neutral-0); /* Text on accent */
+  --text-on-destructive: var(--colors-neutral-0); /* Text on destructive */
+  --text-accent: var(--colors-violet-700); /* Accent / brand text */
+  --text-link: var(--colors-sky-700); /* Hyperlink text */
+  --text-success: var(--colors-green-700); /* Success text */
+  --text-warning: var(--colors-amber-700); /* Warning text */
+  --text-error: var(--colors-red-700); /* Error text */
+  --text-info: var(--colors-sky-700); /* Info text */
+  --text-ai: var(--text-accent); /* AI accent text */
+  --text-code: var(--colors-neutral-900); /* Inline code text */
+  --icon-primary: var(--text-primary); /* Primary icon */
+  --icon-secondary: var(--text-secondary); /* Secondary icon */
+  --icon-tertiary: var(--text-tertiary); /* Tertiary icon */
+  --icon-on-primary: var(--text-on-primary); /* Icon on primary bg */
+  --icon-on-secondary: var(--colors-blue-500); /* Icon on secondary bg */
+  --icon-on-inverse: var(--text-on-inverse); /* Icon on inverse surface */
+  --icon-disabled: var(--text-disabled); /* Disabled icon */
+  --icon-accent: var(--text-accent); /* Accent icon */
+  --icon-link: var(--text-link); /* Link icon */
+  --icon-success: var(--text-success); /* Success icon */
+  --icon-warning: var(--text-warning); /* Warning icon */
+  --icon-error: var(--text-error); /* Error icon */
+  --icon-info: var(--text-info); /* Info icon */
+  --icon-ai: var(--text-ai); /* AI icon */
+  --border-subtle: var(--colors-neutral-150); /* Subtle dividers */
+  --border-default: var(--colors-neutral-200); /* Default border */
+  --border-strong: var(--colors-neutral-400); /* Strong border */
+  --border-hover: var(--colors-violet-500); /* Border on hover */
+  --border-focus: var(--colors-violet-500); /* Focus ring border */
+  --border-disabled: var(--border-subtle); /* Disabled border */
+  --border-error: var(--text-error); /* Error border */
+  --border-success: var(--text-success); /* Success border */
+  --border-warning: var(--text-warning); /* Warning border */
+  --border-info: var(--text-info); /* Info border */
+  --border-input: var(--border-default); /* Input resting border */
+  --border-input-focus: var(--border-focus); /* Input focused border */
+  --border-divider: var(--border-input); /* Section divider */
+  --action-primary-bg-default: var(--colors-blue-500); /* color */
+  --action-primary-bg-hover: var(--colors-blue-600); /* color */
+  --action-primary-bg-pressed: var(--colors-blue-700); /* color */
+  --action-primary-bg-focus: var(--colors-blue-500); /* color */
+  --action-primary-bg-disabled: var(--colors-neutral-300); /* color */
+  --action-primary-text-default: var(--colors-neutral-0); /* color */
+  --action-primary-text-hover: var(--colors-neutral-0); /* color */
+  --action-primary-text-pressed: var(--colors-neutral-0); /* color */
+  --action-primary-text-focus: var(--colors-neutral-0); /* color */
+  --action-primary-text-disabled: var(--colors-neutral-450); /* color */
+  --action-secondary-bg-default: var(--colors-neutral-0); /* color */
+  --action-secondary-text-default: var(--colors-blue-500); /* color */
+  --action-secondary-text-hover: var(--colors-blue-600); /* color */
+  --action-secondary-text-pressed: var(--colors-blue-700); /* color */
+  --action-secondary-text-focus: var(--colors-blue-500); /* color */
+  --action-secondary-text-disabled: var(--colors-neutral-450); /* color */
+  --action-secondary-border-default: var(--colors-blue-500); /* color */
+  --action-secondary-border-hover: var(--colors-blue-600); /* color */
+  --action-secondary-border-pressed: var(--colors-blue-700); /* color */
+  --action-secondary-border-disabled: var(--colors-neutral-450); /* color */
+  --action-secondary-icon-hover: var(--colors-blue-600); /* color */
+  --action-secondary-icon-default: var(--colors-blue-500); /* color */
+  --action-secondary-icon-disabled: var(--colors-neutral-450); /* color */
+  --action-secondary-icon-pressed: var(--colors-blue-700); /* color */
+  --action-secondary-icon-focus: var(--colors-blue-500); /* color */
+  --action-text-action-bg-default: var(--colors-neutral-0); /* color */
+  --action-text-action-bg-hover: var(--colors-neutral-50); /* color */
+  --action-text-action-bg-pressed: var(--colors-neutral-100); /* color */
+  --action-text-action-bg-focus: var(--colors-neutral-0); /* color */
+  --action-text-action-bg-disabled: var(--colors-neutral-0); /* color */
+  --action-text-action-text-default: var(--colors-blue-500); /* color */
+  --action-text-action-text-hover: var(--colors-blue-600); /* color */
+  --action-text-action-text-pressed: var(--colors-blue-700); /* color */
+  --action-text-action-text-focus: var(--colors-blue-500); /* color */
+  --action-text-action-text-disabled: var(--colors-neutral-400); /* color */
+  --action-text-action-border-pressed: var(--colors-blue-700); /* color */
+  --action-text-action-icon-focus: var(--colors-blue-500); /* color */
+  --action-text-action-icon-pressed: var(--colors-blue-700); /* color */
+  --action-text-action-icon-hover: var(--colors-blue-600); /* color */
+  --action-text-action-icon-disabled: var(--colors-neutral-450); /* color */
+  --action-text-action-icon-default: var(--colors-blue-500); /* color */
+  --action-destructive-bg-default: var(--colors-red-700); /* color */
+  --action-destructive-bg-hover: var(--colors-red-900); /* color */
+  --action-destructive-bg-pressed: var(--colors-red-900); /* color */
+  --action-destructive-bg-focus: var(--colors-red-700); /* color */
+  --action-destructive-bg-disabled: var(--colors-neutral-150); /* color */
+  --action-destructive-text-default: var(--colors-neutral-0); /* color */
+  --action-destructive-text-hover: var(--colors-neutral-0); /* color */
+  --action-destructive-text-pressed: var(--colors-neutral-0); /* color */
+  --action-destructive-text-focus: var(--colors-neutral-0); /* color */
+  --action-destructive-text-disabled: var(--colors-neutral-400); /* color */
+  --focus-ring-default: var(--colors-violet-700); /* Default focus ring */
+  --focus-ring-destructive: var(--colors-red-700); /* Destructive focus ring */
+  --focus-ring-offset: var(--colors-neutral-50); /* Focus ring offset bg */
+  --status-success-bg: var(--colors-green-50); /* Success bg subtle */
+  --status-success-bg-strong: var(--colors-green-100); /* Success bg strong */
+  --status-success-text: var(--text-success); /* Success text */
+  --status-success-icon: var(--status-success-text); /* Success icon */
+  --status-success-border: var(--status-success-text); /* Success border */
+  --status-warning-bg: var(--colors-amber-50); /* Warning bg subtle */
+  --status-warning-bg-strong: var(--colors-amber-100); /* Warning bg strong */
+  --status-warning-text: var(--text-warning); /* Warning text */
+  --status-warning-icon: var(--status-warning-text); /* Warning icon */
+  --status-warning-border: var(--status-warning-text); /* Warning border */
+  --status-error-bg: var(--colors-red-50); /* Error bg subtle */
+  --status-error-bg-strong: var(--colors-red-100); /* Error bg strong */
+  --status-error-text: var(--text-error); /* Error text */
+  --status-error-icon: var(--status-error-text); /* Error icon */
+  --status-error-border: var(--status-error-text); /* Error border */
+  --status-info-bg: var(--colors-sky-50); /* Info bg subtle */
+  --status-info-bg-strong: var(--colors-sky-100); /* Info bg strong */
+  --status-info-text: var(--text-info); /* Info text */
+  --status-info-icon: var(--status-info-text); /* Info icon */
+  --status-info-border: var(--status-info-text); /* Info border */
+  --accent-violet-default: var(--colors-violet-500); /* Violet accent default */
+  --accent-violet-subtle: var(--colors-violet-50); /* Violet accent subtle bg */
+  --accent-violet-hover: var(--colors-violet-700); /* Violet accent hover */
+  --accent-violet-on-violet: var(--colors-neutral-0); /* On violet bg */
+  --accent-cyan-default: var(--colors-cyan-700); /* Cyan accent default */
+  --accent-cyan-subtle: var(--colors-cyan-50); /* Cyan accent subtle bg */
+  --accent-cyan-hover: var(--colors-cyan-700); /* Cyan accent hover */
+  --accent-cyan-on-cyan: var(--accent-violet-on-violet); /* On cyan bg */
+  --accent-magenta-default: var(--colors-magenta-500); /* Magenta accent default */
+  --accent-magenta-subtle: var(--colors-magenta-50); /* Magenta accent subtle bg */
+  --accent-magenta-hover: var(--colors-magenta-700); /* Magenta accent hover */
+  --accent-magenta-on-magenta: var(--accent-violet-on-violet); /* On magenta bg */
+  --ai-cursor: var(--colors-violet-700); /* AI streaming cursor */
+  --ai-agent: var(--colors-cyan-700); /* Agent identity color */
+  --ai-thinking-bg: var(--colors-violet-50); /* Thinking block bg */
+  --ai-thinking-border: var(--colors-violet-700); /* Thinking block border */
+  --ai-tool-bg: var(--colors-neutral-100); /* Tool execution bg */
+  --ai-tool-success: var(--colors-green-700); /* Tool success */
+  --ai-tool-error: var(--colors-red-700); /* Tool error */
+  --ai-citation-bg: var(--ai-thinking-bg); /* Citation chip bg */
+  --ai-citation-border: var(--ai-cursor); /* Citation chip border */
+  --ai-glow: var(--colors-violet-500); /* AI glow — same both modes */
+  --typography-display-lg: var(--typography-font-size-6xl); /* Display large — hero (60px) */
+  --typography-display-sm: var(--typography-font-size-5xl); /* Display small — sub-hero (48px) */
+  --typography-heading-h1: var(--typography-font-size-4xl); /* H1 page title (36px) */
+  --typography-heading-h2: var(--typography-font-size-3xl); /* H2 section header (28px) */
+  --typography-heading-h3: var(--typography-font-size-2xl); /* H3 sub-section (24px) */
+  --typography-heading-h4: var(--typography-font-size-xl); /* H4 card title (20px) */
+  --typography-heading-h5: var(--typography-font-size-lg); /* H5 group header (18px) */
+  --typography-heading-h6: var(--typography-font-size-md); /* H6 inline title (16px) */
+  --typography-body-lg: var(--typography-font-size-lg); /* Body large (18px) */
+  --typography-body-md: var(--typography-font-size-md); /* Body medium — default (16px) */
+  --typography-body-sm: var(--typography-font-size-base); /* Body small (14px) */
+  --typography-body-xs: var(--typography-font-size-sm); /* Body XS — metadata (12px) */
+  --radius-none: var(--radius-none); /* No radius */
+  --radius-full: var(--radius-full); /* Full / pill radius */
+  --radius-button: var(--radius-md); /* Button border radius */
+  --radius-input: var(--radius-sm); /* Input border radius */
+  --radius-card: var(--radius-xl); /* Card border radius */
+  --radius-modal: var(--radius-xl); /* Modal border radius */
+  --radius-badge: var(--radius-full); /* dimension */
+  --radius-chip: var(--radius-md); /* Chip border radius */
+  --radius-message: var(--radius-xl); /* Message bubble radius */
+  --radius-avatar: var(--radius-full); /* dimension */
+  --radius-tooltip: var(--radius-sm); /* Tooltip border radius */
+  --radius-xs: var(--radius-xs); /* XS radius */
+  --radius-icon-button: var(--radius-md); /* Icon button radius */
+  --radius-sm: var(--radius-sm); /* SM radius */
+  --radius-md: var(--radius-md); /* MD radius */
+  --radius-base: var(--radius-base); /* Base radius */
+  --radius-lg: var(--radius-lg); /* LG radius */
+  --radius-xl: var(--radius-xl); /* XL radius */
+  --radius-2xl: var(--radius-2xl); /* 2XL radius */
+  --radius-3xl: var(--radius-3xl); /* 3XL radius */
+  --spacing-button-padding-x: var(--spacing-lg); /* Button horizontal padding */
+  --spacing-button-padding-y: var(--spacing-sm); /* Button vertical padding */
+  --spacing-button-icon-gap: var(--spacing-sm); /* Button icon-label gap */
+  --spacing-input-padding-x: var(--spacing-md); /* Input horizontal padding */
+  --spacing-input-padding-y: var(--spacing-sm); /* Input vertical padding */
+  --spacing-input-label-gap: var(--spacing-xs); /* Label to input gap */
+  --spacing-input-helper-gap: var(--spacing-xs); /* Input to helper text gap */
+  --spacing-card-padding: var(--spacing-2xl); /* Card internal padding */
+  --spacing-card-gap: var(--spacing-lg); /* Card section gap */
+  --spacing-card-header-gap: var(--spacing-sm); /* Card header gap */
+  --spacing-message-padding: var(--spacing-md); /* Message bubble padding */
+  --spacing-message-gap: var(--spacing-sm); /* Gap between messages */
+  --spacing-message-avatar-gap: var(--spacing-sm); /* Avatar to message gap */
+  --spacing-layout-page-margin: var(--spacing-2xl); /* Page horizontal margin */
+  --spacing-layout-section-gap: var(--spacing-2xl); /* Page section gap */
+  --spacing-layout-sidebar-pad: var(--spacing-2xl); /* Sidebar padding */
+  --spacing-layout-modal-pad: var(--spacing-2xl); /* Modal padding */
+  --spacing-layout-menu-level-gap: var(--spacing-sm); /* Nav menu indent */
+  --spacing-focus-ring-width: var(--border-width-md); /* Focus ring width */
+  --spacing-focus-ring-offset: var(--border-width-md); /* Focus ring offset */
+  --opacity-transparent: var(--opacity-0); /* Fully transparent */
+  --opacity-scrim-light: var(--opacity-40); /* Light scrim */
+  --opacity-scrim-medium: var(--opacity-50); /* Medium scrim */
+  --opacity-scrim-heavy: var(--opacity-75); /* Heavy scrim */
+  --opacity-disabled: var(--opacity-40); /* Disabled element opacity */
+  --opacity-hover-overlay: var(--opacity-8); /* Hover overlay alpha */
+  --opacity-pressed-overlay: var(--opacity-16); /* Pressed overlay alpha */
+  --opacity-focus-ring: var(--opacity-25); /* Focus ring alpha */
+  --opacity-opaque: var(--opacity-100); /* Fully opaque */
+  --shadow-xs: var(--shadow-color-light-xs); /* XS shadow */
+  --shadow-sm: var(--shadow-color-light-sm); /* SM shadow */
+  --shadow-md: var(--shadow-color-light-md); /* MD shadow */
+  --shadow-lg: var(--shadow-color-light-lg); /* LG shadow */
+  --shadow-xl: var(--shadow-color-light-xl); /* XL shadow */
+  --shadow-2xl: var(--shadow-color-light-2xl); /* 2XL shadow */
+  --shadow-inner: var(--shadow-color-light-inner); /* Inner shadow */
+  --shadow-focus-ring: var(--shadow-color-light-focus-outer); /* Focus ring shadow */
+  --shadow-glow-ai: var(--shadow-color-light-glow-ai); /* AI glow */
+  --charts-blue-25: var(--colors-blue-25); /* color */
+  --charts-blue-50: var(--colors-blue-50); /* color */
+  --charts-blue-100: var(--colors-blue-100); /* color */
+  --charts-blue-150: var(--colors-blue-150); /* color */
+  --charts-blue-200: var(--colors-blue-200); /* color */
+  --charts-blue-300: var(--colors-blue-300); /* color */
+  --charts-blue-400: var(--colors-blue-400); /* color */
+  --charts-blue-450: var(--colors-blue-450); /* color */
+  --charts-blue-500: var(--colors-blue-500); /* color */
+  --charts-blue-600: var(--colors-blue-600); /* color */
+  --charts-blue-700: var(--colors-blue-700); /* color */
+  --charts-blue-750: var(--colors-blue-750); /* color */
+  --charts-blue-800: var(--colors-blue-800); /* color */
+  --charts-blue-900: var(--colors-blue-900); /* color */
+  --charts-blue-950: var(--colors-blue-950); /* color */
+  --charts-yellow-25: var(--colors-yellow-25); /* color */
+  --charts-yellow-50: var(--colors-yellow-50); /* color */
+  --charts-yellow-100: var(--colors-yellow-100); /* color */
+  --charts-yellow-150: var(--colors-yellow-150); /* color */
+  --charts-yellow-200: var(--colors-yellow-200); /* color */
+  --charts-yellow-300: var(--colors-yellow-300); /* color */
+  --charts-yellow-400: var(--colors-yellow-400); /* color */
+  --charts-yellow-450: var(--colors-yellow-450); /* color */
+  --charts-yellow-500: var(--colors-yellow-500); /* color */
+  --charts-yellow-600: var(--colors-yellow-600); /* color */
+  --charts-yellow-700: var(--colors-yellow-700); /* color */
+  --charts-yellow-750: var(--colors-yellow-750); /* color */
+  --charts-yellow-800: var(--colors-yellow-800); /* color */
+  --charts-yellow-900: var(--colors-yellow-900); /* color */
+  --charts-yellow-950: var(--colors-yellow-950); /* color */
+  --charts-violet-50: var(--colors-violet-50); /* color */
+  --charts-violet-100: var(--colors-violet-100); /* color */
+  --charts-violet-200: var(--colors-violet-200); /* color */
+  --charts-violet-300: var(--colors-violet-300); /* color */
+  --charts-violet-500: var(--colors-violet-500); /* color */
+  --charts-violet-700: var(--colors-violet-700); /* color */
+  --charts-violet-900: var(--colors-violet-900); /* color */
+  --charts-cyan-50: var(--colors-cyan-50); /* color */
+  --charts-cyan-100: var(--colors-cyan-100); /* color */
+  --charts-cyan-200: var(--colors-cyan-200); /* color */
+  --charts-cyan-300: var(--colors-cyan-300); /* color */
+  --charts-cyan-500: var(--colors-cyan-500); /* color */
+  --charts-cyan-700: var(--colors-cyan-700); /* color */
+  --charts-cyan-900: var(--colors-cyan-900); /* color */
+  --charts-magenta-50: var(--colors-magenta-50); /* color */
+  --charts-magenta-100: var(--colors-magenta-100); /* color */
+  --charts-magenta-200: var(--colors-magenta-200); /* color */
+  --charts-magenta-300: var(--colors-magenta-300); /* color */
+  --charts-magenta-500: var(--colors-magenta-500); /* color */
+  --charts-magenta-700: var(--colors-magenta-700); /* color */
+  --charts-magenta-900: var(--colors-magenta-900); /* color */
+  --charts-green-50: var(--colors-green-50); /* color */
+  --charts-green-100: var(--colors-green-100); /* color */
+  --charts-green-200: var(--colors-green-200); /* color */
+  --charts-green-500: var(--colors-green-500); /* color */
+  --charts-green-700: var(--colors-green-700); /* color */
+  --charts-green-900: var(--colors-green-900); /* color */
+  --charts-red-50: var(--colors-red-50); /* color */
+  --charts-red-100: var(--colors-red-100); /* color */
+  --charts-red-200: var(--colors-red-200); /* color */
+  --charts-red-500: var(--colors-red-500); /* color */
+  --charts-red-700: var(--colors-red-700); /* color */
+  --charts-red-900: var(--colors-red-900); /* color */
+}
+
+/* Dark Mode Overrides */
+.dark, [data-theme="dark"] {
+  --bg-default: var(--colors-neutral-999);
+  --bg-surface-1: var(--colors-neutral-950);
+  --bg-surface-2: var(--colors-neutral-900);
+  --bg-surface-3: var(--colors-neutral-800);
+  --bg-surface-4: var(--colors-neutral-750);
+  --bg-surface-5: var(--colors-neutral-700);
+  --bg-overlay: var(--shadow-color-dark-md);
+  --bg-input: var(--colors-neutral-800);
+  --bg-tooltip: var(--colors-neutral-0);
+  --bg-modal: var(--colors-neutral-800);
+  --bg-sidebar: var(--colors-neutral-950);
+  --bg-hover: var(--colors-neutral-600);
+  --bg-pressed: var(--colors-neutral-500);
+  --bg-selected: var(--colors-violet-900);
+  --bg-disabled: var(--colors-neutral-750);
+  --bg-code: var(--colors-neutral-750);
+  --bg-message-ai: var(--colors-neutral-800);
+  --bg-message-user: var(--colors-neutral-700);
+  --text-primary: var(--colors-neutral-25);
+  --text-secondary: var(--colors-neutral-100);
+  --text-tertiary: var(--colors-neutral-300);
+  --text-disabled: var(--colors-neutral-450);
+  --text-placeholder: var(--colors-neutral-400);
+  --text-on-inverse: var(--colors-neutral-900);
+  --text-accent: var(--colors-violet-200);
+  --text-link: var(--colors-sky-500);
+  --text-success: var(--colors-green-500);
+  --text-warning: var(--colors-amber-500);
+  --text-error: var(--colors-red-200);
+  --text-info: var(--colors-sky-500);
+  --text-code: var(--colors-neutral-25);
+  --border-subtle: var(--colors-neutral-750);
+  --border-default: var(--colors-neutral-700);
+  --border-strong: var(--colors-neutral-500);
+  --action-primary-bg-hover: var(--colors-blue-450);
+  --action-primary-bg-pressed: var(--colors-blue-400);
+  --action-primary-bg-focus: var(--colors-blue-400);
+  --action-primary-bg-disabled: var(--colors-neutral-700);
+  --action-primary-text-disabled: var(--colors-neutral-600);
+  --action-secondary-bg-default: var(--colors-neutral-800);
+  --action-secondary-text-default: var(--colors-blue-300);
+  --action-secondary-text-hover: var(--colors-blue-200);
+  --action-secondary-text-pressed: var(--colors-blue-100);
+  --action-secondary-text-focus: var(--colors-blue-300);
+  --action-secondary-text-disabled: var(--colors-neutral-600);
+  --action-secondary-border-default: var(--colors-blue-300);
+  --action-secondary-border-hover: var(--colors-blue-200);
+  --action-secondary-border-pressed: var(--colors-blue-100);
+  --action-secondary-border-disabled: var(--colors-neutral-600);
+  --action-secondary-icon-hover: var(--colors-blue-200);
+  --action-secondary-icon-default: var(--colors-blue-300);
+  --action-secondary-icon-disabled: var(--colors-neutral-600);
+  --action-secondary-icon-pressed: var(--colors-blue-100);
+  --action-secondary-icon-focus: var(--colors-blue-300);
+  --action-text-action-bg-hover: var(--colors-neutral-800);
+  --action-text-action-bg-pressed: var(--colors-neutral-750);
+  --action-text-action-text-default: var(--colors-blue-300);
+  --action-text-action-text-hover: var(--colors-blue-200);
+  --action-text-action-text-pressed: var(--colors-blue-100);
+  --action-text-action-text-focus: var(--colors-blue-300);
+  --action-text-action-border-pressed: var(--colors-blue-100);
+  --action-text-action-icon-focus: var(--colors-blue-300);
+  --action-text-action-icon-pressed: var(--colors-blue-100);
+  --action-text-action-icon-hover: var(--colors-blue-200);
+  --action-text-action-icon-disabled: var(--colors-neutral-600);
+  --action-text-action-icon-default: var(--colors-blue-300);
+  --action-destructive-bg-hover: var(--colors-red-500);
+  --action-destructive-bg-pressed: var(--colors-red-500);
+  --action-destructive-bg-focus: var(--colors-red-500);
+  --action-destructive-bg-disabled: var(--colors-neutral-700);
+  --focus-ring-default: var(--colors-violet-500);
+  --focus-ring-destructive: var(--colors-red-500);
+  --status-success-bg: var(--colors-green-900);
+  --status-success-bg-strong: var(--colors-green-700);
+  --status-success-border: var(--status-success-bg-strong);
+  --status-warning-bg: var(--colors-amber-900);
+  --status-warning-bg-strong: var(--colors-amber-700);
+  --status-warning-border: var(--status-warning-bg-strong);
+  --status-error-bg: var(--colors-red-900);
+  --status-error-bg-strong: var(--colors-red-700);
+  --status-error-border: var(--status-error-bg-strong);
+  --status-info-bg: var(--colors-sky-900);
+  --status-info-bg-strong: var(--colors-sky-700);
+  --status-info-border: var(--status-info-bg-strong);
+  --accent-violet-subtle: var(--colors-violet-700);
+  --accent-violet-hover: var(--colors-violet-300);
+  --accent-violet-on-violet: var(--colors-neutral-900);
+  --accent-cyan-default: var(--colors-cyan-500);
+  --accent-cyan-subtle: var(--colors-cyan-700);
+  --accent-cyan-hover: var(--colors-cyan-300);
+  --accent-magenta-subtle: var(--colors-magenta-700);
+  --accent-magenta-hover: var(--colors-magenta-300);
+  --ai-cursor: var(--colors-violet-300);
+  --ai-agent: var(--colors-cyan-300);
+  --ai-thinking-bg: var(--colors-violet-900);
+  --ai-thinking-border: var(--colors-violet-300);
+  --ai-tool-bg: var(--colors-neutral-800);
+  --ai-tool-success: var(--colors-green-200);
+  --ai-tool-error: var(--colors-red-200);
+  --shadow-xs: var(--shadow-color-dark-xs);
+  --shadow-sm: var(--shadow-color-dark-sm);
+  --shadow-md: var(--shadow-color-dark-md);
+  --shadow-lg: var(--shadow-color-dark-lg);
+  --shadow-xl: var(--shadow-color-dark-xl);
+  --shadow-2xl: var(--shadow-color-dark-2xl);
+  --shadow-inner: var(--shadow-color-dark-inner);
+  --shadow-focus-ring: var(--shadow-color-dark-focus-outer);
+  --shadow-glow-ai: var(--shadow-color-dark-glow-ai);
+  --charts-blue-50: var(--colors-blue-25);
+  --charts-blue-100: var(--colors-blue-50);
+  --charts-blue-150: var(--colors-blue-50);
+  --charts-blue-200: var(--colors-blue-100);
+  --charts-blue-300: var(--colors-blue-150);
+  --charts-blue-400: var(--colors-blue-200);
+  --charts-blue-450: var(--colors-blue-300);
+  --charts-blue-500: var(--colors-blue-400);
+  --charts-blue-600: var(--colors-blue-450);
+  --charts-blue-700: var(--colors-blue-500);
+  --charts-blue-750: var(--colors-blue-600);
+  --charts-blue-800: var(--colors-blue-700);
+  --charts-blue-900: var(--colors-blue-750);
+  --charts-blue-950: var(--colors-blue-800);
+  --charts-yellow-50: var(--colors-yellow-25);
+  --charts-yellow-100: var(--colors-yellow-50);
+  --charts-yellow-150: var(--colors-yellow-50);
+  --charts-yellow-200: var(--colors-yellow-100);
+  --charts-yellow-300: var(--colors-yellow-150);
+  --charts-yellow-400: var(--colors-yellow-200);
+  --charts-yellow-450: var(--colors-yellow-300);
+  --charts-yellow-500: var(--colors-yellow-400);
+  --charts-yellow-600: var(--colors-yellow-450);
+  --charts-yellow-700: var(--colors-yellow-500);
+  --charts-yellow-750: var(--colors-yellow-600);
+  --charts-yellow-800: var(--colors-yellow-700);
+  --charts-yellow-900: var(--colors-yellow-750);
+  --charts-yellow-950: var(--colors-yellow-800);
+  --charts-violet-100: var(--colors-violet-50);
+  --charts-violet-300: var(--colors-violet-100);
+  --charts-violet-500: var(--colors-violet-300);
+  --charts-violet-700: var(--colors-violet-500);
+  --charts-violet-900: var(--colors-violet-500);
+  --charts-cyan-100: var(--colors-cyan-50);
+  --charts-cyan-200: var(--colors-cyan-100);
+  --charts-cyan-300: var(--colors-cyan-200);
+  --charts-cyan-500: var(--colors-cyan-300);
+  --charts-cyan-700: var(--colors-cyan-500);
+  --charts-cyan-900: var(--colors-cyan-500);
+  --charts-magenta-100: var(--colors-magenta-50);
+  --charts-magenta-200: var(--colors-magenta-100);
+  --charts-magenta-300: var(--colors-magenta-100);
+  --charts-magenta-500: var(--colors-magenta-200);
+  --charts-magenta-700: var(--colors-magenta-300);
+  --charts-magenta-900: var(--colors-magenta-500);
+  --charts-green-100: var(--colors-green-50);
+  --charts-green-200: var(--colors-green-100);
+  --charts-green-500: var(--colors-green-200);
+  --charts-green-700: var(--colors-green-500);
+  --charts-green-900: var(--colors-green-500);
+  --charts-red-100: var(--colors-red-50);
+  --charts-red-200: var(--colors-red-100);
+  --charts-red-500: var(--colors-red-200);
+  --charts-red-700: var(--colors-red-500);
+  --charts-red-900: var(--colors-red-500);
+}
