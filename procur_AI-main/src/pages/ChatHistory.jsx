@@ -444,17 +444,17 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav }) {
                       <div className="pmenu-item" onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); setRenameValue(item.title); setShowRenameModal(true); }} style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-primary)', cursor: 'pointer', borderRadius: 6 }}>
                         <Edit2 size={14} color="var(--text-secondary)" style={{ flexShrink: 0 }} /> Rename
                       </div>
-                      <div className="pmenu-item" onClick={(e) => { 
-                        e.stopPropagation(); 
-                        setOpenMenuId(null); 
+                      <div className="pmenu-item" onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenMenuId(null);
                         setShareModal({ title: item.title });
                         setLinkCopied(false);
                       }} style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-primary)', cursor: 'pointer', borderRadius: 6 }}>
                         <Share2 size={14} color="var(--text-secondary)" style={{ flexShrink: 0 }} /> Share
                       </div>
-                      <div className="pmenu-item" onClick={(e) => { 
-                        e.stopPropagation(); 
-                        setOpenMenuId(null); 
+                      <div className="pmenu-item" onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenMenuId(null);
                         const filename = `Chat — ${item.title}.pdf`;
                         setDownloadState({ filename, done: false });
                         setDownloadProgress(0);
