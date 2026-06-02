@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MainLayout from '../layouts/MainLayout.jsx';
-import { Plus, Paperclip, ChevronDown, Mic, Send, Sparkles, FileText, BarChart2, Package, ArrowLeft, X, Copy, CheckCircle, ThumbsUp, ThumbsDown, RotateCcw, Volume2, VolumeX, Edit2, AlertTriangle, MoreHorizontal, Pin, PinOff, Share2, Download, Link, Scale } from 'lucide-react';
+import { Plus, Paperclip, ChevronDown, Mic, Send, Sparkles, FileText, BarChart2, Package, ArrowLeft, X, Copy, CheckCircle, ThumbsUp, ThumbsDown, RotateCcw, Edit2, AlertTriangle, MoreHorizontal, Pin, PinOff, Share2, Download, Trash2, Scale } from 'lucide-react';
 
 export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
   const [inputFocused, setInputFocused] = useState(false);
   const [inputText, setInputText] = useState('');
-  const [attachedFile, setAttachedFile] = useState(null);
+  const [attachedFiles, setAttachedFiles] = useState([]);
+  const [toast, setToast] = useState(null);
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
   
   const [messages, setMessages] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
+  const [showUploadTooltip, setShowUploadTooltip] = useState(false);
   const [reasoningSteps, setReasoningSteps] = useState([]);
   const [reasoningComplete, setReasoningComplete] = useState(false);
   const [showReasoningPanel, setShowReasoningPanel] = useState(false);
@@ -18,7 +20,6 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
   const [regeneratingMsgs, setRegeneratingMsgs] = useState(new Set());
   const [editingMsgIndex, setEditingMsgIndex] = useState(null);
   const [editingText, setEditingText] = useState('');
-  const [speakingMsgs, setSpeakingMsgs] = useState(new Set());
   const [copiedMsgs, setCopiedMsgs] = useState(new Set());
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [renameValue, setRenameValue] = useState('');
@@ -179,9 +180,9 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
   const handleSend = () => {
     if (!inputText.trim()) return;
     const userMsg = { role: 'user', content: inputText.trim() };
-    if (attachedFile) {
-        userMsg.attachments = [attachedFile];
-        setAttachedFile(null);
+    if (attachedFiles.length > 0) {
+        userMsg.attachments = attachedFiles;
+        setAttachedFiles([]);
     }
     setMessages(prev => [...prev, userMsg]);
     setInputText('');
@@ -221,6 +222,10 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
           0% { opacity: 1 }
           50% { opacity: 0.4 }
           100% { opacity: 1 }
+        }
+        @keyframes toastIn {
+          from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+          to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
         @keyframes spinOnce { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -466,7 +471,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
                             });
                           }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: isDisliked ? 'rgba(239,68,68,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isDisliked ? '#ef4444' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!isDisliked) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!isDisliked) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
                             <ThumbsDown size={14} />
-                            {dislikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Noted</div>}
+                            {dislikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Disliked</div>}
                           </button>
 
                           <button onClick={() => {
@@ -477,13 +482,6 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
                           }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: regeneratingMsgs.has(i) ? 'rgba(124,124,255,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: regeneratingMsgs.has(i) ? '#7c7cff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!regeneratingMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!regeneratingMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
                             <RotateCcw size={14} style={{ animation: regeneratingMsgs.has(i) ? 'spinOnce 0.6s linear infinite' : 'none' }} />
                             {regeneratingMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Regenerating...</div>}
-                          </button>
-
-                          <button onClick={() => {
-                            setSpeakingMsgs(prev => { const n = new Set(prev); if (n.has(i)) n.delete(i); else n.add(i); return n; });
-                          }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: speakingMsgs.has(i) ? 'rgba(0,82,204,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: speakingMsgs.has(i) ? '#0052cc' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!speakingMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!speakingMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
-                            {speakingMsgs.has(i) ? <Volume2 size={14} /> : <VolumeX size={14} />}
-                            {speakingMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Speaking...</div>}
                           </button>
                         </div>
                       </div>
@@ -497,15 +495,17 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
             <div style={{ flexShrink: 0, padding: '16px 24px 20px', background: 'white' }}>
               <div style={{ width: '56%', margin: '0 auto' }}>
 
-                {/* Attachment pill — shown when file attached */}
-                {attachedFile && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12 }}>
-                      <FileText size={13} color="#0052cc" />
-                      <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{attachedFile.name}</span>
-                      <span style={{ color: 'var(--text-tertiary)' }}>{attachedFile.size}</span>
-                      <X size={12} style={{ color: 'var(--text-tertiary)', cursor: 'pointer', marginLeft: 2 }} onClick={() => setAttachedFile(null)} />
-                    </div>
+                {/* Attachment pills — shown when files attached */}
+                {attachedFiles.length > 0 && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
+                    {attachedFiles.map((f, i) => (
+                      <div key={i} style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12 }}>
+                        <FileText size={13} color="#0052cc" />
+                        <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{f.name}</span>
+                        <span style={{ color: 'var(--text-tertiary)' }}>{f.size}</span>
+                        <X size={12} style={{ color: 'var(--text-tertiary)', cursor: 'pointer', marginLeft: 2 }} onClick={() => setAttachedFiles(prev => prev.filter((_, idx) => idx !== i))} />
+                      </div>
+                    ))}
                   </div>
                 )}
 
@@ -555,25 +555,65 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
 
                     {/* Left: Attach icon */}
-                    <button
-                      onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                      style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
-                    >
-                      <Paperclip size={18} />
-                    </button>
-                    <input type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} ref={fileInputRef} onChange={(e) => {
-                      const file = e.target.files[0];
-                      if (file) setAttachedFile({ name: file.name, size: (file.size / 1024 / 1024).toFixed(1) + ' MB' });
-                      e.target.value = '';
-                    }} />
+                    <div style={{ position: 'relative' }}>
+                      <button
+                        onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                        style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; setShowUploadTooltip(true); }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; setShowUploadTooltip(false); }}
+                      >
+                        <Paperclip size={18} />
+                      </button>
+                      {showUploadTooltip && (
+                        <div style={{
+                          position: 'absolute',
+                          bottom: 'calc(100% + 8px)',
+                          left: '0%',
+                          background: '#fff',
+                          border: '1px solid var(--border-default)',
+                          borderRadius: 8,
+                          padding: '10px 14px',
+                          fontSize: 12,
+                          color: 'var(--text-primary)',
+                          whiteSpace: 'nowrap',
+                          boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                          zIndex: 100,
+                          pointerEvents: 'none'
+                        }}>
+                          Upload up to 5 files in PDF, JPEG or PNG format, up to 10 MB each
+                        </div>
+                      )}
+                      <input type="file" multiple accept=".pdf,.docx,.txt" style={{ display: 'none' }} ref={fileInputRef} onChange={(e) => {
+                        const files = Array.from(e.target.files);
+                        if (attachedFiles.length + files.length > 5) {
+                          setToast({ msg: 'Upload up to 5 files maximum.', type: 'error' });
+                          setTimeout(() => setToast(null), 3000);
+                          e.target.value = '';
+                          return;
+                        }
+                        const validFiles = [];
+                        for (const file of files) {
+                          if (file.size > 10 * 1024 * 1024) {
+                            setToast({ msg: 'Each file up to 10 MB maximum.', type: 'error' });
+                            setTimeout(() => setToast(null), 3000);
+                            e.target.value = '';
+                            return;
+                          }
+                          validFiles.push({ name: file.name, size: (file.size / 1024 / 1024).toFixed(1) + ' MB', file });
+                        }
+                        setAttachedFiles(prev => [...prev, ...validFiles]);
+                        e.target.value = '';
+                      }} />
+                    </div>
 
                     {/* Right: char count + send */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{ fontSize: 11, color: inputText.length > 1800 ? '#ef4444' : 'var(--text-tertiary)' }}>
-                        {inputText.length} / 2000
+                      <span style={{ fontSize: 11, color: inputText.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>
+                        {inputText.length} / 20000
                       </span>
+                      <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                        <Mic size={18} strokeWidth={2} />
+                      </button>
                       <button
                         onClick={handleSend}
                         disabled={!inputText.trim()}
@@ -601,6 +641,32 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
             background: '#fff', display: 'flex', flexDirection: 'column', overflow: 'hidden',
             transition: 'max-width 0.25s ease'
           }}>
+            {/* Toast */}
+            {toast && (
+              <div style={{
+                position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)',
+                zIndex: 1000, pointerEvents: 'auto',
+                background: toast.type === 'error' ? '#fef2f2' : '#f0fdf4',
+                border: `1px solid ${toast.type === 'error' ? 'rgba(239,68,68,0.25)' : 'rgba(34,197,94,0.25)'}`,
+                borderLeft: `4px solid ${toast.type === 'error' ? '#ef4444' : '#22c55e'}`,
+                borderRadius: 12, padding: '16px 20px',
+                display: 'flex', alignItems: 'center', gap: 14,
+                boxShadow: '0 8px 32px rgba(14,15,37,0.1)',
+                minWidth: 360, maxWidth: 500,
+                animation: 'toastIn 0.2s ease forwards',
+              }}>
+                <AlertTriangle size={22} color={toast.type === 'error' ? '#ef4444' : '#22c55e'} strokeWidth={2} style={{ flexShrink: 0 }} />
+                <div style={{ fontSize: 14, fontWeight: 600, color: toast.type === 'error' ? '#991b1b' : '#15803d', flex: 1, lineHeight: 1.4 }}>
+                  {toast.msg}
+                </div>
+                <div
+                  onClick={() => setToast(null)}
+                  style={{ padding: 4, borderRadius: 6, cursor: 'pointer', color: toast.type === 'error' ? 'rgba(153,27,27,0.5)' : 'rgba(21,128,61,0.5)', display: 'flex', flexShrink: 0, transition: 'all 0.15s ease' }}
+                >
+                  <X size={18} strokeWidth={2} />
+                </div>
+              </div>
+            )}
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: 300 }}>
               {/* Panel Header */}
               <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>

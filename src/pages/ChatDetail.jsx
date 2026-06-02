@@ -40,7 +40,8 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
   const [activeRightPane, setActiveRightPane] = useState(null);
   const [showReasoningPanel, setShowReasoningPanel] = useState(false);
   const [reasoningSteps, setReasoningSteps] = useState(REASONING_STEPS_FULL.map(s => ({ ...s, status: 'complete' })));
-  const [reasoningComplete, setReasoningComplete] = useState(true);
+  const [reasoningComplete, setReasoningComplete] = useState(false);
+  const [showUploadTooltip, setShowUploadTooltip] = useState(false);
 
   const [typedTitles, setTypedTitles] = useState({});
 
@@ -72,7 +73,8 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
 
   const [inputText, setInputText] = useState('');
   const [inputFocused, setInputFocused] = useState(false);
-  const [attachedFile, setAttachedFile] = useState(null);
+  const [attachedFiles, setAttachedFiles] = useState([]);
+  const [toast, setToast] = useState(null);
   const [hoveredUserMsg, setHoveredUserMsg] = useState(null);
   const [likedMsgs, setLikedMsgs] = useState(new Set());
   const [dislikedMsgs, setDislikedMsgs] = useState(new Set());
@@ -152,7 +154,7 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
   const handleSend = () => {
     if (!inputText.trim()) return;
     const userMsg = { role: 'user', time: 'Just now', content: inputText.trim() };
-    if (attachedFile) { userMsg.attachments = [attachedFile]; setAttachedFile(null); }
+    if (attachedFiles.length > 0) { userMsg.attachments = attachedFiles; setAttachedFiles([]); }
     setMessages(prev => [...prev, userMsg]);
     setInputText('');
     setReasoningSteps([]);
@@ -176,11 +178,39 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
     @keyframes textShimmer { 0% { opacity: 1 } 50% { opacity: 0.4 } 100% { opacity: 1 } }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     @keyframes blink { 0%,100% { opacity: 1 } 50% { opacity: 0 } }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-12px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
   `;
 
   return (
     <MainLayout activeNav="Chat History" onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
       <style dangerouslySetInnerHTML={{ __html: css }} />
+
+      {/* Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)',
+          zIndex: 2000, pointerEvents: 'auto',
+          background: toast.type === 'error' ? '#fef2f2' : '#f0fdf4',
+          border: `1px solid ${toast.type === 'error' ? 'rgba(239,68,68,0.25)' : 'rgba(34,197,94,0.25)'}`,
+          borderLeft: `4px solid ${toast.type === 'error' ? '#ef4444' : '#22c55e'}`,
+          borderRadius: 12, padding: '16px 20px',
+          display: 'flex', alignItems: 'center', gap: 14,
+          boxShadow: '0 8px 32px rgba(14,15,37,0.1)',
+          minWidth: 360, maxWidth: 500,
+          animation: 'toastIn 0.2s ease forwards',
+        }}>
+          <AlertTriangle size={22} color={toast.type === 'error' ? '#ef4444' : '#22c55e'} strokeWidth={2} style={{ flexShrink: 0 }} />
+          <div style={{ fontSize: 14, fontWeight: 600, color: toast.type === 'error' ? '#991b1b' : '#15803d', flex: 1, lineHeight: 1.4 }}>
+            {toast.msg}
+          </div>
+          <div
+            onClick={() => setToast(null)}
+            style={{ padding: 4, borderRadius: 6, cursor: 'pointer', color: toast.type === 'error' ? 'rgba(153,27,27,0.5)' : 'rgba(21,128,61,0.5)', display: 'flex', flexShrink: 0, transition: 'all 0.15s ease' }}
+          >
+            <X size={18} strokeWidth={2} />
+          </div>
+        </div>
+      )}
 
       {/* DOWNLOAD CARD */}
       {showDownload && (
@@ -373,7 +403,7 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
                         {msg.sources && (
                           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                             {msg.sources.map(s => (
-                              <div key={s} onClick={() => { setActiveRightPane('citation'); setShowReasoningPanel(false); }} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, background: 'var(--bg-surface-2)', border: '1px solid var(--border-default)', padding: '4px 8px', borderRadius: 16, color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background='var(--border-default)'} onMouseLeave={e => e.currentTarget.style.background='var(--bg-surface-2)'}>
+                              <div key={s} onClick={() => { setActiveRightPane('citation'); setShowReasoningPanel(false); }} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, background: 'var(--bg-surface-2)', border: '1px solid var(--border-default)', padding: '4px 8px', borderRadius: 16, color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--border-default)'} onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}>
                                 <FileText size={11} />{s}
                               </div>
                             ))}
@@ -424,14 +454,16 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
           {/* INPUT BAR */}
           <div style={{ flexShrink: 0, padding: '16px 24px 20px', background: 'white' }}>
             <div style={{ width: '56%', margin: '0 auto' }}>
-              {attachedFile && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <div style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12 }}>
-                    <FileText size={13} color="#0052cc" />
-                    <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{attachedFile.name}</span>
-                    <span style={{ color: 'var(--text-tertiary)' }}>{attachedFile.size}</span>
-                    <X size={12} style={{ color: 'var(--text-tertiary)', cursor: 'pointer', marginLeft: 2 }} onClick={() => setAttachedFile(null)} />
-                  </div>
+              {attachedFiles.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
+                  {attachedFiles.map((f, i) => (
+                    <div key={i} style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12 }}>
+                      <FileText size={13} color="#0052cc" />
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{f.name}</span>
+                      <span style={{ color: 'var(--text-tertiary)' }}>{f.size}</span>
+                      <X size={12} style={{ color: 'var(--text-tertiary)', cursor: 'pointer', marginLeft: 2 }} onClick={() => setAttachedFiles(prev => prev.filter((_, idx) => idx !== i))} />
+                    </div>
+                  ))}
                 </div>
               )}
               <div style={{ background: 'white', border: `1.5px solid ${inputFocused ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: inputFocused ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.06)' : '0 2px 8px rgba(14,15,37,0.06)', transition: 'border-color 0.15s, box-shadow 0.15s' }}>
@@ -443,15 +475,65 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
                   style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', resize: 'none', minHeight: 24, maxHeight: 154, overflowY: 'auto', fontFamily: 'Inter, sans-serif', lineHeight: 1.5 }}
                 />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
-                  <button onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                    style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
-                    <Paperclip size={18} />
-                  </button>
-                  <input type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} ref={fileInputRef} onChange={(e) => { const file = e.target.files[0]; if (file) setAttachedFile({ name: file.name, size: (file.size / 1024 / 1024).toFixed(1) + ' MB' }); e.target.value = ''; }} />
+                  <div style={{ position: 'relative' }}>
+                    <button onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                      style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#7c7cff';
+                        e.currentTarget.style.background = 'rgba(124,124,255,0.08)';
+                        setShowUploadTooltip(true);
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = 'var(--text-tertiary)';
+                        e.currentTarget.style.background = 'transparent';
+                        setShowUploadTooltip(false);
+                      }}
+                    >
+                      <Paperclip size={18} strokeWidth={2} />
+                    </button>
+                    {showUploadTooltip && (
+                      <div style={{
+                        position: 'absolute',
+                        bottom: 'calc(100% + 8px)',
+                        left: '0%',
+                        background: '#fff',
+                        border: '1px solid var(--border-default)',
+                        borderRadius: 8,
+                        padding: '10px 14px',
+                        fontSize: 12,
+                        color: 'var(--text-primary)',
+                        whiteSpace: 'nowrap',
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                        zIndex: 100,
+                        pointerEvents: 'none'
+                      }}>
+                        Upload up to 5 files in PDF, JPEG or PNG format, up to 10 MB each
+                      </div>
+                    )}
+                    <input type="file" multiple accept=".pdf,.docx,.txt" style={{ display: 'none' }} ref={fileInputRef} onChange={(e) => {
+                      const files = Array.from(e.target.files);
+                      if (attachedFiles.length + files.length > 5) {
+                        setToast({ msg: 'Upload up to 5 files maximum.', type: 'error' });
+                        setTimeout(() => setToast(null), 3000);
+                        e.target.value = '';
+                        return;
+                      }
+                      const validFiles = [];
+                      for (const file of files) {
+                        if (file.size > 10 * 1024 * 1024) {
+                          setToast({ msg: 'Each file up to 10 MB maximum.', type: 'error' });
+                          setTimeout(() => setToast(null), 3000);
+                          e.target.value = '';
+                          return;
+                        }
+                        validFiles.push({ name: file.name, size: (file.size / 1024 / 1024).toFixed(1) + ' MB', file });
+                      }
+                      setAttachedFiles(prev => [...prev, ...validFiles]);
+                      e.target.value = '';
+                    }} />
+                  </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontSize: 11, color: inputText.length > 1800 ? '#ef4444' : 'var(--text-tertiary)' }}>{inputText.length} / 2000</span>
+                    <span style={{ fontSize: 11, color: inputText.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{inputText.length} / 20000</span>
                     <button onClick={handleSend} disabled={!inputText.trim()}
                       style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: inputText.trim() ? 'pointer' : 'not-allowed', background: inputText.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: inputText.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
                       <Send size={15} color={inputText.trim() ? 'white' : 'var(--text-tertiary)'} />
@@ -514,24 +596,24 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
               onClick={(e) => e.stopPropagation()}>
               <div style={{ height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', borderBottom: '1px solid var(--border-subtle)', background: 'white', flexShrink: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                   <FileText size={20} color="var(--text-secondary)" />
-                   <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '0.02em' }}>DOCUMENT PREVIEW - PR-2026-001</div>
+                  <FileText size={20} color="var(--text-secondary)" />
+                  <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '0.02em' }}>DOCUMENT PREVIEW - PR-2026-001</div>
                 </div>
-                <button onClick={() => setActiveRightPane(null)} style={{ background: 'var(--bg-surface-2)', border: 'none', width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.2s ease' }} onMouseEnter={e => e.currentTarget.style.background='var(--border-default)'} onMouseLeave={e => e.currentTarget.style.background='var(--bg-surface-2)'}><X size={16} /></button>
+                <button onClick={() => setActiveRightPane(null)} style={{ background: 'var(--bg-surface-2)', border: 'none', width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.2s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--border-default)'} onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}><X size={16} /></button>
               </div>
               <div className="chat-scroll" style={{ flex: 1, overflowY: 'auto', padding: 40, display: 'flex', justifyContent: 'center', background: 'var(--bg-surface-1)' }}>
                 <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: 40, boxShadow: '0 8px 24px rgba(0,0,0,0.06)', width: '100%', maxWidth: 800, minHeight: '100%' }}>
-                   <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>PR-2026-001</div>
-                   <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 32, borderBottom: '1px solid var(--border-subtle)', paddingBottom: 24 }}>Generated on May 12, 2026</div>
-                   <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                      <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '100%' }} />
-                      <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '90%' }} />
-                      <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '95%' }} />
-                      <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '80%' }} />
-                      <div style={{ marginTop: 24, height: 240, background: 'var(--bg-surface-2)', borderRadius: 12, width: '100%' }} />
-                      <div style={{ marginTop: 24, height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '85%' }} />
-                      <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '60%' }} />
-                   </div>
+                  <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>PR-2026-001</div>
+                  <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 32, borderBottom: '1px solid var(--border-subtle)', paddingBottom: 24 }}>Generated on May 12, 2026</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '100%' }} />
+                    <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '90%' }} />
+                    <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '95%' }} />
+                    <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '80%' }} />
+                    <div style={{ marginTop: 24, height: 240, background: 'var(--bg-surface-2)', borderRadius: 12, width: '100%' }} />
+                    <div style={{ marginTop: 24, height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '85%' }} />
+                    <div style={{ height: 16, background: 'var(--bg-surface-2)', borderRadius: 6, width: '60%' }} />
+                  </div>
                 </div>
               </div>
             </div>

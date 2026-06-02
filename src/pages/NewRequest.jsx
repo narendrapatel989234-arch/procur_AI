@@ -5,7 +5,7 @@ import {
   ChevronDown, Calendar, Building, User,
   Tag, AlertCircle, AlertTriangle, LayoutDashboard, Scan, Cpu, FileCheck, MessageSquare,
   ThumbsUp, ThumbsDown, RotateCcw, Copy, Volume2, Edit2, VolumeX,
-  MoreHorizontal, Pin, PinOff, Download, Share2, Link, Wand2
+  MoreHorizontal, Pin, PinOff, Download, Share2, Link, Wand2, Mic
 } from 'lucide-react';
 import MainLayout from '../layouts/MainLayout.jsx';
 
@@ -411,6 +411,7 @@ const SUCCESS_MODAL_STYLE = {
 };
 
 export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
+  const [showUploadTooltip, setShowUploadTooltip] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -472,6 +473,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
   const [reasoningComplete, setReasoningComplete] = useState(false);
   const [editingMsgIndex, setEditingMsgIndex] = useState(null);
   const [editingText, setEditingText] = useState('');
+  const [chatTitle, setChatTitle] = useState('New Request');
 
   const [typedTitles, setTypedTitles] = useState({});
 
@@ -703,6 +705,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
     setTimeout(() => {
       setIsTyping(false);
       if (userMessageCount === 0) {
+        setChatTitle('Cloud Migration Request');
         setMessages(prev => [...prev, { role: 'ai', text: "Got it. To complete your procurement request, I need a few more details. Could you confirm: what is your cost centre or business unit, and what is the required-by date for this engagement?" }]);
       } else if (userMessageCount === 1) {
         setMessages(prev => [...prev, { role: 'ai', text: "Perfect. And one last thing — do you have a preferred vendor in mind, or should this go out as an open RFP to shortlisted vendors?" }]);
@@ -713,10 +716,28 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
   }
 
   function handleFileSelect(e) {
-    const file = e.target.files[0];
-    if (file) {
-      setAttachedFiles(prev => [...prev, { name: file.name, size: (file.size / 1024 / 1024).toFixed(1) + ' MB' }]);
+    const files = Array.from(e.target.files);
+    if (attachedFiles.length + files.length > 5) {
+      setToastMessage('Upload up to 5 files maximum.');
+      setShowToast(true);
+      const timer = setTimeout(() => setShowToast(false), 3000);
+      toastTimerRef.current = timer;
+      e.target.value = '';
+      return;
     }
+    const validFiles = [];
+    for (const file of files) {
+      if (file.size > 10 * 1024 * 1024) {
+        setToastMessage('Each file up to 10 MB maximum.');
+        setShowToast(true);
+        const timer = setTimeout(() => setShowToast(false), 3000);
+        toastTimerRef.current = timer;
+        e.target.value = '';
+        return;
+      }
+      validFiles.push({ name: file.name, size: (file.size / 1024 / 1024).toFixed(1) + ' MB' });
+    }
+    setAttachedFiles(prev => [...prev, ...validFiles]);
     e.target.value = '';
   }
 
@@ -1000,12 +1021,14 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
           <div onClick={handleBack} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--text-tertiary)' }}>
             <ArrowLeft size={16} strokeWidth={2} />
           </div>
-          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>New Request</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
+            {activeMode === 'chat' && hasMessages ? chatTitle : 'New Request'}
+          </span>
         </div>
 
         {/* Centre — mode toggle */}
         <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', background: 'var(--bg-surface-2)', borderRadius: 10, padding: 4, gap: 2 }}>
-          {['chat', 'form', 'upload'].map((m) => (
+          {['chat', 'form'].map((m) => (
             <button
               key={m}
               onClick={() => setActiveMode(m)}
@@ -1532,7 +1555,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                               });
                             }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: isDisliked ? 'rgba(239,68,68,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isDisliked ? '#ef4444' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!isDisliked) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!isDisliked) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
                               <ThumbsDown size={14} />
-                              {dislikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Noted</div>}
+                              {dislikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Disliked</div>}
                             </button>
 
                             {/* Regenerate Button */}
@@ -1544,14 +1567,6 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                             }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: regeneratingMsgs.has(i) ? 'rgba(124,124,255,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: regeneratingMsgs.has(i) ? '#7c7cff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!regeneratingMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!regeneratingMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
                               <RotateCcw size={14} style={{ animation: regeneratingMsgs.has(i) ? 'spinOnce 0.6s linear infinite' : 'none' }} />
                               {regeneratingMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Regenerating...</div>}
-                            </button>
-
-                            {/* Volume Button */}
-                            <button onClick={() => {
-                              setSpeakingMsgs(prev => { const n = new Set(prev); if (n.has(i)) n.delete(i); else n.add(i); return n; });
-                            }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: speakingMsgs.has(i) ? 'rgba(0,82,204,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: speakingMsgs.has(i) ? '#0052cc' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!speakingMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!speakingMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
-                              {speakingMsgs.has(i) ? <Volume2 size={14} /> : <VolumeX size={14} />}
-                              {speakingMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Speaking...</div>}
                             </button>
                           </div>
                         </div>
@@ -1616,7 +1631,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                         textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 154) + 'px';
                       }
                     }}
-                    placeholder="Describe your procurement need or choose a template above..."
+                    placeholder={activeMode === 'chat' ? 'Describe your procurement need or choose a starter prompt' : 'Describe your procurement need or choose a template above...'}
                     rows={1}
                     style={{
                       width: '100%', border: 'none', outline: 'none', background: 'transparent',
@@ -1641,20 +1656,44 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                         onMouseEnter={(e) => {
                           e.currentTarget.style.color = '#7c7cff';
                           e.currentTarget.style.background = 'rgba(124,124,255,0.08)';
+                          setShowUploadTooltip(true);
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.color = 'var(--text-tertiary)';
                           e.currentTarget.style.background = 'transparent';
+                          setShowUploadTooltip(false);
                         }}
                       >
                         <Paperclip size={18} strokeWidth={2} />
                       </button>
-                      <input type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileSelect} />
+                      {showUploadTooltip && (
+                        <div style={{
+                          position: 'absolute',
+                          bottom: 'calc(100% + 8px)',
+                          left: '0%',
+                          background: '#fff',
+                          border: '1px solid var(--border-default)',
+                          borderRadius: 8,
+                          padding: '10px 14px',
+                          fontSize: 12,
+                          color: 'var(--text-primary)',
+                          whiteSpace: 'nowrap',
+                          boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                          zIndex: 100,
+                          pointerEvents: 'none'
+                        }}>
+                          Upload up to 5 files in PDF, JPEG or PNG format, up to 10 MB each
+                        </div>
+                      )}
+                      <input type="file" multiple accept=".pdf,.docx,.txt" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileSelect} />
                     </div>
 
                     {/* Right side — Count + Send */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{ fontSize: 11, color: charCount > 1800 ? '#ef4444' : 'var(--text-tertiary)' }}>{charCount} / 2000</span>
+                      <span style={{ fontSize: 11, color: charCount > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{charCount} / 20000</span>
+                      <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                        <Mic size={18} strokeWidth={2} />
+                      </button>
                       <button
                         onClick={sendMessage}
                         disabled={!inputValue.trim()}
@@ -1756,13 +1795,39 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
       )}
 
       {/* ═══ MODE: FORM ═══ */}
-      {activeMode === 'form' && (() => {
+      {activeMode === 'form' && uploadPhase === 'empty' && (() => {
         const subcatOptions = fProcCategory ? (SUBCATEGORY_MAP[fProcCategory] || []) : [];
         const spendCategory = SPEND_CATEGORY_MAP[fProcCategory] || '';
         const isAnyFieldFilled = Boolean(fReqTitle || fBizUnit || fRequiredByDate || fPriority || fProcCategory || fSubcategory || fProjectName || fCapexOpex || fJustification || fReqDesc || fQuantity || fUnitValue || fUom || fBudget || fCostBreakdown || fSuggestedVendor || fVendorJustification || fContractRef || fDeliveryLoc || fTimeline || uploadedFiles.length > 0);
         const specificNote = <div style={{ display: 'block', fontSize: 11, color: 'var(--text-tertiary)', fontStyle: 'italic', marginTop: 4 }}>Applicable for specific categories</div>;
         return (
           <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px', background: 'var(--bg-default)' }}>
+            <div style={{ maxWidth: 720, margin: '0 auto', width: '100%', marginBottom: 40 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Upload Procurement Document</div>
+              <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, marginBottom: 24 }}>Upload a requirements document, SOW, or specifications file. Our AI will extract all procurement fields automatically.</div>
+
+              <div
+                onClick={handleUploadClick}
+                className="pai-upload-zone"
+                onMouseEnter={() => setUUploadHover(true)}
+                onMouseLeave={() => setUUploadHover(false)}
+                style={{
+                  background: uUploadHover ? 'rgba(124,124,255,0.015)' : '#fff',
+                  border: `2px dashed ${uUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
+                  borderRadius: 16, padding: '64px 32px',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+                  cursor: 'pointer', transition: 'all 0.2s ease',
+                }}
+              >
+                <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(0,82,204,0.07), rgba(124,124,255,0.1))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Upload size={30} color="#7c7cff" strokeWidth={2} />
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginTop: 8 }}>Drop your document here</div>
+                <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>or click to browse files</div>
+                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>Supports PDF, DOCX, XLSX · Max 25MB</div>
+              </div>
+            </div>
+
             <div style={{ maxWidth: 680, margin: '0 auto' }}>
               <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Create Procurement Request</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, marginBottom: 24 }}>Fill in the details to generate a new requisition</div>
@@ -2065,21 +2130,18 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                   <FL>Timeline</FL>
                   <FTextarea value={fTimeline} onChange={(e) => setFTimeline(e.target.value)} placeholder="Describe phased delivery plan and key milestones" minHeight={100} />
                   {aiFilledFields.has('fTimeline') && <AiFilledTag />}
-                  {specificNote}
                 </div>
-
                 {/* ── Submit row ── */}
                 <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
                   <button
-                    onClick={() => onNavigate('Dashboard')}
+                    onClick={handleBack}
                     style={{
                       background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
                       padding: '9px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)',
                       cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'inherit',
                     }}
                   >
-                    <X size={14} strokeWidth={2} />
-                    Cancel
+                    Save Draft
                   </button>
                   <button
                     onClick={handleFormSubmit}
@@ -2100,8 +2162,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
         );
       })()}
 
-      {/* ═══ MODE: UPLOAD ═══ */}
-      {activeMode === 'upload' && (() => {
+      {/* ═══ MODE: FORM (UPLOAD PHASES) ═══ */}
+      {activeMode === 'form' && uploadPhase !== 'empty' && (() => {
         function UDrop({ refEl, open, onToggle, value, placeholder, options, onChange, renderOption, disabled }) {
           return (
             <div ref={refEl} style={{ position: 'relative' }}>

@@ -4,7 +4,7 @@ import {
 
   Search, ChevronDown, ChevronUp, ArrowUpDown,
   ChevronLeft, ChevronRight, Eye, Pencil, X, Trash2, MessageSquare,
-  Clock, CheckCircle, AlertTriangle,
+  Clock, CheckCircle, AlertTriangle, Calendar,
   TrendingUp, TrendingDown, Zap, FileText, Layers, Briefcase
 } from 'lucide-react';
 
@@ -95,7 +95,6 @@ const FILTER_OPTIONS = {
   'Status': ['PR Drafted', 'PR in progress', 'PR Cancelled', 'RFP Drafted', 'RFP Published', 'Evaluation in progress', 'Negotiation in progress', 'Vendor Finalized', 'SoW Drafted', 'SoW Approved', 'SoW Signed', 'PO Pending', 'PO Approved', 'PO Rejected'],
   'Cost Centre': ['DDAIS', 'Finance', 'Engineering', 'Operations', 'Marketing', 'HR', 'Legal', 'Procurement', 'IT', 'Other'],
   'Type': ['Routine', 'Complex'],
-  'Date Range': ['Today', 'This Week', 'This Month', 'Last 3 Months'],
 };
 
 
@@ -291,6 +290,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
   const [tableSearchFocused, setTableSearchFocused] = useState(false);
 
   const [tableSearch, setTableSearch] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [openFilter, setOpenFilter] = useState(null);
   const [activeTab, setActiveTab] = useState('my'); // 'my' | 'approval'
@@ -462,27 +462,26 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
           {KPIS.map((k, i) => (
             <div key={i} className="pkpi" style={{
               background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14,
-              padding: '18px 20px', boxShadow: '0 1px 3px rgba(14,15,37,0.05)',
+              padding: '12px 16px', boxShadow: '0 1px 3px rgba(14,15,37,0.05)',
               display: 'flex', flexDirection: 'column', height: '100%'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{
-                  width: 36, height: 36, borderRadius: 10, background: k.iconBg,
+                  width: 32, height: 32, borderRadius: 10, background: k.iconBg,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <k.Icon size={18} color={k.iconColor} strokeWidth={2} />
+                  <k.Icon size={16} color={k.iconColor} strokeWidth={2} />
                 </div>
               </div>
               <div style={{
                 fontSize: 11, fontWeight: 600, color: 'var(--text-tertiary)',
-                textTransform: 'uppercase', letterSpacing: '0.4px', marginTop: 14,
-                lineHeight: 1.3, minHeight: 29
+                textTransform: 'uppercase', letterSpacing: '0.4px', marginTop: 10,
+                lineHeight: 1.3
               }}>{k.label}</div>
-              <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginTop: 4 }}>{k.value}</div>
+              <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginTop: 2 }}>{k.value}</div>
               <div style={{
-                fontSize: 11, color: k.trendColor, marginTop: 16,
-                display: 'flex', alignItems: 'flex-start', gap: 6, lineHeight: 1.4,
-                minHeight: 31
+                fontSize: 11, color: k.trendColor, marginTop: 10,
+                display: 'flex', alignItems: 'flex-start', gap: 6, lineHeight: 1.4
               }}>
                 <div style={{ paddingTop: 1 }}><k.TrendIcon size={12} strokeWidth={2.5} /></div>
                 <span style={{ flex: 1 }}>{k.trend}</span>
@@ -568,7 +567,53 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
 
             </div>
 
-
+            {/* Date Range Calendar */}
+            <div style={{ position: 'relative' }}>
+              <button onClick={() => setShowDatePicker(!showDatePicker)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: showDatePicker ? 'var(--bg-surface-1)' : '#fff', border: `1px solid ${showDatePicker ? '#7c7cff' : 'var(--border-default)'}`, padding: '0 12px', height: 36, borderRadius: 8, fontSize: 12, color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.15s ease', fontFamily: 'inherit' }}>
+                <Calendar size={13} strokeWidth={2} /> Select Date <ChevronDown size={13} strokeWidth={2} style={{ transition: 'transform 0.15s ease', transform: showDatePicker ? 'rotate(180deg)' : 'rotate(0)' }} />
+              </button>
+              {showDatePicker && (
+                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '12px 16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 100, width: 280, animation: 'fadeIn 0.15s ease' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Select Date Range</div>
+                    <button onClick={() => setShowDatePicker(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex' }}><X size={14} /></button>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                    <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 2, display: 'flex', color: 'var(--text-primary)' }}><ChevronLeft size={16} /></button>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <div style={{ border: '1px solid var(--border-default)', borderRadius: 6, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', cursor: 'pointer', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>January <ChevronDown size={12} color="var(--text-secondary)" /></div>
+                      <div style={{ border: '1px solid var(--border-default)', borderRadius: 6, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', cursor: 'pointer', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>2025 <ChevronDown size={12} color="var(--text-secondary)" /></div>
+                    </div>
+                    <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 2, display: 'flex', color: 'var(--text-primary)' }}><ChevronRight size={16} /></button>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', textAlign: 'center', fontSize: 10, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 8 }}>
+                    <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', rowGap: 4, textAlign: 'center', fontSize: 12, color: 'var(--text-primary)' }}>
+                    <div /><div /><div /><div /><div />
+                    <div style={{ padding: '4px 0' }}>01</div><div style={{ padding: '4px 0' }}>02</div>
+                    <div style={{ padding: '4px 0' }}>03</div><div style={{ padding: '4px 0' }}>04</div><div style={{ padding: '4px 0' }}>05</div><div style={{ padding: '4px 0' }}>06</div>
+                    <div style={{ background: '#0052cc', color: '#fff', borderRadius: '12px 0 0 12px', padding: '4px 0', fontWeight: 600 }}>07</div>
+                    <div style={{ background: '#e8f1fb', padding: '4px 0' }}>08</div><div style={{ background: '#e8f1fb', padding: '4px 0' }}>09</div>
+                    <div style={{ background: '#e8f1fb', padding: '4px 0' }}>10</div><div style={{ background: '#e8f1fb', padding: '4px 0' }}>11</div><div style={{ background: '#e8f1fb', padding: '4px 0', color: '#0052cc', fontWeight: 600 }}>12</div>
+                    <div style={{ background: '#0052cc', color: '#fff', borderRadius: '0 12px 12px 0', padding: '4px 0', fontWeight: 600 }}>13</div>
+                    <div style={{ padding: '4px 0' }}>14</div><div style={{ padding: '4px 0' }}>15</div><div style={{ padding: '4px 0' }}>16</div>
+                    <div style={{ padding: '4px 0' }}>17</div><div style={{ padding: '4px 0' }}>18</div><div style={{ padding: '4px 0' }}>19</div><div style={{ padding: '4px 0' }}>20</div>
+                    <div style={{ padding: '4px 0' }}>21</div><div style={{ padding: '4px 0' }}>22</div><div style={{ padding: '4px 0' }}>23</div>
+                    <div style={{ padding: '4px 0' }}>24</div><div style={{ padding: '4px 0' }}>25</div><div style={{ padding: '4px 0' }}>26</div><div style={{ padding: '4px 0' }}>27</div>
+                    <div style={{ padding: '4px 0' }}>28</div><div style={{ padding: '4px 0' }}>29</div><div style={{ padding: '4px 0' }}>30</div>
+                    <div style={{ padding: '4px 0' }}>31</div>
+                  </div>
+                  <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '12px -16px 0', padding: '12px 16px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>07 Jan - 13 Jan 2025</div>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button style={{ padding: '6px 12px', border: '1px solid var(--border-default)', borderRadius: 6, background: '#fff', fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', cursor: 'pointer' }}>Clear</button>
+                      <button onClick={() => setShowDatePicker(false)} style={{ padding: '6px 12px', border: 'none', borderRadius: 6, background: '#0052cc', fontSize: 12, fontWeight: 600, color: '#fff', cursor: 'pointer' }}>Apply</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {Object.keys(FILTER_OPTIONS).map((label) => (
 

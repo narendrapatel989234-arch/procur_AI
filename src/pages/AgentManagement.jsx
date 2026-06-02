@@ -164,47 +164,42 @@ export default function AgentManagement({ activeNav, onNavigate }) {
 
               {/* Custom Date Picker Popover */}
               {showDatePicker && (
-                <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 8, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '20px 24px', boxShadow: '0 12px 32px rgba(0,0,0,0.1)', zIndex: 100, width: 360, animation: 'fadeIn 0.15s ease' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                    <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)' }}>Select Date Range</div>
-                    <button onClick={() => setShowDatePicker(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex' }}><X size={16} /></button>
+                <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '12px 16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 100, width: 280, animation: 'fadeIn 0.15s ease' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Select Date Range</div>
+                    <button onClick={() => setShowDatePicker(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex' }}><X size={14} /></button>
                   </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-                    <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', color: 'var(--text-primary)' }}><ChevronLeft size={18} /></button>
-                    <div style={{ display: 'flex', gap: 12 }}>
-                      <div style={{ border: '1px solid var(--border-default)', borderRadius: 8, padding: '7px 14px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', cursor: 'pointer', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>January <ChevronDown size={14} color="var(--text-secondary)" /></div>
-                      <div style={{ border: '1px solid var(--border-default)', borderRadius: 8, padding: '7px 14px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', cursor: 'pointer', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>2025 <ChevronDown size={14} color="var(--text-secondary)" /></div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                    <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 2, display: 'flex', color: 'var(--text-primary)' }}><ChevronLeft size={16} /></button>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <div style={{ border: '1px solid var(--border-default)', borderRadius: 6, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', cursor: 'pointer', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>January <ChevronDown size={12} color="var(--text-secondary)" /></div>
+                      <div style={{ border: '1px solid var(--border-default)', borderRadius: 6, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', cursor: 'pointer', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>2025 <ChevronDown size={12} color="var(--text-secondary)" /></div>
                     </div>
-                    <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', color: 'var(--text-primary)' }}><ChevronRight size={18} /></button>
+                    <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 2, display: 'flex', color: 'var(--text-primary)' }}><ChevronRight size={16} /></button>
                   </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', textAlign: 'center', fontSize: 10, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 12 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', textAlign: 'center', fontSize: 10, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 8 }}>
                     <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
                   </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', rowGap: 8, textAlign: 'center', fontSize: 13, color: 'var(--text-primary)' }}>
-                    {/* Empty slots */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', rowGap: 4, textAlign: 'center', fontSize: 12, color: 'var(--text-primary)' }}>
                     <div /><div /><div /><div /><div />
-                    <div style={{ padding: '8px 0' }}>01</div><div style={{ padding: '8px 0' }}>02</div>
-                    <div style={{ padding: '8px 0' }}>03</div><div style={{ padding: '8px 0' }}>04</div><div style={{ padding: '8px 0' }}>05</div><div style={{ padding: '8px 0' }}>06</div>
-                    <div style={{ background: '#0052cc', color: '#fff', borderRadius: '16px 0 0 16px', padding: '8px 0', fontWeight: 600 }}>07</div>
-                    <div style={{ background: '#e8f1fb', padding: '8px 0' }}>08</div><div style={{ background: '#e8f1fb', padding: '8px 0' }}>09</div>
-                    <div style={{ background: '#e8f1fb', padding: '8px 0' }}>10</div><div style={{ background: '#e8f1fb', padding: '8px 0' }}>11</div><div style={{ background: '#e8f1fb', padding: '8px 0', color: '#0052cc', fontWeight: 600 }}>12</div>
-                    <div style={{ background: '#0052cc', color: '#fff', borderRadius: '0 16px 16px 0', padding: '8px 0', fontWeight: 600 }}>13</div>
-                    <div style={{ padding: '8px 0' }}>14</div><div style={{ padding: '8px 0' }}>15</div><div style={{ padding: '8px 0' }}>16</div>
-                    <div style={{ padding: '8px 0' }}>17</div><div style={{ padding: '8px 0' }}>18</div><div style={{ padding: '8px 0' }}>19</div><div style={{ padding: '8px 0' }}>20</div>
-                    <div style={{ padding: '8px 0' }}>21</div><div style={{ padding: '8px 0' }}>22</div><div style={{ padding: '8px 0' }}>23</div>
-                    <div style={{ padding: '8px 0' }}>24</div><div style={{ padding: '8px 0' }}>25</div><div style={{ padding: '8px 0' }}>26</div><div style={{ padding: '8px 0' }}>27</div>
-                    <div style={{ padding: '8px 0' }}>28</div><div style={{ padding: '8px 0' }}>29</div><div style={{ padding: '8px 0' }}>30</div>
-                    <div style={{ padding: '8px 0' }}>31</div>
+                    <div style={{ padding: '4px 0' }}>01</div><div style={{ padding: '4px 0' }}>02</div>
+                    <div style={{ padding: '4px 0' }}>03</div><div style={{ padding: '4px 0' }}>04</div><div style={{ padding: '4px 0' }}>05</div><div style={{ padding: '4px 0' }}>06</div>
+                    <div style={{ background: '#0052cc', color: '#fff', borderRadius: '12px 0 0 12px', padding: '4px 0', fontWeight: 600 }}>07</div>
+                    <div style={{ background: '#e8f1fb', padding: '4px 0' }}>08</div><div style={{ background: '#e8f1fb', padding: '4px 0' }}>09</div>
+                    <div style={{ background: '#e8f1fb', padding: '4px 0' }}>10</div><div style={{ background: '#e8f1fb', padding: '4px 0' }}>11</div><div style={{ background: '#e8f1fb', padding: '4px 0', color: '#0052cc', fontWeight: 600 }}>12</div>
+                    <div style={{ background: '#0052cc', color: '#fff', borderRadius: '0 12px 12px 0', padding: '4px 0', fontWeight: 600 }}>13</div>
+                    <div style={{ padding: '4px 0' }}>14</div><div style={{ padding: '4px 0' }}>15</div><div style={{ padding: '4px 0' }}>16</div>
+                    <div style={{ padding: '4px 0' }}>17</div><div style={{ padding: '4px 0' }}>18</div><div style={{ padding: '4px 0' }}>19</div><div style={{ padding: '4px 0' }}>20</div>
+                    <div style={{ padding: '4px 0' }}>21</div><div style={{ padding: '4px 0' }}>22</div><div style={{ padding: '4px 0' }}>23</div>
+                    <div style={{ padding: '4px 0' }}>24</div><div style={{ padding: '4px 0' }}>25</div><div style={{ padding: '4px 0' }}>26</div><div style={{ padding: '4px 0' }}>27</div>
+                    <div style={{ padding: '4px 0' }}>28</div><div style={{ padding: '4px 0' }}>29</div><div style={{ padding: '4px 0' }}>30</div>
+                    <div style={{ padding: '4px 0' }}>31</div>
                   </div>
-
-                  <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '16px -24px 0', padding: '16px 24px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>07 Jan 2025 - 13 Jan 2025</div>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button style={{ padding: '8px 16px', border: '1px solid var(--border-default)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', cursor: 'pointer' }}>Clear</button>
-                      <button onClick={() => setShowDatePicker(false)} style={{ padding: '8px 16px', border: 'none', borderRadius: 8, background: 'linear-gradient(135deg, #0052cc, #7c7cff)', fontSize: 13, fontWeight: 600, color: '#fff', cursor: 'pointer' }}>Apply</button>
+                  <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '12px -16px 0', padding: '12px 16px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>07 Jan - 13 Jan 2025</div>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button style={{ padding: '6px 12px', border: '1px solid var(--border-default)', borderRadius: 6, background: '#fff', fontSize: 12, fontWeight: 600, color: 'var(--text-primary)', cursor: 'pointer' }}>Clear</button>
+                      <button onClick={() => setShowDatePicker(false)} style={{ padding: '6px 12px', border: 'none', borderRadius: 6, background: '#0052cc', fontSize: 12, fontWeight: 600, color: '#fff', cursor: 'pointer' }}>Apply</button>
                     </div>
                   </div>
                 </div>
