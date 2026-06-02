@@ -716,7 +716,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                         const ss = STAGE_STYLES[r.stage] || STAGE_STYLES['Draft'];
                         const isDraft = r.status?.toLowerCase() === 'pr drafted';
                         return (
-                          <tr key={r.id} className="ptr" onClick={() => setCurrentPage('prdetail')} style={{
+                          <tr key={r.id} className="ptr" onClick={() => r.type === 'Complex' ? setCurrentPage('prdetailrfp') : setCurrentPage('prdetailfresh')} style={{
                             borderBottom: idx < paginatedRows.length - 1 ? '1px solid #f5f5f5' : 'none',
                             cursor: 'pointer'
                           }}>
