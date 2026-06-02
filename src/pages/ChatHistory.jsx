@@ -159,6 +159,8 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav }) {
   const css = `
     @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-12px) } to { opacity: 1; transform: translateX(-50%) translateY(0) } }
     @keyframes toastOut { from { opacity:1; transform: translateY(0) } to { opacity:0; transform: translateY(-12px) } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(20px) } to { opacity: 1; transform: translateX(0) } }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.96) } to { opacity: 1; transform: scale(1) } }
     @keyframes progressFill { from { width: 0% } to { width: 100% } }
     .pcard{transition:box-shadow .18s ease,transform .18s ease}
     .pcard:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(14,15,37,0.08)}
@@ -225,7 +227,7 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav }) {
           background: '#fff', border: '1px solid var(--border-subtle)',
           borderRadius: 14, padding: '14px 16px', width: 320,
           boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-          animation: 'toastIn 0.2s ease forwards',
+          animation: 'slideInRight 0.2s ease forwards',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
             <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(239,68,68,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -261,7 +263,7 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav }) {
           <div style={{
             background: '#fff', borderRadius: 16, padding: '28px 28px 24px',
             width: 480, boxShadow: '0 16px 48px rgba(0,0,0,0.15)',
-            animation: 'toastIn 0.2s ease forwards',
+            animation: 'modalIn 0.15s ease-out forwards',
           }} onClick={(e) => e.stopPropagation()}>
 
             {/* Header */}
@@ -504,7 +506,7 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav }) {
       {showRenameModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onClick={() => setShowRenameModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 440, boxShadow: '0 16px 48px rgba(0,0,0,0.15)' }}
+          <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 440, boxShadow: '0 16px 48px rgba(0,0,0,0.15)', animation: 'modalIn 0.15s ease-out forwards' }}
             onClick={(e) => e.stopPropagation()}>
             <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>Rename this chat</div>
             <input
@@ -512,7 +514,7 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav }) {
               onChange={(e) => setRenameValue(e.target.value)}
               autoFocus
               onKeyDown={(e) => { if (e.key === 'Enter' && renameValue.trim()) setShowRenameModal(false); if (e.key === 'Escape') setShowRenameModal(false); }}
-              style={{ width: '100%', padding: '12px 16px', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)', marginBottom: 20 }}
+              style={{ background: '#fff', width: '100%', padding: '12px 16px', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)', marginBottom: 20 }}
             />
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button onClick={() => setShowRenameModal(false)} style={{ padding: '10px 20px', border: '1px solid var(--border-default)', borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>Cancel</button>
@@ -525,7 +527,7 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav }) {
       {showDeleteModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onClick={() => setShowDeleteModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 20, padding: '36px 28px 28px', width: 460, boxShadow: '0 16px 48px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+          <div style={{ background: '#fff', borderRadius: 20, padding: '36px 28px 28px', width: 460, boxShadow: '0 16px 48px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', animation: 'modalIn 0.15s ease-out forwards' }}
             onClick={(e) => e.stopPropagation()}>
             <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
               <AlertTriangle size={32} color="#ef4444" strokeWidth={2} />

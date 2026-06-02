@@ -3,9 +3,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
 
   Search, ChevronDown, ChevronUp, ArrowUpDown,
-  ChevronLeft, ChevronRight, Eye, Pencil, X, Trash2,
+  ChevronLeft, ChevronRight, Eye, Pencil, X, Trash2, MessageSquare,
   Clock, CheckCircle, AlertTriangle,
-  TrendingUp, TrendingDown, Zap, FileText, Layers,
+  TrendingUp, TrendingDown, Zap, FileText, Layers, Briefcase
 } from 'lucide-react';
 
 import MainLayout from '../layouts/MainLayout.jsx';
@@ -21,111 +21,81 @@ import MainLayout from '../layouts/MainLayout.jsx';
 
 
 const KPIS = [
-
-  { label: 'My Active Requests', value: '12', trend: '+2 this week', TrendIcon: TrendingUp, trendColor: '#22c55e', Icon: FileText, iconColor: '#0052cc', iconBg: 'rgba(0,82,204,0.07)' },
-
-  { label: 'Pending My Action', value: '5', trend: 'Needs attention', TrendIcon: AlertTriangle, trendColor: '#f59e0b', Icon: Clock, iconColor: '#f59e0b', iconBg: 'rgba(245,158,11,0.07)' },
-
-  { label: 'Approved This Month', value: '8', trend: '+3 vs last month', TrendIcon: TrendingUp, trendColor: '#22c55e', Icon: CheckCircle, iconColor: '#22c55e', iconBg: 'rgba(34,197,94,0.07)' },
-
-  { label: 'Rejected / Returned', value: '2', trend: 'This month', TrendIcon: TrendingDown, trendColor: '#ef4444', Icon: X, iconColor: '#ef4444', iconBg: 'rgba(239,68,68,0.07)' },
-
-  { label: 'Avg PR-to-PO Time', value: '6.2d', trend: '-0.8d improvement', TrendIcon: TrendingUp, trendColor: '#22c55e', Icon: Zap, iconColor: '#7c7cff', iconBg: 'rgba(124,124,255,0.07)' },
-
+  { label: 'Active Requisitions', value: '12', trend: '+2% volume vs last month', TrendIcon: TrendingUp, trendColor: '#22c55e', Icon: FileText, iconColor: '#0052cc', iconBg: 'rgba(0,82,204,0.07)' },
+  { label: 'Active RFPs', value: '8', trend: '3 Drafts | 5 Published', TrendIcon: Layers, trendColor: '#22c55e', Icon: Layers, iconColor: '#7c7cff', iconBg: 'rgba(124,124,255,0.07)' },
+  { label: 'SOW', value: '15', trend: '5 Approved & awaiting Signature | 10 Signed', TrendIcon: CheckCircle, trendColor: '#22c55e', Icon: Briefcase, iconColor: '#a21caf', iconBg: 'rgba(162,28,175,0.07)' },
+  { label: 'POs Pending', value: '24', trend: '85% PR-PO completion rate', TrendIcon: TrendingUp, trendColor: '#22c55e', Icon: Clock, iconColor: '#f59e0b', iconBg: 'rgba(245,158,11,0.07)' },
+  { label: 'Average PR-PO Cycle Time', value: '6.2d', trend: '-12% duration vs last month', TrendIcon: TrendingDown, trendColor: '#22c55e', Icon: Zap, iconColor: '#7c7cff', iconBg: 'rgba(124,124,255,0.07)' },
 ];
 
 
 
 const STAGE_STYLES = {
-
   'Requisition': { background: '#e8f1fb', color: '#0052cc' },
-
-  'RFQ / RFP': { background: '#ede9fe', color: '#6d28d9' },
-
+  'RFP': { background: '#ede9fe', color: '#6d28d9' },
   'Bid Evaluation': { background: '#fdf4ff', color: '#a21caf' },
-
   'Negotiation': { background: '#fff3e0', color: '#e65100' },
-
   'Award': { background: '#f0fdf4', color: '#15803d' },
-
   'Contract / SOW': { background: '#fff1f2', color: '#be123c' },
-
   'Purchase Order (PO)': { background: '#ecfdf5', color: '#065f46' },
-
-  'Draft': { background: '#f5f5f5', color: '#888888' },
-
 };
 
-
+const STATUS_STYLES = {
+  'PR Drafted': { background: '#f5f5f5', color: '#888888' },
+  'PR in progress': { background: '#e8f1fb', color: '#0052cc' },
+  'PR Cancelled': { background: '#fff1f2', color: '#be123c' },
+  'RFP Drafted': { background: '#f5f5f5', color: '#888888' },
+  'RFP Published': { background: '#ede9fe', color: '#6d28d9' },
+  'Evaluation in progress': { background: '#fdf4ff', color: '#a21caf' },
+  'Negotiation in progress': { background: '#fff3e0', color: '#e65100' },
+  'Vendor Finalized': { background: '#f0fdf4', color: '#15803d' },
+  'SoW Drafted': { background: '#f5f5f5', color: '#888888' },
+  'SoW Approved': { background: '#f0fdf4', color: '#15803d' },
+  'SoW Signed': { background: '#ecfdf5', color: '#065f46' },
+  'PO Pending': { background: '#fff3e0', color: '#e65100' },
+  'PO Approved': { background: '#f0fdf4', color: '#15803d' },
+  'PO Rejected': { background: '#fff1f2', color: '#be123c' },
+};
 
 const ROWS = [
-
-  { id: 'PR-2026-000', title: 'IT Equipment Budget Q3', creator: 'David Kim', created: '13-May-2026 09:00', stage: 'Draft', type: 'Routine', updated: 'Just now', costCentre: 'IT' },
-
-  { id: 'PR-2026-001', title: 'MacBook Pro Upgrades', creator: 'David Kim', created: '12-May-2026 14:30', stage: 'Requisition', type: 'Routine', updated: '2 hours ago', costCentre: 'IT' },
-
-  { id: 'PR-2026-002', title: 'Enterprise Salesforce License', creator: 'David Kim', created: '10-May-2026 09:15', stage: 'RFQ / RFP', type: 'Complex', updated: '4 hours ago', costCentre: 'DDAIS' },
-
-  { id: 'PR-2026-003', title: 'Office Supplies Q2', creator: 'David Kim', created: '09-May-2026 11:45', stage: 'Award', type: 'Routine', updated: '1 day ago', costCentre: 'Operations' },
-
-  { id: 'PR-2026-004', title: 'AWS Cloud Migration Consulting', creator: 'David Kim', created: '08-May-2026 16:20', stage: 'Negotiation', type: 'Complex', updated: '1 day ago', costCentre: 'Engineering' },
-
-  { id: 'PR-2026-005', title: 'Ergonomic Office Chairs', creator: 'David Kim', created: '07-May-2026 08:05', stage: 'Award', type: 'Routine', updated: '2 days ago', costCentre: 'HR' },
-
-  { id: 'PR-2026-006', title: 'Data Analytics Platform', creator: 'David Kim', created: '06-May-2026 13:50', stage: 'Bid Evaluation', type: 'Complex', updated: '2 days ago', costCentre: 'Finance' },
-
-  { id: 'PR-2026-007', title: 'Security Audit Services', creator: 'David Kim', created: '05-May-2026 10:10', stage: 'Contract / SOW', type: 'Complex', updated: '3 days ago', costCentre: 'Legal' },
-
-  { id: 'PR-2026-008', title: 'Printer Toner Refills', creator: 'David Kim', created: '04-May-2026 15:25', stage: 'Purchase Order (PO)', type: 'Routine', updated: '3 days ago', costCentre: 'Operations' },
-
-  { id: 'PR-2026-009', title: 'Marketing Agency Retainer', creator: 'David Kim', created: '03-May-2026 12:40', stage: 'RFQ / RFP', type: 'Complex', updated: '4 days ago', costCentre: 'Marketing' },
-
-  { id: 'PR-2026-010', title: 'Warehouse Shelving Units', creator: 'David Kim', created: '02-May-2026 09:55', stage: 'Purchase Order (PO)', type: 'Routine', updated: '5 days ago', costCentre: 'Procurement' },
-
-  { id: 'PR-2026-011', title: 'Finance System Upgrade Draft', creator: 'David Kim', created: '01-May-2026 10:30', stage: 'Draft', type: 'Complex', updated: '6 days ago', costCentre: 'Finance' },
-
-  { id: 'PR-2026-012', title: 'Brand Assets Refresh Draft', creator: 'David Kim', created: '30-Apr-2026 14:00', stage: 'Draft', type: 'Routine', updated: '1 week ago', costCentre: 'Marketing' },
-
-  { id: 'PR-2026-013', title: 'HR Onboarding Kits', creator: 'David Kim', created: '29-Apr-2026 09:45', stage: 'Requisition', type: 'Routine', updated: '1 week ago', costCentre: 'HR' },
-
-  { id: 'PR-2026-014', title: 'Legal Document Management SaaS', creator: 'David Kim', created: '28-Apr-2026 11:20', stage: 'RFQ / RFP', type: 'Complex', updated: '1 week ago', costCentre: 'Legal' },
-
-  { id: 'PR-2026-015', title: 'Network Infrastructure Refresh', creator: 'David Kim', created: '27-Apr-2026 16:00', stage: 'Negotiation', type: 'Complex', updated: '8 days ago', costCentre: 'Engineering' },
-
-  { id: 'PR-2026-016', title: 'Office Pantry Restocking', creator: 'David Kim', created: '26-Apr-2026 08:30', stage: 'Purchase Order (PO)', type: 'Routine', updated: '9 days ago', costCentre: 'Operations' },
-
-  { id: 'PR-2026-017', title: 'ERP Module Licensing', creator: 'David Kim', created: '25-Apr-2026 13:15', stage: 'Bid Evaluation', type: 'Complex', updated: '10 days ago', costCentre: 'DDAIS' },
-
-  { id: 'PR-2026-018', title: 'Training Room AV Equipment', creator: 'David Kim', created: '24-Apr-2026 10:00', stage: 'Contract / SOW', type: 'Routine', updated: '11 days ago', costCentre: 'HR' },
-
-  { id: 'PR-2026-019', title: 'Procurement Analytics Licence', creator: 'David Kim', created: '23-Apr-2026 15:45', stage: 'Award', type: 'Complex', updated: '12 days ago', costCentre: 'Procurement' },
-
+  { id: 'PR-2026-000', title: 'IT Equipment Budget Q3', created: '13-May-2026 09:00', stage: 'Requisition', status: 'PR Drafted', type: 'Routine', updated: 'Just now', costCentre: 'IT' },
+  { id: 'PR-2026-001', title: 'MacBook Pro Upgrades', created: '12-May-2026 14:30', stage: 'Requisition', status: 'PR in progress', type: 'Routine', updated: '2 hours ago', costCentre: 'IT' },
+  { id: 'PR-2026-002', title: 'Enterprise Salesforce License', created: '10-May-2026 09:15', stage: 'RFP', status: 'RFP Published', type: 'Complex', updated: '4 hours ago', costCentre: 'DDAIS' },
+  { id: 'PR-2026-003', title: 'Office Supplies Q2', created: '09-May-2026 11:45', stage: 'Award', status: 'Vendor Finalized', type: 'Routine', updated: '1 day ago', costCentre: 'Operations' },
+  { id: 'PR-2026-004', title: 'AWS Cloud Migration Consulting', created: '08-May-2026 16:20', stage: 'Negotiation', status: 'Negotiation in progress', type: 'Complex', updated: '1 day ago', costCentre: 'Engineering' },
+  { id: 'PR-2026-005', title: 'Ergonomic Office Chairs', created: '07-May-2026 08:05', stage: 'Award', status: 'Vendor Finalized', type: 'Routine', updated: '2 days ago', costCentre: 'HR' },
+  { id: 'PR-2026-006', title: 'Data Analytics Platform', created: '06-May-2026 13:50', stage: 'Bid Evaluation', status: 'Evaluation in progress', type: 'Complex', updated: '2 days ago', costCentre: 'Finance' },
+  { id: 'PR-2026-007', title: 'Security Audit Services', created: '05-May-2026 10:10', stage: 'Contract / SOW', status: 'SoW Approved', type: 'Complex', updated: '3 days ago', costCentre: 'Legal' },
+  { id: 'PR-2026-008', title: 'Printer Toner Refills', created: '04-May-2026 15:25', stage: 'Purchase Order (PO)', status: 'PO Approved', type: 'Routine', updated: '3 days ago', costCentre: 'Operations' },
+  { id: 'PR-2026-009', title: 'Marketing Agency Retainer', created: '03-May-2026 12:40', stage: 'RFP', status: 'RFP Published', type: 'Complex', updated: '4 days ago', costCentre: 'Marketing' },
+  { id: 'PR-2026-010', title: 'Warehouse Shelving Units', created: '02-May-2026 09:55', stage: 'Purchase Order (PO)', status: 'PO Pending', type: 'Routine', updated: '5 days ago', costCentre: 'Procurement' },
+  { id: 'PR-2026-011', title: 'Finance System Upgrade Draft', created: '01-May-2026 10:30', stage: 'Requisition', status: 'PR Drafted', type: 'Complex', updated: '6 days ago', costCentre: 'Finance' },
+  { id: 'PR-2026-012', title: 'Brand Assets Refresh Draft', created: '30-Apr-2026 14:00', stage: 'Requisition', status: 'PR Drafted', type: 'Routine', updated: '1 week ago', costCentre: 'Marketing' },
+  { id: 'PR-2026-013', title: 'HR Onboarding Kits', created: '29-Apr-2026 09:45', stage: 'Requisition', status: 'PR in progress', type: 'Routine', updated: '1 week ago', costCentre: 'HR' },
+  { id: 'PR-2026-014', title: 'Legal Document Management SaaS', created: '28-Apr-2026 11:20', stage: 'RFP', status: 'RFP Drafted', type: 'Complex', updated: '1 week ago', costCentre: 'Legal' },
+  { id: 'PR-2026-015', title: 'Network Infrastructure Refresh', created: '27-Apr-2026 16:00', stage: 'Negotiation', status: 'Negotiation in progress', type: 'Complex', updated: '8 days ago', costCentre: 'Engineering' },
+  { id: 'PR-2026-016', title: 'Office Pantry Restocking', created: '26-Apr-2026 08:30', stage: 'Purchase Order (PO)', status: 'PO Rejected', type: 'Routine', updated: '9 days ago', costCentre: 'Operations' },
+  { id: 'PR-2026-017', title: 'ERP Module Licensing', created: '25-Apr-2026 13:15', stage: 'Bid Evaluation', status: 'Evaluation in progress', type: 'Complex', updated: '10 days ago', costCentre: 'DDAIS' },
+  { id: 'PR-2026-018', title: 'Training Room AV Equipment', created: '24-Apr-2026 10:00', stage: 'Contract / SOW', status: 'SoW Signed', type: 'Routine', updated: '11 days ago', costCentre: 'HR' },
+  { id: 'PR-2026-019', title: 'Procurement Analytics Licence', created: '23-Apr-2026 15:45', stage: 'Award', status: 'Vendor Finalized', type: 'Complex', updated: '12 days ago', costCentre: 'Procurement' },
 ];
 
 const APPROVAL_ROWS = [
-  { id: 'PR-2026-011', title: 'Cloud Infrastructure Upgrade', creator: 'Sarah Chen', created: '11-May-2026 10:00', stage: 'Negotiation', type: 'Complex', updated: '1 hour ago' },
-  { id: 'PR-2026-012', title: 'Office Renovation Supplies', creator: 'James Patel', created: '10-May-2026 14:30', stage: 'Requisition', type: 'Routine', updated: '3 hours ago' },
-  { id: 'PR-2026-013', title: 'Annual Software Licenses', creator: 'Priya Nair', created: '09-May-2026 09:00', stage: 'Negotiation', type: 'Complex', updated: '1 day ago' },
-  { id: 'PR-2026-014', title: 'Marketing Campaign Tools', creator: 'Alex Wong', created: '08-May-2026 11:20', stage: 'Requisition', type: 'Routine', updated: '2 days ago' },
-  { id: 'PR-2026-015', title: 'Data Center Equipment', creator: 'Riya Sharma', created: '07-May-2026 16:45', stage: 'RFQ / RFP', type: 'Complex', updated: '3 days ago' },
+  { id: 'PR-2026-011', title: 'Cloud Infrastructure Upgrade', created: '11-May-2026 10:00', stage: 'Negotiation', status: 'Negotiation in progress', type: 'Complex', updated: '1 hour ago', costCentre: 'Engineering' },
+  { id: 'PR-2026-012', title: 'Office Renovation Supplies', created: '10-May-2026 14:30', stage: 'Requisition', status: 'PR in progress', type: 'Routine', updated: '3 hours ago', costCentre: 'Operations' },
+  { id: 'PR-2026-013', title: 'Annual Software Licenses', created: '09-May-2026 09:00', stage: 'Negotiation', status: 'Negotiation in progress', type: 'Complex', updated: '1 day ago', costCentre: 'IT' },
+  { id: 'PR-2026-014', title: 'Marketing Campaign Tools', created: '08-May-2026 11:20', stage: 'Requisition', status: 'PR in progress', type: 'Routine', updated: '2 days ago', costCentre: 'Marketing' },
+  { id: 'PR-2026-015', title: 'Data Center Equipment', created: '07-May-2026 16:45', stage: 'RFP', status: 'RFP Published', type: 'Complex', updated: '3 days ago', costCentre: 'IT' },
 ];
 
-
-
-const COLUMNS = ['PR ID', 'Title', 'Creator', 'Created Date', 'Lifecycle Stage', 'Cost Centre', 'Type', 'Last Updated', 'Actions'];
-
-
+const COLUMNS = ['PR ID', 'Title', 'Created Date', 'Lifecycle Stage', 'Status', 'Cost Centre', 'Type', 'Last Updated', 'Actions'];
 
 const FILTER_OPTIONS = {
-
-  'Lifecycle Stage': ['Draft', 'Requisition', 'RFQ / RFP', 'Bid Evaluation', 'Negotiation', 'Award', 'Contract / SOW', 'Purchase Order (PO)'],
-
+  'Lifecycle Stage': ['Requisition', 'RFP', 'Bid Evaluation', 'Negotiation', 'Award', 'Contract / SOW', 'Purchase Order (PO)'],
+  'Status': ['PR Drafted', 'PR in progress', 'PR Cancelled', 'RFP Drafted', 'RFP Published', 'Evaluation in progress', 'Negotiation in progress', 'Vendor Finalized', 'SoW Drafted', 'SoW Approved', 'SoW Signed', 'PO Pending', 'PO Approved', 'PO Rejected'],
   'Cost Centre': ['DDAIS', 'Finance', 'Engineering', 'Operations', 'Marketing', 'HR', 'Legal', 'Procurement', 'IT', 'Other'],
-
   'Type': ['Routine', 'Complex'],
-
   'Date Range': ['Today', 'This Week', 'This Month', 'Last 3 Months'],
-
 };
 
 
@@ -183,10 +153,8 @@ function FilterDropdown({ label, options, isOpen, onToggle, onClose, activeOptio
           display: 'flex', alignItems: 'center', gap: 6,
 
           background: isOpen || hasSelection ? 'var(--bg-surface-1)' : '#fff',
-
           border: `1px solid ${isOpen || hasSelection ? '#7c7cff' : 'var(--border-default)'}`,
-
-          borderRadius: 8, padding: '7px 12px', fontSize: 12,
+          borderRadius: 8, padding: '0 12px', height: 36, fontSize: 12,
 
           color: 'var(--text-secondary)', cursor: 'pointer', fontFamily: 'inherit',
 
@@ -200,7 +168,7 @@ function FilterDropdown({ label, options, isOpen, onToggle, onClose, activeOptio
 
           selectedCount === 0 ? label :
 
-            selectedCount === 1 ? activeOption[0] :
+            selectedCount === 1 ? `${label}: ${activeOption[0]}` :
 
               `${label}: ${selectedCount} selected`
 
@@ -325,10 +293,11 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
   const [tableSearch, setTableSearch] = useState('');
 
   const [openFilter, setOpenFilter] = useState(null);
-  const [managerTab, setManagerTab] = useState('my'); // 'my' | 'approval'
+  const [activeTab, setActiveTab] = useState('my'); // 'my' | 'approval'
   const [activeFilters, setActiveFilters] = useState({
     'Lifecycle Stage': [],
-    'Cost Centre': null,
+    'Status': [],
+    'Cost Centre': [],
     'Type': null,
   });
   const [sortCol, setSortCol] = useState(null);
@@ -364,7 +333,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
   useEffect(() => {
     setIsSearching(true);
     const timer = setTimeout(() => {
-      const baseRows = (userRole === 'manager' && managerTab === 'approval') ? APPROVAL_ROWS : ROWS;
+      const baseRows = activeTab === 'approval' ? APPROVAL_ROWS : ROWS;
       let results = [...baseRows];
 
       // search filter
@@ -377,14 +346,19 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
         );
       }
 
+      // status filter
+      if (activeFilters['Status'] && activeFilters['Status'].length > 0) {
+        results = results.filter(r => activeFilters['Status'].includes(r.status));
+      }
+
       // lifecycle stage filter
       if (activeFilters['Lifecycle Stage'] && activeFilters['Lifecycle Stage'].length > 0) {
         results = results.filter(r => activeFilters['Lifecycle Stage'].includes(r.stage));
       }
 
       // cost centre filter
-      if (activeFilters['Cost Centre']) {
-        results = results.filter(r => r.costCentre === activeFilters['Cost Centre']);
+      if (activeFilters['Cost Centre'] && activeFilters['Cost Centre'].length > 0) {
+        results = results.filter(r => activeFilters['Cost Centre'].includes(r.costCentre));
       }
 
       // type filter
@@ -395,8 +369,8 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
       // sort
       if (sortCol) {
         const colMap = {
-          'PR ID': 'id', 'Title': 'title', 'Creator': 'creator',
-          'Created Date': 'created', 'Lifecycle Stage': 'stage',
+          'PR ID': 'id', 'Title': 'title',
+          'Created Date': 'created', 'Lifecycle Stage': 'stage', 'Status': 'status',
           'Type': 'type', 'Last Updated': 'updated'
         };
         const key = colMap[sortCol];
@@ -415,7 +389,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
     }, tableSearch.trim() ? 600 : 150);
 
     return () => clearTimeout(timer);
-  }, [tableSearch, sortCol, sortDir, activeFilters, managerTab, userRole]);
+  }, [tableSearch, sortCol, sortDir, activeFilters, activeTab, userRole]);
 
   const totalRows = displayedRows.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
@@ -437,6 +411,9 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
     .pbtn-edit { transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
     .pbtn-edit:hover { background: rgba(0,82,204,0.07) !important; border-color: rgba(0,82,204,0.3) !important; color: #0052cc !important; }
     .pbtn-edit:hover svg { stroke: #0052cc; }
+    .pbtn-chat { transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+    .pbtn-chat:hover { background: rgba(0,82,204,0.07) !important; border-color: rgba(0,82,204,0.3) !important; color: #0052cc !important; }
+    .pbtn-chat:hover svg { stroke: #0052cc; }
     .pbtn-x { transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
     .pbtn-x:hover { background: rgba(239,68,68,0.07) !important; border-color: rgba(239,68,68,0.3) !important; color: #ef4444 !important; }
     .pbtn-x:hover svg { stroke: #ef4444; }
@@ -483,57 +460,34 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 }}>
 
           {KPIS.map((k, i) => (
-
             <div key={i} className="pkpi" style={{
-
               background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14,
-
               padding: '18px 20px', boxShadow: '0 1px 3px rgba(14,15,37,0.05)',
-
+              display: 'flex', flexDirection: 'column', height: '100%'
             }}>
-
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-
                 <div style={{
-
                   width: 36, height: 36, borderRadius: 10, background: k.iconBg,
-
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-
                 }}>
-
                   <k.Icon size={18} color={k.iconColor} strokeWidth={2} />
-
                 </div>
-
               </div>
-
               <div style={{
-
                 fontSize: 11, fontWeight: 600, color: 'var(--text-tertiary)',
-
                 textTransform: 'uppercase', letterSpacing: '0.4px', marginTop: 14,
-
+                lineHeight: 1.3, minHeight: 29
               }}>{k.label}</div>
-
               <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', marginTop: 4 }}>{k.value}</div>
-
               <div style={{
-
-                fontSize: 11, color: k.trendColor, marginTop: 4,
-
-                display: 'flex', alignItems: 'center', gap: 4,
-
+                fontSize: 11, color: k.trendColor, marginTop: 16,
+                display: 'flex', alignItems: 'flex-start', gap: 6, lineHeight: 1.4,
+                minHeight: 31
               }}>
-
-                <k.TrendIcon size={12} strokeWidth={2.2} />
-
-                {k.trend}
-
+                <div style={{ paddingTop: 1 }}><k.TrendIcon size={12} strokeWidth={2.5} /></div>
+                <span style={{ flex: 1 }}>{k.trend}</span>
               </div>
-
             </div>
-
           ))}
 
         </div>
@@ -546,52 +500,31 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
 
 
 
-          {/* Section header */}
-          {userRole === 'manager' ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 0, background: 'var(--bg-surface-2)', borderRadius: 10, padding: 3 }}>
-                <button
-                  onClick={() => setManagerTab('my')}
-                  style={{
-                    padding: '6px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                    fontSize: 13, fontWeight: 600, fontFamily: 'inherit',
-                    background: managerTab === 'my' ? '#fff' : 'transparent',
-                    color: managerTab === 'my' ? 'var(--text-primary)' : 'var(--text-tertiary)',
-                    boxShadow: managerTab === 'my' ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  My Requests
-                </button>
-                <button
-                  onClick={() => setManagerTab('approval')}
-                  style={{
-                    padding: '6px 16px', borderRadius: 8, border: 'none', cursor: 'pointer',
-                    fontSize: 13, fontWeight: 600, fontFamily: 'inherit',
-                    background: managerTab === 'approval' ? '#fff' : 'transparent',
-                    color: managerTab === 'approval' ? 'var(--text-primary)' : 'var(--text-tertiary)',
-                    boxShadow: managerTab === 'approval' ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  Pending Approval
-                  <span style={{ marginLeft: 6, background: 'rgba(245,158,11,0.12)', color: '#b45309', borderRadius: 20, padding: '1px 7px', fontSize: 10, fontWeight: 700 }}>5</span>
-                </button>
-              </div>
-              <span className="pvall" style={{ fontSize: 13, color: 'var(--colors-blue-500)', cursor: 'pointer', fontWeight: 500 }}>View All</span>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Active Requests</span>
-                <span style={{ background: 'rgba(0,82,204,0.08)', color: '#0052cc', borderRadius: 20, padding: '2px 9px', fontSize: 11, fontWeight: 700 }}>47</span>
-              </div>
-
-              <span className="pvall" style={{ fontSize: 13, color: 'var(--colors-blue-500)', cursor: 'pointer', fontWeight: 500 }}>View All</span>
-
-            </div>
-          )}
+          <div style={{ display: 'flex', gap: 24, borderBottom: '1px solid var(--border-subtle)', marginBottom: 14 }}>
+            <button
+              onClick={() => setActiveTab('my')}
+              style={{
+                background: 'transparent', border: 'none', borderBottom: activeTab === 'my' ? '2px solid #0052cc' : '2px solid transparent',
+                padding: '0 4px 10px', fontSize: 14, fontWeight: activeTab === 'my' ? 600 : 500,
+                color: activeTab === 'my' ? '#0052cc' : 'var(--text-tertiary)',
+                cursor: 'pointer', transition: 'all 0.15s ease'
+              }}
+            >
+              My Requests
+            </button>
+            <button
+              onClick={() => setActiveTab('approval')}
+              style={{
+                background: 'transparent', border: 'none', borderBottom: activeTab === 'approval' ? '2px solid #0052cc' : '2px solid transparent',
+                padding: '0 4px 10px', fontSize: 14, fontWeight: activeTab === 'approval' ? 600 : 500,
+                color: activeTab === 'approval' ? '#0052cc' : 'var(--text-tertiary)',
+                cursor: 'pointer', transition: 'all 0.15s ease',
+                display: 'flex', alignItems: 'center', gap: 6
+              }}
+            >
+              Approval Requests <span style={{ fontSize: 12, background: 'rgba(0,0,0,0.05)', padding: '2px 8px', borderRadius: 12, fontWeight: 700 }}>5</span>
+            </button>
+          </div>
 
 
 
@@ -602,9 +535,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
             <div style={{
 
               display: 'flex', alignItems: 'center', gap: 8, width: 260,
-
-              background: '#fff', borderRadius: 8, padding: '7px 12px',
-
+              background: '#fff', borderRadius: 8, padding: '0 12px', height: 36,
               border: `1px solid ${tableSearchFocused ? '#7c7cff' : 'var(--border-default)'}`,
 
               boxShadow: tableSearchFocused ? '0 0 0 3px rgba(124,124,255,0.12)' : 'none',
@@ -656,10 +587,10 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                 onClose={closeFilter}
 
                 activeOption={activeFilters[label]}
-                isMulti={label === 'Lifecycle Stage'}
+                isMulti={label === 'Lifecycle Stage' || label === 'Cost Centre' || label === 'Status'}
 
                 onSelect={(label, opt) => {
-                  if (label === 'Lifecycle Stage') {
+                  if (label === 'Lifecycle Stage' || label === 'Cost Centre' || label === 'Status') {
                     if (opt === 'CLEAR_ALL') {
                       setActiveFilters(prev => ({ ...prev, [label]: [] }));
                       return;
@@ -678,9 +609,9 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
 
             ))}
 
-            {(activeFilters['Lifecycle Stage'].length > 0 || activeFilters['Cost Centre'] || activeFilters['Type']) && (
+            {(activeFilters['Lifecycle Stage'].length > 0 || activeFilters['Status']?.length > 0 || activeFilters['Cost Centre'].length > 0 || activeFilters['Type']) && (
               <button
-                onClick={() => setActiveFilters({ 'Lifecycle Stage': [], 'Cost Centre': null, 'Type': null })}
+                onClick={() => setActiveFilters({ 'Lifecycle Stage': [], 'Status': [], 'Cost Centre': [], 'Type': null })}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 5,
                   background: 'transparent', border: 'none', cursor: 'pointer',
@@ -719,9 +650,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                     <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
 
                       {COLUMNS.map((col, idx) => {
-
-                        const widths = ['80px', '170px', '100px', '110px', '130px', '110px', '80px', '110px', '80px'];
-
+                        const widths = ['80px', '170px', '100px', '120px', '140px', '110px', '80px', '100px', '80px'];
                         return (
 
                           <th key={col} onClick={() => {
@@ -785,37 +714,28 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                     ) : paginatedRows.length > 0 ? (
                       paginatedRows.map((r, idx) => {
                         const ss = STAGE_STYLES[r.stage] || STAGE_STYLES['Draft'];
-                        const isDraft = r.stage === 'Draft';
+                        const isDraft = r.status?.toLowerCase() === 'pr drafted';
                         return (
-                          <tr key={r.id} className="ptr" onClick={() => setCurrentPage(r.type === 'Complex' ? 'prdetailrfp' : 'prdetailfresh')} style={{
+                          <tr key={r.id} className="ptr" onClick={() => setCurrentPage('prdetail')} style={{
                             borderBottom: idx < paginatedRows.length - 1 ? '1px solid #f5f5f5' : 'none',
                             cursor: 'pointer'
                           }}>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.id}</td>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title}</td>
-                            <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.creator}</td>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.created}</td>
+                            <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.stage}</td>
                             <td style={{ padding: '13px 16px' }}>
                               <span style={{
                                 display: 'inline-block', padding: '3px 10px', borderRadius: 20,
-                                fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap', ...ss,
-                              }}>{r.stage}</span>
+                                fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap', ...(STATUS_STYLES[r.status] || { background: '#f5f5f5', color: '#888888' }),
+                              }}>{r.status}</span>
                             </td>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.costCentre || '—'}</td>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.type}</td>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.updated}</td>
                             <td style={{ padding: '13px 16px' }}>
                               <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                                <button className="pbtn" onClick={(e) => { e.stopPropagation(); setCurrentPage(r.type === 'Complex' ? 'prdetailrfp' : 'prdetailfresh'); }} style={{
-                                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 5,
-                                  height: 30, padding: '0 10px', boxSizing: 'border-box',
-                                  border: '1px solid var(--border-default)', borderRadius: 7,
-                                  fontSize: 12, background: '#fff',
-                                  color: 'var(--text-primary)', cursor: 'pointer', fontFamily: 'inherit',
-                                }}>
-                                  <Eye size={13} strokeWidth={2} /> View
-                                </button>
-                                <button className="pbtn pbtn-edit" onClick={(e) => e.stopPropagation()} style={{
+                                <button className="pbtn pbtn-edit" title="Edit (Form)" onClick={(e) => e.stopPropagation()} style={{
                                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                                   height: 30, minWidth: 30, padding: '0 9px', boxSizing: 'border-box',
                                   border: '1px solid var(--border-default)', borderRadius: 7,
@@ -824,8 +744,17 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                                 }}>
                                   <Pencil size={13} strokeWidth={2} />
                                 </button>
+                                <button className="pbtn pbtn-chat" title="Chat" onClick={(e) => e.stopPropagation()} style={{
+                                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                  height: 30, minWidth: 30, padding: '0 9px', boxSizing: 'border-box',
+                                  border: '1px solid var(--border-default)', borderRadius: 7,
+                                  background: '#fff',
+                                  color: 'var(--text-tertiary)', cursor: 'pointer',
+                                }}>
+                                  <MessageSquare size={13} strokeWidth={2} />
+                                </button>
                                 {isDraft && (
-                                  <button className="pbtn pbtn-x" onClick={(e) => e.stopPropagation()} style={{
+                                  <button className="pbtn pbtn-x" title="Delete" onClick={(e) => e.stopPropagation()} style={{
                                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                                     height: 30, minWidth: 30, padding: '0 9px', boxSizing: 'border-box',
                                     border: '1px solid var(--border-default)', borderRadius: 7,
