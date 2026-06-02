@@ -1192,7 +1192,7 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
                 <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
                   {['all', 'ai', 'approvals'].map(f => {
                     const isF = auditFilter === f;
-                    return <button key={f} onClick={() => setAuditFilter(f)} style={{ padding: '6px 14px', borderRadius: 8, fontSize: 120, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', background: isF ? 'rgba(124,124,255,0.1)' : '#fff', color: isF ? '#3d3db8' : 'var(--text-secondary)', border: `1px solid ${isF ? 'rgba(124,124,255,0.3)' : 'var(--border-default)'}` }}>
+                    return <button key={f} onClick={() => setAuditFilter(f)} style={{ padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', background: isF ? 'rgba(124,124,255,0.1)' : '#fff', color: isF ? '#3d3db8' : 'var(--text-secondary)', border: `1px solid ${isF ? 'rgba(124,124,255,0.3)' : 'var(--border-default)'}` }}>
                       {f === 'all' ? 'All Activity' : f === 'ai' ? 'AI Actions' : 'Approvals'}
                     </button>;
                   })}
