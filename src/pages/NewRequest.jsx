@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Plus, FileText, Upload, Sparkles, X, ArrowRight,
+  Plus, FileText, Upload, Sparkles, X, ArrowRight, Save,
   Send, Paperclip, CheckCircle, Trash2, ArrowLeft,
   ChevronDown, Calendar, Building, User,
   Tag, AlertCircle, AlertTriangle, LayoutDashboard, Scan, Cpu, FileCheck, MessageSquare,
@@ -299,7 +299,7 @@ function FInput({ value, onChange, placeholder, type = 'text', readOnly, prefill
         border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
         borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
         fontFamily: 'inherit',
-        background: prefilled ? 'var(--bg-surface-2)' : '#fff',
+        background: prefilled ? 'rgba(0,0,0,0.02)' : '#fff',
         boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
         transition: 'border-color .15s ease, box-shadow .15s ease',
         ...extraStyle,
@@ -313,6 +313,7 @@ function FTextarea({ value, onChange, placeholder, minHeight = 100 }) {
     <textarea value={value} onChange={onChange} placeholder={placeholder}
       onFocus={() => setFc(true)} onBlur={() => setFc(false)}
       style={{
+        background: '#fff',
         width: '100%', padding: '9px 12px', boxSizing: 'border-box',
         border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
         borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
@@ -376,7 +377,7 @@ function UInput({ value, onChange, placeholder, type = 'text', readOnly, prefill
         border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
         borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
         fontFamily: 'inherit',
-        background: prefilled ? 'var(--bg-surface-2)' : '#fff',
+        background: prefilled ? 'rgba(0,0,0,0.02)' : '#fff',
         boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
         transition: 'border-color .15s ease, box-shadow .15s ease',
         ...extraStyle,
@@ -390,6 +391,7 @@ function UTextarea({ value, onChange, placeholder, minHeight = 100 }) {
     <textarea value={value} onChange={onChange} placeholder={placeholder}
       onFocus={() => setFc(true)} onBlur={() => setFc(false)}
       style={{
+        background: '#fff',
         width: '100%', padding: '9px 12px', boxSizing: 'border-box',
         border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
         borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
@@ -953,7 +955,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
               <X size={14} />
             </button>
           </div>
-          <div style={{ height: 4, background: 'var(--bg-surface-2)', borderRadius: 999, overflow: 'hidden' }}>
+          <div style={{ height: 4, background: 'rgba(0,0,0,0.02)', borderRadius: 999, overflow: 'hidden' }}>
             <div style={{
               height: '100%', borderRadius: 999,
               background: downloadDone ? '#22c55e' : 'linear-gradient(90deg, #0052cc, #7c7cff)',
@@ -1027,7 +1029,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
         </div>
 
         {/* Centre — mode toggle */}
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', background: 'var(--bg-surface-2)', borderRadius: 10, padding: 4, gap: 2 }}>
+        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', background: 'rgba(0,0,0,0.02)', borderRadius: 10, padding: 4, gap: 2 }}>
           {['chat', 'form'].map((m) => (
             <button
               key={m}
@@ -1304,7 +1306,9 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                               <button
                                 onClick={() => setEditingMsgIndex(null)}
                                 style={{ padding: '6px 14px', border: '1px solid var(--border-default)', borderRadius: 7, background: '#fff', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-secondary)' }}
-                              >Cancel</button>
+                              >
+                    <Save size={15} strokeWidth={2} /> Save Draft
+                  </button>
                               <button
                                 onClick={() => {
                                   setMessages(prev => prev.map((m, idx) => idx === i ? { ...m, text: editingText, content: editingText } : m));
@@ -1846,7 +1850,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                 <div style={{ marginBottom: 16 }}>
                   <FL>Requisition ID</FL>
                   <div style={{
-                    padding: '9px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border-subtle)',
+                    padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)',
                     borderRadius: 8, fontSize: 12, color: 'var(--text-tertiary)', fontStyle: 'italic', fontWeight: 400,
                   }}>Will be auto-generated on submission</div>
                 </div>
@@ -1921,7 +1925,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                 <div style={{ marginBottom: 16 }}>
                   <FL required>Spend Category</FL>
                   <div style={{
-                    padding: '9px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border-subtle)',
+                    padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)',
                     borderRadius: 8, fontSize: 14, color: 'var(--text-secondary)',
                   }}>{spendCategory || '—'}</div>
                   <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 4 }}>Auto-selected based on category</div>
@@ -2064,7 +2068,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                 <div style={{ marginBottom: 16 }}>
                   <FL required>Estimated Budget</FL>
                   <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8, overflow: 'hidden' }}>
-                    <span style={{ padding: '9px 12px', background: 'var(--bg-surface-2)', fontSize: 14, color: 'var(--text-tertiary)', borderRight: '1px solid var(--border-default)', whiteSpace: 'nowrap' }}>₹</span>
+                    <span style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', fontSize: 14, color: 'var(--text-tertiary)', borderRight: '1px solid var(--border-default)', whiteSpace: 'nowrap' }}>₹</span>
                     <input type="text" value={fBudget} onChange={(e) => setFBudget(e.target.value)} placeholder="0.00"
                       style={{ flex: 1, padding: '9px 12px', border: 'none', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }}
                     />
@@ -2141,7 +2145,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                       cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'inherit',
                     }}
                   >
-                    Save Draft
+                    <Save size={15} strokeWidth={2} /> Save Draft
                   </button>
                   <button
                     onClick={handleFormSubmit}
@@ -2212,7 +2216,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                 border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
                 borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
                 fontFamily: 'inherit',
-                background: prefilled ? 'var(--bg-surface-2)' : '#fff',
+                background: prefilled ? 'rgba(0,0,0,0.02)' : '#fff',
                 boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
                 transition: 'border-color .15s ease, box-shadow .15s ease',
               }}
@@ -2220,11 +2224,12 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
           );
         }
         function UTextarea({ value, onChange, placeholder, minHeight = 100 }) {
-          const [fc, setFc] = useState(false);
-          return (
-            <textarea value={value} onChange={onChange} placeholder={placeholder}
-              onFocus={() => setFc(true)} onBlur={() => setFc(false)}
-              style={{
+  const [fc, setFc] = useState(false);
+  return (
+    <textarea value={value} onChange={onChange} placeholder={placeholder}
+      onFocus={() => setFc(true)} onBlur={() => setFc(false)}
+      style={{
+        background: '#fff',
                 width: '100%', padding: '9px 12px', boxSizing: 'border-box',
                 border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
                 borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
@@ -2295,7 +2300,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                   </div>
                 </div>
                 <div style={{ maxWidth: 420, width: '100%' }}>
-                  <div style={{ height: 4, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
+                  <div style={{ height: 4, background: 'rgba(0,0,0,0.02)', borderRadius: 99, overflow: 'hidden' }}>
                     <div style={{ height: '100%', background: 'linear-gradient(90deg, #0052cc, #7c7cff)', borderRadius: 99, animation: 'uploadProgress 1.4s ease-out forwards' }} />
                   </div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 4 }}>Uploading document...</div>
@@ -2314,7 +2319,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                     <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</div>
                     <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>2.4 MB · PDF</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4, maxWidth: 420, width: '100%' }}>
-                      <div style={{ flex: 1, height: 4, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
+                      <div style={{ flex: 1, height: 4, background: 'rgba(0,0,0,0.02)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
                         <div style={{ position: 'absolute', height: '100%', width: '40%', background: 'linear-gradient(90deg, transparent, #7c7cff, transparent)', borderRadius: 99, animation: 'shimmer 1.2s linear infinite' }} />
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(124,124,255,0.08)', border: '1px solid rgba(124,124,255,0.2)', borderRadius: 20, padding: '4px 12px', fontSize: 11, fontWeight: 600, color: '#7c7cff' }}>
@@ -2376,7 +2381,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                   <SectionLabel>General Info</SectionLabel>
                   <div style={{ marginBottom: 16 }}>
                     <UL>Requisition ID</UL>
-                    <div style={{ padding: '9px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 12, color: 'var(--text-tertiary)', fontStyle: 'italic', fontWeight: 400 }}>Will be auto-generated on submission</div>
+                    <div style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 12, color: 'var(--text-tertiary)', fontStyle: 'italic', fontWeight: 400 }}>Will be auto-generated on submission</div>
                   </div>
                   <div style={{ marginBottom: 16 }}>
                     <UL required>Request Title</UL>
@@ -2423,7 +2428,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                   </div>
                   <div style={{ marginBottom: 16 }}>
                     <UL required>Spend Category</UL>
-                    <div style={{ padding: '9px 12px', background: 'var(--bg-surface-2)', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 14, color: 'var(--text-secondary)' }}>{spendCategory || '—'}</div>
+                    <div style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 14, color: 'var(--text-secondary)' }}>{spendCategory || '—'}</div>
                     <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 4 }}>Auto-selected based on category</div>
                   </div>
                   <div style={{ marginBottom: 16 }}>
@@ -2527,7 +2532,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                   <div style={{ marginBottom: 16 }}>
                     <UL required>Estimated Budget</UL>
                     <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8, overflow: 'hidden' }}>
-                      <span style={{ padding: '9px 12px', background: 'var(--bg-surface-2)', fontSize: 14, color: 'var(--text-tertiary)', borderRight: '1px solid var(--border-default)', whiteSpace: 'nowrap' }}>₹</span>
+                      <span style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', fontSize: 14, color: 'var(--text-tertiary)', borderRight: '1px solid var(--border-default)', whiteSpace: 'nowrap' }}>₹</span>
                       <input type="text" value={uBudget} onChange={(e) => setUBudget(e.target.value)} placeholder="0.00" style={{ flex: 1, padding: '9px 12px', border: 'none', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }} />
                     </div>
                     {renderExtracted('Estimated Budget')}
@@ -2585,9 +2590,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                         cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'inherit',
                       }}
                     >
-                      <X size={14} strokeWidth={2} />
-                      Cancel
-                    </button>
+                    <Save size={15} strokeWidth={2} /> Save Draft
+                  </button>
                     <button
                       onClick={handleUploadSubmit}
                       style={{
@@ -2679,7 +2683,9 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
               style={{ width: '100%', padding: '12px 16px', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)', marginBottom: 20 }}
             />
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-              <button onClick={() => setShowRenameModal(false)} style={{ padding: '10px 20px', border: '1px solid var(--border-default)', borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>Cancel</button>
+              <button onClick={() => setShowRenameModal(false)} style={{ padding: '10px 20px', border: '1px solid var(--border-default)', borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>
+                    <Save size={15} strokeWidth={2} /> Save Draft
+                  </button>
               <button onClick={() => { if (renameValue.trim()) setShowRenameModal(false); }} style={{ padding: '10px 20px', border: 'none', borderRadius: 10, background: renameValue.trim() ? '#0052cc' : 'var(--bg-surface-2)', fontSize: 14, fontWeight: 600, cursor: renameValue.trim() ? 'pointer' : 'default', fontFamily: 'inherit', color: renameValue.trim() ? '#fff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}>Rename</button>
             </div>
           </div>
@@ -2697,7 +2703,9 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
             <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>Are you sure you want to delete?</div>
             <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 28, lineHeight: 1.5 }}>This action is permanent and cannot be undone.</div>
             <div style={{ display: 'flex', gap: 12, width: '100%' }}>
-              <button onClick={() => setShowDeleteModal(false)} style={{ flex: 1, padding: '13px', border: '1px solid var(--border-default)', borderRadius: 12, background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>Cancel</button>
+              <button onClick={() => setShowDeleteModal(false)} style={{ flex: 1, padding: '13px', border: '1px solid var(--border-default)', borderRadius: 12, background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>
+                    <Save size={15} strokeWidth={2} /> Save Draft
+                  </button>
               <button onClick={() => setShowDeleteModal(false)} style={{ flex: 1, padding: '13px', border: 'none', borderRadius: 12, background: '#ef4444', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: '#fff' }}>Delete</button>
             </div>
           </div>
