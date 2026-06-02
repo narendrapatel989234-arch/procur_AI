@@ -4,6 +4,7 @@ import ChatHistory from './pages/ChatHistory.jsx';
 import NewRequest from './pages/NewRequest.jsx';
 import PRDetail from './pages/PRDetail.jsx';
 import PRDetailFresh from './pages/PRDetailFresh.jsx';
+import PRDetailRFP from './pages/PRDetailRFP.jsx';
 import Login from './pages/Login.jsx';
 import NewChat from './pages/NewChat.jsx';
 import ChatDetail from './pages/ChatDetail.jsx';
@@ -18,6 +19,7 @@ const NAV_MAP = {
   'New Request': 'newrequest',
   'Chat Detail': 'chatdetail',
   'PR Detail Fresh': 'prdetailfresh',
+  'PR Detail RFP': 'prdetailrfp',
   'Login': 'login',
   'Agent Management': 'agentmanagement',
 };
@@ -32,6 +34,7 @@ const PAGE_TO_NAV = {
   'chatdetail': null,
   'prdetail': null,
   'prdetailfresh': 'Requests',
+  'prdetailrfp': 'Requests',
   'login': null,
   'agentmanagement': 'Agent Management',
 };
@@ -59,6 +62,7 @@ export default function App() {
       {currentPage === 'prdetail' && <PRDetail {...pageProps} />}
       {currentPage === 'prdetailfresh' && <PRDetailFresh {...pageProps} />}
       {currentPage === 'agentmanagement' && <AgentManagement {...pageProps} />}
+      {currentPage === 'prdetailrfp' && <PRDetailRFP {...pageProps} />}
     </>
   );
 }

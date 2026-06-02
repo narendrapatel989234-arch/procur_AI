@@ -787,7 +787,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                         const ss = STAGE_STYLES[r.stage] || STAGE_STYLES['Draft'];
                         const isDraft = r.stage === 'Draft';
                         return (
-                          <tr key={r.id} className="ptr" onClick={() => setCurrentPage('prdetail')} style={{
+                          <tr key={r.id} className="ptr" onClick={() => setCurrentPage(r.type === 'Complex' ? 'prdetailrfp' : 'prdetailfresh')} style={{
                             borderBottom: idx < paginatedRows.length - 1 ? '1px solid #f5f5f5' : 'none',
                             cursor: 'pointer'
                           }}>
@@ -806,7 +806,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.updated}</td>
                             <td style={{ padding: '13px 16px' }}>
                               <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                                <button className="pbtn" onClick={(e) => { e.stopPropagation(); setCurrentPage('prdetail'); }} style={{
+                                <button className="pbtn" onClick={(e) => { e.stopPropagation(); setCurrentPage(r.type === 'Complex' ? 'prdetailrfp' : 'prdetailfresh'); }} style={{
                                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 5,
                                   height: 30, padding: '0 10px', boxSizing: 'border-box',
                                   border: '1px solid var(--border-default)', borderRadius: 7,
