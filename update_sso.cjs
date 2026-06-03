@@ -145,38 +145,38 @@ const new_block = `    if (isSSO) {
                 {/* Right side - Login Option */}
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 40px', background: '#fff', position: 'relative', overflow: 'hidden' }}>
                     
-                    {/* Background Blob like in image */}
+                    {/* Background Blob */}
                     <div style={{ position: 'absolute', top: -150, right: -150, width: 600, height: 600, background: 'var(--bg-surface-2)', borderRadius: '50%', pointerEvents: 'none' }} />
                     <div style={{ position: 'absolute', bottom: -150, left: -200, width: 500, height: 500, background: 'var(--bg-surface-2)', borderRadius: '50%', pointerEvents: 'none' }} />
 
-                    <div style={{ width: '100%', maxWidth: 440, display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 10, margin: 'auto' }}>
-                        
-                        {/* Out of box elements */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-                            <div style={{
-                                width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, #3b5bdb, #4b6ef6)',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: '0 4px 12px rgba(0,82,204,0.3)'
-                            }}>
-                                <Zap size={22} color="#fff" strokeWidth={2.5} />
-                            </div>
-                            <span style={{ fontSize: 28, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>ProcurAI</span>
-                        </div>
-                        
-                        <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 10px 0', letterSpacing: '-0.5px' }}>
-                            Single Sign-On
-                        </h1>
-                        <p style={{ fontSize: 16, color: 'var(--text-secondary)', margin: '0 0 40px 0' }}>
-                            Continue with your corporate identity provider
-                        </p>
+                    <div style={{ width: '100%', maxWidth: 400, display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 10, margin: 'auto' }}>
                         
                         {/* The Box */}
                         <div style={{ 
-                            width: '100%', padding: '40px 30px', background: '#fff', 
+                            width: '100%', padding: '48px 36px', background: '#fff', 
                             border: '1px solid var(--border-subtle)', borderRadius: 20, 
-                            boxShadow: '0 8px 32px rgba(0,0,0,0.03)',
+                            boxShadow: '0 12px 40px rgba(0,0,0,0.04)',
                             display: 'flex', flexDirection: 'column', alignItems: 'center'
                         }}>
+                            
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+                                <div style={{
+                                    width: 44, height: 44, borderRadius: 12, background: 'linear-gradient(135deg, #3b5bdb, #4b6ef6)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    boxShadow: '0 4px 12px rgba(0,82,204,0.3)'
+                                }}>
+                                    <Zap size={22} color="#fff" strokeWidth={2.5} />
+                                </div>
+                                <span style={{ fontSize: 28, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>ProcurAI</span>
+                            </div>
+                            
+                            <h1 style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 10px 0', letterSpacing: '-0.5px' }}>
+                                Single Sign-On
+                            </h1>
+                            <p style={{ fontSize: 14, color: 'var(--text-secondary)', margin: '0 0 32px 0', textAlign: 'center' }}>
+                                Continue with your corporate identity provider
+                            </p>
+
                             <button
                                 onClick={() => {
                                     localStorage.setItem('userRole', 'manager');
@@ -199,7 +199,7 @@ const new_block = `    if (isSSO) {
                             <button
                                 onClick={() => setIsSSO(false)}
                                 style={{
-                                    marginTop: 30, background: 'none', border: 'none', fontSize: 14, fontWeight: 500, 
+                                    marginTop: 24, background: 'none', border: 'none', fontSize: 14, fontWeight: 500, 
                                     color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8,
                                     fontFamily: 'inherit', transition: 'color 0.2s ease'
                                 }}

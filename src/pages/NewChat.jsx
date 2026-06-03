@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import MainLayout from '../layouts/MainLayout.jsx';
 import { Plus, Paperclip, ChevronDown, Mic, Send, Sparkles, FileText, BarChart2, Package, ArrowLeft, X, Copy, CheckCircle, ThumbsUp, ThumbsDown, RotateCcw, Edit2, AlertTriangle, MoreHorizontal, Pin, PinOff, Share2, Download, Trash2, Scale } from 'lucide-react';
 
-export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
+export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRole}) {
   const [inputFocused, setInputFocused] = useState(false);
   const [inputText, setInputText] = useState('');
   const [attachedFiles, setAttachedFiles] = useState([]);
@@ -230,7 +230,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
 
         @keyframes spinOnce { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       `}</style>
-      <MainLayout activeNav="Chat History" onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
+      <MainLayout userRole={userRole} activeNav="Chat History" onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
 
         {/* ── Top Bar (Header) ── */}
         <div style={{
@@ -614,6 +614,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav }) {
                       <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
                         <Mic size={18} strokeWidth={2} />
                       </button>
+                      <Mic size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.color = '#0052cc'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-tertiary)'} />
                       <button
                         onClick={handleSend}
                         disabled={!inputText.trim()}

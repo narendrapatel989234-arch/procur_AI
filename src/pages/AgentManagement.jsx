@@ -14,7 +14,7 @@ const INITIAL_AGENTS = [
   { id: 9, name: 'Cloud Catalyst', icon: Cloud, description: 'Obtains cloud data, transforms it for NoSQL storage, and identifies underlying usage patterns automatically.', status: 'Active', lastUsed: '29/04/25', color: '#dcfce7', iconColor: '#22c55e' },
 ];
 
-export default function AgentManagement({ activeNav, onNavigate }) {
+export default function AgentManagement({ activeNav, onNavigate , userRole}) {
   const [agents, setAgents] = useState(INITIAL_AGENTS);
   const [search, setSearch] = useState('');
   const [showAddAgent, setShowAddAgent] = useState(false);
@@ -117,7 +117,7 @@ export default function AgentManagement({ activeNav, onNavigate }) {
   };
 
   return (
-    <MainLayout
+    <MainLayout userRole={userRole}
       activeNav={activeNav}
       onNavigate={onNavigate}
       searchPlaceholder={null}

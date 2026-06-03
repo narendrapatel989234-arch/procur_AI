@@ -239,7 +239,7 @@ function EditModal({ onClose, onSave }) {
   );
 }
 
-export default function PRDetail({ setCurrentPage, onNavigate, activeNav }) {
+export default function PRDetail({ setCurrentPage, onNavigate, activeNav , userRole}) {
   const [showEditModal, setShowEditModal] = React.useState(false);
   const [showSaveToast, setShowSaveToast] = React.useState(false);
   const [prStatus] = React.useState('RFP in Progress');
@@ -278,7 +278,7 @@ export default function PRDetail({ setCurrentPage, onNavigate, activeNav }) {
         </div>
       )}
 
-      <MainLayout activeNav={activeNav} onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
+      <MainLayout userRole={userRole} activeNav={activeNav} onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
 
         {/* TOP BAR */}
         <div style={{ height: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: 12, flexShrink: 0 }}>

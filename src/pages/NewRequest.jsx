@@ -412,7 +412,7 @@ const SUCCESS_MODAL_STYLE = {
   card: { background: '#fff', borderRadius: 20, padding: '40px 36px', maxWidth: 420, width: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' },
 };
 
-export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
+export default function NewRequest({ setCurrentPage, onNavigate, activeNav , userRole}) {
   const [showUploadTooltip, setShowUploadTooltip] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
@@ -912,7 +912,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
      RENDER
      ══════════════════════════════════════════════════════════ */
   return (
-    <MainLayout activeNav={activeNav} onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
+    <MainLayout userRole={userRole} activeNav={activeNav} onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
       {/* ═══ TOAST NOTIFICATION ═══ */}
@@ -1133,7 +1133,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                   <>
                     {/* Greeting block */}
                     <div style={{ marginBottom: 36, textAlign: 'left' }}>
-                      <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>Hi David 👋</div>
+                      <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>Hi {userRole === 'manager' ? 'Sarah' : 'David'} 👋</div>
                       <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginTop: 6 }}>
                         Your AI assistant for procurement requests.
                       </div>
@@ -1698,6 +1698,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav }) {
                       <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
                         <Mic size={18} strokeWidth={2} />
                       </button>
+                      <Mic size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.color = '#0052cc'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-tertiary)'} />
                       <button
                         onClick={sendMessage}
                         disabled={!inputValue.trim()}

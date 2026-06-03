@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { LayoutDashboard, MessageSquare, Receipt, Plus, Zap, PanelLeftClose, PanelLeft, Settings, HelpCircle, LogOut, ChevronDown, Layers, Bot } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Receipt, Plus, Zap, PanelLeftClose, PanelLeft, Settings, HelpCircle, LogOut, ChevronDown, Layers, Bot, Cpu } from 'lucide-react';
 
 const NAV = [
   { name: 'Dashboard', Icon: LayoutDashboard },
   { name: 'Chat History', Icon: MessageSquare },
   { name: 'Purchase Orders', Icon: Receipt },
   { name: 'Templates', Icon: Layers },
-  { name: 'Agent Management', Icon: Bot },
+  { name: 'Agent Management', Icon: Cpu },
 ];
 
-export default function Sidebar({ activeNav, onNavigate }) {
+export default function Sidebar({ activeNav, onNavigate, userRole }) {
   const [isCollapsed, setIsCollapsed] = useState(() => localStorage.getItem('sidebar_collapsed') === 'true');
   const [isLogoHovered, setIsLogoHovered] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
@@ -105,8 +105,8 @@ export default function Sidebar({ activeNav, onNavigate }) {
       </nav>
       <div ref={profileRef} onClick={() => setProfileMenuOpen(!profileMenuOpen)} style={{ marginTop: 'auto', padding: isCollapsed ? '20px 0' : '20px', borderTop: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', cursor: 'pointer', position: 'relative', background: profileMenuOpen ? 'var(--bg-surface-1)' : 'transparent', transition: 'background 0.2s ease' }} onMouseEnter={(e) => { if (!profileMenuOpen) e.currentTarget.style.background = 'var(--bg-surface-1)'; }} onMouseLeave={(e) => { if (!profileMenuOpen) e.currentTarget.style.background = 'transparent'; }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' }}>
-          <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>DK</div>
-          {!isCollapsed && (<div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}><span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>David Kim</span><span style={{ fontSize: 12, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Procurement Analyst</span></div>)}
+          <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14, flexShrink: 0 }}>{userRole === 'manager' ? 'SC' : 'DK'}</div>
+          {!isCollapsed && (<div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}><span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{userRole === 'manager' ? 'Sarah Chen' : 'David Kim'}</span><span style={{ fontSize: 12, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>{userRole === 'manager' ? 'Procurement Manager' : 'Procurement Analyst'}</span></div>)}
         </div>
         {!isCollapsed && <ChevronDown size={14} color="var(--text-tertiary)" style={{ flexShrink: 0, transition: 'transform 0.2s ease', transform: profileMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)' }} />}
         {profileMenuOpen && (

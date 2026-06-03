@@ -822,7 +822,7 @@ const REASONING_MAP = {
   10: ['RFP template selected: Technology Consulting Standard v2.1', 'Scoring config generated: 5 criteria', 'Cost estimation complete: ₹45,00,000'],
 };
 
-export default function PRDetailRFP({ onNavigate, activeNav }) {
+export default function PRDetailRFP({ onNavigate, activeNav , userRole}) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showSaveToast, setShowSaveToast] = useState(false);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -1331,7 +1331,7 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
         </div>
       )}
 
-      <MainLayout activeNav={activeNav} onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
+      <MainLayout userRole={userRole} activeNav={activeNav} onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
 
         {/* STICKY CHROME */}
         <div style={{ position: 'sticky', top: 0, zIndex: 100, background: '#fff' }}>

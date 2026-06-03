@@ -421,13 +421,13 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
 
   return (
 
-    <MainLayout
+    <MainLayout userRole={userRole}
 
       activeNav={activeNav}
 
       onNavigate={onNavigate}
 
-      titleComponent={<span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Hi David 👋</span>}
+      titleComponent={<span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Hi {userRole === 'manager' ? 'Sarah' : 'David'} 👋</span>}
 
       searchPlaceholder={null}
 

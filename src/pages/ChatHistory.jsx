@@ -81,7 +81,7 @@ function FilterDropdown({ label, options, activeOption, isOpen, onToggle, onClos
   );
 }
 
-export default function ChatHistory({ setCurrentPage, onNavigate, activeNav }) {
+export default function ChatHistory({ setCurrentPage, onNavigate, activeNav , userRole}) {
   const [toast, setToast] = useState(null); // { message, type: 'success'|'neutral' }
   const [downloadState, setDownloadState] = useState(null); // { filename, progress, done }
   const [shareModal, setShareModal] = useState(null); // { title }
@@ -185,7 +185,7 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav }) {
   `;
 
   return (
-    <MainLayout
+    <MainLayout userRole={userRole}
       activeNav={activeNav}
       onNavigate={onNavigate}
       searchPlaceholder={null}

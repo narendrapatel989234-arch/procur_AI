@@ -312,7 +312,7 @@ export default function Templates({ pageProps }) {
   };
 
   return (
-    <MainLayout
+    <MainLayout userRole={pageProps.userRole}
       activeNav={pageProps?.activeNav}
       onNavigate={pageProps?.onNavigate}
       titleComponent={<span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Templates</span>}

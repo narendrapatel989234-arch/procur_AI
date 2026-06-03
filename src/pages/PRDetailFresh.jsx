@@ -438,7 +438,7 @@ function EditModal({ onClose, onSave }) {
   );
 }
 
-export default function PRDetailFresh({ onNavigate }) {
+export default function PRDetailFresh({ onNavigate , userRole}) {
   const [nodes, setNodes] = useState(INITIAL_NODES);
   const [selectedNode, setSelectedNode] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);

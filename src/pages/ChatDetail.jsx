@@ -5,7 +5,7 @@ import {
   Copy, Edit2, RotateCcw, ThumbsUp, ThumbsDown,
   VolumeX, Volume2, X, Link, CheckCircle, AlertTriangle,
   Paperclip, MoreHorizontal, Pin, PinOff, Download, Share2, Trash2
-} from 'lucide-react';
+, Mic} from 'lucide-react';
 
 const REASONING_STEPS_FULL = [
   { title: 'Reading procurement request', bullets: [] },
@@ -35,7 +35,7 @@ const INITIAL_THREAD = [
   { role: 'ai', time: '9:45 AM', content: "Your PR is currently In Sourcing stage. TechDirect India has been notified. Expected PO generation within 2 business days based on current SLA.", insight: null, sources: null, action: "View PR status →" },
 ];
 
-export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
+export default function ChatDetail({ setCurrentPage, onNavigate, activeNav , userRole}) {
   const [messages, setMessages] = useState(INITIAL_THREAD);
   const [activeRightPane, setActiveRightPane] = useState(null);
   const [showReasoningPanel, setShowReasoningPanel] = useState(false);
@@ -182,7 +182,7 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
   `;
 
   return (
-    <MainLayout activeNav="Chat History" onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
+    <MainLayout userRole={userRole} activeNav="Chat History" onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
       {/* Toast */}
@@ -431,16 +431,12 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
                       <button onClick={() => { setDislikedMsgs(prev => { const n = new Set(prev); if (n.has(i)) n.delete(i); else { n.add(i); setLikedMsgs(l => { const nl = new Set(l); nl.delete(i); return nl; }); setDislikedTooltipVisible(t => new Set(t).add(i)); const timer = setTimeout(() => setDislikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500); tooltipTimers.current.add(timer); } return n; }); }}
                         style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: isDisliked ? 'rgba(239,68,68,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isDisliked ? '#ef4444' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}>
                         <ThumbsDown size={14} />
-                        {dislikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Noted</div>}
+                        {dislikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Disliked</div>}
                       </button>
                       <button onClick={() => { setRegeneratingMsgs(prev => new Set([...prev, i])); setTimeout(() => { setRegeneratingMsgs(prev => { const next = new Set(prev); next.delete(i); return next; }); }, 1500); }}
                         style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: regeneratingMsgs.has(i) ? 'rgba(124,124,255,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: regeneratingMsgs.has(i) ? '#7c7cff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}>
                         <RotateCcw size={14} style={{ animation: regeneratingMsgs.has(i) ? 'spinOnce 0.6s linear infinite' : 'none' }} />
                         {regeneratingMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Regenerating...</div>}
-                      </button>
-                      <button onClick={() => { setSpeakingMsgs(prev => { const n = new Set(prev); if (n.has(i)) n.delete(i); else n.add(i); return n; }); }}
-                        style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: speakingMsgs.has(i) ? 'rgba(0,82,204,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: speakingMsgs.has(i) ? '#0052cc' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}>
-                        {speakingMsgs.has(i) ? <Volume2 size={14} /> : <VolumeX size={14} />}
                       </button>
                     </div>
                   </div>
@@ -534,7 +530,8 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav }) {
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <span style={{ fontSize: 11, color: inputText.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{inputText.length} / 20000</span>
-                    <button onClick={handleSend} disabled={!inputText.trim()}
+                    <Mic size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.color = '#0052cc'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-tertiary)'} />
+                      <button onClick={handleSend} disabled={!inputText.trim()}
                       style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: inputText.trim() ? 'pointer' : 'not-allowed', background: inputText.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: inputText.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
                       <Send size={15} color={inputText.trim() ? 'white' : 'var(--text-tertiary)'} />
                     </button>
