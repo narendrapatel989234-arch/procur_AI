@@ -140,7 +140,7 @@ function FilterDropdown({ label, options, isOpen, onToggle, onClose, activeOptio
   );
 }
 
-export default function Templates({ pageProps }) {
+export default function Templates({ setCurrentPage, onNavigate, activeNav, userRole }) {
   const [tableSearch, setTableSearch] = useState('');
   const [tableSearchFocused, setTableSearchFocused] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
@@ -312,9 +312,9 @@ export default function Templates({ pageProps }) {
   };
 
   return (
-    <MainLayout userRole={pageProps.userRole}
-      activeNav={pageProps?.activeNav}
-      onNavigate={pageProps?.onNavigate}
+    <MainLayout
+      activeNav={activeNav}
+      onNavigate={onNavigate}
       titleComponent={<span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Templates</span>}
       searchPlaceholder={null}
     >
