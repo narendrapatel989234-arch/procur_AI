@@ -45,14 +45,16 @@ const PAGE_TO_NAV = {
 export default function App() {
   const [currentPage, setCurrentPage] = useState('login');
   const [userRole, setUserRole] = useState('analyst');
+  const [navState, setNavState] = useState(null);
 
-  function handleNavigate(nameOrKey) {
+  function handleNavigate(nameOrKey, state = null) {
     const mapped = NAV_MAP[nameOrKey];
     setCurrentPage(mapped || nameOrKey);
+    setNavState(state);
   }
 
   const activeNav = PAGE_TO_NAV[currentPage] || '';
-  const pageProps = { setCurrentPage, onNavigate: handleNavigate, activeNav, userRole };
+  const pageProps = { setCurrentPage, onNavigate: handleNavigate, activeNav, userRole, navState };
 
   return (
     <>

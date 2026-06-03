@@ -177,7 +177,7 @@ function EInput({ value, onChange, placeholder, type = 'text', readOnly, prefill
         border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
         borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
         fontFamily: 'inherit',
-        background: prefilled ? 'var(--bg-surface-2)' : '#fff',
+        background: prefilled ? '#f5f5f5' : '#ffffff', backgroundColor: '#ffffff',
         boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
         transition: 'border-color .15s ease, box-shadow .15s ease',
         ...extraStyle,
@@ -207,7 +207,7 @@ function EL({ children, required }) {
   return <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginBottom: 6 }}>{children}{required && <span style={{ color: '#ef4444' }}> *</span>}</label>;
 }
 
-function EditModal({ onClose, onSave }) {
+export function EditModal({  onClose, onSave }) {
   const [fReqTitle, setFReqTitle] = useState('AWS Cloud Migration Consulting Services');
   const [fBizUnit, setFBizUnit] = useState('Engineering'); const [fBizUnitOpen, setFBizUnitOpen] = useState(false);
   const [fRequestorName, setFRequestorName] = useState('David Kim');
@@ -254,14 +254,19 @@ function EditModal({ onClose, onSave }) {
   const subcatOptions = fProcCategory ? (SUBCATEGORY_MAP[fProcCategory] || []) : [];
   const spendCategory = SPEND_CATEGORY_MAP[fProcCategory] || '';
   const specificNote = <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic', marginTop: 4 }}>Applicable for specific categories</div>;
-
   const SL = ({ children }) => <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>{children}</div>;
   const Div = () => <div style={{ borderTop: '1px solid #f0f0f0', margin: '10px 0' }} />;
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    <div style={{ position: 'fixed', inset: 0, zIndex: 1100, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       onClick={onClose}>
-      <div style={{ background: '#fff', borderRadius: 16, width: 720, maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}
+      <style>{`
+        .edit-modal-input-fix input, .edit-modal-input-fix textarea {
+          background-color: #ffffff !important;
+          color: #1a1a1a !important;
+        }
+      `}</style>
+      <div className="edit-modal-input-fix" style={{ background: '#fff', borderRadius: 16, width: 720, maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}
         onClick={e => e.stopPropagation()}>
 
         <div style={{ padding: '20px 24px', borderBottom: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
@@ -438,12 +443,12 @@ function EditModal({ onClose, onSave }) {
   );
 }
 
-export default function PRDetailFresh({ onNavigate , userRole}) {
+export default function PRDetailFresh({ onNavigate , userRole, navState }) {
   const [nodes, setNodes] = useState(INITIAL_NODES);
   const [selectedNode, setSelectedNode] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [prStatus, setPrStatus] = useState('Submitted');
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
   const [showSaveToast, setShowSaveToast] = useState(false);
 
   const upd = (ids, status) => {

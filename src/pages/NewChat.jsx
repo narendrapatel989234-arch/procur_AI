@@ -287,12 +287,12 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
                     <Sparkles size={20} color="#fff" strokeWidth={2} />
                   </div>
                   <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 12, letterSpacing: '-0.3px' }}>How can I help you today?</div>
-                  <div style={{ fontSize: 15, color: 'var(--text-secondary)', textAlign: 'center', maxWidth: 420, lineHeight: 1.6 }}>
-                    I can assist with creating purchase requests, analyzing vendor contracts, tracking orders, and evaluating supply chain metrics.
+                  <div style={{ fontSize: 15, color: 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.6 }}>
+                    I can assist with creating purchase requests, analyzing vendor contracts,<br />tracking orders, and evaluating supply chain metrics.
                   </div>
 
                   {/* Starter Prompts */}
-                  <div style={{ display: 'flex', gap: 16, marginTop: 48, width: '56%', margin: '0 auto' }}>
+                  <div style={{ display: 'flex', gap: 16, margin: '40px auto 0', width: '100%', maxWidth: 760 }}>
 
                     <div className="prompt-card" onClick={() => setInputText("I want to compare proposals from multiple vendors. Please help me evaluate pricing, commercial terms, and supplier strengths.")}>
                       <div style={{ color: '#0052cc', marginBottom: 12, background: 'rgba(0,82,204,0.06)', width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -321,7 +321,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
                   </div>
                 </>
               ) : (
-                <div style={{ width: '56%', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 16 }}>
+                <div style={{ width: '100%', maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 16 }}>
                   {messages.map((msg, i) => {
                     const isLiked = likedMsgs.has(i);
                     const isDisliked = dislikedMsgs.has(i);
@@ -493,7 +493,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
 
             {/* ── Sticky Input Bar ── */}
             <div style={{ flexShrink: 0, padding: '16px 24px 20px', background: 'white' }}>
-              <div style={{ width: '56%', margin: '0 auto' }}>
+              <div style={{ width: '100%', maxWidth: 760, margin: '0 auto' }}>
 
                 {/* Attachment pills — shown when files attached */}
                 {attachedFiles.length > 0 && (

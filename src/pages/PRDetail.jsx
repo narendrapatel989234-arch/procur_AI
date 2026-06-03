@@ -99,7 +99,7 @@ function EDrop({ refEl, open, onToggle, value, placeholder, options, onChange, r
 
 function EInput({ value, onChange, placeholder, type = 'text', readOnly, prefilled }) {
   const [fc, setFc] = React.useState(false);
-  return <input type={type} value={value} onChange={onChange} placeholder={placeholder} readOnly={readOnly} onFocus={() => setFc(true)} onBlur={() => setFc(false)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', background: prefilled ? 'var(--bg-surface-2)' : '#fff', boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none', transition: 'border-color .15s ease, box-shadow .15s ease' }} />;
+  return <input type={type} value={value} onChange={onChange} placeholder={placeholder} readOnly={readOnly} onFocus={() => setFc(true)} onBlur={() => setFc(false)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', background: prefilled ? '#f8f9fa' : '#fff', boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none', transition: 'border-color .15s ease, box-shadow .15s ease' }} />;
 }
 
 function ETextarea({ value, onChange, placeholder, minHeight = 100 }) {

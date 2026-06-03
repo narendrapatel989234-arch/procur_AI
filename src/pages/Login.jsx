@@ -18,9 +18,14 @@ export default function Login({ onNavigate, onLogin }) {
 
     if (isSSO) {
         return (
-            <div style={{ display: 'flex', height: '100vh', width: '100%', background: '#fafcff', fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', display: 'flex', height: '100vh', width: '100%', background: '#fafcff', fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
+
+                {/* Subtle Gradients for entire screen */}
+                <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: 800, height: 800, background: 'radial-gradient(circle, rgba(124,124,255,0.15) 0%, rgba(255,255,255,0) 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', bottom: '-20%', right: '10%', width: 1000, height: 1000, background: 'radial-gradient(circle, rgba(0,82,204,0.12) 0%, rgba(255,255,255,0) 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
+
                 {/* Left side - Illustration */}
-                <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '30px 40px', position: 'relative', overflow: 'hidden', background: '#fafcff' }}>
+                <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '30px 40px', position: 'relative', overflow: 'hidden', background: 'transparent' }}>
 
                     <style>{`
                         @keyframes float1 { 0%, 100% { transform: translate(-50%, -50%) translateY(0); } 50% { transform: translate(-50%, -50%) translateY(-10px); } }
@@ -29,10 +34,6 @@ export default function Login({ onNavigate, onLogin }) {
                         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(124,124,255,0.4); } 50% { box-shadow: 0 0 0 20px rgba(124,124,255,0); } }
                         @keyframes spinSlow { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
                     `}</style>
-
-                    {/* Subtle Gradients */}
-                    <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: 600, height: 600, background: 'radial-gradient(circle, rgba(124,124,255,0.15) 0%, rgba(255,255,255,0) 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
-                    <div style={{ position: 'absolute', bottom: '-20%', right: '10%', width: 700, height: 700, background: 'radial-gradient(circle, rgba(0,82,204,0.12) 0%, rgba(255,255,255,0) 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
 
                     <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 20 }}>
                         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '4px 12px', background: 'linear-gradient(135deg, rgba(0,82,204,0.1), rgba(124,124,255,0.1))', border: '1px solid rgba(124,124,255,0.2)', borderRadius: 20, marginBottom: 12 }}>
@@ -55,8 +56,8 @@ export default function Login({ onNavigate, onLogin }) {
                             <path d="M 350 200 C 250 200, 200 100, 150 100" fill="none" stroke="url(#grad1)" strokeWidth="2.5" strokeDasharray="6 6" />
                             <path d="M 350 200 C 450 200, 500 100, 550 100" fill="none" stroke="url(#grad2)" strokeWidth="2.5" strokeDasharray="6 6" />
 
-                            <path d="M 350 200 C 250 200, 150 200, 80 200" fill="none" stroke="url(#grad1)" strokeWidth="2.5" strokeDasharray="6 6" />
-                            <path d="M 350 200 C 450 200, 550 200, 620 200" fill="none" stroke="url(#grad2)" strokeWidth="2.5" strokeDasharray="6 6" />
+                            <path d="M 350 200 C 250 201, 150 199, 80 200" fill="none" stroke="url(#grad1)" strokeWidth="2.5" strokeDasharray="6 6" />
+                            <path d="M 350 200 C 450 201, 550 199, 620 200" fill="none" stroke="url(#grad2)" strokeWidth="2.5" strokeDasharray="6 6" />
 
                             <path d="M 350 200 C 250 200, 200 300, 150 300" fill="none" stroke="url(#grad1)" strokeWidth="2.5" strokeDasharray="6 6" />
                             <path d="M 350 200 C 450 200, 500 300, 550 300" fill="none" stroke="url(#grad2)" strokeWidth="2.5" strokeDasharray="6 6" />
@@ -111,7 +112,7 @@ export default function Login({ onNavigate, onLogin }) {
                                         <div style={dotStyle} /> Autonomous Agents
                                     </div>
                                     <div style={{ ...pillStyle, top: '25%', left: '79%', transform: 'translate(-50%, -50%)', animation: 'float2 7s ease-in-out infinite' }}>
-                                        <div style={dotStyle} /> Predictive analytics
+                                        <div style={dotStyle} /> Predictive Analytics
                                     </div>
 
                                     <div style={{ ...pillStyle, top: '50%', left: '11%', transform: 'translate(-50%, -50%)', animation: 'float3 5s ease-in-out infinite' }}>
@@ -134,11 +135,7 @@ export default function Login({ onNavigate, onLogin }) {
                 </div>
 
                 {/* Right side - Login Option */}
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 40px', background: '#fafcff', position: 'relative', overflow: 'hidden' }}>
-
-                    {/* Background Blob */}
-                    <div style={{ position: 'absolute', top: -150, right: -150, width: 600, height: 600, background: 'var(--bg-surface-2)', borderRadius: '50%', pointerEvents: 'none' }} />
-                    <div style={{ position: 'absolute', bottom: -150, left: -200, width: 500, height: 500, background: 'var(--bg-surface-2)', borderRadius: '50%', pointerEvents: 'none' }} />
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 40px', background: 'transparent', position: 'relative', overflow: 'hidden' }}>
 
                     <div style={{ width: '100%', maxWidth: 400, display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', zIndex: 10, margin: 'auto' }}>
 
@@ -202,7 +199,7 @@ export default function Login({ onNavigate, onLogin }) {
                             </button>
                         </div>
 
-                        <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, paddingTop: 40 }}>
+                        {/*<div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, paddingTop: 40 }}>
                             <div style={{ fontSize: 11, color: 'var(--text-tertiary)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
                                 <span>Powered By</span>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, opacity: 0.6 }}>
@@ -219,7 +216,7 @@ export default function Login({ onNavigate, onLogin }) {
                                 <span style={{ cursor: 'pointer' }}>Terms Of Use</span>
                                 <span style={{ cursor: 'pointer' }}>Privacy Policy</span>
                             </div>
-                        </div>
+                        </div>*/}
 
                     </div>
                 </div>

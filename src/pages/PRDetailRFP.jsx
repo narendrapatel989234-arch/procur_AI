@@ -548,7 +548,7 @@ function EInput({ value, onChange, placeholder, type = 'text', readOnly, prefill
         border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
         borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
         fontFamily: 'inherit',
-        background: prefilled ? 'var(--bg-surface-2)' : '#fff',
+        background: prefilled ? '#f5f5f5' : '#ffffff', backgroundColor: '#ffffff',
         boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
         transition: 'border-color .15s ease, box-shadow .15s ease',
         ...extraStyle,
@@ -822,8 +822,8 @@ const REASONING_MAP = {
   10: ['RFP template selected: Technology Consulting Standard v2.1', 'Scoring config generated: 5 criteria', 'Cost estimation complete: ₹45,00,000'],
 };
 
-export default function PRDetailRFP({ onNavigate, activeNav , userRole}) {
-  const [showEditModal, setShowEditModal] = useState(false);
+export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState }) {
+  const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
   const [showSaveToast, setShowSaveToast] = useState(false);
   const [selectedNode, setSelectedNode] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);

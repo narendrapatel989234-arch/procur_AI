@@ -926,7 +926,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
           <CheckCircle size={22} color="#22c55e" style={{ flexShrink: 0 }} strokeWidth={2} />
           <div style={{ fontSize: 14, fontWeight: 600, color: '#15803d', flex: 1, lineHeight: 1.4 }}>{toastMessage}</div>
           <div
-            onClick={() => { clearTimeout(toastTimerRef.current); setShowToast(false); onNavigate('Dashboard'); }}
+            onClick={() => { clearTimeout(toastTimerRef.current); setShowToast(false); if (toastMessage.includes('draft')) onNavigate('Dashboard'); }}
             style={{ padding: 4, borderRadius: 6, cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex', flexShrink: 0, transition: 'all 0.15s ease' }}
             onMouseEnter={(e) => { e.currentTarget.style.color = '#15803d'; e.currentTarget.style.background = 'rgba(34,197,94,0.1)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(21,128,61,0.5)'; e.currentTarget.style.background = 'transparent'; }}
@@ -1057,7 +1057,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 width: 34, height: 34, borderRadius: 8,
-                border: '1px solid var(--border-default)',
+                border: 'none',
                 background: menuOpen ? 'var(--bg-surface-1)' : '#fff',
                 cursor: 'pointer', color: 'var(--text-tertiary)',
                 transition: 'all 0.15s ease',
@@ -1076,8 +1076,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 padding: 6, zIndex: 200, minWidth: 180,
               }}>
                 {[
+                  { icon: isPinned ? PinOff : Pin, label: isPinned ? 'Unpin' : 'Pin', action: () => { setIsPinned(p => !p); setMenuOpen(false); setToastMessage(isPinned ? 'Request unpinned' : 'Request pinned to top'); setShowToast(true); clearTimeout(toastTimerRef.current); toastTimerRef.current = setTimeout(() => setShowToast(false), 3000); } },
                   { icon: Edit2, label: 'Rename', action: () => { setMenuOpen(false); setRenameValue('MacBook Pro Upgrade Request'); setShowRenameModal(true); } },
-                  { icon: isPinned ? PinOff : Pin, label: isPinned ? 'Unpin' : 'Pin', action: () => { setIsPinned(p => !p); setMenuOpen(false); } },
                   { icon: Share2, label: 'Share', action: () => { setMenuOpen(false); setShowShareModal(true); setLinkCopied(false); } },
                   { icon: Download, label: 'Download', action: handleDownload },
                 ].map(({ icon: Icon, label, action }) => (
@@ -1097,7 +1097,6 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                     {label}
                   </div>
                 ))}
-                <div style={{ height: 1, background: 'var(--border-subtle)', margin: '4px 0' }} />
                 <div
                   onClick={() => { setMenuOpen(false); setShowDeleteModal(true); }}
                   style={{
@@ -1591,7 +1590,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                   border: `1.5px solid ${inputFocused ? '#7c7cff' : 'var(--border-default)'}`,
                   borderRadius: 14, padding: '12px 14px',
                   display: 'flex', flexDirection: 'column', gap: 8,
-                  boxShadow: inputFocused ? '0 0 0 3px rgba(124,124,255,0.09)' : 'none',
+                  boxShadow: inputFocused ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.06)' : '0 2px 8px rgba(14,15,37,0.06)',
                   transition: 'border-color .15s ease, box-shadow .15s ease',
                 }}>
                   {/* Attachment pill row */}

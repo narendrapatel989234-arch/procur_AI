@@ -144,19 +144,20 @@ export default function AgentManagement({ activeNav, onNavigate , userRole}) {
 
         {/* Header Controls */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-          <div style={{ position: 'relative', width: 320 }}>
-            <Search size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
-            <input
-              type="text"
-              placeholder="Search Agent"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              style={{ width: '100%', padding: '0 12px 0 36px', height: 36, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, outline: 'none', color: 'var(--text-primary)', transition: 'border-color 0.15s ease, box-shadow 0.15s ease' }}
-              onFocus={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.12)'; }}
-              onBlur={e => { e.currentTarget.style.borderColor = 'var(--border-default)'; e.currentTarget.style.boxShadow = 'none'; }}
-            />
-          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ position: 'relative', width: 320 }}>
+              <Search size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
+              <input
+                type="text"
+                placeholder="Search Agent"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                style={{ width: '100%', padding: '0 12px 0 36px', height: 36, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, outline: 'none', color: 'var(--text-primary)', transition: 'border-color 0.15s ease, box-shadow 0.15s ease' }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.12)'; }}
+                onBlur={e => { e.currentTarget.style.borderColor = 'var(--border-default)'; e.currentTarget.style.boxShadow = 'none'; }}
+              />
+            </div>
+            
             <div style={{ position: 'relative' }}>
               <button onClick={() => setShowDatePicker(!showDatePicker)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: showDatePicker ? 'var(--bg-surface-1)' : '#fff', border: `1px solid ${showDatePicker ? '#7c7cff' : 'var(--border-default)'}`, padding: '0 12px', height: 36, borderRadius: 8, fontSize: 12, color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.15s ease', fontFamily: 'inherit' }}>
                 <Calendar size={13} strokeWidth={2} /> Select Date <ChevronDown size={13} strokeWidth={2} style={{ transition: 'transform 0.15s ease', transform: showDatePicker ? 'rotate(180deg)' : 'rotate(0)' }} />
@@ -164,7 +165,7 @@ export default function AgentManagement({ activeNav, onNavigate , userRole}) {
 
               {/* Custom Date Picker Popover */}
               {showDatePicker && (
-                <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '12px 16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 100, width: 280, animation: 'fadeIn 0.15s ease' }}>
+                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '12px 16px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 100, width: 280, animation: 'fadeIn 0.15s ease' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                     <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Select Date Range</div>
                     <button onClick={() => setShowDatePicker(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex' }}><X size={14} /></button>
@@ -205,7 +206,9 @@ export default function AgentManagement({ activeNav, onNavigate , userRole}) {
                 </div>
               )}
             </div>
-
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button onClick={() => {
               setNewAgentName(''); setNewAgentIntro(''); setNewAgentDesc(''); setNewAgentInstr(''); setEnabledToggle(false);
               setViewOnlyMode(false); setAgentToView(null); setShowAddAgent(true);
