@@ -1126,7 +1126,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
 
             {/* Messages / empty state */}
             <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: hasMessages ? '24px' : '40px 24px 24px', gap: hasMessages ? 16 : 0 }}>
-              <div style={{ width: '56%', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: hasMessages ? 'stretch' : 'stretch', gap: hasMessages ? 16 : 0, flex: hasMessages ? undefined : 1 }}>
+              <div style={{ width: '100%', maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: hasMessages ? 'stretch' : 'stretch', gap: hasMessages ? 16 : 0, flex: hasMessages ? undefined : 1 }}>
 
                 {!hasMessages ? (
                   /* ── Empty state ── */
@@ -1585,7 +1585,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
 
             {/* ── Chat input bar ── */}
             <div style={{ flexShrink: 0, padding: '16px 24px 20px', background: '#fff', boxShadow: 'none', borderTop: 'none' }}>
-              <div style={{ width: '56%', margin: '0 auto' }}>
+              <div style={{ width: '100%', maxWidth: 760, margin: '0 auto' }}>
                 <div style={{
                   background: '#fff',
                   border: `1.5px solid ${inputFocused ? '#7c7cff' : 'var(--border-default)'}`,
@@ -1698,7 +1698,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                       <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
                         <Mic size={18} strokeWidth={2} />
                       </button>
-                      <Mic size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.color = '#0052cc'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-tertiary)'} />
+
                       <button
                         onClick={sendMessage}
                         disabled={!inputValue.trim()}
