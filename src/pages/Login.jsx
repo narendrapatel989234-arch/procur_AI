@@ -18,7 +18,7 @@ export default function Login({ onNavigate, onLogin }) {
 
     if (isSSO) {
         return (
-            <div style={{ display: 'flex', height: '100vh', width: '100%', background: '#fff', fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', height: '100vh', width: '100%', background: '#fafcff', fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
                 {/* Left side - Illustration */}
                 <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '30px 40px', position: 'relative', overflow: 'hidden', background: '#fafcff' }}>
 
@@ -88,7 +88,7 @@ export default function Login({ onNavigate, onLogin }) {
                                 animation: 'pulseGlow 3s infinite',
                                 boxShadow: '0 8px 24px rgba(0,82,204,0.4)'
                             }}>
-                                <Bot size={40} color="#fff" strokeWidth={1.5} />
+                                <ShieldCheck size={40} color="#fff" strokeWidth={1.5} />
                             </div>
                             {/* Orbiting rings - tight around the bounding box */}
                             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 140, height: 140, border: '1px solid rgba(124,124,255,0.3)', borderRadius: '50%', pointerEvents: 'none' }} />
@@ -134,7 +134,7 @@ export default function Login({ onNavigate, onLogin }) {
                 </div>
 
                 {/* Right side - Login Option */}
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 40px', background: '#fff', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 40px', background: '#fafcff', position: 'relative', overflow: 'hidden' }}>
 
                     {/* Background Blob */}
                     <div style={{ position: 'absolute', top: -150, right: -150, width: 600, height: 600, background: 'var(--bg-surface-2)', borderRadius: '50%', pointerEvents: 'none' }} />
@@ -184,7 +184,7 @@ export default function Login({ onNavigate, onLogin }) {
                                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-default)'; e.currentTarget.style.boxShadow = '0 2px 6px rgba(0,0,0,0.02)'; }}
                             >
                                 <Globe size={18} color="#0052cc" />
-                                Sign in with SAML / SSO
+                                Sign in with SSO
                             </button>
 
                             <button

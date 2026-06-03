@@ -1099,7 +1099,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
                 ))}
                 <div style={{ height: 1, background: 'var(--border-subtle)', margin: '4px 0' }} />
                 <div
-                  onClick={() => { setMenuOpen(false); }}
+                  onClick={() => { setMenuOpen(false); setShowDeleteModal(true); }}
                   style={{
                     display: 'flex', alignItems: 'center', gap: 10,
                     padding: '8px 12px', borderRadius: 7, cursor: 'pointer',
@@ -1164,7 +1164,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
                       <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-tertiary)', marginBottom: 10, textAlign: 'left' }}>
                         Choose how to get started —
                       </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: '1fr', gap: 12, width: '100%', maxWidth: 760, margin: '0 auto', paddingBottom: 28 }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: '1fr', gap: 12, width: '100%', margin: '0 auto', paddingBottom: 28 }}>
 
                         {/* CARD 1 - Narrative */}
                         <div
@@ -1807,7 +1807,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
         const specificNote = <div style={{ display: 'block', fontSize: 11, color: 'var(--text-tertiary)', fontStyle: 'italic', marginTop: 4 }}>Applicable for specific categories</div>;
         return (
           <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px', background: 'var(--bg-default)' }}>
-            <div style={{ maxWidth: 720, margin: '0 auto', width: '100%', marginBottom: 40 }}>
+            <div style={{ maxWidth: 680, margin: '0 auto', width: '100%', marginBottom: 40 }}>
               <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Upload Procurement Document</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, marginBottom: 24 }}>Upload a requirements document, SOW, or specifications file. Our AI will extract all procurement fields automatically.</div>
 
@@ -2675,18 +2675,21 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
           onClick={() => setShowRenameModal(false)}>
           <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 440, boxShadow: '0 16px 48px rgba(0,0,0,0.15)' }}
             onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>Rename this chat</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Rename this chat</div>
+              <X size={20} color="var(--text-tertiary)" style={{ cursor: 'pointer' }} onClick={() => setShowRenameModal(false)} />
+            </div>
             <input
               value={renameValue}
               onChange={(e) => setRenameValue(e.target.value)}
               autoFocus
               onKeyDown={(e) => { if (e.key === 'Enter' && renameValue.trim()) setShowRenameModal(false); if (e.key === 'Escape') setShowRenameModal(false); }}
-              style={{ width: '100%', padding: '12px 16px', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)', marginBottom: 20 }}
+              style={{ background: '#fff', width: '100%', padding: '12px 16px', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)', marginBottom: 20 }}
             />
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button onClick={() => setShowRenameModal(false)} style={{ padding: '10px 20px', border: '1px solid var(--border-default)', borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>
-                    <Save size={15} strokeWidth={2} /> Save Draft
-                  </button>
+                Cancel
+              </button>
               <button onClick={() => { if (renameValue.trim()) setShowRenameModal(false); }} style={{ padding: '10px 20px', border: 'none', borderRadius: 10, background: renameValue.trim() ? '#0052cc' : 'var(--bg-surface-2)', fontSize: 14, fontWeight: 600, cursor: renameValue.trim() ? 'pointer' : 'default', fontFamily: 'inherit', color: renameValue.trim() ? '#fff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}>Rename</button>
             </div>
           </div>
@@ -2705,8 +2708,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
             <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 28, lineHeight: 1.5 }}>This action is permanent and cannot be undone.</div>
             <div style={{ display: 'flex', gap: 12, width: '100%' }}>
               <button onClick={() => setShowDeleteModal(false)} style={{ flex: 1, padding: '13px', border: '1px solid var(--border-default)', borderRadius: 12, background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>
-                    <Save size={15} strokeWidth={2} /> Save Draft
-                  </button>
+                Cancel
+              </button>
               <button onClick={() => setShowDeleteModal(false)} style={{ flex: 1, padding: '13px', border: 'none', borderRadius: 12, background: '#ef4444', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: '#fff' }}>Delete</button>
             </div>
           </div>

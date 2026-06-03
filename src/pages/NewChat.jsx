@@ -206,7 +206,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
           border: 1px solid var(--border-default);
           border-radius: 12px;
           padding: 16px;
-          width: 240px;
+          flex: 1;
           cursor: pointer;
           transition: all 0.2s ease;
           box-shadow: 0 2px 8px rgba(0,0,0,0.02);
@@ -292,7 +292,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
                   </div>
 
                   {/* Starter Prompts */}
-                  <div style={{ display: 'flex', gap: 16, marginTop: 48, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 800 }}>
+                  <div style={{ display: 'flex', gap: 16, marginTop: 48, width: '56%', margin: '0 auto' }}>
 
                     <div className="prompt-card" onClick={() => setInputText("I want to compare proposals from multiple vendors. Please help me evaluate pricing, commercial terms, and supplier strengths.")}>
                       <div style={{ color: '#0052cc', marginBottom: 12, background: 'rgba(0,82,204,0.06)', width: 36, height: 36, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -614,7 +614,6 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
                       <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
                         <Mic size={18} strokeWidth={2} />
                       </button>
-                      <Mic size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.color = '#0052cc'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-tertiary)'} />
                       <button
                         onClick={handleSend}
                         disabled={!inputText.trim()}
@@ -752,13 +751,16 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
           onClick={() => setShowRenameModal(false)}>
           <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 440, boxShadow: '0 16px 48px rgba(0,0,0,0.15)' }}
             onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>Rename this chat</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Rename this chat</div>
+              <X size={20} color="var(--text-tertiary)" style={{ cursor: 'pointer' }} onClick={() => setShowRenameModal(false)} />
+            </div>
             <input
               value={renameValue}
               onChange={(e) => setRenameValue(e.target.value)}
               autoFocus
               onKeyDown={(e) => { if (e.key === 'Enter' && renameValue.trim()) setShowRenameModal(false); if (e.key === 'Escape') setShowRenameModal(false); }}
-              style={{ width: '100%', padding: '12px 16px', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)', marginBottom: 20 }}
+              style={{ background: '#fff', width: '100%', padding: '12px 16px', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)', marginBottom: 20 }}
             />
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button onClick={() => setShowRenameModal(false)} style={{ padding: '10px 20px', border: '1px solid var(--border-default)', borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>Cancel</button>

@@ -342,7 +342,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
         results = results.filter(r =>
           r.id.toLowerCase().includes(q) ||
           r.title.toLowerCase().includes(q) ||
-          r.creator.toLowerCase().includes(q)
+          (r.costCentre && r.costCentre.toLowerCase().includes(q))
         );
       }
 
@@ -460,7 +460,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 }}>
 
           {KPIS.map((k, i) => (
-            <div key={i} className="pkpi" style={{
+            <div key={i} style={{
               background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14,
               padding: '12px 16px', boxShadow: '0 1px 3px rgba(14,15,37,0.05)',
               display: 'flex', flexDirection: 'column', height: '100%'
@@ -567,6 +567,47 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
 
             </div>
 
+
+
+            {Object.keys(FILTER_OPTIONS).map((label) => (
+
+              <FilterDropdown
+
+                key={label}
+
+                label={label}
+
+                options={FILTER_OPTIONS[label]}
+
+                isOpen={openFilter === label}
+
+                onToggle={() => setOpenFilter(openFilter === label ? null : label)}
+
+                onClose={closeFilter}
+
+                activeOption={activeFilters[label]}
+                isMulti={label === 'Lifecycle Stage' || label === 'Cost Centre' || label === 'Status'}
+
+                onSelect={(label, opt) => {
+                  if (label === 'Lifecycle Stage' || label === 'Cost Centre' || label === 'Status') {
+                    if (opt === 'CLEAR_ALL') {
+                      setActiveFilters(prev => ({ ...prev, [label]: [] }));
+                      return;
+                    }
+                    setActiveFilters(prev => {
+                      const arr = prev[label] || [];
+                      const next = arr.includes(opt) ? arr.filter(x => x !== opt) : [...arr, opt];
+                      return { ...prev, [label]: next };
+                    });
+                  } else {
+                    setActiveFilters(prev => ({ ...prev, [label]: prev[label] === opt ? null : opt }));
+                  }
+                }}
+
+              />
+
+            ))}
+
             {/* Date Range Calendar */}
             <div style={{ position: 'relative' }}>
               <button onClick={() => setShowDatePicker(!showDatePicker)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: showDatePicker ? 'var(--bg-surface-1)' : '#fff', border: `1px solid ${showDatePicker ? '#7c7cff' : 'var(--border-default)'}`, padding: '0 12px', height: 36, borderRadius: 8, fontSize: 12, color: 'var(--text-secondary)', cursor: 'pointer', transition: 'all 0.15s ease', fontFamily: 'inherit' }}>
@@ -614,45 +655,6 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                 </div>
               )}
             </div>
-
-            {Object.keys(FILTER_OPTIONS).map((label) => (
-
-              <FilterDropdown
-
-                key={label}
-
-                label={label}
-
-                options={FILTER_OPTIONS[label]}
-
-                isOpen={openFilter === label}
-
-                onToggle={() => setOpenFilter(openFilter === label ? null : label)}
-
-                onClose={closeFilter}
-
-                activeOption={activeFilters[label]}
-                isMulti={label === 'Lifecycle Stage' || label === 'Cost Centre' || label === 'Status'}
-
-                onSelect={(label, opt) => {
-                  if (label === 'Lifecycle Stage' || label === 'Cost Centre' || label === 'Status') {
-                    if (opt === 'CLEAR_ALL') {
-                      setActiveFilters(prev => ({ ...prev, [label]: [] }));
-                      return;
-                    }
-                    setActiveFilters(prev => {
-                      const arr = prev[label] || [];
-                      const next = arr.includes(opt) ? arr.filter(x => x !== opt) : [...arr, opt];
-                      return { ...prev, [label]: next };
-                    });
-                  } else {
-                    setActiveFilters(prev => ({ ...prev, [label]: prev[label] === opt ? null : opt }));
-                  }
-                }}
-
-              />
-
-            ))}
 
             {(activeFilters['Lifecycle Stage'].length > 0 || activeFilters['Status']?.length > 0 || activeFilters['Cost Centre'].length > 0 || activeFilters['Type']) && (
               <button
