@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from '../layouts/Sidebar.jsx';
-import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X, Brain, GitBranch, ShieldCheck, Banknote, Scale, PackageCheck, UserCheck, Zap, Pencil, Calendar, Building, Tag, MapPin, ChevronDown, Upload, Eye, FileText } from 'lucide-react';
+import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X, Brain, GitBranch, ShieldCheck, Banknote, Scale, PackageCheck, UserCheck, Zap, Pencil, Calendar, Building, Tag, MapPin, ChevronDown, Upload, Eye, FileText, Send, Mic, Paperclip, Copy, ThumbsUp, ThumbsDown, RotateCcw, Edit2 } from 'lucide-react';
 
 const ICONS = { User, Sparkles, GitBranch, Banknote, Scale, Zap, ShieldCheck, PackageCheck, UserCheck, CheckCircle };
 
@@ -207,6 +207,9 @@ function EL({ children, required }) {
   return <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginBottom: 6 }}>{children}{required && <span style={{ color: '#ef4444' }}> *</span>}</label>;
 }
 
+const SL = ({ children }) => <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>{children}</div>;
+const Div = () => <div style={{ borderTop: '1px solid #f0f0f0', margin: '10px 0' }} />;
+
 export function EditModal({ onClose, onSave }) {
   const [fReqTitle, setFReqTitle] = useState('AWS Cloud Migration Consulting Services');
   const [fBizUnit, setFBizUnit] = useState('Engineering'); const [fBizUnitOpen, setFBizUnitOpen] = useState(false);
@@ -254,8 +257,6 @@ export function EditModal({ onClose, onSave }) {
   const subcatOptions = fProcCategory ? (SUBCATEGORY_MAP[fProcCategory] || []) : [];
   const spendCategory = SPEND_CATEGORY_MAP[fProcCategory] || '';
   const specificNote = <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic', marginTop: 4 }}>Applicable for specific categories</div>;
-  const SL = ({ children }) => <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>{children}</div>;
-  const Div = () => <div style={{ borderTop: '1px solid #f0f0f0', margin: '10px 0' }} />;
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1100, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -452,12 +453,33 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
   const [showSaveToast, setShowSaveToast] = useState(false);
 
   const [activeTab, setActiveTab] = useState('overview');
-  const [poMode, setPoMode] = useState('form'); // 'form' | 'preview'
-  const [poEditing, setPoEditing] = useState(false);
+  const [showPoEditModal, setShowPoEditModal] = useState(false);
   const [showPoPreview, setShowPoPreview] = useState(false);
 
+  const [chatPaneOpen, setChatPaneOpen] = useState(false);
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState([
+    { role: 'user', text: 'Summarise the PO for me' },
+    { role: 'status' },
+    { role: 'ai', text: 'PO-2026-00412 is for AWS Cloud Migration Consulting Services with Accenture Middle East. Total value: ₹45,00,000. Engagement covers 3 senior architects for 6 months across assessment, migration and support phases. Terms: Technology & Consulting. Awaiting approval from Sarah Chen.' }
+  ]);
+  const chatInputRef = useRef(null);
+  const [chatCopiedMsgs, setChatCopiedMsgs] = useState(new Set());
+  const [chatLikedMsgs, setChatLikedMsgs] = useState(new Set());
+  const [chatDislikedMsgs, setChatDislikedMsgs] = useState(new Set());
+  const [chatRegeneratingMsgs, setChatRegeneratingMsgs] = useState(new Set());
+  const [chatHoveredUserMsg, setChatHoveredUserMsg] = useState(null);
+  const chatScrollRef = useRef(null);
+  const [chatLikedTooltipVisible, setChatLikedTooltipVisible] = useState(new Set());
+  const [chatDislikedTooltipVisible, setChatDislikedTooltipVisible] = useState(new Set());
+  const chatTooltipTimers = useRef(new Set());
+  const [chatShowReasoningPanel, setChatShowReasoningPanel] = useState(false);
+  const [chatReasoningComplete, setChatReasoningComplete] = useState(true);
+
   // PO form fields
-  const [poLogo] = useState(null); // file upload placeholder
+  // PO form fields
+  const [poLogoFile, setPoLogoFile] = useState(null);
+  const poLogoInputRef = useRef(null);
   const [poAddress, setPoAddress] = useState('DDAIS Group\nProcurement Division\nDubai Internet City, Building 17\nDubai, UAE');
   const [poSupplierName, setPoSupplierName] = useState('Accenture Middle East');
   const [poSupplierAddress, setPoSupplierAddress] = useState('Accenture Middle East LLC\nAlSalam Tower, 34th Floor\nDubai, UAE');
@@ -520,6 +542,9 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
         @keyframes pulseRing { 0%,100%{box-shadow:0 0 0 0 rgba(124,124,255,0.4)} 50%{box-shadow:0 0 0 8px rgba(124,124,255,0)} }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
         @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-12px) } to { opacity: 1; transform: translateX(-50%) translateY(0) } }
+        @keyframes chatSpinOnce { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        @keyframes chatFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes textShimmer { 0% { opacity: 1 } 50% { opacity: 0.4 } 100% { opacity: 1 } }
       `}</style>
 
       {showSaveToast && (
@@ -558,8 +583,8 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
             <ChevronRight size={14} color="#ccc" />
             <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>PR-2026-011</span>
           </div>
-          <button style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid #ddd', borderRadius: 8, padding: '7px 14px', fontSize: 13, color: '#1a1a1a', fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>
-            <Download size={14} /> Export
+          <button onClick={() => setChatPaneOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'linear-gradient(135deg, #0052cc, #7c7cff)', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, color: '#fff', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.3)', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 18px rgba(0,82,204,0.45)'} onMouseLeave={e => e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.3)'}>
+            <Sparkles size={14} strokeWidth={2} /> AI Chat
           </button>
         </div>
 
@@ -728,29 +753,37 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
             <div style={{ flex: 1, overflowY: 'auto', background: '#f5f5f7', padding: 24 }}>
 
               {/* ACTION BAR */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                <div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>Purchase Order</div>
-                  <div style={{ fontSize: 13, color: '#999', marginTop: 2 }}>AI-generated · Awaiting manager approval</div>
+              <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '14px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                {/* Left: PO doc identity */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <FileText size={18} color="#0052cc" strokeWidth={1.8} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Purchase Order</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ color: '#0052cc', fontWeight: 600 }}>{poNumber}</span>
+                      <span>·</span>
+                      <span>AI-generated</span>
+                      <span>·</span>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 20, background: 'rgba(245,158,11,0.1)', color: '#b45309', fontSize: 11, fontWeight: 600 }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#b45309' }} />
+                        Awaiting Approval
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <button onClick={() => setShowPoPreview(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1px solid var(--border-default)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+
+                {/* Right: CTAs */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <button onClick={() => setShowPoPreview(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1px solid var(--border-default)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                     <Eye size={14} /> Preview
                   </button>
-                  {!poEditing ? (
-                    <button onClick={() => setPoEditing(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                      <Pencil size={14} strokeWidth={2} /> Edit PO
-                    </button>
-                  ) : (
-                    <>
-                      <button onClick={() => setPoEditing(false)} style={{ padding: '8px 14px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#666', fontFamily: 'inherit' }}>Discard</button>
-                      <button onClick={() => setPoEditing(false)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>
-                        <CheckCircle size={14} /> Save PO
-                      </button>
-                    </>
-                  )}
-                  {userRole === 'manager' && !poEditing && (
-                    <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 20px', border: 'none', borderRadius: 8, background: '#15803d', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(21,128,61,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#166534'} onMouseLeave={e => e.currentTarget.style.background = '#15803d'}>
+                  <button onClick={() => setShowPoEditModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                    <Pencil size={13} strokeWidth={2} /> Edit
+                  </button>
+                  {userRole === 'manager' && (
+                    <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 20px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#003fa3'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,82,204,0.35)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#0052cc'; e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.25)'; }}>
                       <CheckCircle size={14} /> Approve PO
                     </button>
                   )}
@@ -765,31 +798,25 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16, display: 'flex', alignItems: 'center' }}>Company Logo</div>
                   <div>
-                    {poEditing ? (
-                      <div style={{ border: '2px dashed #e0e0e0', borderRadius: 8, padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', background: '#fafafa', width: 'fit-content', transition: 'border-color 0.15s ease' }} onClick={() => document.getElementById('po-logo-input').click()} onMouseEnter={e => e.currentTarget.style.borderColor = '#7c7cff'} onMouseLeave={e => e.currentTarget.style.borderColor = '#e0e0e0'}>
-                        <Upload size={14} color="#7c7cff" />
-                        <span style={{ fontSize: 13, color: '#999' }}>Upload logo (PNG, SVG)</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 8, background: 'linear-gradient(135deg, #0d1f3c, #0052cc)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <span style={{ color: '#fff', fontSize: 13, fontWeight: 800, letterSpacing: '-0.5px' }}>DD</span>
                       </div>
-                    ) : (
-                      <div style={{ width: 80, height: 36, border: '1px dashed #e0e0e0', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ fontSize: 11, color: '#ccc' }}>No logo</span>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#0d1f3c' }}>DDAIS Group</div>
+                        <div style={{ fontSize: 11, color: '#999' }}>Procurement Division</div>
                       </div>
-                    )}
-                    <input id="po-logo-input" type="file" accept=".png,.svg,.jpg" style={{ display: 'none' }} />
+                    </div>
                   </div>
 
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Company Address</div>
                   <div>
-                    {poEditing ? (
-                      <textarea value={poAddress} onChange={e => setPoAddress(e.target.value)} rows={4} style={{ width: '100%', maxWidth: 480, padding: '8px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poAddress}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poAddress}</div>
                   </div>
 
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Buyer Name</div>
                   <div>
-                    {poEditing ? (
-                      <input value={poBuyerName} onChange={e => setPoBuyerName(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 280 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poBuyerName}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poBuyerName}</div>
                   </div>
                 </div>
 
@@ -801,23 +828,17 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Supplier Name</div>
                   <div>
-                    {poEditing ? (
-                      <input value={poSupplierName} onChange={e => setPoSupplierName(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 280 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poSupplierName}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poSupplierName}</div>
                   </div>
 
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Supplier Address</div>
                   <div>
-                    {poEditing ? (
-                      <textarea value={poSupplierAddress} onChange={e => setPoSupplierAddress(e.target.value)} rows={3} style={{ width: '100%', maxWidth: 480, padding: '8px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poSupplierAddress}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poSupplierAddress}</div>
                   </div>
 
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Supplier Contact No.</div>
                   <div>
-                    {poEditing ? (
-                      <input value={poSupplierContact} onChange={e => setPoSupplierContact(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 220 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poSupplierContact}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poSupplierContact}</div>
                   </div>
                 </div>
 
@@ -829,49 +850,27 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>PO Number</div>
                   <div>
-                    {poEditing ? (
-                      <input value={poNumber} onChange={e => setPoNumber(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 220 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : <div style={{ fontSize: 13, fontWeight: 600, color: '#0052cc' }}>{poNumber}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#0052cc' }}>{poNumber}</div>
                   </div>
 
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Issue Date</div>
                   <div>
-                    {poEditing ? (
-                      <input type="date" value={poIssueDate} onChange={e => setPoIssueDate(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 180 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poIssueDate}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poIssueDate}</div>
                   </div>
 
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Change No.</div>
                   <div>
-                    {poEditing ? (
-                      <input value={poChangeNo} onChange={e => setPoChangeNo(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 100 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poChangeNo}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poChangeNo}</div>
                   </div>
 
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Terms (Category)</div>
                   <div>
-                    {poEditing ? (
-                      <div ref={poTermsCatRef} style={{ position: 'relative', width: 280 }}>
-                        <button onClick={() => setPoTermsCategoryOpen(!poTermsCategoryOpen)} style={{ width: '100%', padding: '8px 12px', boxSizing: 'border-box', border: `1px solid ${poTermsCategoryOpen ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 8, fontSize: 13, cursor: 'pointer', background: '#fff', fontFamily: 'inherit', outline: 'none', color: '#1a1a1a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: poTermsCategoryOpen ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none' }}>
-                          <span>{poTermsCategory}</span>
-                          <ChevronDown size={13} style={{ transform: poTermsCategoryOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.15s ease' }} />
-                        </button>
-                        {poTermsCategoryOpen && (
-                          <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 300, background: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', padding: 6 }}>
-                            {['Real Estate', 'Technology and Consulting', 'Energy & Utilities', 'Healthcare & Pharma'].map(opt => (
-                              <div key={opt} onClick={() => { setPoTermsCategory(opt); setPoTermsCategoryOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, borderRadius: 6, cursor: 'pointer', color: '#1a1a1a' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{opt}</div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poTermsCategory}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poTermsCategory}</div>
                   </div>
 
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Instructions</div>
                   <div>
-                    {poEditing ? (
-                      <textarea value={poInstructions} onChange={e => setPoInstructions(e.target.value)} rows={3} style={{ width: '100%', maxWidth: 480, padding: '8px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.7 }}>{poInstructions}</div>}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.7 }}>{poInstructions}</div>
                   </div>
                 </div>
 
@@ -880,9 +879,6 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                 {/* ── LINE ITEMS ── */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
                   <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>LINE ITEMS</div>
-                  {poEditing && (
-                    <button onClick={() => setPoLineItems([...poLineItems, { ln: String(poLineItems.length + 1), matCode: '', prTaskNo: '', prItem: '', description: '', uom: '', quantity: '', unitPrice: '', amount: '', delDate: '' }])} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 7, background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit' }}>+ Add Row</button>
-                  )}
                 </div>
 
                 <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid var(--border-subtle)', marginBottom: 20 }}>
@@ -897,17 +893,11 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                     <tbody>
                       {poLineItems.map((item, idx) => (
                         <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                          {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
-                            <td key={fi} style={{ padding: '10px 12px', fontSize: 13, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid var(--border-subtle)' : 'none', verticalAlign: 'top' }}>
-                              {poEditing ? (
-                                field === 'description' ? (
-                                  <textarea value={item[field]} onChange={e => { const u = [...poLineItems]; u[idx][field] = e.target.value; setPoLineItems(u); }} style={{ width: '100%', minWidth: 180, padding: '4px 6px', border: '1px solid #e0e0e0', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 56 }} />
-                                ) : (
-                                  <input value={item[field]} onChange={e => { const u = [...poLineItems]; u[idx][field] = e.target.value; setPoLineItems(u); }} style={{ width: '100%', minWidth: field === 'ln' || field === 'prItem' ? 36 : 72, padding: '4px 6px', border: '1px solid #e0e0e0', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none' }} />
-                                )
-                              ) : <span style={{ fontSize: 12, lineHeight: 1.5 }}>{item[field]}</span>}
-                            </td>
-                          ))}
+                        {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
+                          <td key={fi} style={{ padding: '10px 12px', fontSize: 13, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid var(--border-subtle)' : 'none', verticalAlign: 'top' }}>
+                            <span style={{ fontSize: 12, lineHeight: 1.5 }}>{item[field]}</span>
+                          </td>
+                        ))}
                         </tr>
                       ))}
                       <tr style={{ background: 'var(--bg-surface-2)', borderTop: '2px solid var(--border-default)' }}>
@@ -924,18 +914,14 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                 {/* ── SPECIAL INSTRUCTIONS ── */}
                 <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 10 }}>SPECIAL INSTRUCTIONS TO SUPPLIER</div>
                 <div style={{ marginBottom: 20 }}>
-                  {poEditing ? (
-                    <textarea value={poSpecialInstructions} onChange={e => setPoSpecialInstructions(e.target.value)} rows={6} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                  ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poSpecialInstructions}</div>}
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poSpecialInstructions}</div>
                 </div>
 
                 <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
 
                 {/* ── TERMS & CONDITIONS ── */}
                 <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 10 }}>TERMS & CONDITIONS</div>
-                {poEditing ? (
-                  <textarea value={poTermsConditions} onChange={e => setPoTermsConditions(e.target.value)} rows={8} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poTermsConditions}</div>}
+                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poTermsConditions}</div>
 
               </div>
 
@@ -1039,24 +1025,34 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>Change Order Description:</div>
 
                 {/* Line items table */}
-                <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc', marginBottom: 24, fontSize: 11 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc', marginBottom: 24, fontSize: 11, tableLayout: 'fixed' }}>
+                  <colgroup>
+                    <col style={{ width: '4%' }} />
+                    <col style={{ width: '18%' }} />
+                    <col style={{ width: '16%' }} />
+                    <col style={{ width: '32%' }} />
+                    <col style={{ width: '8%' }} />
+                    <col style={{ width: '7%' }} />
+                    <col style={{ width: '8%' }} />
+                    <col style={{ width: '7%' }} />
+                  </colgroup>
                   <thead>
                     <tr style={{ background: '#0d1f3c' }}>
-                      {['LN', 'MAT-CODE\nOr COST CODE', 'PURCHASE\nREQUISITION/\nTASK NUMBER', 'PR\nITEM', 'DESCRIPTION', 'UOM', 'QUANTITY', 'UNIT PRICE', 'AMOUNT', 'DEL.DATE'].map((h, i) => (
-                        <th key={i} style={{ padding: '7px 8px', fontSize: 9, fontWeight: 700, color: '#fff', textAlign: 'left', borderRight: i < 9 ? '1px solid rgba(255,255,255,0.15)' : 'none', whiteSpace: 'pre-line', lineHeight: 1.3 }}>{h}</th>
+                      {['LN', 'MAT-CODE / COST CODE', 'PR / TASK NO.', 'DESCRIPTION', 'UOM', 'QTY', 'UNIT PRICE', 'AMOUNT'].map((h, i) => (
+                        <th key={i} style={{ padding: '7px 8px', fontSize: 9, fontWeight: 700, color: '#fff', textAlign: 'left', borderRight: i < 7 ? '1px solid rgba(255,255,255,0.15)' : 'none', whiteSpace: 'pre-line', lineHeight: 1.3 }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {poLineItems.map((item, idx) => (
                       <tr key={idx} style={{ borderBottom: '1px solid #e5e5e5', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
-                        {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
-                          <td key={fi} style={{ padding: '7px 8px', fontSize: 11, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid #e5e5e5' : 'none', verticalAlign: 'top', lineHeight: 1.4 }}>{item[field]}</td>
+                        {['ln', 'matCode', 'prTaskNo', 'description', 'uom', 'quantity', 'unitPrice', 'amount'].map((field, fi) => (
+                          <td key={fi} style={{ padding: '7px 8px', fontSize: 11, color: '#1a1a1a', borderRight: fi < 7 ? '1px solid #e5e5e5' : 'none', verticalAlign: 'top', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis' }}>{item[field]}</td>
                         ))}
                       </tr>
                     ))}
                     <tr style={{ background: '#f0f4ff', borderTop: '2px solid #0052cc' }}>
-                      <td colSpan={8} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid #ccc' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
+                      <td colSpan={6} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid #ccc' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
                       <td colSpan={2} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#0052cc' }}>₹45,00,000.00 INR</td>
                     </tr>
                   </tbody>
@@ -1093,6 +1089,492 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
               </div>
 
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI CHAT PANE */}
+      <div style={{ width: chatPaneOpen ? 680 : 0, flexShrink: 0, borderLeft: chatPaneOpen ? '1px solid #e5e5e5' : 'none', overflow: 'hidden', transition: 'width 0.25s ease', background: '#fff', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ width: 680, display: 'flex', flexDirection: 'column', height: '100%' }}>
+
+          {/* Header — matches NewChat top bar style */}
+          <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(0,82,204,0.2)' }}>
+                <Sparkles size={15} color="#fff" strokeWidth={2} />
+              </div>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>AI Assistant</div>
+                <div style={{ fontSize: 11, display: 'flex', alignItems: 'center', gap: 4, marginTop: 1 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#22c55e' }} />
+                  <span style={{ color: '#22c55e', fontWeight: 500 }}>PR-2026-011 context loaded</span>
+                </div>
+              </div>
+            </div>
+            <button onClick={() => setChatPaneOpen(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex', padding: 6, borderRadius: 8, transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Messages scroll area */}
+          <div ref={chatScrollRef} style={{ flex: 1, overflowY: 'auto', padding: '20px 20px 8px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+            {chatMessages.map((msg, i) => {
+              if (msg.role === 'status') {
+                return (
+                  <div key={i} style={{ alignSelf: 'flex-start', display: 'flex', flexDirection: 'column', gap: 8, width: '82%', animation: 'chatFadeIn 0.2s ease forwards' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, marginLeft: -38 }}>
+                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                        <Sparkles size={12} color="#fff" strokeWidth={2} />
+                      </div>
+                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(124,124,255,0.04)', border: '1px solid rgba(124,124,255,0.15)', borderRadius: 10, padding: '8px 14px' }}>
+                        <div style={{ flex: 1, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
+                          {chatReasoningComplete ? (
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>Completed</span>
+                          ) : (
+                            <span style={{ animation: 'textShimmer 1.2s ease-in-out infinite', display: 'inline-block' }}>Analysing your request...</span>
+                          )}
+                        </div>
+                        <button onClick={() => setChatShowReasoningPanel(p => !p)} style={{ fontSize: 12, fontWeight: 500, color: '#7c7cff', background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>
+                          {chatShowReasoningPanel ? 'Hide Steps' : 'Show Steps'}
+                        </button>
+                      </div>
+                    </div>
+                    {/* Inline Reasoning Steps */}
+                    {chatShowReasoningPanel && (
+                      <div style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '12px 16px', marginLeft: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <Sparkles size={12} color="#7c7cff" /> Thinking Steps
+                        </div>
+                        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                          <div style={{ position: 'absolute', left: 4, top: 4, bottom: 4, width: 1, background: 'var(--border-subtle)', zIndex: 0 }} />
+                          {[
+                            { title: 'Reading procurement request', status: 'complete' },
+                            { title: 'Extracting key requirements', status: 'complete' },
+                            { title: 'Querying vendor database', status: 'complete' },
+                            { title: 'Generating PR draft summary', status: 'complete' },
+                          ].map((step, idx) => (
+                            <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, position: 'relative', zIndex: 1 }}>
+                              <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#1a1a1a', marginTop: 3, flexShrink: 0 }} />
+                              <div style={{ fontSize: 12, fontWeight: 500, color: '#4a4a4a' }}>{step.title}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return msg.role === 'user' ? (
+                /* ── User message ── */
+                <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '78%', animation: 'chatFadeIn 0.2s ease forwards' }}
+                  onMouseEnter={() => setChatHoveredUserMsg(i)}
+                  onMouseLeave={() => setChatHoveredUserMsg(null)}>
+                  <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
+                    {msg.text}
+                  </div>
+                  {/* Hover actions */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end', height: 26, visibility: chatHoveredUserMsg === i ? 'visible' : 'hidden', opacity: chatHoveredUserMsg === i ? 1 : 0, transition: 'opacity 0.15s ease' }}>
+                    <button onClick={() => { 
+                        setChatCopiedMsgs(prev => new Set(prev).add(i)); 
+                        const t = setTimeout(() => setChatCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000); 
+                        chatTooltipTimers.current.add(t);
+                      }}
+                      style={{ position: 'relative', width: 26, height: 26, borderRadius: 6, border: 'none', background: chatCopiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatCopiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                      onMouseEnter={e => { if (!chatCopiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; } }}
+                      onMouseLeave={e => { if (!chatCopiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; } }}>
+                      {chatCopiedMsgs.has(i) ? <CheckCircle size={13} /> : <Copy size={13} />}
+                      {chatCopiedMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 4px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: '#fff', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '3px 7px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Copied!</div>}
+                    </button>
+                    <button onClick={() => { /* edit not needed in pane */ }}
+                      style={{ position: 'relative', width: 26, height: 26, borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
+                      <Edit2 size={13} />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* ── AI message ── */
+                <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '82%', display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 38, animation: 'chatFadeIn 0.2s ease forwards' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginLeft: -38 }}>
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                      <Sparkles size={12} color="#fff" strokeWidth={2} />
+                    </div>
+                    <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, paddingTop: 4 }}>
+                      {msg.text}
+                    </div>
+                  </div>
+                  {/* Action row below AI message */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <span style={{ fontSize: 11, color: 'var(--text-tertiary)', marginRight: 6 }}>Just now</span>
+
+                    {/* Copy */}
+                    <button onClick={() => { 
+                        setChatCopiedMsgs(prev => new Set(prev).add(i)); 
+                        const t = setTimeout(() => setChatCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
+                        chatTooltipTimers.current.add(t);
+                      }}
+                      style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: chatCopiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatCopiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                      onMouseEnter={e => { if (!chatCopiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
+                      onMouseLeave={e => { if (!chatCopiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                      {chatCopiedMsgs.has(i) ? <CheckCircle size={14} /> : <Copy size={14} />}
+                      {chatCopiedMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 4px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: '#fff', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '3px 7px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Copied!</div>}
+                    </button>
+
+                    {/* Thumbs up */}
+                    <button onClick={() => { 
+                        setChatLikedMsgs(prev => { 
+                          const n = new Set(prev); 
+                          if (n.has(i)) n.delete(i); 
+                          else { 
+                            n.add(i); 
+                            setChatDislikedMsgs(d => { const nd = new Set(d); nd.delete(i); return nd; }); 
+                            setChatLikedTooltipVisible(t => new Set(t).add(i));
+                            const timer = setTimeout(() => setChatLikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
+                            chatTooltipTimers.current.add(timer);
+                          } 
+                          return n; 
+                        }); 
+                      }}
+                      style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: chatLikedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatLikedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                      onMouseEnter={e => { if (!chatLikedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
+                      onMouseLeave={e => { if (!chatLikedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                      <ThumbsUp size={14} />
+                      {chatLikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Liked</div>}
+                    </button>
+
+                    {/* Thumbs down */}
+                    <button onClick={() => { 
+                        setChatDislikedMsgs(prev => { 
+                          const n = new Set(prev); 
+                          if (n.has(i)) n.delete(i); 
+                          else { 
+                            n.add(i); 
+                            setChatLikedMsgs(l => { const nl = new Set(l); nl.delete(i); return nl; }); 
+                            setChatDislikedTooltipVisible(t => new Set(t).add(i));
+                            const timer = setTimeout(() => setChatDislikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
+                            chatTooltipTimers.current.add(timer);
+                          } 
+                          return n; 
+                        }); 
+                      }}
+                      style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: chatDislikedMsgs.has(i) ? 'rgba(239,68,68,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatDislikedMsgs.has(i) ? '#ef4444' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                      onMouseEnter={e => { if (!chatDislikedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
+                      onMouseLeave={e => { if (!chatDislikedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                      <ThumbsDown size={14} />
+                      {chatDislikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Disliked</div>}
+                    </button>
+
+                    {/* Regenerate */}
+                    <button onClick={() => { 
+                        setChatRegeneratingMsgs(prev => new Set([...prev, i])); 
+                        setTimeout(() => setChatRegeneratingMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 1500); 
+                      }}
+                      style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: chatRegeneratingMsgs.has(i) ? 'rgba(124,124,255,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatRegeneratingMsgs.has(i) ? '#7c7cff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                      onMouseEnter={e => { if (!chatRegeneratingMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
+                      onMouseLeave={e => { if (!chatRegeneratingMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                      <RotateCcw size={14} style={{ animation: chatRegeneratingMsgs.has(i) ? 'chatSpinOnce 0.6s linear infinite' : 'none' }} />
+                      {chatRegeneratingMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Regenerating...</div>}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* ── Input bar — matches NewChat exactly ── */}
+          <div style={{ flexShrink: 0, padding: '12px 16px 16px', background: '#fff' }}>
+            <div style={{ border: `1.5px solid ${chatInput ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: chatInput ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.04)' : '0 2px 8px rgba(14,15,37,0.04)', transition: 'border-color 0.15s, box-shadow 0.15s', background: '#fff' }}>
+
+              {/* Textarea */}
+              <textarea
+                ref={chatInputRef}
+                value={chatInput}
+                onChange={e => {
+                  setChatInput(e.target.value);
+                  if (chatInputRef.current) {
+                    chatInputRef.current.style.height = 'auto';
+                    chatInputRef.current.style.height = Math.min(chatInputRef.current.scrollHeight, 120) + 'px';
+                  }
+                }}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (!chatInput.trim()) return;
+                    const userMsg = { role: 'user', text: chatInput.trim() };
+                    const statusMsg = { role: 'status' };
+                    const aiMsg = { role: 'ai', text: 'I\'m reviewing this PR and the related procurement data. Based on the workflow and documents available, here is my analysis for your query.' };
+                    setChatMessages(prev => [...prev, userMsg, statusMsg, aiMsg]);
+                    setChatInput('');
+                    if (chatInputRef.current) chatInputRef.current.style.height = 'auto';
+                  }
+                }}
+                placeholder="Ask about this PR..."
+                rows={1}
+                style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', resize: 'none', minHeight: 24, maxHeight: 120, overflowY: 'auto', fontFamily: 'Inter, sans-serif', lineHeight: 1.5 }}
+              />
+
+              {/* Bottom action row — matches NewChat exactly */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
+
+                {/* Left: Paperclip */}
+                <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
+                  <Paperclip size={18} />
+                </button>
+
+                {/* Right: char count + mic + send */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontSize: 11, color: chatInput.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>
+                    {chatInput.length} / 20000
+                  </span>
+                  <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                    onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                    <Mic size={18} strokeWidth={2} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (!chatInput.trim()) return;
+                      const userMsg = { role: 'user', text: chatInput.trim() };
+                      const statusMsg = { role: 'status' };
+                      const aiMsg = { role: 'ai', text: 'I\'m reviewing this PR and the related procurement data. Based on the workflow and documents available, here is my analysis for your query.' };
+                      setChatMessages(prev => [...prev, userMsg, statusMsg, aiMsg]);
+                      setChatInput('');
+                      if (chatInputRef.current) chatInputRef.current.style.height = 'auto';
+                    }}
+                    style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: chatInput.trim() ? 'pointer' : 'not-allowed', background: chatInput.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: chatInput.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
+                    <Send size={15} color={chatInput.trim() ? '#fff' : 'var(--text-tertiary)'} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {showPoEditModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowPoEditModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 900, maxHeight: '92vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={e => e.stopPropagation()}>
+
+            {/* Modal header */}
+            <div style={{ padding: '20px 24px', borderBottom: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a' }}>Edit Purchase Order</div>
+                <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>{poNumber} · AWS Cloud Migration Consulting</div>
+              </div>
+              <button onClick={() => setShowPoEditModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 6, borderRadius: 8 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><X size={18} /></button>
+            </div>
+
+            {/* Scrollable form body */}
+            <div style={{ overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+
+              {/* Section: Buyer Info */}
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 6 }}>BUYER INFORMATION</div>
+
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Company Address</div>
+                <textarea value={poAddress} onChange={e => setPoAddress(e.target.value)} rows={4} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Buyer Name</div>
+                  <input value={poBuyerName} onChange={e => setPoBuyerName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Company Logo</div>
+                  <div
+                    onClick={() => poLogoInputRef.current && poLogoInputRef.current.click()}
+                    style={{ border: `2px dashed ${poLogoFile ? '#22c55e' : '#e0e0e0'}`, borderRadius: 8, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', background: poLogoFile ? 'rgba(34,197,94,0.03)' : '#fafafa', transition: 'all 0.15s ease' }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = poLogoFile ? '#22c55e' : '#7c7cff'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = poLogoFile ? '#22c55e' : '#e0e0e0'; }}
+                  >
+                    {poLogoFile ? (
+                      <>
+                        <CheckCircle size={16} color="#22c55e" strokeWidth={2} />
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>{poLogoFile.name}</div>
+                          <div style={{ fontSize: 11, color: '#999', marginTop: 1 }}>Click to replace</div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <Upload size={14} color="#7c7cff" />
+                        <span style={{ fontSize: 13, color: '#999' }}>Upload logo (PNG, SVG, JPG)</span>
+                      </>
+                    )}
+                  </div>
+                  <input
+                    ref={poLogoInputRef}
+                    type="file"
+                    accept=".png,.svg,.jpg,.jpeg"
+                    style={{ display: 'none' }}
+                    onChange={e => { if (e.target.files[0]) setPoLogoFile(e.target.files[0]); e.target.value = ''; }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 6 }}>SUPPLIER INFORMATION</div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Name</div>
+                  <input value={poSupplierName} onChange={e => setPoSupplierName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Contact No.</div>
+                  <input value={poSupplierContact} onChange={e => setPoSupplierContact(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Address</div>
+                <textarea value={poSupplierAddress} onChange={e => setPoSupplierAddress(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+              </div>
+
+              <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 6 }}>PO DETAILS</div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>PO Number</div>
+                  <input value={poNumber} onChange={e => setPoNumber(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Issue Date</div>
+                  <input type="date" value={poIssueDate} onChange={e => setPoIssueDate(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Change No.</div>
+                  <input value={poChangeNo} onChange={e => setPoChangeNo(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Terms (Category)</div>
+                  <div ref={poTermsCatRef} style={{ position: 'relative' }}>
+                    <button onClick={() => setPoTermsCategoryOpen(!poTermsCategoryOpen)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: `1px solid ${poTermsCategoryOpen ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 8, fontSize: 14, cursor: 'pointer', background: '#fff', fontFamily: 'inherit', outline: 'none', color: '#1a1a1a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: poTermsCategoryOpen ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none' }}>
+                      <span>{poTermsCategory}</span>
+                      <ChevronDown size={13} style={{ transform: poTermsCategoryOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.15s ease' }} />
+                    </button>
+                    {poTermsCategoryOpen && (
+                      <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 400, background: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', padding: 6 }}>
+                        {['Real Estate', 'Technology and Consulting', 'Energy & Utilities', 'Healthcare & Pharma'].map(opt => (
+                          <div key={opt} onClick={() => { setPoTermsCategory(opt); setPoTermsCategoryOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, borderRadius: 6, cursor: 'pointer', color: '#1a1a1a' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{opt}</div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Instructions</div>
+                <textarea value={poInstructions} onChange={e => setPoInstructions(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+              </div>
+
+              <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>LINE ITEMS</div>
+                <button
+                  onClick={() => setPoLineItems(prev => [...prev, { ln: String(prev.length + 1), matCode: '', prTaskNo: '', prItem: '', description: '', uom: '', quantity: '', unitPrice: '', amount: '', delDate: '' }])}
+                  style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 7, background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit' }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'}
+                  onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                >+ Add Row</button>
+              </div>
+
+              <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid var(--border-subtle)', marginBottom: 6 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 820, fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                      {[
+                        { label: 'LN', w: '40px' },
+                        { label: 'MAT-CODE / COST CODE', w: '140px' },
+                        { label: 'PR / TASK NO.', w: '120px' },
+                        { label: 'PR ITEM', w: '70px' },
+                        { label: 'DESCRIPTION', w: 'auto' },
+                        { label: 'UOM', w: '70px' },
+                        { label: 'QTY', w: '60px' },
+                        { label: 'UNIT PRICE', w: '90px' },
+                        { label: 'AMOUNT', w: '90px' },
+                        { label: 'DEL. DATE', w: '90px' },
+                      ].map((col, ci) => (
+                        <th key={ci} style={{ padding: '9px 10px', fontSize: 10, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', width: col.w, borderRight: ci < 9 ? '1px solid var(--border-subtle)' : 'none' }}>
+                          {col.label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {poLineItems.length === 0 ? (
+                      <tr>
+                        <td colSpan={10} style={{ padding: '20px', textAlign: 'center', fontSize: 13, color: 'var(--text-tertiary)' }}>
+                          No line items. Click "+ Add Row" to add one.
+                        </td>
+                      </tr>
+                    ) : (
+                      poLineItems.map((item, idx) => (
+                        <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid var(--border-subtle)' : 'none', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
+                          {[
+                            { field: 'ln', isTextarea: false, minW: 32 },
+                            { field: 'matCode', isTextarea: false, minW: 110 },
+                            { field: 'prTaskNo', isTextarea: false, minW: 100 },
+                            { field: 'prItem', isTextarea: false, minW: 48 },
+                            { field: 'description', isTextarea: true, minW: 140 },
+                            { field: 'uom', isTextarea: false, minW: 50 },
+                            { field: 'quantity', isTextarea: false, minW: 48 },
+                            { field: 'unitPrice', isTextarea: false, minW: 72 },
+                            { field: 'amount', isTextarea: false, minW: 72 },
+                            { field: 'delDate', isTextarea: false, minW: 72 },
+                          ].map(({ field, isTextarea, minW }, fi) => (
+                            <td key={fi} style={{ padding: '8px 10px', verticalAlign: 'top', borderRight: fi < 9 ? '1px solid var(--border-subtle)' : 'none' }}>
+                              {isTextarea ? (
+                                <textarea
+                                  value={item[field]}
+                                  onChange={e => { const u = [...poLineItems]; u[idx][field] = e.target.value; setPoLineItems(u); }}
+                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 52, lineHeight: 1.4 }}
+                                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
+                                  onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
+                                />
+                              ) : (
+                                <input
+                                  value={item[field]}
+                                  onChange={e => { const u = [...poLineItems]; u[idx][field] = e.target.value; setPoLineItems(u); }}
+                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
+                                  onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
+                                />
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Special Instructions to Supplier</div>
+                <textarea value={poSpecialInstructions} onChange={e => setPoSpecialInstructions(e.target.value)} rows={5} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Terms & Conditions</div>
+                <textarea value={poTermsConditions} onChange={e => setPoTermsConditions(e.target.value)} rows={7} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+              </div>
+
+            </div>
+
+            {/* Footer */}
+            <div style={{ padding: '16px 24px', borderTop: '1px solid #e8e8e8', display: 'flex', justifyContent: 'flex-end', gap: 10, flexShrink: 0 }}>
+              <button onClick={() => setShowPoEditModal(false)} style={{ padding: '9px 20px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
+              <button onClick={() => { setShowPoEditModal(false); setShowSaveToast(true); setTimeout(() => setShowSaveToast(false), 3000); }} style={{ padding: '9px 24px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>Save Changes</button>
+            </div>
+
           </div>
         </div>
       )}

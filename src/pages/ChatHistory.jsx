@@ -371,19 +371,19 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav, use
                 onSelect={handleFilterSelect}
               />
             ))}
-            
+
             {/* Clear filters */}
             <button
               onClick={() => setActiveFilters({ 'View Chats': 'All', 'Date Range': 'All' })}
               disabled={!(activeFilters['View Chats'] !== 'All' || activeFilters['Date Range'] !== 'All')}
               style={{
                 display: 'flex', alignItems: 'center', gap: 6,
-                padding: '6px 12px', 
+                padding: '6px 12px',
                 background: (activeFilters['View Chats'] !== 'All' || activeFilters['Date Range'] !== 'All') ? 'rgba(239, 68, 68, 0.08)' : 'transparent',
                 border: 'none', borderRadius: 6,
-                fontSize: 12, fontWeight: 600, 
+                fontSize: 12, fontWeight: 600,
                 color: (activeFilters['View Chats'] !== 'All' || activeFilters['Date Range'] !== 'All') ? '#ef4444' : 'rgba(239, 68, 68, 0.4)',
-                cursor: (activeFilters['View Chats'] !== 'All' || activeFilters['Date Range'] !== 'All') ? 'pointer' : 'not-allowed', 
+                cursor: (activeFilters['View Chats'] !== 'All' || activeFilters['Date Range'] !== 'All') ? 'pointer' : 'not-allowed',
                 transition: 'all 0.15s ease'
               }}
               onMouseEnter={e => { if (activeFilters['View Chats'] !== 'All' || activeFilters['Date Range'] !== 'All') e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)' }}
