@@ -1,34 +1,43 @@
-import React, { useState } from 'react';
-import { Zap, ArrowRight, ShieldCheck, Globe, ArrowLeft, Lock, Bot, Sparkles, BarChart, Layers } from 'lucide-react';
+const fs = require('fs');
 
-export default function Login({ onNavigate, onLogin }) {
-    const [email, setEmail] = useState('analyst@procurai.com');
-    const [password, setPassword] = useState('password123');
-    const [isSSO, setIsSSO] = useState(false);
+let content = fs.readFileSync('src/pages/Login.jsx', 'utf-8');
+const lines = content.split('\n');
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        if (email && password) {
-            const role = email === 'manager@procurai.com' ? 'manager' : 'analyst';
-            localStorage.setItem('userRole', role);
-            onLogin(role);
-            onNavigate('Dashboard');
+let start_idx = -1;
+let end_idx = -1;
+
+for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes('if (isSSO) {')) {
+        start_idx = i;
+        break;
+    }
+}
+
+if (start_idx !== -1) {
+    let open_brackets = 0;
+    for (let i = start_idx; i < lines.length; i++) {
+        open_brackets += (lines[i].match(/\{/g) || []).length;
+        open_brackets -= (lines[i].match(/\}/g) || []).length;
+        if (open_brackets === 0) {
+            end_idx = i;
+            break;
         }
-    };
+    }
+}
 
-    if (isSSO) {
+const new_block = `    if (isSSO) {
         return (
             <div style={{ display: 'flex', height: '100vh', width: '100%', background: '#fff', fontFamily: 'Inter, sans-serif', overflow: 'hidden' }}>
                 {/* Left side - Illustration */}
                 <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '30px 40px', position: 'relative', overflow: 'hidden', background: '#fafcff' }}>
                     
-                    <style>{`
+                    <style>{\`
                         @keyframes float1 { 0%, 100% { transform: translate(-50%, -50%) translateY(0); } 50% { transform: translate(-50%, -50%) translateY(-10px); } }
                         @keyframes float2 { 0%, 100% { transform: translate(-50%, -50%) translateY(0); } 50% { transform: translate(-50%, -50%) translateY(8px); } }
                         @keyframes float3 { 0%, 100% { transform: translate(-50%, -50%) translateY(0); } 50% { transform: translate(-50%, -50%) translateY(-6px); } }
                         @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(124,124,255,0.4); } 50% { box-shadow: 0 0 0 20px rgba(124,124,255,0); } }
                         @keyframes spinSlow { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-                    `}</style>
+                    \`}</style>
 
                     {/* Subtle Gradients */}
                     <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: 600, height: 600, background: 'radial-gradient(circle, rgba(124,124,255,0.15) 0%, rgba(255,255,255,0) 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
@@ -225,140 +234,16 @@ export default function Login({ onNavigate, onLogin }) {
                 </div>
             </div>
         );
-    }
+    }`;
 
-    return (
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #f0f4fc 0%, #e0e7ff 100%)', fontFamily: 'Inter, sans-serif' }}>
-            <div style={{
-                width: '100%', maxWidth: 380, background: '#fff',
-                borderRadius: 20, boxShadow: '0 8px 32px rgba(14,15,37,0.08)',
-                padding: '36px 32px', boxSizing: 'border-box', margin: 20
-            }}>
-
-                {/* Header / Logo */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 28 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-                        <div style={{
-                            width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #0052cc, #7c7cff)',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            boxShadow: '0 4px 12px rgba(0,82,204,0.3)'
-                        }}>
-                            <Zap size={18} color="#fff" strokeWidth={2.5} />
-                        </div>
-                        <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>ProcurAI</span>
-                    </div>
-                    <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px 0', letterSpacing: '-0.5px' }}>
-                        Log in to your account
-                    </h1>
-                    <p style={{ fontSize: 14, color: 'var(--text-secondary)', margin: 0, textAlign: 'center' }}>
-                        Please enter your credentials to access the procurement portal
-                    </p>
-                </div>
-
-                {/* Form */}
-                <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 32 }}>
-                    <div>
-                        <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
-                            Email Address
-                        </label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="name@procurai.com"
-                            style={{
-                                width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border-default)',
-                                fontSize: 14, color: 'var(--text-primary)', background: '#fff', outline: 'none',
-                                boxSizing: 'border-box', fontFamily: 'inherit', transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
-                            }}
-                            onFocus={(e) => {
-                                e.target.style.borderColor = '#7c7cff';
-                                e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.12)';
-                            }}
-                            onBlur={(e) => {
-                                e.target.style.borderColor = 'var(--border-default)';
-                                e.target.style.boxShadow = 'none';
-                            }}
-                        />
-                    </div>
-
-                    <div>
-                        <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••"
-                            style={{
-                                width: '100%', padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border-default)',
-                                fontSize: 14, color: 'var(--text-primary)', background: '#fff', outline: 'none',
-                                boxSizing: 'border-box', fontFamily: 'inherit', transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
-                            }}
-                            onFocus={(e) => {
-                                e.target.style.borderColor = '#7c7cff';
-                                e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.12)';
-                            }}
-                            onBlur={(e) => {
-                                e.target.style.borderColor = 'var(--border-default)';
-                                e.target.style.boxShadow = 'none';
-                            }}
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        style={{
-                            width: '100%', padding: '14px', borderRadius: 10, border: 'none',
-                            background: '#0052cc', color: '#fff',
-                            fontSize: 15, fontWeight: 600, cursor: 'pointer', marginTop: 8,
-                            boxShadow: '0 4px 16px rgba(0,82,204,0.12)', transition: 'transform 0.1s ease, box-shadow 0.2s ease, background 0.2s ease',
-                            fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = '#0049b7'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = '#0052cc'}
-                        onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
-                        onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                    >
-                        Login
-                        <ArrowRight size={16} color="#fff" />
-                    </button>
-
-                    {/* SSO Login Link */}
-                    <div style={{ textAlign: 'center', marginTop: 2 }}>
-                        <a
-                            href="#"
-                            onClick={(e) => { e.preventDefault(); setIsSSO(true); }}
-                            style={{
-                                fontSize: 13, fontWeight: 600, color: '#0052cc', textDecoration: 'none', transition: 'color 0.2s ease'
-                            }}
-                            onMouseEnter={(e) => e.currentTarget.style.color = '#003d99'}
-                            onMouseLeave={(e) => e.currentTarget.style.color = '#0052cc'}
-                        >
-                            Log in with SSO
-                        </a>
-                    </div>
-                </form>
-
-                {/* Demo Credentials */}
-                <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: 20 }}>
-                    <h3 style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px 0' }}>
-                        Demo Credentials
-                    </h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12 }}>
-                            <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Analyst</span>
-                            <span style={{ color: 'var(--text-tertiary)' }}>analyst@procurai.com / password123</span>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12 }}>
-                            <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Manager</span>
-                            <span style={{ color: 'var(--text-tertiary)' }}>manager@procurai.com / password123</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    );
+if (start_idx !== -1 && end_idx !== -1) {
+    const updated_lines = [
+        ...lines.slice(0, start_idx),
+        new_block,
+        ...lines.slice(end_idx + 1)
+    ];
+    fs.writeFileSync('src/pages/Login.jsx', updated_lines.join('\n'), 'utf-8');
+    console.log("Replaced successfully!");
+} else {
+    console.log("Failed to find block boundaries.");
 }
