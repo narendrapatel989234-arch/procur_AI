@@ -1832,6 +1832,13 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
               </div>
             </div>
 
+            {/* OR Divider */}
+            <div style={{ maxWidth: 680, margin: '0 auto 40px auto', display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: 0.5 }}>OR</div>
+              <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
+            </div>
+
             <div style={{ maxWidth: 680, margin: '0 auto' }}>
               <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Create Procurement Request</div>
               <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, marginBottom: 24 }}>Fill in the details to generate a new requisition</div>
