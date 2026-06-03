@@ -168,18 +168,32 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
   const tableScrollRef = useRef(null);
 
   const [templateName, setTemplateName] = useState('');
-  const [templateCategory, setTemplateCategory] = useState('AI');
-  const [templateFile, setTemplateFile] = useState(null);
+  const [templateType, setTemplateType] = useState('');
+  const [templateTypeOpen, setTemplateTypeOpen] = useState(false);
+  const [templateCategory, setTemplateCategory] = useState('');
+  const [templateCategoryOpen, setTemplateCategoryOpen] = useState(false);
+  const [templateSubcategory, setTemplateSubcategory] = useState('');
+  const [templateSubcategoryOpen, setTemplateSubcategoryOpen] = useState(false);
   const [templateDesc, setTemplateDesc] = useState('');
+  const [templateFile, setTemplateFile] = useState(null);
   const [templateFileDrag, setTemplateFileDrag] = useState(false);
+
+  const templateTypeRef = useRef(null);
+  const templateCategoryRef = useRef(null);
+  const templateSubcategoryRef = useRef(null);
 
   // Click outside for dropdowns
   useEffect(() => {
-    const handleDocClick = () => {
-      setActiveDropdown(null);
+    const handleDocClick = (e) => {
+      if (!e.target.closest('.tptr') && !e.target.closest('.pmenu-item')) {
+        setActiveDropdown(null);
+      }
+      if (templateTypeRef.current && !templateTypeRef.current.contains(e.target)) setTemplateTypeOpen(false);
+      if (templateCategoryRef.current && !templateCategoryRef.current.contains(e.target)) setTemplateCategoryOpen(false);
+      if (templateSubcategoryRef.current && !templateSubcategoryRef.current.contains(e.target)) setTemplateSubcategoryOpen(false);
     };
-    document.addEventListener('mousedown', handleDocClick);
-    return () => document.removeEventListener('mousedown', handleDocClick);
+    document.addEventListener('click', handleDocClick);
+    return () => document.removeEventListener('click', handleDocClick);
   }, []);
 
   // Click outside for rows-per-page dropdown
@@ -296,6 +310,9 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
     .tptr { transition: background 0.12s ease; }
     .tptr:hover { background: var(--bg-surface-1) !important; }
     .tab-btn:hover { color: var(--text-primary) !important; }
+    .pmenu-item { transition: background 0.1s ease; }
+    .pmenu-item:hover { background: var(--bg-surface-2) !important; }
+    .pmenu-danger:hover { background: var(--status-error-bg) !important; }
   `;
 
   const anyFilterActive = activeFilters.Category.length > 0 || activeFilters.Status.length > 0 || activeFilters.Owner.length > 0 || tableSearch.length > 0;
@@ -305,11 +322,47 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
     // mock submit
     setShowUploadModal(false);
     setTemplateName('');
-    setTemplateCategory('AI');
-    setTemplateFile(null);
+    setTemplateType('');
+    setTemplateCategory('');
+    setTemplateSubcategory('');
     setTemplateDesc('');
-    setTemplateFileDrag(false);
+    setTemplateFile(null);
   };
+
+  const TemplateDrop = ({ refEl, open, onToggle, value, placeholder, options, onChange }) => (
+    <div ref={refEl} style={{ position: 'relative' }}>
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onToggle(); }}
+        style={{
+          width: '100%', padding: '9px 12px', boxSizing: 'border-box',
+          border: `1px solid ${open ? '#7c7cff' : 'var(--border-default)'}`,
+          borderRadius: 8, fontSize: 14, cursor: 'pointer',
+          background: '#fff', fontFamily: 'inherit', outline: 'none',
+          color: value ? 'var(--text-primary)' : 'var(--text-tertiary)',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          boxShadow: open ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
+          transition: 'all .15s ease',
+        }}
+      >
+        <span style={{ display: 'flex', alignItems: 'center' }}>{value || placeholder}</span>
+        <ChevronDown size={14} strokeWidth={2} style={{ flexShrink: 0, transition: 'transform .15s ease', transform: open ? 'rotate(180deg)' : 'rotate(0)' }} />
+      </button>
+      {open && (
+        <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 300, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', padding: 6 }}>
+          {options.map((opt) => (
+            <div key={opt} onClick={() => { onChange(opt); onToggle(); }}
+              style={{ padding: '8px 12px', fontSize: 13, borderRadius: 6, cursor: 'pointer', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', transition: 'background .12s ease' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-surface-2)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+            >
+              {opt}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <MainLayout
@@ -321,19 +374,9 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
       <style dangerouslySetInnerHTML={{ __html: css }} />
       <div style={{ padding: 24, background: 'var(--bg-default)', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
 
-        {/* TOP BAR */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 3 }}>All Templates</div>
-            <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Manage and publish procurement templates.</div>
-          </div>
-          <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-            <Upload size={14} /> Upload Template
-          </button>
-        </div>
-
-        {/* FILTERS BAR */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
+        {/* TOP BAR & FILTERS */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8, background: tableSearchFocused ? 'var(--bg-surface-1)' : '#fff',
             border: `1px solid ${tableSearchFocused ? '#7c7cff' : 'var(--border-default)'}`,
@@ -378,6 +421,10 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
               <X size={13} strokeWidth={2.5} /> Clear filters
             </button>
           )}
+          </div>
+          <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
+            <Upload size={14} /> Upload Template
+          </button>
         </div>
 
         {/* TABLE CONTAINER */}
@@ -401,8 +448,8 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
                     { label: 'Last Modified', key: 'modified', width: 150 },
                     { label: 'Actions', key: null, width: 120 }
                   ].map((col, idx) => (
-                    <th key={idx} onClick={() => col.key && handleSort(col.key)} style={{ padding: '14px 20px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', cursor: col.key ? 'pointer' : 'default', width: col.width, userSelect: 'none' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <th key={idx} onClick={() => col.key && handleSort(col.key)} style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', cursor: col.key ? 'pointer' : 'default', width: col.width, userSelect: 'none' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: col.label === 'Actions' ? 'center' : 'flex-start' }}>
                         {col.label}
                         {col.key && (
                           sortCol === col.key ? (
@@ -441,52 +488,42 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
                     const statusStyle = STATUS_STYLES[row.status] || STATUS_STYLES['Draft'];
                     const catStyle = CATEGORY_STYLES[row.category] || CATEGORY_STYLES['AI'];
                     return (
-                      <tr key={row.id} className="tptr" style={{ borderBottom: idx < paginatedRows.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                        <td style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{row.id}</td>
-                        <td style={{ padding: '14px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{row.name}</td>
-                        <td style={{ padding: '14px 20px' }}>
+                      <tr key={row.id} className="tptr" onClick={() => onNavigate('templatedetail')} style={{ borderBottom: idx < paginatedRows.length - 1 ? '1px solid var(--border-subtle)' : 'none', cursor: 'pointer' }}>
+                        <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.id}</td>
+                        <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)' }}>{row.name}</td>
+                        <td style={{ padding: '13px 16px' }}>
                           <span style={{ display: 'inline-flex', padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: catStyle.background, color: catStyle.color }}>{row.category}</span>
                         </td>
-                        <td style={{ padding: '14px 20px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.version}</td>
-                        <td style={{ padding: '14px 20px' }}>
+                        <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)' }}>{row.version}</td>
+                        <td style={{ padding: '13px 16px' }}>
                           <span style={{ display: 'inline-flex', padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: statusStyle.background, color: statusStyle.color }}>{row.status}</span>
                         </td>
-                        <td style={{ padding: '14px 20px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.owner}</td>
-                        <td style={{ padding: '14px 20px', fontSize: 12, color: 'var(--text-tertiary)' }}>{row.modified}</td>
-                        <td style={{ padding: '14px 20px', position: 'relative' }}>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); setActiveDropdown(activeDropdown === row.id ? null : row.id); }}
-                            style={{ border: '1px solid var(--border-default)', background: '#fff', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '6px', borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}
-                            onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.borderColor = 'var(--border-default)'; }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; }}
-                          >
-                            <MoreVertical size={16} />
-                          </button>
-                          {activeDropdown === row.id && (
-                            <div style={{ position: 'absolute', right: 12, top: 44, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', padding: 6, zIndex: 50, minWidth: 160, textAlign: 'left' }} onClick={e => e.stopPropagation()}>
-                              <div onClick={() => setActiveDropdown(null)} style={{ padding: '9px 12px', fontSize: 13, color: 'var(--text-primary)', cursor: 'pointer', borderRadius: 7, display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                <div style={{ width: 28, height: 28, borderRadius: 7, background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Pencil size={13} color="var(--text-primary)" strokeWidth={2} /></div>
-                                <span style={{ fontWeight: 500 }}>Edit</span>
-                              </div>
-                              {row.status !== 'Published' && (
-                                <div onClick={() => setActiveDropdown(null)} style={{ padding: '9px 12px', fontSize: 13, color: '#15803d', cursor: 'pointer', borderRadius: 7, display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(34,197,94,0.06)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                  <div style={{ width: 28, height: 28, borderRadius: 7, background: 'rgba(34,197,94,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Send size={13} color="#15803d" strokeWidth={2} /></div>
-                                  <span style={{ fontWeight: 500 }}>Publish</span>
+                        <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)' }}>{row.owner}</td>
+                        <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)' }}>{row.modified}</td>
+                        <td style={{ padding: '13px 16px', textAlign: 'center' }}>
+                          <div style={{ position: 'relative', display: 'inline-flex' }}>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setActiveDropdown(activeDropdown === row.id ? null : row.id); }}
+                              style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '4px', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}
+                              onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+                            >
+                              <MoreVertical size={16} />
+                            </button>
+                            {activeDropdown === row.id && (
+                              <div style={{ position: 'absolute', right: '100%', top: 0, marginRight: 8, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, zIndex: 50, minWidth: 140, display: 'flex', flexDirection: 'column', textAlign: 'left' }} onClick={e => e.stopPropagation()}>
+                                <div className="pmenu-item" onClick={() => setActiveDropdown(null)} style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-primary)', cursor: 'pointer', borderRadius: 6 }}>
+                                  <Pencil size={14} color="var(--text-secondary)" style={{ flexShrink: 0 }} /> Edit
                                 </div>
-                              )}
-                              {row.status !== 'Archived' && (
-                                <div onClick={() => setActiveDropdown(null)} style={{ padding: '9px 12px', fontSize: 13, color: '#b45309', cursor: 'pointer', borderRadius: 7, display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(245,158,11,0.06)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                  <div style={{ width: 28, height: 28, borderRadius: 7, background: 'rgba(245,158,11,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Archive size={13} color="#b45309" strokeWidth={2} /></div>
-                                  <span style={{ fontWeight: 500 }}>Archive</span>
+                                <div className="pmenu-item" onClick={() => setActiveDropdown(null)} style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-primary)', cursor: 'pointer', borderRadius: 6 }}>
+                                  <Archive size={14} color="var(--text-secondary)" style={{ flexShrink: 0 }} /> Archive
                                 </div>
-                              )}
-                              <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '4px 0' }} />
-                              <div onClick={() => setActiveDropdown(null)} style={{ padding: '9px 12px', fontSize: 13, color: '#ef4444', cursor: 'pointer', borderRadius: 7, display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.06)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                <div style={{ width: 28, height: 28, borderRadius: 7, background: 'rgba(239,68,68,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Trash2 size={13} color="#ef4444" strokeWidth={2} /></div>
-                                <span style={{ fontWeight: 500 }}>Delete</span>
+                                <div className="pmenu-item pmenu-danger" onClick={() => setActiveDropdown(null)} style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--colors-red-500)', cursor: 'pointer', borderRadius: 6 }}>
+                                  <Trash2 size={14} color="var(--colors-red-500)" style={{ flexShrink: 0 }} /> Delete
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );
@@ -553,9 +590,9 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
       {/* UPLOAD TEMPLATE MODAL */}
       {showUploadModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowUploadModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: 520, padding: 32, display: 'flex', flexDirection: 'column', gap: 20, boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 520, maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
 
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+            <div style={{ padding: '32px 32px 20px', flexShrink: 0, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)' }}>
               <div>
                 <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Upload Template</div>
                 <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>Add a new procurement template to the library.</div>
@@ -563,36 +600,70 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
               <button onClick={() => setShowUploadModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex', padding: 4 }}><X size={18} /></button>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ padding: '24px 32px 32px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Template Name <span style={{ color: '#dc2626' }}>*</span></div>
                 <input
                   type="text"
+                  placeholder="Enter template name"
                   value={templateName}
                   onChange={e => setTemplateName(e.target.value)}
-                  style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', transition: 'all 0.15s ease' }}
+                  style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', transition: 'all 0.15s ease', background: '#fff' }}
                   onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }}
                   onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }}
                 />
               </div>
 
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Category <span style={{ color: '#dc2626' }}>*</span></div>
-                <div style={{ position: 'relative' }}>
-                  <select
-                    value={templateCategory}
-                    onChange={e => setTemplateCategory(e.target.value)}
-                    style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', appearance: 'none', transition: 'all 0.15s ease', background: '#fff' }}
-                    onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }}
-                    onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }}
-                  >
-                    <option value="AI">AI</option>
-                    <option value="Data">Data</option>
-                    <option value="Low-Code">Low-Code</option>
-                    <option value="Custom App">Custom App</option>
-                  </select>
-                  <ChevronDown size={14} color="var(--text-secondary)" style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Template Type <span style={{ color: '#dc2626' }}>*</span></div>
+                  <TemplateDrop
+                    refEl={templateTypeRef}
+                    open={templateTypeOpen}
+                    onToggle={() => setTemplateTypeOpen(!templateTypeOpen)}
+                    value={templateType}
+                    placeholder="Select template type"
+                    options={['Purchase Requisition', 'RFP', 'Proposal', 'SOW', 'Purchase Order']}
+                    onChange={setTemplateType}
+                  />
                 </div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Category <span style={{ color: '#dc2626' }}>*</span></div>
+                  <TemplateDrop
+                    refEl={templateCategoryRef}
+                    open={templateCategoryOpen}
+                    onToggle={() => setTemplateCategoryOpen(!templateCategoryOpen)}
+                    value={templateCategory}
+                    placeholder="Select category"
+                    options={['AI', 'Data', 'Low-Code', 'Custom App']}
+                    onChange={setTemplateCategory}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Subcategory <span style={{ color: '#dc2626' }}>*</span></div>
+                <TemplateDrop
+                  refEl={templateSubcategoryRef}
+                  open={templateSubcategoryOpen}
+                  onToggle={() => setTemplateSubcategoryOpen(!templateSubcategoryOpen)}
+                  value={templateSubcategory}
+                  placeholder="Select subcategory"
+                  options={['Land & Development', 'Construction & Infrastructure', 'Facilities Management', 'Property Management']}
+                  onChange={setTemplateSubcategory}
+                />
+              </div>
+
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Description <span style={{ color: '#dc2626' }}>*</span></div>
+                <textarea
+                  value={templateDesc}
+                  onChange={e => setTemplateDesc(e.target.value)}
+                  placeholder="Briefly describe this template's use case"
+                  style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', transition: 'all 0.15s ease', minHeight: 80, resize: 'vertical', background: '#fff' }}
+                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }}
+                  onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }}
+                />
               </div>
 
               <div>
@@ -617,35 +688,23 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
                   ) : (
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop file here or <span style={{ color: '#7c7cff', fontWeight: 600 }}>browse</span></div>
-                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX · Max 25MB</div>
+                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX A Max 25MB</div>
                     </div>
                   )}
                 </div>
                 <input id="template-file-input" type="file" accept=".pdf,.docx" style={{ display: 'none' }} onChange={e => { if (e.target.files[0]) setTemplateFile(e.target.files[0]); }} />
               </div>
 
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Description</div>
-                <textarea
-                  value={templateDesc}
-                  onChange={e => setTemplateDesc(e.target.value)}
-                  placeholder="Briefly describe this template's use case"
-                  style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', transition: 'all 0.15s ease', minHeight: 80, resize: 'vertical' }}
-                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }}
-                  onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }}
-                />
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 4 }}>
+                <button onClick={() => setShowUploadModal(false)} style={{ padding: '9px 16px', border: '1px solid var(--border-default)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: 'var(--text-primary)', fontFamily: 'inherit' }}>Cancel</button>
+                <button
+                  onClick={handleUploadSubmit}
+                  disabled={!(templateName && templateType && templateCategory && templateSubcategory && templateDesc && templateFile)}
+                  style={{ padding: '9px 16px', border: 'none', borderRadius: 8, background: !(templateName && templateType && templateCategory && templateSubcategory && templateDesc && templateFile) ? 'var(--bg-surface-2)' : '#0052cc', fontSize: 13, fontWeight: 600, cursor: !(templateName && templateType && templateCategory && templateSubcategory && templateDesc && templateFile) ? 'not-allowed' : 'pointer', color: !(templateName && templateType && templateCategory && templateSubcategory && templateDesc && templateFile) ? 'var(--text-tertiary)' : '#fff', fontFamily: 'inherit' }}
+                >
+                  Upload
+                </button>
               </div>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 4 }}>
-              <button onClick={() => setShowUploadModal(false)} style={{ padding: '9px 16px', border: '1px solid var(--border-default)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: 'var(--text-primary)', fontFamily: 'inherit' }}>Cancel</button>
-              <button
-                onClick={handleUploadSubmit}
-                disabled={!templateName || !templateFile}
-                style={{ padding: '9px 16px', border: 'none', borderRadius: 8, background: (!templateName || !templateFile) ? 'var(--bg-surface-2)' : '#0052cc', fontSize: 13, fontWeight: 600, cursor: (!templateName || !templateFile) ? 'not-allowed' : 'pointer', color: (!templateName || !templateFile) ? 'var(--text-tertiary)' : '#fff', fontFamily: 'inherit' }}
-              >
-                Upload Template
-              </button>
             </div>
 
           </div>
