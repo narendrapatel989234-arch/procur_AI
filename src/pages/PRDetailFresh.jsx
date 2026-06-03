@@ -1122,46 +1122,21 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
             {chatMessages.map((msg, i) => {
               if (msg.role === 'status') {
                 return (
-                  <div key={i} style={{ alignSelf: 'flex-start', display: 'flex', flexDirection: 'column', gap: 8, width: '82%', animation: 'chatFadeIn 0.2s ease forwards' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10, marginLeft: -38 }}>
+                  <div key={i} style={{ alignSelf: 'flex-start', display: 'flex', flexDirection: 'column', gap: 8, width: '90%', animation: 'chatFadeIn 0.2s ease forwards' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                       <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
                         <Sparkles size={12} color="#fff" strokeWidth={2} />
                       </div>
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(124,124,255,0.04)', border: '1px solid rgba(124,124,255,0.15)', borderRadius: 10, padding: '8px 14px' }}>
                         <div style={{ flex: 1, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
                           {chatReasoningComplete ? (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>Completed</span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle size={14} color="#22c55e" /> Completed</span>
                           ) : (
                             <span style={{ animation: 'textShimmer 1.2s ease-in-out infinite', display: 'inline-block' }}>Analysing your request...</span>
                           )}
                         </div>
-                        <button onClick={() => setChatShowReasoningPanel(p => !p)} style={{ fontSize: 12, fontWeight: 500, color: '#7c7cff', background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>
-                          {chatShowReasoningPanel ? 'Hide Steps' : 'Show Steps'}
-                        </button>
                       </div>
                     </div>
-                    {/* Inline Reasoning Steps */}
-                    {chatShowReasoningPanel && (
-                      <div style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '12px 16px', marginLeft: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <Sparkles size={12} color="#7c7cff" /> Thinking Steps
-                        </div>
-                        <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                          <div style={{ position: 'absolute', left: 4, top: 4, bottom: 4, width: 1, background: 'var(--border-subtle)', zIndex: 0 }} />
-                          {[
-                            { title: 'Reading procurement request', status: 'complete' },
-                            { title: 'Extracting key requirements', status: 'complete' },
-                            { title: 'Querying vendor database', status: 'complete' },
-                            { title: 'Generating PR draft summary', status: 'complete' },
-                          ].map((step, idx) => (
-                            <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, position: 'relative', zIndex: 1 }}>
-                              <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#1a1a1a', marginTop: 3, flexShrink: 0 }} />
-                              <div style={{ fontSize: 12, fontWeight: 500, color: '#4a4a4a' }}>{step.title}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 );
               }
@@ -1197,17 +1172,21 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                 </div>
               ) : (
                 /* ── AI message ── */
-                <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '82%', display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 38, animation: 'chatFadeIn 0.2s ease forwards' }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginLeft: -38 }}>
-                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                      <Sparkles size={12} color="#fff" strokeWidth={2} />
-                    </div>
+                <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '82%', display: 'flex', flexDirection: 'column', gap: 6, animation: 'chatFadeIn 0.2s ease forwards' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                    {chatMessages[i - 1]?.role !== 'status' ? (
+                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                        <Sparkles size={12} color="#fff" strokeWidth={2} />
+                      </div>
+                    ) : (
+                      <div style={{ width: 28, flexShrink: 0 }} />
+                    )}
                     <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, paddingTop: 4 }}>
                       {msg.text}
                     </div>
                   </div>
                   {/* Action row below AI message */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 38 }}>
                     <span style={{ fontSize: 11, color: 'var(--text-tertiary)', marginRight: 6 }}>Just now</span>
 
                     {/* Copy */}
