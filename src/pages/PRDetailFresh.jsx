@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from '../layouts/Sidebar.jsx';
-import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X, Brain, GitBranch, ShieldCheck, Banknote, Scale, PackageCheck, UserCheck, Zap, Pencil, Calendar, Building, Tag, MapPin, ChevronDown, Upload } from 'lucide-react';
+import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X, Brain, GitBranch, ShieldCheck, Banknote, Scale, PackageCheck, UserCheck, Zap, Pencil, Calendar, Building, Tag, MapPin, ChevronDown, Upload, Eye, FileText } from 'lucide-react';
 
 const ICONS = { User, Sparkles, GitBranch, Banknote, Scale, Zap, ShieldCheck, PackageCheck, UserCheck, CheckCircle };
 
@@ -207,7 +207,7 @@ function EL({ children, required }) {
   return <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginBottom: 6 }}>{children}{required && <span style={{ color: '#ef4444' }}> *</span>}</label>;
 }
 
-export function EditModal({  onClose, onSave }) {
+export function EditModal({ onClose, onSave }) {
   const [fReqTitle, setFReqTitle] = useState('AWS Cloud Migration Consulting Services');
   const [fBizUnit, setFBizUnit] = useState('Engineering'); const [fBizUnitOpen, setFBizUnitOpen] = useState(false);
   const [fRequestorName, setFRequestorName] = useState('David Kim');
@@ -443,7 +443,7 @@ export function EditModal({  onClose, onSave }) {
   );
 }
 
-export default function PRDetailFresh({ onNavigate , userRole, navState }) {
+export default function PRDetailFresh({ onNavigate, userRole, navState }) {
   const [nodes, setNodes] = useState(INITIAL_NODES);
   const [selectedNode, setSelectedNode] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
@@ -454,6 +454,7 @@ export default function PRDetailFresh({ onNavigate , userRole, navState }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [poMode, setPoMode] = useState('form'); // 'form' | 'preview'
   const [poEditing, setPoEditing] = useState(false);
+  const [showPoPreview, setShowPoPreview] = useState(false);
 
   // PO form fields
   const [poLogo] = useState(null); // file upload placeholder
@@ -576,9 +577,9 @@ export default function PRDetailFresh({ onNavigate , userRole, navState }) {
         {/* TABS */}
         <div style={{ background: '#fff', borderBottom: '1px solid #e5e5e5', padding: '0 24px', display: 'flex', flexShrink: 0, marginTop: 12 }}>
           {[
-            { id: 'overview',    label: 'Overview' },
-            { id: 'po',         label: 'Purchase Order' },
-            { id: 'invoices',   label: 'Invoices' },
+            { id: 'overview', label: 'Overview' },
+            { id: 'po', label: 'Purchase Order' },
+            { id: 'invoices', label: 'Invoices' },
             { id: 'activities', label: 'Activities' },
           ].map(tab => (
             <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: '13px 16px', fontSize: 13, fontWeight: activeTab === tab.id ? 600 : 500, borderBottom: activeTab === tab.id ? '2px solid #7c7cff' : '2px solid transparent', color: activeTab === tab.id ? '#3d3db8' : '#999', cursor: 'pointer', transition: 'all 0.15s ease' }}>
@@ -593,133 +594,133 @@ export default function PRDetailFresh({ onNavigate , userRole, navState }) {
           {activeTab === 'overview' && (
             <>
               {/* MAIN */}
-          <div style={{ flex: 1, overflowY: 'auto', background: '#f5f5f7', padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ flex: 1, overflowY: 'auto', background: '#f5f5f7', padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-            {/* WORKFLOW */}
-            <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, flexShrink: 0 }}>
-              <div style={{ padding: '13px 20px', borderBottom: '1px solid #e5e5e5', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#999' }}>
-                PROCUREMENT WORKFLOW
-              </div>
-              <div style={{ padding: '28px 32px', overflowX: 'auto', background: '#f8f8fc', backgroundImage: 'radial-gradient(circle, #d0d0e0 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', width: 'max-content', minHeight: 180 }}>
-                  <NodeCard node={g(0)} onNodeClick={handleNodeClick} />
-                  <Arrow />
-                  <NodeCard node={g(1)} onNodeClick={handleNodeClick} />
-                  <Arrow />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignSelf: 'center' }}>
-                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#bbb', paddingLeft: 2 }}>PARALLEL</div>
-                    <NodeCard node={g(2)} onNodeClick={handleNodeClick} />
-                    <NodeCard node={g(3)} onNodeClick={handleNodeClick} />
-                    <NodeCard node={g(4)} onNodeClick={handleNodeClick} />
+                {/* WORKFLOW */}
+                <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, flexShrink: 0 }}>
+                  <div style={{ padding: '13px 20px', borderBottom: '1px solid #e5e5e5', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#999' }}>
+                    PROCUREMENT WORKFLOW
                   </div>
-                  <Arrow />
-                  <NodeCard node={g(5)} onNodeClick={handleNodeClick} />
-                  <Arrow />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignSelf: 'center' }}>
-                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#bbb', paddingLeft: 2 }}>PARALLEL</div>
-                    <NodeCard node={g(6)} onNodeClick={handleNodeClick} />
-                    <NodeCard node={g(7)} onNodeClick={handleNodeClick} />
-                    <NodeCard node={g(8)} onNodeClick={handleNodeClick} />
+                  <div style={{ padding: '28px 32px', overflowX: 'auto', background: '#f8f8fc', backgroundImage: 'radial-gradient(circle, #d0d0e0 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', width: 'max-content', minHeight: 180 }}>
+                      <NodeCard node={g(0)} onNodeClick={handleNodeClick} />
+                      <Arrow />
+                      <NodeCard node={g(1)} onNodeClick={handleNodeClick} />
+                      <Arrow />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignSelf: 'center' }}>
+                        <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#bbb', paddingLeft: 2 }}>PARALLEL</div>
+                        <NodeCard node={g(2)} onNodeClick={handleNodeClick} />
+                        <NodeCard node={g(3)} onNodeClick={handleNodeClick} />
+                        <NodeCard node={g(4)} onNodeClick={handleNodeClick} />
+                      </div>
+                      <Arrow />
+                      <NodeCard node={g(5)} onNodeClick={handleNodeClick} />
+                      <Arrow />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignSelf: 'center' }}>
+                        <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#bbb', paddingLeft: 2 }}>PARALLEL</div>
+                        <NodeCard node={g(6)} onNodeClick={handleNodeClick} />
+                        <NodeCard node={g(7)} onNodeClick={handleNodeClick} />
+                        <NodeCard node={g(8)} onNodeClick={handleNodeClick} />
+                      </div>
+                      <Arrow />
+                      <NodeCard node={g(9)} onNodeClick={handleNodeClick} />
+                      <Arrow />
+                      <NodeCard node={g(10)} onNodeClick={handleNodeClick} />
+                      <Arrow />
+                      <NodeCard node={g(11)} onNodeClick={handleNodeClick} />
+                      <Arrow />
+                      <NodeCard node={g(12)} onNodeClick={handleNodeClick} />
+                    </div>
                   </div>
-                  <Arrow />
-                  <NodeCard node={g(9)} onNodeClick={handleNodeClick} />
-                  <Arrow />
-                  <NodeCard node={g(10)} onNodeClick={handleNodeClick} />
-                  <Arrow />
-                  <NodeCard node={g(11)} onNodeClick={handleNodeClick} />
-                  <Arrow />
-                  <NodeCard node={g(12)} onNodeClick={handleNodeClick} />
                 </div>
-              </div>
-            </div>
 
-            {/* REQUISITION DETAILS */}
-            <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px', flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#999' }}>REQUISITION DETAILS</div>
-                  <div style={{ fontSize: 12, color: '#999' }}>Submitted Just now</div>
-                </div>
-                <button
-                  onClick={() => setShowEditModal(true)}
-                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 7, padding: '6px 14px', fontSize: 12, fontWeight: 500, color: '#0052cc', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s ease' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'}
-                  onMouseLeave={e => e.currentTarget.style.background = '#fff'}
-                >
-                  <Pencil size={12} strokeWidth={2} />
-                  Edit Details
-                </button>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px 0' }}>
-                {[
-                  ['Request Title', 'AWS Cloud Migration Consulting Services'],
-                  ['Procurement Category', 'Technology and Consulting'],
-                  ['Subcategory', 'Cloud & Infrastructure Services'],
-                  ['Spend Category', 'Indirect Spend'],
-                  ['Cost Centre', 'Engineering'],
-                  ['CapEx / OpEx', 'OpEx'],
-                  ['Estimated Budget', 'Rs 45,00,000'],
-                  ['Quantity', '1'],
-                  ['Unit of Measure', 'Resources'],
-                  ['Required By Date', '15 July 2026'],
-                  ['Delivery Location', 'Dubai'],
-                  ['Suggested Vendor', 'Open to sourcing'],
-                  ['Project Name', 'Infrastructure Modernisation 2026'],
-                ].map(([label, value]) => (
-                  <React.Fragment key={label}>
-                    <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>{label}</div>
-                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{value}</div>
-                  </React.Fragment>
-                ))}
-                <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Priority</div>
-                <div><span style={{ background: 'rgba(245,158,11,0.1)', color: '#b45309', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600 }}>Urgent</span></div>
-              </div>
-              <div style={{ height: 1, background: '#e5e5e5', margin: '16px 0' }} />
-              <div style={{ fontSize: 12, fontWeight: 600, color: '#999', marginBottom: 6 }}>Requirement Description</div>
-              <div style={{ fontSize: 13, color: '#1a1a1a', lineHeight: 1.6 }}>
-                We require consulting services for migrating our existing on-premise infrastructure to AWS. The engagement should cover assessment, architecture design, migration execution, and post-migration support. Expected team size: 3 senior architects for 6 months.
-              </div>
-            </div>
-          </div>
-
-          {/* REASONING PANEL */}
-          <div style={{ width: panelOpen ? 300 : 0, flexShrink: 0, borderLeft: panelOpen ? '1px solid #e5e5e5' : 'none', overflow: 'hidden', transition: 'width 0.25s ease', background: '#fff', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ width: 300, display: 'flex', flexDirection: 'column', height: '100%' }}>
-
-              {/* Header — NO borderBottom */}
-              <div style={{ padding: '16px 20px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Brain size={16} color="#7c7cff" />
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>AI Reasoning</span>
-                </div>
-                <button onClick={() => { setPanelOpen(false); setSelectedNode(null); }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 4, borderRadius: 6 }}>
-                  <X size={16} />
-                </button>
-              </div>
-
-              {/* Node info — no border, no divider */}
-              {selectedNode && (
-                <div style={{ padding: '0 20px 10px', flexShrink: 0 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{selectedNode.title}</div>
-                  <div style={{ fontSize: 11, color: '#999', marginTop: 3 }}>{selectedNode.timestamp || 'Processing...'}</div>
-                </div>
-              )}
-
-              {/* Steps label — NO divider above it */}
-              <div style={{ padding: '0 20px 10px', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>REASONING STEPS</div>
-
-              {/* Steps */}
-              <div key={selectedNode?.id} style={{ flex: 1, overflowY: 'auto', padding: '0 20px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {(REASONING_MAP[selectedNode?.id] || []).map((step, i) => (
-                  <div key={i} style={{ background: '#fafafa', border: '1px solid #ebebeb', borderRadius: 8, padding: '10px 12px', display: 'flex', alignItems: 'flex-start', gap: 8, animation: 'fadeInUp 0.3s ease forwards', animationDelay: `${i * 0.07}s`, opacity: 0 }}>
-                    <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#7c7cff', flexShrink: 0, marginTop: 5 }} />
-                    <div style={{ fontSize: 12, fontWeight: 500, color: '#4a4a4a', lineHeight: 1.5 }}>{step}</div>
+                {/* REQUISITION DETAILS */}
+                <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px', flexShrink: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#999' }}>REQUISITION DETAILS</div>
+                      <div style={{ fontSize: 12, color: '#999' }}>Submitted Just now</div>
+                    </div>
+                    <button
+                      onClick={() => setShowEditModal(true)}
+                      style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 7, padding: '6px 14px', fontSize: 12, fontWeight: 500, color: '#0052cc', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s ease' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                    >
+                      <Pencil size={12} strokeWidth={2} />
+                      Edit Details
+                    </button>
                   </div>
-                ))}
+                  <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px 0' }}>
+                    {[
+                      ['Request Title', 'AWS Cloud Migration Consulting Services'],
+                      ['Procurement Category', 'Technology and Consulting'],
+                      ['Subcategory', 'Cloud & Infrastructure Services'],
+                      ['Spend Category', 'Indirect Spend'],
+                      ['Cost Centre', 'Engineering'],
+                      ['CapEx / OpEx', 'OpEx'],
+                      ['Estimated Budget', 'Rs 45,00,000'],
+                      ['Quantity', '1'],
+                      ['Unit of Measure', 'Resources'],
+                      ['Required By Date', '15 July 2026'],
+                      ['Delivery Location', 'Dubai'],
+                      ['Suggested Vendor', 'Open to sourcing'],
+                      ['Project Name', 'Infrastructure Modernisation 2026'],
+                    ].map(([label, value]) => (
+                      <React.Fragment key={label}>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>{label}</div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{value}</div>
+                      </React.Fragment>
+                    ))}
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Priority</div>
+                    <div><span style={{ background: 'rgba(245,158,11,0.1)', color: '#b45309', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600 }}>Urgent</span></div>
+                  </div>
+                  <div style={{ height: 1, background: '#e5e5e5', margin: '16px 0' }} />
+                  <div style={{ fontSize: 12, fontWeight: 600, color: '#999', marginBottom: 6 }}>Requirement Description</div>
+                  <div style={{ fontSize: 13, color: '#1a1a1a', lineHeight: 1.6 }}>
+                    We require consulting services for migrating our existing on-premise infrastructure to AWS. The engagement should cover assessment, architecture design, migration execution, and post-migration support. Expected team size: 3 senior architects for 6 months.
+                  </div>
+                </div>
               </div>
 
-            </div>
-          </div>
+              {/* REASONING PANEL */}
+              <div style={{ width: panelOpen ? 300 : 0, flexShrink: 0, borderLeft: panelOpen ? '1px solid #e5e5e5' : 'none', overflow: 'hidden', transition: 'width 0.25s ease', background: '#fff', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ width: 300, display: 'flex', flexDirection: 'column', height: '100%' }}>
+
+                  {/* Header — NO borderBottom */}
+                  <div style={{ padding: '16px 20px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <Brain size={16} color="#7c7cff" />
+                      <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>AI Reasoning</span>
+                    </div>
+                    <button onClick={() => { setPanelOpen(false); setSelectedNode(null); }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 4, borderRadius: 6 }}>
+                      <X size={16} />
+                    </button>
+                  </div>
+
+                  {/* Node info — no border, no divider */}
+                  {selectedNode && (
+                    <div style={{ padding: '0 20px 10px', flexShrink: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{selectedNode.title}</div>
+                      <div style={{ fontSize: 11, color: '#999', marginTop: 3 }}>{selectedNode.timestamp || 'Processing...'}</div>
+                    </div>
+                  )}
+
+                  {/* Steps label — NO divider above it */}
+                  <div style={{ padding: '0 20px 10px', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>REASONING STEPS</div>
+
+                  {/* Steps */}
+                  <div key={selectedNode?.id} style={{ flex: 1, overflowY: 'auto', padding: '0 20px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {(REASONING_MAP[selectedNode?.id] || []).map((step, i) => (
+                      <div key={i} style={{ background: '#fafafa', border: '1px solid #ebebeb', borderRadius: 8, padding: '10px 12px', display: 'flex', alignItems: 'flex-start', gap: 8, animation: 'fadeInUp 0.3s ease forwards', animationDelay: `${i * 0.07}s`, opacity: 0 }}>
+                        <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#7c7cff', flexShrink: 0, marginTop: 5 }} />
+                        <div style={{ fontSize: 12, fontWeight: 500, color: '#4a4a4a', lineHeight: 1.5 }}>{step}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+              </div>
             </>
           )}
 
@@ -732,315 +733,211 @@ export default function PRDetailFresh({ onNavigate , userRole, navState }) {
                   <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>Purchase Order</div>
                   <div style={{ fontSize: 13, color: '#999', marginTop: 2 }}>AI-generated · Awaiting manager approval</div>
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  {/* Mode toggle */}
-                  <div style={{ display: 'flex', border: '1px solid #e0e0e0', borderRadius: 8, overflow: 'hidden', background: '#fff' }}>
-                    {[['form','Form View'],['preview','Preview']].map(([mode, label]) => (
-                      <button key={mode} onClick={() => setPoMode(mode)} style={{ padding: '7px 16px', border: 'none', background: poMode === mode ? '#0052cc' : '#fff', color: poMode === mode ? '#fff' : '#666', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s ease' }}>{label}</button>
-                    ))}
-                  </div>
-                  {poMode === 'form' && !poEditing && (
-                    <button onClick={() => setPoEditing(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 8, background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                      <Pencil size={13} strokeWidth={2} /> Edit PO
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <button onClick={() => setShowPoPreview(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1px solid var(--border-default)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                    <Eye size={14} /> Preview
+                  </button>
+                  {!poEditing ? (
+                    <button onClick={() => setPoEditing(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                      <Pencil size={14} strokeWidth={2} /> Edit PO
                     </button>
-                  )}
-                  {poMode === 'form' && poEditing && (
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button onClick={() => setPoEditing(false)} style={{ padding: '7px 14px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#666', fontFamily: 'inherit' }}>Discard</button>
-                      <button onClick={() => setPoEditing(false)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>
-                        <CheckCircle size={13} /> Save PO
+                  ) : (
+                    <>
+                      <button onClick={() => setPoEditing(false)} style={{ padding: '8px 14px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#666', fontFamily: 'inherit' }}>Discard</button>
+                      <button onClick={() => setPoEditing(false)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>
+                        <CheckCircle size={14} /> Save PO
                       </button>
-                    </div>
+                    </>
+                  )}
+                  {userRole === 'manager' && !poEditing && (
+                    <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 20px', border: 'none', borderRadius: 8, background: '#15803d', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(21,128,61,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#166534'} onMouseLeave={e => e.currentTarget.style.background = '#15803d'}>
+                      <CheckCircle size={14} /> Approve PO
+                    </button>
                   )}
                 </div>
               </div>
 
-              {poMode === 'form' ? (
-                /* ── FORM VIEW ── */
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px' }}>
 
-                  {/* SECTION: Buyer Info */}
-                  <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px' }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 16 }}>BUYER INFORMATION</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Company Logo</div>
-                        <div style={{ border: '2px dashed #e0e0e0', borderRadius: 10, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, cursor: poEditing ? 'pointer' : 'default', background: '#fafafa', opacity: poEditing ? 1 : 0.7 }} onClick={() => poEditing && document.getElementById('po-logo-input').click()}>
-                          <Upload size={16} color="#7c7cff" strokeWidth={2} />
-                          <div style={{ fontSize: 12, color: '#999' }}>Upload logo (PNG, SVG)</div>
-                        </div>
-                        <input id="po-logo-input" type="file" accept=".png,.svg,.jpg" style={{ display: 'none' }} />
+                {/* ── BUYER INFO ── */}
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>BUYER INFORMATION</div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16, display: 'flex', alignItems: 'center' }}>Company Logo</div>
+                  <div>
+                    {poEditing ? (
+                      <div style={{ border: '2px dashed #e0e0e0', borderRadius: 8, padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', background: '#fafafa', width: 'fit-content', transition: 'border-color 0.15s ease' }} onClick={() => document.getElementById('po-logo-input').click()} onMouseEnter={e => e.currentTarget.style.borderColor = '#7c7cff'} onMouseLeave={e => e.currentTarget.style.borderColor = '#e0e0e0'}>
+                        <Upload size={14} color="#7c7cff" />
+                        <span style={{ fontSize: 13, color: '#999' }}>Upload logo (PNG, SVG)</span>
                       </div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Buyer Name</div>
-                        {poEditing ? (
-                          <input value={poBuyerName} onChange={e => setPoBuyerName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                        ) : (
-                          <div style={{ fontSize: 14, color: '#1a1a1a', padding: '9px 0' }}>{poBuyerName}</div>
-                        )}
+                    ) : (
+                      <div style={{ width: 80, height: 36, border: '1px dashed #e0e0e0', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span style={{ fontSize: 11, color: '#ccc' }}>No logo</span>
                       </div>
-                    </div>
-                    <div style={{ marginTop: 16 }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Company Address</div>
-                      {poEditing ? (
-                        <textarea value={poAddress} onChange={e => setPoAddress(e.target.value)} rows={4} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                      ) : (
-                        <div style={{ fontSize: 14, color: '#1a1a1a', lineHeight: 1.7, whiteSpace: 'pre-line' }}>{poAddress}</div>
-                      )}
-                    </div>
+                    )}
+                    <input id="po-logo-input" type="file" accept=".png,.svg,.jpg" style={{ display: 'none' }} />
                   </div>
 
-                  {/* SECTION: Supplier Info */}
-                  <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px' }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 16 }}>SUPPLIER INFORMATION</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Name</div>
-                        {poEditing ? (
-                          <input value={poSupplierName} onChange={e => setPoSupplierName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                        ) : (
-                          <div style={{ fontSize: 14, color: '#1a1a1a', padding: '9px 0' }}>{poSupplierName}</div>
-                        )}
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Contact No.</div>
-                        {poEditing ? (
-                          <input value={poSupplierContact} onChange={e => setPoSupplierContact(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                        ) : (
-                          <div style={{ fontSize: 14, color: '#1a1a1a', padding: '9px 0' }}>{poSupplierContact}</div>
-                        )}
-                      </div>
-                    </div>
-                    <div style={{ marginTop: 16 }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Address</div>
-                      {poEditing ? (
-                        <textarea value={poSupplierAddress} onChange={e => setPoSupplierAddress(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                      ) : (
-                        <div style={{ fontSize: 14, color: '#1a1a1a', lineHeight: 1.7, whiteSpace: 'pre-line' }}>{poSupplierAddress}</div>
-                      )}
-                    </div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Company Address</div>
+                  <div>
+                    {poEditing ? (
+                      <textarea value={poAddress} onChange={e => setPoAddress(e.target.value)} rows={4} style={{ width: '100%', maxWidth: 480, padding: '8px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poAddress}</div>}
                   </div>
 
-                  {/* SECTION: PO Meta */}
-                  <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px' }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 16 }}>PO DETAILS</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 16, marginBottom: 16 }}>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>PO Number</div>
-                        {poEditing ? (
-                          <input value={poNumber} onChange={e => setPoNumber(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                        ) : (
-                          <div style={{ fontSize: 14, fontWeight: 600, color: '#0052cc' }}>{poNumber}</div>
-                        )}
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Issue Date</div>
-                        {poEditing ? (
-                          <input type="date" value={poIssueDate} onChange={e => setPoIssueDate(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                        ) : (
-                          <div style={{ fontSize: 14, color: '#1a1a1a' }}>{poIssueDate}</div>
-                        )}
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Change No.</div>
-                        {poEditing ? (
-                          <input value={poChangeNo} onChange={e => setPoChangeNo(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                        ) : (
-                          <div style={{ fontSize: 14, color: '#1a1a1a' }}>{poChangeNo}</div>
-                        )}
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Terms (Category)</div>
-                        {poEditing ? (
-                          <div ref={poTermsCatRef} style={{ position: 'relative' }}>
-                            <button onClick={() => setPoTermsCategoryOpen(!poTermsCategoryOpen)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: `1px solid ${poTermsCategoryOpen ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 8, fontSize: 14, cursor: 'pointer', background: '#fff', fontFamily: 'inherit', outline: 'none', color: '#1a1a1a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: poTermsCategoryOpen ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none' }}>
-                              <span>{poTermsCategory}</span>
-                              <ChevronDown size={14} style={{ transform: poTermsCategoryOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.15s ease' }} />
-                            </button>
-                            {poTermsCategoryOpen && (
-                              <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 300, background: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', padding: 6 }}>
-                                {['Real Estate', 'Technology and Consulting', 'Energy & Utilities', 'Healthcare & Pharma'].map(opt => (
-                                  <div key={opt} onClick={() => { setPoTermsCategory(opt); setPoTermsCategoryOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, borderRadius: 6, cursor: 'pointer', color: '#1a1a1a' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{opt}</div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <div style={{ fontSize: 14, color: '#1a1a1a' }}>{poTermsCategory}</div>
-                        )}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Instructions</div>
-                      {poEditing ? (
-                        <textarea value={poInstructions} onChange={e => setPoInstructions(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                      ) : (
-                        <div style={{ fontSize: 14, color: '#1a1a1a', lineHeight: 1.7 }}>{poInstructions}</div>
-                      )}
-                    </div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Buyer Name</div>
+                  <div>
+                    {poEditing ? (
+                      <input value={poBuyerName} onChange={e => setPoBuyerName(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 280 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poBuyerName}</div>}
+                  </div>
+                </div>
+
+                <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
+
+                {/* ── SUPPLIER INFO ── */}
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>SUPPLIER INFORMATION</div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Supplier Name</div>
+                  <div>
+                    {poEditing ? (
+                      <input value={poSupplierName} onChange={e => setPoSupplierName(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 280 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poSupplierName}</div>}
                   </div>
 
-                  {/* SECTION: Line Items Table */}
-                  <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>LINE ITEMS</div>
-                      {poEditing && (
-                        <button onClick={() => setPoLineItems([...poLineItems, { ln: String(poLineItems.length + 1), matCode: '', prTaskNo: '', prItem: '', description: '', uom: '', quantity: '', unitPrice: '', amount: '', delDate: '' }])} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 7, background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit' }}>
-                          + Add Row
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Supplier Address</div>
+                  <div>
+                    {poEditing ? (
+                      <textarea value={poSupplierAddress} onChange={e => setPoSupplierAddress(e.target.value)} rows={3} style={{ width: '100%', maxWidth: 480, padding: '8px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poSupplierAddress}</div>}
+                  </div>
+
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Supplier Contact No.</div>
+                  <div>
+                    {poEditing ? (
+                      <input value={poSupplierContact} onChange={e => setPoSupplierContact(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 220 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poSupplierContact}</div>}
+                  </div>
+                </div>
+
+                <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
+
+                {/* ── PO META ── */}
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>PO DETAILS</div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>PO Number</div>
+                  <div>
+                    {poEditing ? (
+                      <input value={poNumber} onChange={e => setPoNumber(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 220 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                    ) : <div style={{ fontSize: 13, fontWeight: 600, color: '#0052cc' }}>{poNumber}</div>}
+                  </div>
+
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Issue Date</div>
+                  <div>
+                    {poEditing ? (
+                      <input type="date" value={poIssueDate} onChange={e => setPoIssueDate(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 180 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poIssueDate}</div>}
+                  </div>
+
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Change No.</div>
+                  <div>
+                    {poEditing ? (
+                      <input value={poChangeNo} onChange={e => setPoChangeNo(e.target.value)} style={{ padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', width: 100 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poChangeNo}</div>}
+                  </div>
+
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Terms (Category)</div>
+                  <div>
+                    {poEditing ? (
+                      <div ref={poTermsCatRef} style={{ position: 'relative', width: 280 }}>
+                        <button onClick={() => setPoTermsCategoryOpen(!poTermsCategoryOpen)} style={{ width: '100%', padding: '8px 12px', boxSizing: 'border-box', border: `1px solid ${poTermsCategoryOpen ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 8, fontSize: 13, cursor: 'pointer', background: '#fff', fontFamily: 'inherit', outline: 'none', color: '#1a1a1a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: poTermsCategoryOpen ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none' }}>
+                          <span>{poTermsCategory}</span>
+                          <ChevronDown size={13} style={{ transform: poTermsCategoryOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.15s ease' }} />
                         </button>
-                      )}
-                    </div>
-                    <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid #e5e5e5' }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
-                        <thead>
-                          <tr style={{ background: '#1a3a5c' }}>
-                            {['LN', 'MAT-CODE / COST CODE', 'PURCHASE REQUISITION / TASK NUMBER', 'PR ITEM', 'DESCRIPTION', 'UOM', 'QUANTITY', 'UNIT PRICE', 'AMOUNT', 'DEL. DATE'].map((h, i) => (
-                              <th key={i} style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, color: '#fff', textAlign: 'left', whiteSpace: 'nowrap', borderRight: i < 9 ? '1px solid rgba(255,255,255,0.1)' : 'none' }}>{h}</th>
+                        {poTermsCategoryOpen && (
+                          <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 300, background: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', padding: 6 }}>
+                            {['Real Estate', 'Technology and Consulting', 'Energy & Utilities', 'Healthcare & Pharma'].map(opt => (
+                              <div key={opt} onClick={() => { setPoTermsCategory(opt); setPoTermsCategoryOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, borderRadius: 6, cursor: 'pointer', color: '#1a1a1a' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{opt}</div>
                             ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {poLineItems.map((item, idx) => (
-                            <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid #f0f0f0' : 'none', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
-                              {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
-                                <td key={fi} style={{ padding: '10px 12px', fontSize: 13, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid #f0f0f0' : 'none', verticalAlign: 'top' }}>
-                                  {poEditing ? (
-                                    field === 'description' ? (
-                                      <textarea value={item[field]} onChange={e => { const updated = [...poLineItems]; updated[idx][field] = e.target.value; setPoLineItems(updated); }} style={{ width: '100%', minWidth: 200, padding: '4px 6px', border: '1px solid #e0e0e0', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 60 }} />
-                                    ) : (
-                                      <input value={item[field]} onChange={e => { const updated = [...poLineItems]; updated[idx][field] = e.target.value; setPoLineItems(updated); }} style={{ width: '100%', minWidth: field === 'ln' || field === 'prItem' ? 40 : 80, padding: '4px 6px', border: '1px solid #e0e0e0', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none' }} />
-                                    )
-                                  ) : (
-                                    <span style={{ fontSize: 12, lineHeight: 1.5 }}>{item[field]}</span>
-                                  )}
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                          {/* Total row */}
-                          <tr style={{ background: '#f5f5f5', borderTop: '2px solid #e0e0e0' }}>
-                            <td colSpan={8} style={{ padding: '10px 12px', fontSize: 12, fontWeight: 700, color: '#1a1a1a', textAlign: 'right' }}>Total :- {poLineItems.length > 0 ? `FORTY FIVE LAKH RUPEES AND ZERO` : '—'}</td>
-                            <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 700, color: '#0052cc', borderLeft: '1px solid #e0e0e0' }}>₹{poLineItems[0]?.amount || '—'}</td>
-                            <td style={{ borderLeft: '1px solid #e0e0e0' }} />
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poTermsCategory}</div>}
                   </div>
 
-                  {/* SECTION: Special Instructions */}
-                  <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px' }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 12 }}>SPECIAL INSTRUCTIONS TO SUPPLIER</div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Instructions</div>
+                  <div>
                     {poEditing ? (
-                      <textarea value={poSpecialInstructions} onChange={e => setPoSpecialInstructions(e.target.value)} rows={6} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : (
-                      <div style={{ fontSize: 14, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poSpecialInstructions}</div>
-                    )}
-                  </div>
-
-                  {/* SECTION: Terms & Conditions */}
-                  <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px' }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 12 }}>TERMS & CONDITIONS</div>
-                    {poEditing ? (
-                      <textarea value={poTermsConditions} onChange={e => setPoTermsConditions(e.target.value)} rows={8} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', outline: 'none', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8 }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                    ) : (
-                      <div style={{ fontSize: 14, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poTermsConditions}</div>
-                    )}
-                  </div>
-
-                </div>
-              ) : (
-
-                /* ── PREVIEW MODE ── */
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '0 0 40px' }}>
-                  <div style={{ background: '#fff', width: 794, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', borderRadius: 4 }}>
-
-                    {/* PO Header */}
-                    <div style={{ padding: '40px 52px 24px', borderBottom: '3px solid #1a3a5c' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
-                          <div style={{ fontSize: 28, fontWeight: 800, color: '#1a3a5c', letterSpacing: '-0.5px', marginBottom: 4 }}>PURCHASE ORDER</div>
-                          <div style={{ fontSize: 13, color: '#666', whiteSpace: 'pre-line', lineHeight: 1.6 }}>{poAddress}</div>
-                        </div>
-                        <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: 11, color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px' }}>PO Number</div>
-                          <div style={{ fontSize: 20, fontWeight: 700, color: '#0052cc', marginBottom: 8 }}>{poNumber}</div>
-                          <div style={{ fontSize: 11, color: '#999' }}>Issue Date: <span style={{ color: '#1a1a1a', fontWeight: 600 }}>{poIssueDate}</span></div>
-                          <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>Change No.: <span style={{ color: '#1a1a1a', fontWeight: 600 }}>{poChangeNo}</span></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Supplier / Buyer */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, borderBottom: '1px solid #e5e5e5' }}>
-                      <div style={{ padding: '20px 52px', borderRight: '1px solid #e5e5e5' }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: '#999', marginBottom: 8 }}>SUPPLIER</div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}>{poSupplierName}</div>
-                        <div style={{ fontSize: 13, color: '#555', whiteSpace: 'pre-line', lineHeight: 1.6 }}>{poSupplierAddress}</div>
-                        <div style={{ fontSize: 13, color: '#555', marginTop: 4 }}>{poSupplierContact}</div>
-                      </div>
-                      <div style={{ padding: '20px 52px' }}>
-                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: '#999', marginBottom: 8 }}>BUYER</div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}>{poBuyerName}</div>
-                        <div style={{ fontSize: 13, color: '#555', whiteSpace: 'pre-line', lineHeight: 1.6 }}>{poAddress}</div>
-                        <div style={{ fontSize: 13, color: '#555', marginTop: 8 }}><span style={{ fontWeight: 600 }}>Terms:</span> {poTermsCategory}</div>
-                      </div>
-                    </div>
-
-                    {/* Instructions */}
-                    {poInstructions && (
-                      <div style={{ padding: '16px 52px', borderBottom: '1px solid #e5e5e5', background: '#fafafa' }}>
-                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: '#999', letterSpacing: '0.5px', marginBottom: 6 }}>INSTRUCTIONS</div>
-                        <div style={{ fontSize: 13, color: '#444', lineHeight: 1.6 }}>{poInstructions}</div>
-                      </div>
-                    )}
-
-                    {/* Change Order Description label */}
-                    <div style={{ padding: '20px 52px 8px' }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a' }}>Change Order Description:</div>
-                    </div>
-
-                    {/* Line Items Table */}
-                    <div style={{ padding: '0 52px 20px' }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc' }}>
-                        <thead>
-                          <tr style={{ background: '#1a3a5c' }}>
-                            {['LN', 'MAT-CODE\nOr COST CODE', 'PURCHASE\nREQUISITION/\nTASK NUMBER', 'PR\nITEM', 'DESCRIPTION', 'UOM', 'QUANTITY', 'UNIT PRICE', 'AMOUNT', 'DEL.DATE'].map((h, i) => (
-                              <th key={i} style={{ padding: '8px 8px', fontSize: 10, fontWeight: 700, color: '#fff', textAlign: 'left', borderRight: i < 9 ? '1px solid rgba(255,255,255,0.2)' : 'none', whiteSpace: 'pre-line', lineHeight: 1.3 }}>{h}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {poLineItems.map((item, idx) => (
-                            <tr key={idx} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                              {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
-                                <td key={fi} style={{ padding: '8px 8px', fontSize: 11, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid #e0e0e0' : 'none', verticalAlign: 'top', lineHeight: 1.5 }}>{item[field]}</td>
-                              ))}
-                            </tr>
-                          ))}
-                          <tr style={{ background: '#f5f5f5', borderTop: '1px solid #ccc' }}>
-                            <td colSpan={8} style={{ padding: '8px 8px', fontSize: 11, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid #ccc' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
-                            <td colSpan={2} style={{ padding: '8px 8px', fontSize: 11, fontWeight: 700, color: '#0052cc' }}>₹45,00,000.00 INR</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Special Instructions */}
-                    <div style={{ margin: '0 52px', padding: '16px', border: '1px solid #ccc', marginBottom: 16 }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: '#1a1a1a', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>SPECIAL INSTRUCTIONS TO SUPPLIER</div>
-                      <div style={{ fontSize: 12, color: '#444', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poSpecialInstructions}</div>
-                    </div>
-
-                    {/* Terms & Conditions */}
-                    <div style={{ margin: '0 52px', padding: '16px', border: '1px solid #ccc', marginBottom: 40 }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: '#1a1a1a', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>TERMS & CONDITIONS</div>
-                      <div style={{ fontSize: 12, color: '#444', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poTermsConditions}</div>
-                    </div>
-
+                      <textarea value={poInstructions} onChange={e => setPoInstructions(e.target.value)} rows={3} style={{ width: '100%', maxWidth: 480, padding: '8px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                    ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.7 }}>{poInstructions}</div>}
                   </div>
                 </div>
-              )}
+
+                <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
+
+                {/* ── LINE ITEMS ── */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>LINE ITEMS</div>
+                  {poEditing && (
+                    <button onClick={() => setPoLineItems([...poLineItems, { ln: String(poLineItems.length + 1), matCode: '', prTaskNo: '', prItem: '', description: '', uom: '', quantity: '', unitPrice: '', amount: '', delDate: '' }])} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 7, background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit' }}>+ Add Row</button>
+                  )}
+                </div>
+
+                <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid var(--border-subtle)', marginBottom: 20 }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
+                    <thead>
+                      <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                        {['LN', 'MAT-CODE / COST CODE', 'PR / TASK NO.', 'PR ITEM', 'DESCRIPTION', 'UOM', 'QTY', 'UNIT PRICE', 'AMOUNT', 'DEL. DATE'].map((h, i) => (
+                          <th key={i} style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', borderRight: i < 9 ? '1px solid var(--border-subtle)' : 'none' }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {poLineItems.map((item, idx) => (
+                        <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                          {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
+                            <td key={fi} style={{ padding: '10px 12px', fontSize: 13, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid var(--border-subtle)' : 'none', verticalAlign: 'top' }}>
+                              {poEditing ? (
+                                field === 'description' ? (
+                                  <textarea value={item[field]} onChange={e => { const u = [...poLineItems]; u[idx][field] = e.target.value; setPoLineItems(u); }} style={{ width: '100%', minWidth: 180, padding: '4px 6px', border: '1px solid #e0e0e0', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 56 }} />
+                                ) : (
+                                  <input value={item[field]} onChange={e => { const u = [...poLineItems]; u[idx][field] = e.target.value; setPoLineItems(u); }} style={{ width: '100%', minWidth: field === 'ln' || field === 'prItem' ? 36 : 72, padding: '4px 6px', border: '1px solid #e0e0e0', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none' }} />
+                                )
+                              ) : <span style={{ fontSize: 12, lineHeight: 1.5 }}>{item[field]}</span>}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                      <tr style={{ background: 'var(--bg-surface-2)', borderTop: '2px solid var(--border-default)' }}>
+                        <td colSpan={8} style={{ padding: '10px 12px', fontSize: 12, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid var(--border-subtle)' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
+                        <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 700, color: '#0052cc', borderRight: '1px solid var(--border-subtle)' }}>₹45,00,000.00</td>
+                        <td />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
+
+                {/* ── SPECIAL INSTRUCTIONS ── */}
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 10 }}>SPECIAL INSTRUCTIONS TO SUPPLIER</div>
+                <div style={{ marginBottom: 20 }}>
+                  {poEditing ? (
+                    <textarea value={poSpecialInstructions} onChange={e => setPoSpecialInstructions(e.target.value)} rows={6} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                  ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poSpecialInstructions}</div>}
+                </div>
+
+                <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
+
+                {/* ── TERMS & CONDITIONS ── */}
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 10 }}>TERMS & CONDITIONS</div>
+                {poEditing ? (
+                  <textarea value={poTermsConditions} onChange={e => setPoTermsConditions(e.target.value)} rows={8} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                ) : <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poTermsConditions}</div>}
+
+              </div>
 
             </div>
           )}
@@ -1063,6 +960,142 @@ export default function PRDetailFresh({ onNavigate , userRole, navState }) {
 
         </div>
       </div>
+
+      {showPoPreview && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowPoPreview(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: '82vw', maxWidth: 920, height: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+
+            {/* Modal header */}
+            <div style={{ padding: '16px 24px', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 9, background: 'rgba(0,82,204,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <FileText size={16} color="#0052cc" />
+                </div>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Purchase Order — {poNumber}</div>
+                  <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>{poSupplierName} · Issued {poIssueDate}</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid #e0e0e0', background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#666', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                  <Download size={13} /> Download
+                </button>
+                <button onClick={() => setShowPoPreview(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 6, borderRadius: 8 }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable document area */}
+            <div style={{ flex: 1, overflowY: 'auto', background: '#f0f0f0', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 0 40px', gap: 20 }}>
+
+              {/* Page 1 */}
+              <div style={{ background: '#fff', width: 700, minHeight: 900, borderRadius: 4, boxShadow: '0 2px 12px rgba(0,0,0,0.12)', padding: '48px 60px', boxSizing: 'border-box', position: 'relative' }}>
+                {/* Page header bar */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #0052cc', paddingBottom: 10, marginBottom: 36 }}>
+                  <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic' }}>DDAIS Group</div>
+                  <div style={{ fontSize: 10, color: '#999' }}>PO {poNumber} &nbsp;|&nbsp; Confidential</div>
+                </div>
+
+                {/* PO Title + number */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
+                  <div>
+                    <div style={{ fontSize: 26, fontWeight: 800, color: '#0d1f3c', letterSpacing: '-0.5px', marginBottom: 6 }}>PURCHASE ORDER</div>
+                    <div style={{ fontSize: 12, color: '#555', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poAddress}</div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: 10, color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>PO Number</div>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: '#0052cc', marginBottom: 10 }}>{poNumber}</div>
+                    <div style={{ fontSize: 11, color: '#666' }}>Issue Date: <span style={{ fontWeight: 600, color: '#1a1a1a' }}>{poIssueDate}</span></div>
+                    <div style={{ fontSize: 11, color: '#666', marginTop: 2 }}>Change No.: <span style={{ fontWeight: 600, color: '#1a1a1a' }}>{poChangeNo}</span></div>
+                    <div style={{ fontSize: 11, color: '#666', marginTop: 2 }}>Terms: <span style={{ fontWeight: 600, color: '#1a1a1a' }}>{poTermsCategory}</span></div>
+                  </div>
+                </div>
+
+                {/* Supplier / Buyer grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '1px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', marginBottom: 24 }}>
+                  <div style={{ padding: '16px 20px', borderRight: '1px solid #e0e0e0' }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: 8 }}>SUPPLIER</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}>{poSupplierName}</div>
+                    <div style={{ fontSize: 12, color: '#555', whiteSpace: 'pre-line', lineHeight: 1.6 }}>{poSupplierAddress}</div>
+                    <div style={{ fontSize: 12, color: '#555', marginTop: 4 }}>{poSupplierContact}</div>
+                  </div>
+                  <div style={{ padding: '16px 20px' }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: 8 }}>BUYER</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}>{poBuyerName}</div>
+                    <div style={{ fontSize: 12, color: '#555', whiteSpace: 'pre-line', lineHeight: 1.6 }}>{poAddress}</div>
+                  </div>
+                </div>
+
+                {/* Instructions banner */}
+                {poInstructions && (
+                  <div style={{ background: '#f8f9ff', border: '1px solid #e0e7ff', borderRadius: 6, padding: '12px 16px', marginBottom: 24 }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: '#6d6dcc', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 4 }}>INSTRUCTIONS</div>
+                    <div style={{ fontSize: 12, color: '#444', lineHeight: 1.6 }}>{poInstructions}</div>
+                  </div>
+                )}
+
+                {/* Change Order label */}
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>Change Order Description:</div>
+
+                {/* Line items table */}
+                <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc', marginBottom: 24, fontSize: 11 }}>
+                  <thead>
+                    <tr style={{ background: '#0d1f3c' }}>
+                      {['LN', 'MAT-CODE\nOr COST CODE', 'PURCHASE\nREQUISITION/\nTASK NUMBER', 'PR\nITEM', 'DESCRIPTION', 'UOM', 'QUANTITY', 'UNIT PRICE', 'AMOUNT', 'DEL.DATE'].map((h, i) => (
+                        <th key={i} style={{ padding: '7px 8px', fontSize: 9, fontWeight: 700, color: '#fff', textAlign: 'left', borderRight: i < 9 ? '1px solid rgba(255,255,255,0.15)' : 'none', whiteSpace: 'pre-line', lineHeight: 1.3 }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {poLineItems.map((item, idx) => (
+                      <tr key={idx} style={{ borderBottom: '1px solid #e5e5e5', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
+                        {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
+                          <td key={fi} style={{ padding: '7px 8px', fontSize: 11, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid #e5e5e5' : 'none', verticalAlign: 'top', lineHeight: 1.4 }}>{item[field]}</td>
+                        ))}
+                      </tr>
+                    ))}
+                    <tr style={{ background: '#f0f4ff', borderTop: '2px solid #0052cc' }}>
+                      <td colSpan={8} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid #ccc' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
+                      <td colSpan={2} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#0052cc' }}>₹45,00,000.00 INR</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                {/* Page footer */}
+                <div style={{ position: 'absolute', bottom: 32, left: 60, right: 60, display: 'flex', justifyContent: 'center', borderTop: '1.5px solid #0052cc', paddingTop: 8 }}>
+                  <span style={{ fontSize: 10, color: '#999' }}>Page 1 of 2</span>
+                </div>
+              </div>
+
+              {/* Page 2 */}
+              <div style={{ background: '#fff', width: 700, minHeight: 500, borderRadius: 4, boxShadow: '0 2px 12px rgba(0,0,0,0.12)', padding: '48px 60px', boxSizing: 'border-box', position: 'relative' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #0052cc', paddingBottom: 10, marginBottom: 28 }}>
+                  <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic' }}>DDAIS Group</div>
+                  <div style={{ fontSize: 10, color: '#999' }}>PO {poNumber} &nbsp;|&nbsp; Confidential</div>
+                </div>
+
+                {/* Special Instructions */}
+                <div style={{ marginBottom: 24 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: '#0052cc', marginBottom: 10, borderBottom: '1px solid #e0e7ff', paddingBottom: 6 }}>SPECIAL INSTRUCTIONS TO SUPPLIER</div>
+                  <div style={{ fontSize: 12, color: '#444', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poSpecialInstructions}</div>
+                </div>
+
+                {/* Terms */}
+                <div>
+                  <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: '#0052cc', marginBottom: 10, borderBottom: '1px solid #e0e7ff', paddingBottom: 6 }}>TERMS & CONDITIONS</div>
+                  <div style={{ fontSize: 12, color: '#444', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poTermsConditions}</div>
+                </div>
+
+                <div style={{ position: 'absolute', bottom: 32, left: 60, right: 60, display: 'flex', justifyContent: 'center', borderTop: '1.5px solid #0052cc', paddingTop: 8 }}>
+                  <span style={{ fontSize: 10, color: '#999' }}>Page 2 of 2</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
