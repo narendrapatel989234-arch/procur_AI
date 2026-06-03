@@ -839,12 +839,12 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
   const [isEditing, setIsEditing] = useState(false);
   const [rfpHtml, setRfpHtml] = useState(INITIAL_HTML);
   const [savedHtml, setSavedHtml] = useState(INITIAL_HTML);
-  
+
   const [proposals, setProposals] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadForm, setUploadForm] = useState({ vendorName: '', file: null, supporting: null });
   const [activeDropdown, setActiveDropdown] = useState(null);
-  
+
   const [showPreviewModal, setShowPreviewModal] = useState(null);
   const [showReuploadModal, setShowReuploadModal] = useState(null);
   const [showSupportingDocModal, setShowSupportingDocModal] = useState(null);
@@ -862,7 +862,7 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
   const handleProposalUpload = () => {
     if (!uploadForm.vendorName || !uploadForm.file) return;
     const now = new Date();
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const dateStr = `${String(now.getDate()).padStart(2, '0')}-${months[now.getMonth()]}-${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     const newProp = {
       id: Date.now(),
@@ -879,7 +879,7 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
     setProposals([...proposals, newProp]);
     setShowUploadModal(false); setPropFileDrag(false); setSuppFileDrag(false);
     setUploadForm({ vendorName: '', file: null, supporting: null });
-    
+
     setTimeout(() => {
       setProposals(prev => prev.map(p => {
         if (p.id === newProp.id) {
@@ -892,7 +892,7 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
           const commVal = Math.floor(Math.random() * 40 + 120); // 120k to 160k
           const risksPool = ['High implementation risk due to offshore team', 'Minor SLA compliance gaps', 'Aggressive timeline assumption', 'Resource availability risk', 'Strong compliance but slow delivery potential', 'None identified'];
           return {
-            ...p, 
+            ...p,
             status: 'Completed',
             techScore: `${total}/100`,
             commercial: `$${commVal},000`,
@@ -942,9 +942,9 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
           const s5 = Math.floor(Math.random() * 3 + 7);
           const total = s1 + s2 + s3 + s4 + s5;
           const commVal = Math.floor(Math.random() * 30 + 110);
-          return { 
-            ...p, 
-            status: 'Completed', 
+          return {
+            ...p,
+            status: 'Completed',
             techScore: `${total}/100`,
             commercial: `$${commVal},000`,
             criteriaScores: {
@@ -1050,11 +1050,11 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
               </div>
               <button onClick={() => { setShowUploadModal(false); setPropFileDrag(false); setSuppFileDrag(false); }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             </div>
-            
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Vendor Name <span style={{ color: '#dc2626' }}>*</span></div>
-                <input type="text" value={uploadForm.vendorName} onChange={e => setUploadForm({...uploadForm, vendorName: e.target.value})} placeholder="Enter vendor name" style={{ width: '100%', padding: '10px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} />
+                <input type="text" value={uploadForm.vendorName} onChange={e => setUploadForm({ ...uploadForm, vendorName: e.target.value })} placeholder="Enter vendor name" style={{ width: '100%', padding: '10px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} />
               </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>
@@ -1731,7 +1731,7 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
                   </table>
                 </div>
               </div>
-              
+
               {/* COMPARISON SECTION */}
               <div style={{ marginTop: 24 }}>
                 <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Proposal Comparison Matrix</div>
@@ -1783,7 +1783,7 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
                       {proposals.slice(0, 3).map(p => (
                         <div key={`risk-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(239,68,68,0.1)' }}>
                           {(p.risks || []).map((r, ri) => (
-                            <div key={ri} style={{ fontSize: 12, color: '#991b1b', display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: (p.risks||[]).length - 1 === ri ? 0 : 8 }}>
+                            <div key={ri} style={{ fontSize: 12, color: '#991b1b', display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: (p.risks || []).length - 1 === ri ? 0 : 8 }}>
                               <span style={{ fontSize: 14, lineHeight: 1 }}>•</span> <span style={{ lineHeight: 1.4 }}>{r}</span>
                             </div>
                           ))}
@@ -1801,7 +1801,7 @@ export default function PRDetailRFP({ onNavigate, activeNav }) {
                         const currScore = parseInt(current.techScore) || 0;
                         return (currScore > prevScore) ? current : prev;
                       });
-                      
+
                       return (
                         <div style={{ padding: '20px', background: 'linear-gradient(135deg, rgba(124,124,255,0.1), rgba(0,82,204,0.05))', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                           <div style={{ width: 40, height: 40, borderRadius: 12, background: '#fff', border: '1px solid rgba(124,124,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(124,124,255,0.15)' }}>
