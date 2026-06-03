@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import MainLayout from '../layouts/MainLayout.jsx';
 import { Plus, Paperclip, ChevronDown, Mic, Send, Sparkles, FileText, BarChart2, Package, ArrowLeft, X, Copy, CheckCircle, ThumbsUp, ThumbsDown, RotateCcw, Edit2, AlertTriangle, MoreHorizontal, Pin, PinOff, Share2, Download, Trash2, Scale } from 'lucide-react';
 
-export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRole}) {
+export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRole }) {
   const [inputFocused, setInputFocused] = useState(false);
   const [inputText, setInputText] = useState('');
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [toast, setToast] = useState(null);
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
-  
+
   const [messages, setMessages] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
   const [showUploadTooltip, setShowUploadTooltip] = useState(false);
@@ -24,7 +24,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [renameValue, setRenameValue] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -33,7 +33,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
   const [downloadDone, setDownloadDone] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const menuRef = useRef(null);
-  
+
   const [likedMsgs, setLikedMsgs] = useState(new Set());
   const [dislikedMsgs, setDislikedMsgs] = useState(new Set());
   const [likedTooltipVisible, setLikedTooltipVisible] = useState(new Set());
@@ -130,7 +130,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
 
     return () => clearTimeout(timer);
   }, [charIndex, isDeleting, phIndex]);
-  
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -138,7 +138,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
   }, [messages, reasoningSteps]);
 
   const currentPlaceholder = placeholders[phIndex].substring(0, charIndex) + (inputFocused ? '' : '|');
-  
+
   const REASONING_STEPS_FULL = [
     { title: 'Reading procurement request', bullets: [] },
     { title: 'Extracting key requirements', bullets: ['Item type identified: Cloud consulting', 'Duration: 6 months'] },
@@ -176,13 +176,13 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
       }, 800);
     }, delay + 200);
   };
-  
+
   const handleSend = () => {
     if (!inputText.trim()) return;
     const userMsg = { role: 'user', content: inputText.trim() };
     if (attachedFiles.length > 0) {
-        userMsg.attachments = attachedFiles;
-        setAttachedFiles([]);
+      userMsg.attachments = attachedFiles;
+      setAttachedFiles([]);
     }
     setMessages(prev => [...prev, userMsg]);
     setInputText('');
@@ -190,7 +190,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
     setReasoningSteps([]);
     setReasoningComplete(false);
     setShowReasoningPanel(false);
-  
+
     // Add status message
     setTimeout(() => {
       setMessages(prev => [...prev, { role: 'status' }]);
@@ -228,7 +228,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
           to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        @keyframes spinOnce { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes spinOnce { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
       `}</style>
       <MainLayout userRole={userRole} activeNav="Chat History" onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
 
@@ -276,11 +276,11 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
 
         {/* ── Main Chat Thread Area ── */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
-          
+
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             {/* Messages Scroll Area */}
             <div className="chat-scroll" ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: hasStarted ? '24px' : '40px 24px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: hasStarted ? 'flex-start' : 'center', gap: hasStarted ? 16 : 0 }}>
-              
+
               {!hasStarted ? (
                 <>
                   <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, rgb(0, 82, 204), rgb(124, 124, 255))', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginBottom: 24, boxShadow: '0 4px 12px rgba(0,82,204,0.15)' }}>
@@ -336,7 +336,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
                             <div style={{ flex: 1 }}>
                               {reasoningComplete ? (
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
-                                  <CheckCircle size={14} color="#22c55e" />
+                                  {/* <CheckCircle size={14} color="#22c55e" /> */}
                                   Completed
                                 </div>
                               ) : (
@@ -383,42 +383,42 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
                           </div>
                         </div>
                       ) : (
-                      <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '72%' }} onMouseEnter={() => setHoveredUserMsg(i)} onMouseLeave={() => setHoveredUserMsg(null)}>
-                        <div style={{
-                          alignSelf: 'flex-end', maxWidth: '100%', background: 'rgba(0,82,204,0.05)',
-                          border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px',
-                          padding: '12px 16px', fontSize: 14, color: 'var(--text-primary)',
-                          lineHeight: 1.5, whiteSpace: 'pre-wrap'
-                        }}>
-                          {msg.attachments && msg.attachments.length > 0 && (
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
-                              {msg.attachments.map((file, fi) => (
-                                <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
-                                  <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
-                                  <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
-                                  <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          {msg.content}
+                        <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '72%' }} onMouseEnter={() => setHoveredUserMsg(i)} onMouseLeave={() => setHoveredUserMsg(null)}>
+                          <div style={{
+                            alignSelf: 'flex-end', maxWidth: '100%', background: 'rgba(0,82,204,0.05)',
+                            border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px',
+                            padding: '12px 16px', fontSize: 14, color: 'var(--text-primary)',
+                            lineHeight: 1.5, whiteSpace: 'pre-wrap'
+                          }}>
+                            {msg.attachments && msg.attachments.length > 0 && (
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                                {msg.attachments.map((file, fi) => (
+                                  <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
+                                    <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
+                                    <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
+                                    <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            {msg.content}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end', height: 26, visibility: hoveredUserMsg === i ? 'visible' : 'hidden', opacity: hoveredUserMsg === i ? 1 : 0, transition: 'opacity 0.15s ease' }}>
+                            <button onClick={() => {
+                              setCopiedMsgs(prev => new Set(prev).add(i));
+                              const timer = setTimeout(() => setCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
+                              tooltipTimers.current.add(timer);
+                            }} style={{ position: 'relative', overflow: 'visible', width: 26, height: 26, borderRadius: 6, border: 'none', background: copiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: copiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                              {copiedMsgs.has(i) ? <CheckCircle size={13} /> : <Copy size={13} />}
+                              {copiedMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Copied!</div>}
+                            </button>
+                            <button
+                              onClick={() => { setEditingMsgIndex(i); setEditingText(msg.content); }}
+                              style={{ width: 26, height: 26, borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
+                              <Edit2 size={13} />
+                            </button>
+                          </div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end', height: 26, visibility: hoveredUserMsg === i ? 'visible' : 'hidden', opacity: hoveredUserMsg === i ? 1 : 0, transition: 'opacity 0.15s ease' }}>
-                          <button onClick={() => {
-                            setCopiedMsgs(prev => new Set(prev).add(i));
-                            const timer = setTimeout(() => setCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
-                            tooltipTimers.current.add(timer);
-                          }} style={{ position: 'relative', overflow: 'visible', width: 26, height: 26, borderRadius: 6, border: 'none', background: copiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: copiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
-                            {copiedMsgs.has(i) ? <CheckCircle size={13} /> : <Copy size={13} />}
-                            {copiedMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Copied!</div>}
-                          </button>
-                          <button 
-                            onClick={() => { setEditingMsgIndex(i); setEditingText(msg.content); }}
-                            style={{ width: 26, height: 26, borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
-                            <Edit2 size={13} />
-                          </button>
-                        </div>
-                      </div>
                       )
                     ) : (
                       <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '72%', display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 40 }}>
@@ -633,7 +633,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
               </div>
             </div>
           </div>
-          
+
           {/* Right: Reasoning Panel */}
           <div style={{
             maxWidth: showReasoningPanel ? 300 : 0, width: '100%', flexShrink: 0,
@@ -744,93 +744,93 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav , userRo
               </div>
             </div>
           </div>
-      </div>
+        </div>
 
-      {showRenameModal && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          onClick={() => setShowRenameModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 440, boxShadow: '0 16px 48px rgba(0,0,0,0.15)' }}
-            onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Rename this chat</div>
-              <X size={20} color="var(--text-tertiary)" style={{ cursor: 'pointer' }} onClick={() => setShowRenameModal(false)} />
-            </div>
-            <input
-              value={renameValue}
-              onChange={(e) => setRenameValue(e.target.value)}
-              autoFocus
-              onKeyDown={(e) => { if (e.key === 'Enter' && renameValue.trim()) setShowRenameModal(false); if (e.key === 'Escape') setShowRenameModal(false); }}
-              style={{ background: '#fff', width: '100%', padding: '12px 16px', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)', marginBottom: 20 }}
-            />
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-              <button onClick={() => setShowRenameModal(false)} style={{ padding: '10px 20px', border: '1px solid var(--border-default)', borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>Cancel</button>
-              <button onClick={() => { if (renameValue.trim()) setShowRenameModal(false); }} style={{ padding: '10px 20px', border: 'none', borderRadius: 10, background: renameValue.trim() ? '#0052cc' : 'var(--bg-surface-2)', fontSize: 14, fontWeight: 600, cursor: renameValue.trim() ? 'pointer' : 'default', fontFamily: 'inherit', color: renameValue.trim() ? '#fff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}>Rename</button>
+        {showRenameModal && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onClick={() => setShowRenameModal(false)}>
+            <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 440, boxShadow: '0 16px 48px rgba(0,0,0,0.15)' }}
+              onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Rename this chat</div>
+                <X size={20} color="var(--text-tertiary)" style={{ cursor: 'pointer' }} onClick={() => setShowRenameModal(false)} />
+              </div>
+              <input
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                autoFocus
+                onKeyDown={(e) => { if (e.key === 'Enter' && renameValue.trim()) setShowRenameModal(false); if (e.key === 'Escape') setShowRenameModal(false); }}
+                style={{ background: '#fff', width: '100%', padding: '12px 16px', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)', marginBottom: 20 }}
+              />
+              <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+                <button onClick={() => setShowRenameModal(false)} style={{ padding: '10px 20px', border: '1px solid var(--border-default)', borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>Cancel</button>
+                <button onClick={() => { if (renameValue.trim()) setShowRenameModal(false); }} style={{ padding: '10px 20px', border: 'none', borderRadius: 10, background: renameValue.trim() ? '#0052cc' : 'var(--bg-surface-2)', fontSize: 14, fontWeight: 600, cursor: renameValue.trim() ? 'pointer' : 'default', fontFamily: 'inherit', color: renameValue.trim() ? '#fff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}>Rename</button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {showDeleteModal && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          onClick={() => setShowDeleteModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 20, padding: '36px 28px 28px', width: 460, boxShadow: '0 16px 48px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
-            onClick={(e) => e.stopPropagation()}>
-            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-              <AlertTriangle size={32} color="#ef4444" strokeWidth={2} />
-            </div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>Are you sure you want to delete?</div>
-            <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 28, lineHeight: 1.5 }}>This action is permanent and cannot be undone.</div>
-            <div style={{ display: 'flex', gap: 12, width: '100%' }}>
-              <button onClick={() => setShowDeleteModal(false)} style={{ flex: 1, padding: '13px', border: '1px solid var(--border-default)', borderRadius: 12, background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>Cancel</button>
-              <button onClick={() => setShowDeleteModal(false)} style={{ flex: 1, padding: '13px', border: 'none', borderRadius: 12, background: '#ef4444', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: '#fff' }}>Delete</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showShareModal && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowShareModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 440, boxShadow: '0 16px 48px rgba(0,0,0,0.15)' }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>Share this chat</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', borderRadius: 10, padding: '12px 16px', marginBottom: 20 }}>
-              <Link size={16} color="var(--text-tertiary)" style={{ flexShrink: 0 }} />
-              <div style={{ flex: 1, fontSize: 14, color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>procurai.com/c/8f92a1b3</div>
-              <button onClick={() => setLinkCopied(true)} style={{ background: linkCopied ? '#22c55e' : '#fff', border: `1px solid ${linkCopied ? '#22c55e' : 'var(--border-default)'}`, borderRadius: 8, padding: '6px 12px', fontSize: 13, fontWeight: 600, color: linkCopied ? '#fff' : 'var(--text-primary)', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                {linkCopied ? 'Copied!' : 'Copy'}
-              </button>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <button onClick={() => setShowShareModal(false)} style={{ padding: '10px 20px', border: '1px solid var(--border-default)', borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer', color: 'var(--text-primary)' }}>Close</button>
+        {showDeleteModal && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onClick={() => setShowDeleteModal(false)}>
+            <div style={{ background: '#fff', borderRadius: 20, padding: '36px 28px 28px', width: 460, boxShadow: '0 16px 48px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+              onClick={(e) => e.stopPropagation()}>
+              <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                <AlertTriangle size={32} color="#ef4444" strokeWidth={2} />
+              </div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>Are you sure you want to delete?</div>
+              <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginBottom: 28, lineHeight: 1.5 }}>This action is permanent and cannot be undone.</div>
+              <div style={{ display: 'flex', gap: 12, width: '100%' }}>
+                <button onClick={() => setShowDeleteModal(false)} style={{ flex: 1, padding: '13px', border: '1px solid var(--border-default)', borderRadius: 12, background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-primary)' }}>Cancel</button>
+                <button onClick={() => setShowDeleteModal(false)} style={{ flex: 1, padding: '13px', border: 'none', borderRadius: 12, background: '#ef4444', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', color: '#fff' }}>Delete</button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {showDownload && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 360, boxShadow: '0 16px 48px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-            {downloadDone ? (
-              <>
-                <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-                  <CheckCircle size={28} color="#22c55e" strokeWidth={2.5} />
-                </div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>Download Complete</div>
-                <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>File saved as PDF</div>
-              </>
-            ) : (
-              <>
-                <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 24 }}>Preparing Download...</div>
-                <div style={{ width: '100%', height: 6, background: 'var(--bg-surface-2)', borderRadius: 3, overflow: 'hidden', marginBottom: 12 }}>
-                  <div style={{ height: '100%', background: '#0052cc', width: `${downloadProgress}%`, transition: 'width 0.2s ease' }} />
-                </div>
-                <div style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 500 }}>{Math.round(downloadProgress)}%</div>
-              </>
-            )}
+        {showShareModal && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowShareModal(false)}>
+            <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 440, boxShadow: '0 16px 48px rgba(0,0,0,0.15)' }} onClick={(e) => e.stopPropagation()}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 20 }}>Share this chat</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', borderRadius: 10, padding: '12px 16px', marginBottom: 20 }}>
+                <Link size={16} color="var(--text-tertiary)" style={{ flexShrink: 0 }} />
+                <div style={{ flex: 1, fontSize: 14, color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>procurai.com/c/8f92a1b3</div>
+                <button onClick={() => setLinkCopied(true)} style={{ background: linkCopied ? '#22c55e' : '#fff', border: `1px solid ${linkCopied ? '#22c55e' : 'var(--border-default)'}`, borderRadius: 8, padding: '6px 12px', fontSize: 13, fontWeight: 600, color: linkCopied ? '#fff' : 'var(--text-primary)', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                  {linkCopied ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button onClick={() => setShowShareModal(false)} style={{ padding: '10px 20px', border: '1px solid var(--border-default)', borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500, cursor: 'pointer', color: 'var(--text-primary)' }}>Close</button>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-    </MainLayout>
+        {showDownload && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 360, boxShadow: '0 16px 48px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              {downloadDone ? (
+                <>
+                  <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                    <CheckCircle size={28} color="#22c55e" strokeWidth={2.5} />
+                  </div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>Download Complete</div>
+                  <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>File saved as PDF</div>
+                </>
+              ) : (
+                <>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 24 }}>Preparing Download...</div>
+                  <div style={{ width: '100%', height: 6, background: 'var(--bg-surface-2)', borderRadius: 3, overflow: 'hidden', marginBottom: 12 }}>
+                    <div style={{ height: '100%', background: '#0052cc', width: `${downloadProgress}%`, transition: 'width 0.2s ease' }} />
+                  </div>
+                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 500 }}>{Math.round(downloadProgress)}%</div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+      </MainLayout>
     </>
   );
 }

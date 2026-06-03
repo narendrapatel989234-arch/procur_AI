@@ -27,21 +27,21 @@ const TEMPLATE_ROWS = [
 
 const STATUS_STYLES = {
   'Published': { background: '#f0fdf4', color: '#15803d' },
-  'Draft':     { background: '#f5f5f5', color: '#888888' },
-  'Archived':  { background: '#fff1f2', color: '#be123c' },
+  'Draft': { background: '#f5f5f5', color: '#888888' },
+  'Archived': { background: '#fff1f2', color: '#be123c' },
 };
 
 const CATEGORY_STYLES = {
-  'AI':         { background: 'rgba(124,124,255,0.08)', color: '#5b5bd6' },
-  'Data':       { background: 'rgba(0,82,204,0.08)',    color: '#0052cc' },
-  'Low-Code':   { background: 'rgba(34,197,94,0.08)',   color: '#15803d' },
-  'Custom App': { background: 'rgba(245,158,11,0.08)',  color: '#b45309' },
+  'AI': { background: 'rgba(124,124,255,0.08)', color: '#5b5bd6' },
+  'Data': { background: 'rgba(0,82,204,0.08)', color: '#0052cc' },
+  'Low-Code': { background: 'rgba(34,197,94,0.08)', color: '#15803d' },
+  'Custom App': { background: 'rgba(245,158,11,0.08)', color: '#b45309' },
 };
 
 const FILTER_OPTIONS = {
   'Category': ['AI', 'Data', 'Low-Code', 'Custom App'],
-  'Status':   ['Draft', 'Published', 'Archived'],
-  'Owner':    ['David Kim', 'Sarah Chen', 'Mike Ross'],
+  'Status': ['Draft', 'Published', 'Archived'],
+  'Owner': ['David Kim', 'Sarah Chen', 'Mike Ross'],
 };
 
 function FilterDropdown({ label, options, isOpen, onToggle, onClose, activeOption, onSelect, isMulti }) {
@@ -145,28 +145,28 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
   const [tableSearchFocused, setTableSearchFocused] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [displayedRows, setDisplayedRows] = useState([]);
-  
+
   const [sortCol, setSortCol] = useState(null);
   const [sortDir, setSortDir] = useState(null); // 'asc' | 'desc'
-  
+
   const [tablePage, setTablePage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openRpp, setOpenRpp] = useState(false);
   const rppRef = useRef(null);
-  
+
   const [openFilter, setOpenFilter] = useState(null);
   const [activeFilters, setActiveFilters] = useState({
     'Category': [],
     'Status': [],
     'Owner': []
   });
-  
+
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
-  
+
   const [tableScrollable, setTableScrollable] = useState(false);
   const tableScrollRef = useRef(null);
-  
+
   const [templateName, setTemplateName] = useState('');
   const [templateCategory, setTemplateCategory] = useState('AI');
   const [templateFile, setTemplateFile] = useState(null);
@@ -233,32 +233,32 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
     const delay = hasSearch ? 600 : 150;
     const timeoutId = setTimeout(() => {
       let filtered = [...TEMPLATE_ROWS];
-      
+
       // text search
       if (hasSearch) {
         const q = tableSearch.toLowerCase();
-        filtered = filtered.filter(r => 
-          r.id.toLowerCase().includes(q) || 
-          r.name.toLowerCase().includes(q) || 
+        filtered = filtered.filter(r =>
+          r.id.toLowerCase().includes(q) ||
+          r.name.toLowerCase().includes(q) ||
           r.owner.toLowerCase().includes(q)
         );
       }
-      
+
       // category filter
       if (activeFilters.Category.length > 0) {
         filtered = filtered.filter(r => activeFilters.Category.includes(r.category));
       }
-      
+
       // status filter
       if (activeFilters.Status.length > 0) {
         filtered = filtered.filter(r => activeFilters.Status.includes(r.status));
       }
-      
+
       // owner filter
       if (activeFilters.Owner.length > 0) {
         filtered = filtered.filter(r => activeFilters.Owner.includes(r.owner));
       }
-      
+
       // sort
       if (sortCol && sortDir) {
         filtered.sort((a, b) => {
@@ -269,7 +269,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
           return 0;
         });
       }
-      
+
       setDisplayedRows(filtered);
       setIsSearching(false);
       setTablePage(1); // reset to page 1 on filter change
@@ -320,11 +320,11 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
     >
       <style dangerouslySetInnerHTML={{ __html: css }} />
       <div style={{ padding: 24, background: 'var(--bg-default)', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        
+
         {/* TOP BAR */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 3 }}>All Templates</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 3 }}>All Templates</div>
             <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>Manage and publish procurement templates.</div>
           </div>
           <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
@@ -495,10 +495,10 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
               </tbody>
             </table>
           </div>
-          
+
           {/* PAGINATION */}
           <div style={{ padding: '12px 16px', background: '#fff', borderTop: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            
+
             {/* Left: rows-per-page dropdown + count */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -554,7 +554,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
       {showUploadModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowUploadModal(false)}>
           <div style={{ background: '#fff', borderRadius: 16, width: 520, padding: 32, display: 'flex', flexDirection: 'column', gap: 20, boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
-            
+
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Upload Template</div>
@@ -639,8 +639,8 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 4 }}>
               <button onClick={() => setShowUploadModal(false)} style={{ padding: '9px 16px', border: '1px solid var(--border-default)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: 'var(--text-primary)', fontFamily: 'inherit' }}>Cancel</button>
-              <button 
-                onClick={handleUploadSubmit} 
+              <button
+                onClick={handleUploadSubmit}
                 disabled={!templateName || !templateFile}
                 style={{ padding: '9px 16px', border: 'none', borderRadius: 8, background: (!templateName || !templateFile) ? 'var(--bg-surface-2)' : '#0052cc', fontSize: 13, fontWeight: 600, cursor: (!templateName || !templateFile) ? 'not-allowed' : 'pointer', color: (!templateName || !templateFile) ? 'var(--text-tertiary)' : '#fff', fontFamily: 'inherit' }}
               >

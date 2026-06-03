@@ -504,7 +504,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
               onClick={() => setActiveTab('my')}
               style={{
                 background: 'transparent', border: 'none', borderBottom: activeTab === 'my' ? '2px solid #0052cc' : '2px solid transparent',
-                padding: '0 4px 10px', fontSize: 14, fontWeight: activeTab === 'my' ? 600 : 500,
+                padding: '0 4px 10px', fontSize: 13, fontWeight: activeTab === 'my' ? 600 : 500,
                 color: activeTab === 'my' ? '#0052cc' : 'var(--text-tertiary)',
                 cursor: 'pointer', transition: 'all 0.15s ease'
               }}
@@ -515,7 +515,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
               onClick={() => setActiveTab('approval')}
               style={{
                 background: 'transparent', border: 'none', borderBottom: activeTab === 'approval' ? '2px solid #0052cc' : '2px solid transparent',
-                padding: '0 4px 10px', fontSize: 14, fontWeight: activeTab === 'approval' ? 600 : 500,
+                padding: '0 4px 10px', fontSize: 13, fontWeight: activeTab === 'approval' ? 600 : 500,
                 color: activeTab === 'approval' ? '#0052cc' : 'var(--text-tertiary)',
                 cursor: 'pointer', transition: 'all 0.15s ease',
                 display: 'flex', alignItems: 'center', gap: 6

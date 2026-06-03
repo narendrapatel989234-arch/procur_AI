@@ -204,8 +204,8 @@ function SectionLabel({ children, showWand, wandDisabled, isWanding, onWandClick
             color: wandDisabled ? 'var(--text-tertiary)' : '#7c7cff',
             padding: '6px', borderRadius: 6, transition: 'all 0.2s ease',
           }}
-          onMouseEnter={(e) => { if(!wandDisabled && !isWanding) { e.currentTarget.style.background = 'rgba(124,124,255,0.15)'; e.currentTarget.style.color = '#3d3db8'; } }}
-          onMouseLeave={(e) => { if(!wandDisabled && !isWanding) { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; } }}
+          onMouseEnter={(e) => { if (!wandDisabled && !isWanding) { e.currentTarget.style.background = 'rgba(124,124,255,0.15)'; e.currentTarget.style.color = '#3d3db8'; } }}
+          onMouseLeave={(e) => { if (!wandDisabled && !isWanding) { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; } }}
         >
           <Wand2 size={16} strokeWidth={2.5} style={{ animation: isWanding ? 'pulse 0.8s infinite' : 'none' }} />
         </button>
@@ -412,7 +412,7 @@ const SUCCESS_MODAL_STYLE = {
   card: { background: '#fff', borderRadius: 20, padding: '40px 36px', maxWidth: 420, width: '90%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, textAlign: 'center', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' },
 };
 
-export default function NewRequest({ setCurrentPage, onNavigate, activeNav , userRole}) {
+export default function NewRequest({ setCurrentPage, onNavigate, activeNav, userRole }) {
   const [showUploadTooltip, setShowUploadTooltip] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
@@ -544,7 +544,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
   const [fContractRef, setFContractRef] = useState('');
   const [fDeliveryLoc, setFDeliveryLoc] = useState(''); const [fDeliveryOpen, setFDeliveryOpen] = useState(false);
   const [fTimeline, setFTimeline] = useState('');
-  
+
   const [aiFilledFields, setAiFilledFields] = useState(new Set());
   const [wandingSection, setWandingSection] = useState(null);
 
@@ -889,7 +889,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
     @keyframes paiDot { from{opacity:0.25} to{opacity:1} }
     @keyframes paiSpin { to{transform:rotate(360deg)} }
 
-    @keyframes spinOnce { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spinOnce { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
     @keyframes uploadProgress { from { width: 0% } to { width: 100% } }
     @keyframes shimmer { 0% { left: -40% } 100% { left: 100% } }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
@@ -1270,7 +1270,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
                               <div style={{ flex: 1 }}>
                                 {reasoningComplete ? (
                                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
-                                    <CheckCircle size={14} color="#22c55e" />
+                                    {/*<CheckCircle size={14} color="#22c55e" />*/}
                                     Completed
                                   </div>
                                 ) : (
@@ -1307,8 +1307,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
                                 onClick={() => setEditingMsgIndex(null)}
                                 style={{ padding: '6px 14px', border: '1px solid var(--border-default)', borderRadius: 7, background: '#fff', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-secondary)' }}
                               >
-                    <Save size={15} strokeWidth={2} /> Save Draft
-                  </button>
+                                <Save size={15} strokeWidth={2} /> Save Draft
+                              </button>
                               <button
                                 onClick={() => {
                                   setMessages(prev => prev.map((m, idx) => idx === i ? { ...m, text: editingText, content: editingText } : m));
@@ -1319,54 +1319,54 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
                             </div>
                           </div>
                         ) : (
-                        <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '72%' }} onMouseEnter={() => setHoveredUserMsg(i)} onMouseLeave={() => setHoveredUserMsg(null)}>
-                          <div style={{
-                            alignSelf: 'flex-end', maxWidth: '100%', background: 'rgba(0,82,204,0.05)',
-                            border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px',
-                            padding: '12px 16px', fontSize: 14, color: 'var(--text-primary)',
-                            lineHeight: 1.5, whiteSpace: 'pre-wrap'
-                          }}>
-                            {msg.attachments && msg.attachments.length > 0 && (
-                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
-                                {msg.attachments.map((file, fi) => (
-                                  <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
-                                    <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
-                                    <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
-                                    <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {msg.files && msg.files.length > 0 && (
-                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
-                                {msg.files.map((file, fi) => (
-                                  <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
-                                    <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
-                                    <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
-                                    <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {msg.text}
+                          <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '72%' }} onMouseEnter={() => setHoveredUserMsg(i)} onMouseLeave={() => setHoveredUserMsg(null)}>
+                            <div style={{
+                              alignSelf: 'flex-end', maxWidth: '100%', background: 'rgba(0,82,204,0.05)',
+                              border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px',
+                              padding: '12px 16px', fontSize: 14, color: 'var(--text-primary)',
+                              lineHeight: 1.5, whiteSpace: 'pre-wrap'
+                            }}>
+                              {msg.attachments && msg.attachments.length > 0 && (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                                  {msg.attachments.map((file, fi) => (
+                                    <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
+                                      <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
+                                      <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
+                                      <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {msg.files && msg.files.length > 0 && (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                                  {msg.files.map((file, fi) => (
+                                    <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
+                                      <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
+                                      <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
+                                      <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {msg.text}
+                            </div>
+                            {/* Always reserve space for action row to prevent jank */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end', height: 26, visibility: hoveredUserMsg === i ? 'visible' : 'hidden', opacity: hoveredUserMsg === i ? 1 : 0, transition: 'opacity 0.15s ease' }}>
+                              <button onClick={() => {
+                                setCopiedMsgs(prev => new Set(prev).add(i));
+                                const timer = setTimeout(() => setCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
+                                tooltipTimers.current.add(timer);
+                              }} style={{ position: 'relative', overflow: 'visible', width: 26, height: 26, borderRadius: 6, border: 'none', background: copiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: copiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                                {copiedMsgs.has(i) ? <CheckCircle size={13} /> : <Copy size={13} />}
+                                {copiedMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Copied!</div>}
+                              </button>
+                              <button
+                                onClick={() => { setEditingMsgIndex(i); setEditingText(msg.text); }}
+                                style={{ width: 26, height: 26, borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
+                                <Edit2 size={13} />
+                              </button>
+                            </div>
                           </div>
-                          {/* Always reserve space for action row to prevent jank */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end', height: 26, visibility: hoveredUserMsg === i ? 'visible' : 'hidden', opacity: hoveredUserMsg === i ? 1 : 0, transition: 'opacity 0.15s ease' }}>
-                            <button onClick={() => {
-                              setCopiedMsgs(prev => new Set(prev).add(i));
-                              const timer = setTimeout(() => setCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
-                              tooltipTimers.current.add(timer);
-                            }} style={{ position: 'relative', overflow: 'visible', width: 26, height: 26, borderRadius: 6, border: 'none', background: copiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: copiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
-                              {copiedMsgs.has(i) ? <CheckCircle size={13} /> : <Copy size={13} />}
-                              {copiedMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Copied!</div>}
-                            </button>
-                            <button 
-                              onClick={() => { setEditingMsgIndex(i); setEditingText(msg.text); }}
-                              style={{ width: 26, height: 26, borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
-                              <Edit2 size={13} />
-                            </button>
-                          </div>
-                        </div>
                         )
                       ) : (
                         <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '72%', display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 40 }}>
@@ -2225,12 +2225,12 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
           );
         }
         function UTextarea({ value, onChange, placeholder, minHeight = 100 }) {
-  const [fc, setFc] = useState(false);
-  return (
-    <textarea value={value} onChange={onChange} placeholder={placeholder}
-      onFocus={() => setFc(true)} onBlur={() => setFc(false)}
-      style={{
-        background: '#fff',
+          const [fc, setFc] = useState(false);
+          return (
+            <textarea value={value} onChange={onChange} placeholder={placeholder}
+              onFocus={() => setFc(true)} onBlur={() => setFc(false)}
+              style={{
+                background: '#fff',
                 width: '100%', padding: '9px 12px', boxSizing: 'border-box',
                 border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
                 borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
@@ -2591,8 +2591,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav , use
                         cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'inherit',
                       }}
                     >
-                    <Save size={15} strokeWidth={2} /> Save Draft
-                  </button>
+                      <Save size={15} strokeWidth={2} /> Save Draft
+                    </button>
                     <button
                       onClick={handleUploadSubmit}
                       style={{

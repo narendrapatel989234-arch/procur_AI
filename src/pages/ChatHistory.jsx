@@ -81,7 +81,7 @@ function FilterDropdown({ label, options, activeOption, isOpen, onToggle, onClos
   );
 }
 
-export default function ChatHistory({ setCurrentPage, onNavigate, activeNav , userRole}) {
+export default function ChatHistory({ setCurrentPage, onNavigate, activeNav, userRole }) {
   const [toast, setToast] = useState(null); // { message, type: 'success'|'neutral' }
   const [downloadState, setDownloadState] = useState(null); // { filename, progress, done }
   const [shareModal, setShareModal] = useState(null); // { title }
@@ -319,7 +319,7 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav , us
         <div style={{ marginBottom: 24 }}>
           {/* Top Line: Title + New Chat */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-            <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
               My Conversations
             </div>
             <button
