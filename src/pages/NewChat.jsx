@@ -279,7 +279,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             {/* Messages Scroll Area */}
-            <div className="chat-scroll" ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: hasStarted ? '24px' : '40px 24px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: hasStarted ? 'flex-start' : 'center', gap: hasStarted ? 16 : 0 }}>
+            <div className="chat-scroll" ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: hasStarted ? '24px' : '40px 24px 24px', display: 'flex', flexDirection: 'column', justifyContent: hasStarted ? 'flex-start' : 'center', gap: hasStarted ? 16 : 0 }}>
 
               {!hasStarted ? (
                 <>
@@ -580,10 +580,10 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
                           zIndex: 100,
                           pointerEvents: 'none'
                         }}>
-                          Upload up to 5 files in PDF, JPEG or PNG format, up to 10 MB each
+                          Upload up to 5 files in PDF, DOCX and PPT format, up to 10 MB each
                         </div>
                       )}
-                      <input type="file" multiple accept=".pdf,.docx,.txt" style={{ display: 'none' }} ref={fileInputRef} onChange={(e) => {
+                      <input type="file" multiple accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={fileInputRef} onChange={(e) => {
                         const files = Array.from(e.target.files);
                         if (attachedFiles.length + files.length > 5) {
                           setToast({ msg: 'Upload up to 5 files maximum.', type: 'error' });

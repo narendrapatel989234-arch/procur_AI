@@ -503,10 +503,10 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav , use
                         zIndex: 100,
                         pointerEvents: 'none'
                       }}>
-                        Upload up to 5 files in PDF, JPEG or PNG format, up to 10 MB each
+                        Upload up to 5 files in PDF, DOCX and PPT format, up to 10 MB each
                       </div>
                     )}
-                    <input type="file" multiple accept=".pdf,.docx,.txt" style={{ display: 'none' }} ref={fileInputRef} onChange={(e) => {
+                    <input type="file" multiple accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={fileInputRef} onChange={(e) => {
                       const files = Array.from(e.target.files);
                       if (attachedFiles.length + files.length > 5) {
                         setToast({ msg: 'Upload up to 5 files maximum.', type: 'error' });

@@ -1124,7 +1124,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
           <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
             {/* Messages / empty state */}
-            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: hasMessages ? '24px' : '40px 24px 24px', gap: hasMessages ? 16 : 0 }}>
+            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: hasMessages ? '24px' : '40px 24px 24px', gap: hasMessages ? 16 : 0 }}>
               <div style={{ width: '100%', maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: hasMessages ? 'stretch' : 'stretch', gap: hasMessages ? 16 : 0, flex: hasMessages ? undefined : 1 }}>
 
                 {!hasMessages ? (
@@ -1685,10 +1685,10 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                           zIndex: 100,
                           pointerEvents: 'none'
                         }}>
-                          Upload up to 5 files in PDF, JPEG or PNG format, up to 10 MB each
+                          Upload up to 5 files in PDF, DOCX and PPT format, up to 10 MB each
                         </div>
                       )}
-                      <input type="file" multiple accept=".pdf,.docx,.txt" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileSelect} />
+                      <input type="file" multiple accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileSelect} />
                     </div>
 
                     {/* Right side — Count + Send */}
@@ -1828,7 +1828,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 </div>
                 <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginTop: 8 }}>Drop your document here</div>
                 <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>or click to browse files</div>
-                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>Supports PDF, DOCX, XLSX · Max 25MB</div>
+                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>Supports PDF, DOCX and PPT · Max 25MB</div>
               </div>
             </div>
 
@@ -2009,10 +2009,9 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                               e.currentTarget.style.background = 'rgba(239,68,68,0.08)';
                             }}
                             onMouseLeave={(e) => {
-                              e.currentTarget.style.color = 'var(--text-tertiary)';
                               e.currentTarget.style.background = 'transparent';
                             }}
-                            style={{ cursor: 'pointer', padding: 6, borderRadius: 6, flexShrink: 0, color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                            style={{ cursor: 'pointer', padding: 6, borderRadius: 6, flexShrink: 0, color: '#ef4444', transition: 'all 0.15s ease' }}
                           >
                             <Trash2 size={14} strokeWidth={2} />
                           </div>
@@ -2020,24 +2019,26 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                       ))}
                     </div>
                   )}
-                  <div
-                    onClick={() => formFileInputRef.current?.click()}
-                    onMouseEnter={() => setFFormUploadHover(true)}
-                    onMouseLeave={() => setFFormUploadHover(false)}
-                    style={{
-                      border: `2px dashed ${fFormUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
-                      borderRadius: 10, padding: 20, display: 'flex', flexDirection: 'column',
-                      alignItems: 'center', gap: 8, cursor: 'pointer',
-                      background: 'var(--bg-surface-1)', transition: 'border-color .15s ease',
-                    }}
-                  >
-                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Upload size={18} color="#7c7cff" strokeWidth={2} />
+                  {uploadedFiles.length === 0 && (
+                    <div
+                      onClick={() => formFileInputRef.current?.click()}
+                      onMouseEnter={() => setFFormUploadHover(true)}
+                      onMouseLeave={() => setFFormUploadHover(false)}
+                      style={{
+                        border: `2px dashed ${fFormUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
+                        borderRadius: 10, padding: 20, display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', gap: 8, cursor: 'pointer',
+                        background: 'var(--bg-surface-1)', transition: 'border-color .15s ease',
+                      }}
+                    >
+                      <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Upload size={18} color="#7c7cff" strokeWidth={2} />
+                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Drop files or click to upload</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>PDF, DOCX and PPT · Max 25MB</div>
                     </div>
-                    <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Drop files or click to upload</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>PDF, DOCX, XLSX · Max 25MB</div>
-                  </div>
-                  <input type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} ref={formFileInputRef} onChange={handleFormFileSelect} />
+                  )}
+                  <input type="file" accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={formFileInputRef} onChange={handleFormFileSelect} />
                 </div>
 
                 <Divider />
@@ -2121,12 +2122,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 <Divider />
 
                 {/* ── SECTION 6: EXECUTION DETAILS ── */}
-                <SectionLabel
-                  showWand
-                  wandDisabled={!(fDeliveryLoc || fTimeline)}
-                  isWanding={wandingSection === 'Execution Details'}
-                  onWandClick={() => handleWandClick('Execution Details')}
-                >Execution Details</SectionLabel>
+                <SectionLabel>Execution Details</SectionLabel>
 
                 <div style={{ marginBottom: 16 }}>
                   <FL required>Delivery Location</FL>
@@ -2290,7 +2286,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                   </div>
                   <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginTop: 8 }}>Drop your document here</div>
                   <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>or click to browse files</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>Supports PDF, DOCX, XLSX · Max 25MB</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>Supports PDF, DOCX and PPT · Max 25MB</div>
                 </div>
               </div>
             )}
@@ -2370,9 +2366,9 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                   <div
                     className="pai-trash"
                     onClick={() => setUploadPhase('empty')}
-                    style={{ padding: 8, borderRadius: 8, cursor: 'pointer', color: 'var(--text-tertiary)', transition: 'all .12s ease' }}
+                    style={{ padding: 8, borderRadius: 8, cursor: 'pointer', color: '#ef4444', transition: 'all .12s ease' }}
                   >
-                    <Trash2 size={16} strokeWidth={2} />
+                    <Trash2 size={16} strokeWidth={2} color="#ef4444" />
                   </div>
                 </div>
 
@@ -2483,33 +2479,35 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                           </div>
                           <div
                             onClick={() => setUploadFormFiles(prev => prev.filter((_, idx) => idx !== i))}
-                            onMouseEnter={(e) => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
-                            style={{ cursor: 'pointer', padding: 6, borderRadius: 6, flexShrink: 0, color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+                            style={{ cursor: 'pointer', padding: 6, borderRadius: 6, flexShrink: 0, color: '#ef4444', transition: 'all 0.15s ease' }}
                           >
                             <Trash2 size={14} strokeWidth={2} />
                           </div>
                         </div>
                       ))}
                     </div>
-                    <div
-                      onClick={() => uploadFormFileInputRef.current?.click()}
-                      onMouseEnter={() => setUFormUploadHover(true)}
-                      onMouseLeave={() => setUFormUploadHover(false)}
-                      style={{
-                        border: `2px dashed ${uFormUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
-                        borderRadius: 10, padding: 20, display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', gap: 8, cursor: 'pointer',
-                        background: 'var(--bg-surface-1)', transition: 'border-color .15s ease',
-                      }}
-                    >
-                      <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Upload size={18} color="#7c7cff" strokeWidth={2} />
+                    {uploadFormFiles.length === 0 && (
+                      <div
+                        onClick={() => uploadFormFileInputRef.current?.click()}
+                        onMouseEnter={() => setUFormUploadHover(true)}
+                        onMouseLeave={() => setUFormUploadHover(false)}
+                        style={{
+                          border: `2px dashed ${uFormUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
+                          borderRadius: 10, padding: 20, display: 'flex', flexDirection: 'column',
+                          alignItems: 'center', gap: 8, cursor: 'pointer',
+                          background: 'var(--bg-surface-1)', transition: 'border-color .15s ease',
+                        }}
+                      >
+                        <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Upload size={18} color="#7c7cff" strokeWidth={2} />
+                        </div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Drop files or click to upload</div>
+                        <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>PDF, DOCX and PPT · Max 25MB</div>
                       </div>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Drop files or click to upload</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>PDF, DOCX, XLSX · Max 25MB</div>
-                    </div>
-                    <input type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} ref={uploadFormFileInputRef} onChange={handleUploadFormFileSelect} />
+                    )}
+                    <input type="file" accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={uploadFormFileInputRef} onChange={handleUploadFormFileSelect} />
                     <div style={{ display: 'block', fontSize: 11, color: 'var(--text-tertiary)', fontStyle: 'italic', marginTop: 6 }}>Additional supporting documents. The extracted document above is already attached.</div>
                   </div>
                   <Divider />
