@@ -9,6 +9,7 @@ import Login from './pages/Login.jsx';
 import NewChat from './pages/NewChat.jsx';
 import ChatDetail from './pages/ChatDetail.jsx';
 import AgentManagement from './pages/AgentManagement.jsx';
+import Templates from './pages/Templates.jsx';
 
 const NAV_MAP = {
   'Dashboard': 'dashboard',
@@ -21,6 +22,7 @@ const NAV_MAP = {
   'PR Detail Fresh': 'prdetailfresh',
   'PR Detail RFP': 'prdetailrfp',
   'Login': 'login',
+  'Templates': 'templates',
   'Agent Management': 'agentmanagement',
 };
 
@@ -36,6 +38,7 @@ const PAGE_TO_NAV = {
   'prdetailfresh': 'Requests',
   'prdetailrfp': 'Requests',
   'login': null,
+  'templates': 'Templates',
   'agentmanagement': 'Agent Management',
 };
 
@@ -61,6 +64,7 @@ export default function App() {
       {currentPage === 'newrequest' && <NewRequest {...pageProps} />}
       {currentPage === 'prdetail' && <PRDetail {...pageProps} />}
       {currentPage === 'prdetailfresh' && <PRDetailFresh {...pageProps} />}
+      {currentPage === 'templates' && <Templates {...pageProps} />}
       {currentPage === 'agentmanagement' && <AgentManagement {...pageProps} />}
       {currentPage === 'prdetailrfp' && <PRDetailRFP {...pageProps} />}
     </>
