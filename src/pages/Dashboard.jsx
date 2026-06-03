@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-import { EditModal } from './PRDetailFresh.jsx';
+
 import {
 
   Search, ChevronDown, ChevronUp, ArrowUpDown,
@@ -292,9 +292,9 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
 
   const [tableSearch, setTableSearch] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [chatPaneOpen, setChatPaneOpen] = useState(false);
+
   const [deleteRequestId, setDeleteRequestId] = useState(null);
-  const [editRequestId, setEditRequestId] = useState(null);
+
 
   const [openFilter, setOpenFilter] = useState(null);
   const [activeTab, setActiveTab] = useState('my'); // 'my' | 'approval'
@@ -787,7 +787,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.updated}</td>
                             <td style={{ padding: '13px 16px' }}>
                               <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                                <button className="pbtn pbtn-edit" title="Edit (Form)" onClick={(e) => { e.stopPropagation(); setEditRequestId(r.id); }} style={{
+                                <button className="pbtn pbtn-edit" title="Edit (Form)" onClick={(e) => { e.stopPropagation(); r.type === 'Complex' ? onNavigate('PR Detail RFP', { openEditPopup: true }) : onNavigate('PR Detail Fresh', { openEditPopup: true }); }} style={{
                                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                                   height: 30, minWidth: 30, padding: '0 9px', boxSizing: 'border-box',
                                   border: 'none', borderRadius: 7,
@@ -796,7 +796,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                                 }}>
                                   <Pencil size={13} strokeWidth={2} />
                                 </button>
-                                <button className="pbtn pbtn-chat" title="Chat" onClick={(e) => { e.stopPropagation(); setChatPaneOpen(true); }} style={{
+                                <button className="pbtn pbtn-chat" title="Chat" onClick={(e) => { e.stopPropagation(); r.type === 'Complex' ? onNavigate('PR Detail RFP', { openChatPane: true }) : onNavigate('PR Detail Fresh', { openChatPane: true }); }} style={{
                                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                                   height: 30, minWidth: 30, padding: '0 9px', boxSizing: 'border-box',
                                   border: 'none', borderRadius: 7,
@@ -976,81 +976,8 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
         </div>
       )}
 
-      {/* Right Pane Chat */}
-      {chatPaneOpen && (
-        <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 440, background: '#fff', boxShadow: '-4px 0 24px rgba(0,0,0,0.1)', zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-default)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fcfcfc' }}>
-            <div style={{ fontWeight: 600, fontSize: 15, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <MessageSquare size={16} color="#0052cc" /> Chat: {chatPaneOpen.title || chatPaneOpen.id}
-            </div>
-            <button onClick={() => setChatPaneOpen(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)' }}><X size={18} /></button>
-          </div>
-          <div style={{ flex: 1, overflowY: 'auto', padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div style={{ display: 'flex', gap: 12, alignSelf: 'flex-end', maxWidth: '85%' }}>
-              <div style={{ background: '#f0f0f0', padding: '10px 14px', borderRadius: '12px 12px 0 12px', fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.5 }}>
-                Could you check the status of {chatPaneOpen.title || 'this request'}?
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: 12, maxWidth: '85%' }}>
-              <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Sparkles size={13} color="#fff" strokeWidth={2} />
-              </div>
-              <div style={{ flex: 1, background: 'rgba(0,82,204,0.04)', padding: '10px 14px', borderRadius: '0 12px 12px 12px', fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.5 }}>
-                Sure! The request for <b>{chatPaneOpen.title || 'this item'}</b> is currently <b>{chatPaneOpen.status || 'in progress'}</b>.
-                <br /><br />
-                Do you need me to take any action on this?
-              </div>
-            </div>
-          </div>
-          <div style={{ padding: '16px 20px', background: '#fff', borderTop: '1px solid var(--border-subtle)' }}>
-            <div
-              style={{
-                background: '#fff',
-                border: `1.5px solid var(--border-default)`,
-                borderRadius: 14,
-                padding: '12px 14px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 8,
-                boxShadow: '0 2px 8px rgba(14,15,37,0.06)',
-              }}
-            >
-              <textarea
-                placeholder="Ask ProcurAI anything..."
-                style={{
-                  width: '100%', border: 'none', outline: 'none', background: 'transparent',
-                  fontSize: 14, color: 'var(--text-primary)', resize: 'none',
-                  minHeight: 24, maxHeight: 154, overflowY: 'auto',
-                  fontFamily: 'Inter, sans-serif', lineHeight: 1.5,
-                }}
-              />
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
-                <div style={{ display: 'flex', gap: 4 }}>
-                  <button style={{ background: '#f5f5f5', border: 'none', width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                    <Plus size={14} />
-                  </button>
-                  <button style={{ background: 'transparent', border: 'none', width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                    <Paperclip size={14} />
-                  </button>
-                </div>
-                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                  <button style={{ background: 'transparent', border: 'none', width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                    <Mic size={14} />
-                  </button>
-                  <button style={{ background: '#0052cc', border: 'none', width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff' }}>
-                    <Send size={12} strokeWidth={2.5} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Edit Modal Popup */}
-      {editRequestId && (
-        <EditModal onClose={() => setEditRequestId(null)} onSave={() => setEditRequestId(null)} />
-      )}
+
 
     </MainLayout>
 

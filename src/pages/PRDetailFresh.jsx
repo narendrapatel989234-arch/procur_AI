@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from '../layouts/Sidebar.jsx';
-import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X, Brain, GitBranch, ShieldCheck, Banknote, Scale, PackageCheck, UserCheck, Zap, Pencil, Calendar, Building, Tag, MapPin, ChevronDown, Upload, Eye, FileText, Send, Mic, Paperclip, Copy, ThumbsUp, ThumbsDown, RotateCcw, Edit2 } from 'lucide-react';
+import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X, Brain, GitBranch, ShieldCheck, Banknote, Scale, PackageCheck, UserCheck, Zap, Pencil, Calendar, Building, Tag, MapPin, ChevronDown, Upload, Eye, FileText, Send, Mic, Paperclip, Copy, ThumbsUp, ThumbsDown, RotateCcw, Edit2, MoreHorizontal, Pin, PinOff, Share2, Trash2 } from 'lucide-react';
 
 const ICONS = { User, Sparkles, GitBranch, Banknote, Scale, Zap, ShieldCheck, PackageCheck, UserCheck, CheckCircle };
 
@@ -451,12 +451,17 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
   const [prStatus, setPrStatus] = useState('Submitted');
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
   const [showSaveToast, setShowSaveToast] = useState(false);
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showApproveToast, setShowApproveToast] = useState(false);
 
   const [activeTab, setActiveTab] = useState('overview');
   const [showPoEditModal, setShowPoEditModal] = useState(false);
   const [showPoPreview, setShowPoPreview] = useState(false);
 
-  const [chatPaneOpen, setChatPaneOpen] = useState(false);
+  const [chatPaneOpen, setChatPaneOpen] = useState(navState?.openChatPane || false);
+  const [chatMenuOpen, setChatMenuOpen] = useState(false);
+  const [chatMenuPinned, setChatMenuPinned] = useState(false);
+  const chatMenuRef = useRef(null);
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState([
     { role: 'user', text: 'Summarise the PO for me' },
@@ -532,6 +537,15 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
     return () => T.forEach(clearTimeout);
   }, []);
 
+  useEffect(() => {
+    if (!chatMenuOpen) return;
+    function handler(e) {
+      if (chatMenuRef.current && !chatMenuRef.current.contains(e.target)) setChatMenuOpen(false);
+    }
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [chatMenuOpen]);
+
   const g = (id) => nodes.find(n => n.id === id);
   const handleNodeClick = (nd) => { setSelectedNode(nd); setPanelOpen(true); };
   const statusCfg = STATUS_CONFIG[prStatus] || { bg: '#e8f1fb', color: '#0052cc' };
@@ -546,6 +560,38 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
         @keyframes chatFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes textShimmer { 0% { opacity: 1 } 50% { opacity: 0.4 } 100% { opacity: 1 } }
       `}</style>
+
+      {showApproveModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowApproveModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 500, maxWidth: '90vw', padding: '40px 36px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12 }} onClick={e => e.stopPropagation()}>
+            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,82,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0052cc', marginBottom: 6 }}>
+              <CheckCircle size={24} strokeWidth={2} />
+            </div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a' }}>Approve Purchase Order?</div>
+            <div style={{ fontSize: 13, color: '#666', lineHeight: 1.6, marginBottom: 8 }}>Approving this PO will issue it to the supplier and mark it as active in the system. Make sure all details have been reviewed before proceeding.</div>
+            <div style={{ display: 'flex', gap: 10, width: '100%' }}>
+              <button onClick={() => setShowApproveModal(false)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
+              <button
+                onClick={() => { setShowApproveModal(false); setShowApproveToast(true); setTimeout(() => setShowApproveToast(false), 4000); }}
+                style={{ flex: 1, padding: '11px', border: 'none', borderRadius: 10, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}
+                onMouseEnter={e => e.currentTarget.style.background = '#0041a3'}
+                onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}
+              >Approve PO</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showApproveToast && (
+        <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
+          <CheckCircle size={20} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Purchase Order Approved</div>
+            <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{poNumber} has been approved and issued to the supplier.</div>
+          </div>
+          <button onClick={() => setShowApproveToast(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
+        </div>
+      )}
 
       {showSaveToast && (
         <div style={{
@@ -571,15 +617,15 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
 
       {showEditModal && <EditModal onClose={() => setShowEditModal(false)} onSave={() => { setShowEditModal(false); setShowSaveToast(true); setTimeout(() => setShowSaveToast(false), 3000); }} />}
 
-      <Sidebar activeNav="Requests" onNavigate={onNavigate} />
+      <Sidebar activeNav="Dashboard" onNavigate={onNavigate} />
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#fff' }}>
 
         {/* TOP BAR */}
         <div style={{ height: 56, minHeight: 56, flexShrink: 0, background: '#fff', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <ArrowLeft size={18} color="#999" style={{ cursor: 'pointer' }} onClick={() => onNavigate('Requests')} />
-            <span style={{ fontSize: 13, color: '#999', cursor: 'pointer' }} onClick={() => onNavigate('Requests')}>Requests</span>
+            <ArrowLeft size={18} color="#999" style={{ cursor: 'pointer' }} onClick={() => onNavigate('Dashboard')} />
+            <span style={{ fontSize: 13, color: '#999', cursor: 'pointer' }} onClick={() => onNavigate('Dashboard')}>Dashboard</span>
             <ChevronRight size={14} color="#ccc" />
             <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>PR-2026-011</span>
           </div>
@@ -783,7 +829,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                     <Pencil size={13} strokeWidth={2} /> Edit
                   </button>
                   {userRole === 'manager' && (
-                    <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 20px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#003fa3'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,82,204,0.35)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#0052cc'; e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.25)'; }}>
+                    <button onClick={() => setShowApproveModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 20px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#003fa3'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,82,204,0.35)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#0052cc'; e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.25)'; }}>
                       <CheckCircle size={14} /> Approve PO
                     </button>
                   )}
@@ -881,28 +927,28 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                   <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>LINE ITEMS</div>
                 </div>
 
-                <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid var(--border-subtle)', marginBottom: 20 }}>
+                <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid #e5e5e5', marginBottom: 20 }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
                     <thead>
-                      <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                      <tr style={{ background: '#f5f5f7', borderBottom: '1px solid #e5e5e5' }}>
                         {['LN', 'MAT-CODE / COST CODE', 'PR / TASK NO.', 'PR ITEM', 'DESCRIPTION', 'UOM', 'QTY', 'UNIT PRICE', 'AMOUNT', 'DEL. DATE'].map((h, i) => (
-                          <th key={i} style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', borderRight: i < 9 ? '1px solid var(--border-subtle)' : 'none' }}>{h}</th>
+                          <th key={i} style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', borderRight: i < 9 ? '1px solid #e5e5e5' : 'none' }}>{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
                       {poLineItems.map((item, idx) => (
-                        <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                        {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
-                          <td key={fi} style={{ padding: '10px 12px', fontSize: 13, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid var(--border-subtle)' : 'none', verticalAlign: 'top' }}>
-                            <span style={{ fontSize: 12, lineHeight: 1.5 }}>{item[field]}</span>
-                          </td>
-                        ))}
+                        <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid #e5e5e5' : 'none' }}>
+                          {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
+                            <td key={fi} style={{ padding: '10px 12px', fontSize: 13, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid #e5e5e5' : 'none', verticalAlign: 'top' }}>
+                              <span style={{ fontSize: 12, lineHeight: 1.5 }}>{item[field]}</span>
+                            </td>
+                          ))}
                         </tr>
                       ))}
-                      <tr style={{ background: 'var(--bg-surface-2)', borderTop: '2px solid var(--border-default)' }}>
-                        <td colSpan={8} style={{ padding: '10px 12px', fontSize: 12, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid var(--border-subtle)' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
-                        <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 700, color: '#0052cc', borderRight: '1px solid var(--border-subtle)' }}>₹45,00,000.00</td>
+                      <tr style={{ background: '#f5f5f7', borderTop: '2px solid #d0d0d0' }}>
+                        <td colSpan={8} style={{ padding: '10px 12px', fontSize: 12, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid #e5e5e5' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
+                        <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 700, color: '#0052cc', borderRight: '1px solid #e5e5e5' }}>₹45,00,000.00</td>
                         <td />
                       </tr>
                     </tbody>
@@ -1098,22 +1144,49 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
         <div style={{ width: 680, display: 'flex', flexDirection: 'column', height: '100%' }}>
 
           {/* Header — matches NewChat top bar style */}
-          <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(0,82,204,0.2)' }}>
-                <Sparkles size={15} color="#fff" strokeWidth={2} />
-              </div>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>AI Assistant</div>
-                <div style={{ fontSize: 11, display: 'flex', alignItems: 'center', gap: 4, marginTop: 1 }}>
-                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#22c55e' }} />
-                  <span style={{ color: '#22c55e', fontWeight: 500 }}>PR-2026-011 context loaded</span>
-                </div>
+          <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+              <X size={18} color="#999" style={{ cursor: 'pointer', flexShrink: 0 }} onClick={() => setChatPaneOpen(false)} />
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1a1a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 400 }}>
+                Ask about this PR...
               </div>
             </div>
-            <button onClick={() => setChatPaneOpen(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex', padding: 6, borderRadius: 8, transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-              <X size={18} />
-            </button>
+            <div style={{ position: 'relative' }} ref={chatMenuRef}>
+              <button
+                onClick={() => setChatMenuOpen(!chatMenuOpen)}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8, borderRadius: 8, color: '#666' }}
+                onMouseEnter={e => e.currentTarget.style.background = '#f5f5f7'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <MoreHorizontal size={18} />
+              </button>
+              {chatMenuOpen && (
+                <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)', padding: 6, zIndex: 500, minWidth: 180 }}>
+                  {[
+                    { icon: Edit2, label: 'Rename', action: () => setChatMenuOpen(false) },
+                    { icon: chatMenuPinned ? PinOff : Pin, label: chatMenuPinned ? 'Unpin' : 'Pin', action: () => { setChatMenuPinned(p => !p); setChatMenuOpen(false); } },
+                    { icon: Share2, label: 'Share', action: () => setChatMenuOpen(false) },
+                    { icon: Download, label: 'Download', action: () => setChatMenuOpen(false) },
+                  ].map(({ icon: Icon, label, action }) => (
+                    <div key={label} onClick={action}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 7, cursor: 'pointer', fontSize: 13, color: '#1a1a1a', transition: 'background 0.12s ease' }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#f5f5f7'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <Icon size={14} color="#666" />{label}
+                    </div>
+                  ))}
+                  <div style={{ height: 1, background: '#f0f0f0', margin: '4px 0' }} />
+                  <div onClick={() => setChatMenuOpen(false)}
+                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 7, cursor: 'pointer', fontSize: 13, color: '#ef4444', transition: 'background 0.12s ease' }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.06)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <Trash2 size={14} color="#ef4444" />Delete
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Messages scroll area */}
@@ -1130,7 +1203,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(124,124,255,0.04)', border: '1px solid rgba(124,124,255,0.15)', borderRadius: 10, padding: '8px 14px' }}>
                         <div style={{ flex: 1, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
                           {chatReasoningComplete ? (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle size={14} color="#22c55e" /> Completed</span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>Completed</span>
                           ) : (
                             <span style={{ animation: 'textShimmer 1.2s ease-in-out infinite', display: 'inline-block' }}>Analysing your request...</span>
                           )}
@@ -1151,11 +1224,11 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                   </div>
                   {/* Hover actions */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end', height: 26, visibility: chatHoveredUserMsg === i ? 'visible' : 'hidden', opacity: chatHoveredUserMsg === i ? 1 : 0, transition: 'opacity 0.15s ease' }}>
-                    <button onClick={() => { 
-                        setChatCopiedMsgs(prev => new Set(prev).add(i)); 
-                        const t = setTimeout(() => setChatCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000); 
-                        chatTooltipTimers.current.add(t);
-                      }}
+                    <button onClick={() => {
+                      setChatCopiedMsgs(prev => new Set(prev).add(i));
+                      const t = setTimeout(() => setChatCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
+                      chatTooltipTimers.current.add(t);
+                    }}
                       style={{ position: 'relative', width: 26, height: 26, borderRadius: 6, border: 'none', background: chatCopiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatCopiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
                       onMouseEnter={e => { if (!chatCopiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; } }}
                       onMouseLeave={e => { if (!chatCopiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; } }}>
@@ -1190,11 +1263,11 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                     <span style={{ fontSize: 11, color: 'var(--text-tertiary)', marginRight: 6 }}>Just now</span>
 
                     {/* Copy */}
-                    <button onClick={() => { 
-                        setChatCopiedMsgs(prev => new Set(prev).add(i)); 
-                        const t = setTimeout(() => setChatCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
-                        chatTooltipTimers.current.add(t);
-                      }}
+                    <button onClick={() => {
+                      setChatCopiedMsgs(prev => new Set(prev).add(i));
+                      const t = setTimeout(() => setChatCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
+                      chatTooltipTimers.current.add(t);
+                    }}
                       style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: chatCopiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatCopiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
                       onMouseEnter={e => { if (!chatCopiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
                       onMouseLeave={e => { if (!chatCopiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
@@ -1203,20 +1276,20 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                     </button>
 
                     {/* Thumbs up */}
-                    <button onClick={() => { 
-                        setChatLikedMsgs(prev => { 
-                          const n = new Set(prev); 
-                          if (n.has(i)) n.delete(i); 
-                          else { 
-                            n.add(i); 
-                            setChatDislikedMsgs(d => { const nd = new Set(d); nd.delete(i); return nd; }); 
-                            setChatLikedTooltipVisible(t => new Set(t).add(i));
-                            const timer = setTimeout(() => setChatLikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
-                            chatTooltipTimers.current.add(timer);
-                          } 
-                          return n; 
-                        }); 
-                      }}
+                    <button onClick={() => {
+                      setChatLikedMsgs(prev => {
+                        const n = new Set(prev);
+                        if (n.has(i)) n.delete(i);
+                        else {
+                          n.add(i);
+                          setChatDislikedMsgs(d => { const nd = new Set(d); nd.delete(i); return nd; });
+                          setChatLikedTooltipVisible(t => new Set(t).add(i));
+                          const timer = setTimeout(() => setChatLikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
+                          chatTooltipTimers.current.add(timer);
+                        }
+                        return n;
+                      });
+                    }}
                       style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: chatLikedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatLikedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
                       onMouseEnter={e => { if (!chatLikedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
                       onMouseLeave={e => { if (!chatLikedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
@@ -1225,20 +1298,20 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                     </button>
 
                     {/* Thumbs down */}
-                    <button onClick={() => { 
-                        setChatDislikedMsgs(prev => { 
-                          const n = new Set(prev); 
-                          if (n.has(i)) n.delete(i); 
-                          else { 
-                            n.add(i); 
-                            setChatLikedMsgs(l => { const nl = new Set(l); nl.delete(i); return nl; }); 
-                            setChatDislikedTooltipVisible(t => new Set(t).add(i));
-                            const timer = setTimeout(() => setChatDislikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
-                            chatTooltipTimers.current.add(timer);
-                          } 
-                          return n; 
-                        }); 
-                      }}
+                    <button onClick={() => {
+                      setChatDislikedMsgs(prev => {
+                        const n = new Set(prev);
+                        if (n.has(i)) n.delete(i);
+                        else {
+                          n.add(i);
+                          setChatLikedMsgs(l => { const nl = new Set(l); nl.delete(i); return nl; });
+                          setChatDislikedTooltipVisible(t => new Set(t).add(i));
+                          const timer = setTimeout(() => setChatDislikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
+                          chatTooltipTimers.current.add(timer);
+                        }
+                        return n;
+                      });
+                    }}
                       style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: chatDislikedMsgs.has(i) ? 'rgba(239,68,68,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatDislikedMsgs.has(i) ? '#ef4444' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
                       onMouseEnter={e => { if (!chatDislikedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
                       onMouseLeave={e => { if (!chatDislikedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
@@ -1247,10 +1320,10 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                     </button>
 
                     {/* Regenerate */}
-                    <button onClick={() => { 
-                        setChatRegeneratingMsgs(prev => new Set([...prev, i])); 
-                        setTimeout(() => setChatRegeneratingMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 1500); 
-                      }}
+                    <button onClick={() => {
+                      setChatRegeneratingMsgs(prev => new Set([...prev, i]));
+                      setTimeout(() => setChatRegeneratingMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 1500);
+                    }}
                       style={{ position: 'relative', width: 28, height: 28, borderRadius: 7, border: 'none', background: chatRegeneratingMsgs.has(i) ? 'rgba(124,124,255,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: chatRegeneratingMsgs.has(i) ? '#7c7cff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
                       onMouseEnter={e => { if (!chatRegeneratingMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }}
                       onMouseLeave={e => { if (!chatRegeneratingMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
@@ -1338,7 +1411,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
 
       {showPoEditModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowPoEditModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: 900, maxHeight: '92vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={e => e.stopPropagation()}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 1080, maxHeight: '92vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={e => e.stopPropagation()}>
 
             {/* Modal header */}
             <div style={{ padding: '20px 24px', borderBottom: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
@@ -1350,7 +1423,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
             </div>
 
             {/* Scrollable form body */}
-            <div style={{ overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ overflowY: 'auto', overflowX: 'hidden', padding: '24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
 
               {/* Section: Buyer Info */}
               <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 6 }}>BUYER INFORMATION</div>
@@ -1465,10 +1538,10 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                 >+ Add Row</button>
               </div>
 
-              <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid var(--border-subtle)', marginBottom: 6 }}>
+              <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid #e8e8e8', marginBottom: 6 }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 820, fontSize: 12 }}>
                   <thead>
-                    <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                    <tr style={{ background: '#f5f5f7', borderBottom: '1px solid #e8e8e8' }}>
                       {[
                         { label: 'LN', w: '40px' },
                         { label: 'MAT-CODE / COST CODE', w: '140px' },
@@ -1481,7 +1554,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                         { label: 'AMOUNT', w: '90px' },
                         { label: 'DEL. DATE', w: '90px' },
                       ].map((col, ci) => (
-                        <th key={ci} style={{ padding: '9px 10px', fontSize: 10, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', width: col.w, borderRight: ci < 9 ? '1px solid var(--border-subtle)' : 'none' }}>
+                        <th key={ci} style={{ padding: '9px 10px', fontSize: 10, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', width: col.w, borderRight: ci < 9 ? '1px solid #e8e8e8' : 'none' }}>
                           {col.label}
                         </th>
                       ))}
@@ -1490,13 +1563,13 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                   <tbody>
                     {poLineItems.length === 0 ? (
                       <tr>
-                        <td colSpan={10} style={{ padding: '20px', textAlign: 'center', fontSize: 13, color: 'var(--text-tertiary)' }}>
+                        <td colSpan={10} style={{ padding: '20px', textAlign: 'center', fontSize: 13, color: '#999' }}>
                           No line items. Click "+ Add Row" to add one.
                         </td>
                       </tr>
                     ) : (
                       poLineItems.map((item, idx) => (
-                        <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid var(--border-subtle)' : 'none', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
+                        <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid #e8e8e8' : 'none', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
                           {[
                             { field: 'ln', isTextarea: false, minW: 32 },
                             { field: 'matCode', isTextarea: false, minW: 110 },
@@ -1509,11 +1582,11 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                             { field: 'amount', isTextarea: false, minW: 72 },
                             { field: 'delDate', isTextarea: false, minW: 72 },
                           ].map(({ field, isTextarea, minW }, fi) => (
-                            <td key={fi} style={{ padding: '8px 10px', verticalAlign: 'top', borderRight: fi < 9 ? '1px solid var(--border-subtle)' : 'none' }}>
+                            <td key={fi} style={{ padding: '8px 10px', verticalAlign: 'top', borderRight: fi < 9 ? '1px solid #e8e8e8' : 'none' }}>
                               {isTextarea ? (
                                 <textarea
                                   value={item[field]}
-                                  onChange={e => { const u = [...poLineItems]; u[idx][field] = e.target.value; setPoLineItems(u); }}
+                                  onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
                                   style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 52, lineHeight: 1.4 }}
                                   onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
                                   onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
@@ -1521,7 +1594,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                               ) : (
                                 <input
                                   value={item[field]}
-                                  onChange={e => { const u = [...poLineItems]; u[idx][field] = e.target.value; setPoLineItems(u); }}
+                                  onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
                                   style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
                                   onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
                                   onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
@@ -1535,6 +1608,146 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                   </tbody>
                 </table>
               </div>
+              {/*<div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid #e8e8e8', marginBottom: 6 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 820, fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ background: '#f5f5f7', borderBottom: '1px solid #e8e8e8' }}>
+                      {[
+                        { label: 'LN', w: '40px' },
+                        { label: 'MAT-CODE / COST CODE', w: '140px' },
+                        { label: 'PR / TASK NO.', w: '120px' },
+                        { label: 'PR ITEM', w: '70px' },
+                        { label: 'DESCRIPTION', w: 'auto' },
+                        { label: 'UOM', w: '70px' },
+                        { label: 'QTY', w: '60px' },
+                        { label: 'UNIT PRICE', w: '90px' },
+                        { label: 'AMOUNT', w: '90px' },
+                        { label: 'DEL. DATE', w: '90px' },
+                      ].map((col, ci) => (
+                        <th key={ci} style={{ padding: '9px 10px', fontSize: 10, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', width: col.w, borderRight: ci < 9 ? '1px solid #e8e8e8' : 'none' }}>
+                          {col.label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {poLineItems.length === 0 ? (
+                      <tr>
+                        <td colSpan={10} style={{ padding: '20px', textAlign: 'center', fontSize: 13, color: '#999' }}>
+                          No line items. Click "+ Add Row" to add one.
+                        </td>
+                      </tr>
+                    ) : (
+                      poLineItems.map((item, idx) => (
+                        <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid #e8e8e8' : 'none', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
+                          {[
+                            { field: 'ln', isTextarea: false, minW: 32 },
+                            { field: 'matCode', isTextarea: false, minW: 110 },
+                            { field: 'prTaskNo', isTextarea: false, minW: 100 },
+                            { field: 'prItem', isTextarea: false, minW: 48 },
+                            { field: 'description', isTextarea: true, minW: 140 },
+                            { field: 'uom', isTextarea: false, minW: 50 },
+                            { field: 'quantity', isTextarea: false, minW: 48 },
+                            { field: 'unitPrice', isTextarea: false, minW: 72 },
+                            { field: 'amount', isTextarea: false, minW: 72 },
+                            { field: 'delDate', isTextarea: false, minW: 72 },
+                          ].map(({ field, isTextarea, minW }, fi) => (
+                            <td key={fi} style={{ padding: '8px 10px', verticalAlign: 'top', borderRight: fi < 9 ? '1px solid #e8e8e8' : 'none' }}>
+                              {isTextarea ? (
+                                <textarea
+                                  value={item[field]}
+                                  onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
+                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 52, lineHeight: 1.4 }}
+                                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
+                                  onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
+                                />
+                              ) : (
+                                <input
+                                  value={item[field]}
+                                  onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
+                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
+                                  onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
+                                />
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>*/}
+              {/*<div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid #e8e8e8', marginBottom: 6 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 820, fontSize: 12 }}>
+                  <thead>
+                    <tr style={{ background: '#f5f5f7', borderBottom: '1px solid #e8e8e8' }}>
+                      {[
+                        { label: 'LN', w: '40px' },
+                        { label: 'MAT-CODE / COST CODE', w: '140px' },
+                        { label: 'PR / TASK NO.', w: '120px' },
+                        { label: 'PR ITEM', w: '70px' },
+                        { label: 'DESCRIPTION', w: 'auto' },
+                        { label: 'UOM', w: '70px' },
+                        { label: 'QTY', w: '60px' },
+                        { label: 'UNIT PRICE', w: '90px' },
+                        { label: 'AMOUNT', w: '90px' },
+                        { label: 'DEL. DATE', w: '90px' },
+                      ].map((col, ci) => (
+                        <th key={ci} style={{ padding: '9px 10px', fontSize: 10, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', width: col.w, borderRight: ci < 9 ? '1px solid #e8e8e8' : 'none' }}>
+                          {col.label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {poLineItems.length === 0 ? (
+                      <tr>
+                        <td colSpan={10} style={{ padding: '20px', textAlign: 'center', fontSize: 13, color: '#999' }}>
+                          No line items. Click "+ Add Row" to add one.
+                        </td>
+                      </tr>
+                    ) : (
+                      poLineItems.map((item, idx) => (
+                        <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid #e8e8e8' : 'none', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
+                          {[
+                            { field: 'ln', isTextarea: false, minW: 32 },
+                            { field: 'matCode', isTextarea: false, minW: 110 },
+                            { field: 'prTaskNo', isTextarea: false, minW: 100 },
+                            { field: 'prItem', isTextarea: false, minW: 48 },
+                            { field: 'description', isTextarea: true, minW: 140 },
+                            { field: 'uom', isTextarea: false, minW: 50 },
+                            { field: 'quantity', isTextarea: false, minW: 48 },
+                            { field: 'unitPrice', isTextarea: false, minW: 72 },
+                            { field: 'amount', isTextarea: false, minW: 72 },
+                            { field: 'delDate', isTextarea: false, minW: 72 },
+                          ].map(({ field, isTextarea, minW }, fi) => (
+                            <td key={fi} style={{ padding: '8px 10px', verticalAlign: 'top', borderRight: fi < 9 ? '1px solid #e8e8e8' : 'none' }}>
+                              {isTextarea ? (
+                                <textarea
+                                  value={item[field]}
+                                  onChange={e => { const updated = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(updated); }}
+                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 52, lineHeight: 1.4 }}
+                                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
+                                  onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
+                                />
+                              ) : (
+                                <input
+                                  value={item[field]}
+                                  onChange={e => { const updated = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(updated); }}
+                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
+                                  onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
+                                />
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>*/}
 
               <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
               <div>
