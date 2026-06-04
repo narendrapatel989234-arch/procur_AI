@@ -1432,751 +1432,924 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
       <MainLayout userRole={userRole} activeNav={activeNav} onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
 
-        {/* STICKY CHROME */}
-        <div style={{ position: 'sticky', top: 0, zIndex: 100, background: '#fff' }}>
-          <div style={{ height: 56, borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: 12 }}>
-            <ArrowLeft size={17} color="var(--text-tertiary)" style={{ cursor: 'pointer' }} onClick={() => onNavigate('Dashboard')} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-              <span style={{ fontSize: 13, color: 'var(--text-tertiary)', cursor: 'pointer' }} onClick={() => onNavigate('Dashboard')}>Dashboard</span>
-              <ChevronRight size={13} color="var(--text-tertiary)" />
-              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>PR-2026-004</span>
-            </div>
-            <div style={{ flex: 1 }} />
-            <button onClick={() => setChatPaneOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'linear-gradient(135deg, #0052cc, #7c7cff)', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, color: '#fff', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.3)', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 18px rgba(0,82,204,0.45)'} onMouseLeave={e => e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.3)'}>
-              <Sparkles size={14} strokeWidth={2} /> AI Chat
-            </button>
-          </div>
-          <div style={{ borderBottom: '1px solid var(--border-subtle)', padding: '14px 24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>AWS Cloud Migration Consulting</div>
-              <div style={{ background: 'rgba(124,124,255,0.08)', border: '1px solid rgba(124,124,255,0.2)', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 600, color: '#7c7cff', display: 'flex', alignItems: 'center', gap: 5 }}>
-                <Sparkles size={10} strokeWidth={2.5} /> Complex
-              </div>
-              <div style={{ background: statusCfg.bg, border: `1px solid ${statusCfg.border}`, color: statusCfg.color, borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 600 }}>{prStatus}</div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-              {[[User, 'David Kim'], [Calendar, 'Created 08 May 2026'], [Building, 'Engineering'], [Tag, 'Technology and Consulting'], [MapPin, 'Dubai, UAE']].map(([Icon, text]) => (
-                <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon size={12} color="var(--text-tertiary)" /><span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{text}</span></div>
-              ))}
-            </div>
-          </div>
-          <div style={{ borderBottom: '1px solid var(--border-subtle)', padding: '0 24px', display: 'flex' }}>
-            {TABS.map(tab => {
-              const isActive = activeTab === tab.id;
-              return <button key={tab.id} className="tab-btn" onClick={() => setActiveTab(tab.id)} style={{ padding: '13px 16px', fontSize: 13, fontWeight: isActive ? 600 : 500, border: 'none', borderBottom: `2px solid ${isActive ? '#7c7cff' : 'transparent'}`, background: 'transparent', cursor: 'pointer', color: isActive ? '#3d3db8' : 'var(--text-secondary)', fontFamily: 'inherit', transition: 'all 0.15s ease' }}>{tab.label}</button>;
-            })}
-          </div>
-        </div>
+        <div style={{ display: 'flex', width: '100%', height: '100%' }}>
 
-        {/* PAGE BODY */}
-        <div style={{ background: 'var(--bg-surface-2)' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
-          {/* OVERVIEW */}
-          {activeTab === 'overview' && (
-            <div style={{ display: 'flex', flex: 1 }}>
-              <div style={{ flex: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, width: '100%' }}>
-                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden' }}>
-                  <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROCUREMENT WORKFLOW — COMPLEX PR</div>
-                    <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'var(--text-tertiary)' }}>
-                      {[['#7c7cff', 'AI Action'], ['#0052cc', 'User Action'], ['#f59e0b', 'Pending'], ['#ccc', 'Upcoming']].map(([c, l]) => (
-                        <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: c, opacity: c === '#ccc' ? 0.5 : 1 }} />{l}</div>
-                      ))}
-                    </div>
-                  </div>
-                  <div style={{ background: '#f8f8fc', backgroundImage: 'radial-gradient(circle,#d0d0e0 1px,transparent 1px)', backgroundSize: '22px 22px', padding: '28px 36px', overflowX: 'auto', minWidth: '100%' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', width: 'max-content', minHeight: 220 }}>
-                      {WORKFLOW_GROUPS.map((group, gi) => (
-                        <React.Fragment key={group.id}>
-                          {gi > 0 && <Arrow dashed={group.nodes ? group.nodes[0].status === 'waiting' : group.node.status === 'waiting'} />}
-                          {group.type === 'single' ? <NodeCard node={group.node} onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} /> : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 7, alignSelf: 'center' }}>
-                              <div style={{ fontSize: 8.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#bbb', paddingLeft: 2, marginBottom: 2 }}>{group.label}</div>
-                              {group.nodes.map(n => <NodeCard key={n.id} node={n} compact onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} />)}
-                            </div>
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </div>
-                  </div>
+            {/* STICKY CHROME */}
+            <div style={{ position: 'sticky', top: 0, zIndex: 100, background: '#fff' }}>
+              <div style={{ height: 56, borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: 12 }}>
+                <ArrowLeft size={17} color="var(--text-tertiary)" style={{ cursor: 'pointer' }} onClick={() => onNavigate('Dashboard')} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <span style={{ fontSize: 13, color: 'var(--text-tertiary)', cursor: 'pointer' }} onClick={() => onNavigate('Dashboard')}>Dashboard</span>
+                  <ChevronRight size={13} color="var(--text-tertiary)" />
+                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>PR-2026-004</span>
                 </div>
-                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>REQUISITION DETAILS</div>
-                    <button onClick={() => setShowEditModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 8, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 500, color: '#0052cc', fontFamily: 'inherit', transition: 'all 0.15s ease' }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'}
-                      onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                      <Pencil size={13} strokeWidth={2} /> Edit PR Details
-                    </button>
+                <div style={{ flex: 1 }} />
+                <button onClick={() => setChatPaneOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'linear-gradient(135deg, #0052cc, #7c7cff)', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, color: '#fff', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.3)', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 18px rgba(0,82,204,0.45)'} onMouseLeave={e => e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.3)'}>
+                  <Sparkles size={14} strokeWidth={2} /> AI Chat
+                </button>
+              </div>
+              <div style={{ borderBottom: '1px solid var(--border-subtle)', padding: '14px 24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>AWS Cloud Migration Consulting</div>
+                  <div style={{ background: 'rgba(124,124,255,0.08)', border: '1px solid rgba(124,124,255,0.2)', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 600, color: '#7c7cff', display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <Sparkles size={10} strokeWidth={2.5} /> Complex
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px 0' }}>
-                    {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', '₹45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026'], ['Justification', 'Required for modernising backend systems'], ['Contract Reference', 'N/A'], ['Pricing Model', 'Time & Materials'], ['Timeline', '6 Months']].map(([l, v]) => (
-                      <React.Fragment key={l}><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', paddingRight: 16 }}>{l}</div><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{v}</div></React.Fragment>
-                    ))}
-                    <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Priority</div>
-                    <div><span style={{ background: 'rgba(245,158,11,0.1)', color: '#b45309', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600 }}>Urgent</span></div>
-                  </div>
-                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
-                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 6 }}>Requirement Description</div>
-                  <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6 }}>
-                    We require consulting services for migrating our existing on-premise infrastructure to AWS. The engagement should cover assessment, architecture design, migration execution, and post-migration support. Expected team size: 3 senior architects for 6 months.
-                  </div>
-                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
-                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 12 }}>Attachments</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, background: 'var(--bg-surface-1)', cursor: 'pointer' }}>
-                      <FileText size={16} color="#0052cc" />
-                      <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</span>
-                    </div>
-                  </div>
+                  <div style={{ background: statusCfg.bg, border: `1px solid ${statusCfg.border}`, color: statusCfg.color, borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 600 }}>{prStatus}</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                  {[[User, 'David Kim'], [Calendar, 'Created 08 May 2026'], [Building, 'Engineering'], [Tag, 'Technology and Consulting'], [MapPin, 'Dubai, UAE']].map(([Icon, text]) => (
+                    <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon size={12} color="var(--text-tertiary)" /><span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{text}</span></div>
+                  ))}
                 </div>
               </div>
-              {/* REASONING PANEL */}
-              <div style={{ width: panelOpen ? 300 : 0, flexShrink: 0, borderLeft: panelOpen ? '1px solid var(--border-subtle)' : 'none', overflow: 'hidden', transition: 'width 0.25s ease', background: '#fff', display: 'flex', flexDirection: 'column' }}>
-                <div style={{ width: 300, display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <div style={{ padding: '16px 20px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <Brain size={16} color="#7c7cff" />
-                      <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>AI Reasoning</span>
-                    </div>
-                    <button onClick={() => { setPanelOpen(false); setSelectedNode(null); }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex', padding: 4, borderRadius: 6 }}><X size={16} /></button>
-                  </div>
-                  {selectedNode && (
-                    <div style={{ padding: '0 20px 10px', flexShrink: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{selectedNode.title}</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 3 }}>{selectedNode.time || 'Completed'}</div>
-                    </div>
-                  )}
-                  <div style={{ padding: '0 20px 10px', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>REASONING STEPS</div>
-                  <div style={{ flex: 1, overflowY: 'auto', padding: '0 20px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {(REASONING_MAP[selectedNode?.id] || []).map((step, i) => (
-                      <div key={i} style={{ background: '#fafafa', border: '1px solid #ebebeb', borderRadius: 8, padding: '10px 12px', display: 'flex', alignItems: 'flex-start', gap: 8, animation: 'fadeInUp 0.3s ease forwards', animationDelay: `${i * 0.07}s`, opacity: 0 }}>
-                        <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#7c7cff', flexShrink: 0, marginTop: 5 }} />
-                        <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{step}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              <div style={{ borderBottom: '1px solid var(--border-subtle)', padding: '0 24px', display: 'flex' }}>
+                {TABS.map(tab => {
+                  const isActive = activeTab === tab.id;
+                  return <button key={tab.id} className="tab-btn" onClick={() => setActiveTab(tab.id)} style={{ padding: '13px 16px', fontSize: 13, fontWeight: isActive ? 600 : 500, border: 'none', borderBottom: `2px solid ${isActive ? '#7c7cff' : 'transparent'}`, background: 'transparent', cursor: 'pointer', color: isActive ? '#3d3db8' : 'var(--text-secondary)', fontFamily: 'inherit', transition: 'all 0.15s ease' }}>{tab.label}</button>;
+                })}
               </div>
             </div>
-          )}
 
-          {/* RFP TAB */}
-          {activeTab === 'rfp' && (
-            <div style={{ display: 'flex' }}>
-              <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {/* PAGE BODY */}
+            <div style={{ background: 'var(--bg-surface-2)' }}>
 
-                {/* TEMPLATE BANNER */}
-                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(135deg,rgba(0,82,204,0.1),rgba(124,124,255,0.15))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <FileText size={17} color="#7c7cff" strokeWidth={2} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>Technology Consulting Standard v2.1</div>
-                      <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template · Auto-selected by AI based on category and complexity</div>
-                    </div>
-                    <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: '#15803d', marginLeft: 8 }}>
-                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> Current: v1.2
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <button style={btnGhost} onClick={() => setVersionPaneOpen(v => !v)}
-                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                      <History size={13} /> Version History
-                    </button>
-                    <button style={btnGhost} onClick={() => { setNewVersionNote(''); setShowNewVersionModal(true); }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                      <Plus size={13} /> New Version
-                    </button>
-                    {!published && !isEditing && (
-                      <button style={btnBlue} onClick={() => setShowPublishConfirm(true)}
-                        onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                        <Send size={13} /> Publish
-                      </button>
-                    )}
-                    {published && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', fontSize: 12, fontWeight: 600, color: '#15803d' }}>
-                        <CheckCircle size={13} /> Published
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* WYSIWYG DOC */}
-                <WYSIWYGEditor isEditing={isEditing} htmlContent={rfpHtml} setHtmlContent={handleHtmlChange} />
-
-                {/* SUGGESTED VENDORS */}
-                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SUGGESTED VENDORS</div>
-                      <div style={{ background: 'rgba(124,124,255,0.08)', color: '#7c7cff', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 700 }}>{suggestedVendors.length} Vendors</div>
-                    </div>
-                    <button
-                      onClick={() => setShowAddVendorModal(true)}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: 6,
-                        padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
-                        borderRadius: 7, background: '#fff', color: '#0052cc',
-                        fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                        transition: 'all 0.15s ease', fontFamily: 'inherit'
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}
-                    >
-                      <Plus size={12} strokeWidth={2.5} />
-                      Add Vendor
-                    </button>
-                  </div>
-                  <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
-                    {suggestedVendors.map((v, i) => (
-                      <div key={v.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 18px', borderBottom: i < suggestedVendors.length - 1 ? '1px solid var(--border-subtle)' : 'none', background: i === 0 ? 'rgba(124,124,255,0.02)' : '#fff', transition: 'background 0.12s' }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,124,255,0.04)'} onMouseLeave={e => e.currentTarget.style.background = i === 0 ? 'rgba(124,124,255,0.02)' : '#fff'}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
-                          <div style={{ width: 34, height: 34, borderRadius: 9, background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <Building size={14} color='var(--text-tertiary)' strokeWidth={2} />
-                          </div>
-                          <div style={{ minWidth: 180 }}>
-                            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{v.name}</div>
-                            <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{v.location}</div>
-                          </div>
-                          <div style={{ flex: 1, paddingLeft: 20, borderLeft: '1px solid var(--border-subtle)' }}>
-                            <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, listStyleType: 'disc' }}>
-                              {v.rationale?.map((r, idx) => <li key={idx}>{r}</li>)}
-                            </ul>
-                          </div>
+              {/* OVERVIEW */}
+              {activeTab === 'overview' && (
+                <div style={{ display: 'flex', flex: 1 }}>
+                  <div style={{ flex: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, width: '100%' }}>
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden' }}>
+                      <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROCUREMENT WORKFLOW — COMPLEX PR</div>
+                        <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'var(--text-tertiary)' }}>
+                          {[['#7c7cff', 'AI Action'], ['#0052cc', 'User Action'], ['#f59e0b', 'Pending'], ['#ccc', 'Upcoming']].map(([c, l]) => (
+                            <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: c, opacity: c === '#ccc' ? 0.5 : 1 }} />{l}</div>
+                          ))}
                         </div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginLeft: 20 }}>{v.score}<span style={{ fontSize: 11, fontWeight: 500, color: '#999' }}>/100</span></div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* SCORING + COST */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SCORING CONFIG</div>
-                        <div style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>100 pts total</div>
-                      </div>
-                      <button style={{
-                        display: 'flex', alignItems: 'center', gap: 6,
-                        padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
-                        borderRadius: 7, background: '#fff', color: '#0052cc',
-                        fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                        transition: 'all 0.15s ease', fontFamily: 'inherit'
-                      }}
-                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}>
-                        <Pencil size={12} strokeWidth={2} />
-                        Edit
-                      </button>
-                    </div>
-
-                    <div style={{ background: 'linear-gradient(135deg, rgba(0,82,204,0.04), rgba(0,82,204,0.01))', border: '1px solid rgba(0,82,204,0.15)', borderRadius: 10, padding: '14px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.04)', border: '1px solid rgba(0,82,204,0.1)' }}>
-                          <Target size={16} color="#0052cc" strokeWidth={2} />
-                        </div>
-                        <span style={{ fontSize: 13, fontWeight: 600, color: '#0052cc' }}>Threshold Score</span>
-                      </div>
-                      <span style={{ fontSize: 20, fontWeight: 800, color: '#0052cc' }}>60<span style={{ fontSize: 12, fontWeight: 600, marginLeft: 2, color: 'rgba(0,82,204,0.6)' }}>pts</span></span>
-                    </div>
-
-                    <div style={{ marginBottom: 16 }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12 }}>Core Evaluation</div>
-                      {SCORING_CRITERIA.filter(c => ['Technical Competency', 'Relevant Experience'].includes(c.label)).map(c => (
-                        <div key={c.label} style={{ marginBottom: 14 }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.label}</span>
-                            <span style={{ fontSize: 14, fontWeight: 700, color: c.color }}>{c.weight}%</span>
-                          </div>
-                          <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
-                            <div style={{ height: '100%', width: `${c.weight * 3}%`, background: c.color, borderRadius: 99 }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12 }}>Proposal Details</div>
-                      {SCORING_CRITERIA.filter(c => ['Team Composition & CVs', 'Commercial Proposal', 'Approach & Methodology'].includes(c.label)).map(c => (
-                        <div key={c.label} style={{ marginBottom: 14 }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.label}</span>
-                            <span style={{ fontSize: 14, fontWeight: 700, color: c.color }}>{c.weight}%</span>
-                          </div>
-                          <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
-                            <div style={{ height: '100%', width: `${c.weight * 3}%`, background: c.color, borderRadius: 99 }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>COST ESTIMATION</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#7c7cff', fontWeight: 600 }}><Sparkles size={11} /> AI Estimated</div>
-                    </div>
-                    <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
-                      {COST_ITEMS.map((item, i) => (
-                        <div key={item.phase} style={{ padding: '12px 14px', borderBottom: i < COST_ITEMS.length - 1 ? '1px solid var(--border-subtle)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <div><div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 2 }}>{item.phase}</div><div style={{ fontSize: 11, color: '#999' }}>{item.duration} · {item.resources}</div></div>
-                          <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a' }}>{item.estimate}</div>
-                        </div>
-                      ))}
-                      <div style={{ padding: '13px 14px', background: 'linear-gradient(135deg,rgba(0,82,204,0.04),rgba(124,124,255,0.06))', display: 'flex', justifyContent: 'space-between' }}>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Total Estimate</div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>₹45,00,000</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* VERSION PANE */}
-              {versionPaneOpen && (
-                <div style={{ width: 300, flexShrink: 0, borderLeft: '1px solid var(--border-subtle)', background: '#fff' }}>
-                  <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Version History</div>
-                    <button onClick={() => setVersionPaneOpen(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)' }}><X size={16} /></button>
-                  </div>
-                  <div style={{ padding: '8px 20px' }}>
-                    {VERSION_HISTORY.map((v, i) => (
-                      <div key={v.version} style={{ padding: '14px 0', borderBottom: i < VERSION_HISTORY.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <div style={{ width: 30, height: 30, borderRadius: 8, background: v.active ? 'linear-gradient(135deg,#0052cc,#7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <History size={13} color={v.active ? '#fff' : 'var(--text-tertiary)'} />
-                            </div>
-                            <div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.version}</span>
-                                {v.active && <span style={{ background: 'rgba(34,197,94,0.08)', color: '#15803d', borderRadius: 20, padding: '1px 8px', fontSize: 9, fontWeight: 700 }}>CURRENT</span>}
-                              </div>
-                              <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{v.date}</div>
-                            </div>
-                          </div>
-                          <button style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 8px', borderRadius: 7, border: '1px solid var(--border-default)', background: '#fff', fontSize: 11, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' }}><Eye size={11} /> View</button>
-                        </div>
-                        <div style={{ fontSize: 12, color: 'var(--text-secondary)', paddingLeft: 38 }}>{v.note}</div>
-                        <div style={{ fontSize: 11, color: 'var(--text-tertiary)', paddingLeft: 38, marginTop: 2 }}>By {v.author}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* AUDIT */}
-          {activeTab === 'audit' && (
-            <div style={{ padding: 24 }}>
-              <div style={{ maxWidth: 820, margin: '0 auto' }}>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-                  {['all', 'ai', 'approvals'].map(f => {
-                    const isF = auditFilter === f;
-                    return <button key={f} onClick={() => setAuditFilter(f)} style={{ padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', background: isF ? 'rgba(124,124,255,0.1)' : '#fff', color: isF ? '#3d3db8' : 'var(--text-secondary)', border: `1px solid ${isF ? 'rgba(124,124,255,0.3)' : 'var(--border-default)'}` }}>
-                      {f === 'all' ? 'All Activity' : f === 'ai' ? 'AI Actions' : 'Approvals'}
-                    </button>;
-                  })}
-                </div>
-                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden' }}>
-                  {AUDIT_ENTRIES.filter(e => auditFilter === 'all' || (auditFilter === 'ai' && e.type === 'ai')).map((e, i, arr) => {
-                    const Icon = e.type === 'ai' ? Sparkles : User;
-                    const bg = e.type === 'ai' ? 'rgba(124,124,255,0.08)' : 'rgba(0,82,204,0.08)';
-                    const color = e.type === 'ai' ? '#7c7cff' : '#0052cc';
-                    return (
-                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '14px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}
-                        onMouseEnter={ev => ev.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={ev => ev.currentTarget.style.background = 'transparent'}>
-                        <div style={{ width: 32, height: 32, borderRadius: 10, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon size={15} color={color} /></div>
-                        <div style={{ flex: 1 }}><div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{e.title}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2, lineHeight: 1.4 }}>{e.desc}</div><div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 3 }}>{e.actor}</div></div>
-                        <div style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>{e.time}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* PROPOSALS TAB */}
-          {activeTab === 'proposals' && (
-            <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div>
-                  <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Proposals</div>
-                  <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Manage and evaluate vendor proposals for this RFP.</div>
-                </div>
-                {published && (
-                  <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}><Upload size={14} /> Upload Proposal</button>
-                )}
-              </div>
-
-              <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'visible' }}>
-                <div style={{ overflowX: 'auto', paddingBottom: proposals.length > 0 ? 120 : 0 }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 800 }}>
-                    <thead>
-                      <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Rank</th>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Vendor Name</th>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Upload Date</th>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Status</th>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>File Name</th>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Tech. Score</th>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Quotation</th>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Risks</th>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Version</th>
-                        <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', textAlign: 'center' }}>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {proposals.length === 0 ? (
-                        <tr>
-                          <td colSpan={7} style={{ padding: '60px 20px', textAlign: 'center' }}>
-                            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,82,204,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}><Upload size={24} color="#0052cc" /></div>
-                            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>No Proposals Uploaded</div>
-                            <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>{published ? 'Upload the first vendor proposal to start evaluation.' : 'Publish the RFP to enable proposal uploads.'}</div>
-                            {!published && <button onClick={() => setActiveTab('rfp')} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border-default)', background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit', marginTop: 20 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><FileText size={14} /> Review & Publish RFP First</button>}
-                          </td>
-                        </tr>
-                      ) : (
-                        proposals.map((prop, idx) => {
-                          // derive rank from techScore among completed proposals
-                          const completedSorted = [...proposals].filter(p => p.status === 'Completed').sort((a, b) => (parseInt(b.techScore) || 0) - (parseInt(a.techScore) || 0));
-                          const rank = prop.status === 'Completed' ? completedSorted.findIndex(p => p.id === prop.id) + 1 : null;
-                          const riskLevel = prop.risks && prop.risks.length > 0 ? (prop.risks.some(r => r.toLowerCase().includes('high')) ? 'High' : prop.risks.some(r => r.toLowerCase().includes('none')) ? 'Low' : 'Medium') : null;
-                          const riskColor = riskLevel === 'High' ? { bg: 'rgba(239,68,68,0.08)', color: '#dc2626' } : riskLevel === 'Medium' ? { bg: 'rgba(245,158,11,0.08)', color: '#b45309' } : riskLevel === 'Low' ? { bg: 'rgba(34,197,94,0.08)', color: '#15803d' } : { bg: 'var(--bg-surface-2)', color: 'var(--text-tertiary)' };
-                          return (
-                            <tr key={prop.id} style={{ borderBottom: idx < proposals.length - 1 ? '1px solid var(--border-subtle)' : 'none', transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                              <td style={{ padding: '14px 16px', textAlign: 'center' }}>
-                                {rank ? (
-                                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: rank === 1 ? 'linear-gradient(135deg,#f59e0b,#d97706)' : rank === 2 ? 'linear-gradient(135deg,#94a3b8,#64748b)' : rank === 3 ? 'linear-gradient(135deg,#b45309,#92400e)' : 'var(--bg-surface-2)', color: rank <= 3 ? '#fff' : 'var(--text-tertiary)', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>#{rank}</div>
-                                ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
-                              </td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.vendorName}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.uploadDate}</td>
-                              <td style={{ padding: '14px 16px' }}>
-                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 20, background: prop.status === 'Completed' ? 'rgba(34,197,94,0.1)' : 'rgba(234,179,8,0.1)', color: prop.status === 'Completed' ? '#15803d' : '#a16207', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>
-                                  {prop.status === 'Completed' ? <CheckCircle size={11} /> : <RefreshCw size={11} style={prop.status === 'Processing' ? { animation: 'spin 1s linear infinite' } : {}} />} {prop.status}
+                      <div style={{ background: '#f8f8fc', backgroundImage: 'radial-gradient(circle,#d0d0e0 1px,transparent 1px)', backgroundSize: '22px 22px', padding: '28px 36px', overflowX: 'auto', minWidth: '100%' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', width: 'max-content', minHeight: 220 }}>
+                          {WORKFLOW_GROUPS.map((group, gi) => (
+                            <React.Fragment key={group.id}>
+                              {gi > 0 && <Arrow dashed={group.nodes ? group.nodes[0].status === 'waiting' : group.node.status === 'waiting'} />}
+                              {group.type === 'single' ? <NodeCard node={group.node} onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} /> : (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 7, alignSelf: 'center' }}>
+                                  <div style={{ fontSize: 8.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#bbb', paddingLeft: 2, marginBottom: 2 }}>{group.label}</div>
+                                  {group.nodes.map(n => <NodeCard key={n.id} node={n} compact onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} />)}
                                 </div>
-                              </td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: '#0052cc', fontWeight: 500, whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FileText size={13} />{prop.fileName}</div></td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.techScore}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#15803d', whiteSpace: 'nowrap' }}>{prop.commercial || '—'}</td>
-                              <td style={{ padding: '14px 16px' }}>
-                                {riskLevel ? (
-                                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: riskColor.bg, color: riskColor.color, whiteSpace: 'nowrap' }}>
-                                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: riskColor.color }} />{riskLevel}
-                                  </span>
-                                ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
-                              </td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.version}</td>
-                              <td style={{ padding: '14px 16px', textAlign: 'center', position: 'relative' }}>
-                                <button onClick={() => setActiveDropdown(activeDropdown === prop.id ? null : prop.id)} style={{ border: '1px solid var(--border-default)', background: '#fff', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '5px 8px', borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.borderColor = 'var(--border-default)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#fff'; }}><MoreVertical size={15} /></button>
-                                {activeDropdown === prop.id && (
-                                  <div style={{ position: 'absolute', right: 16, top: 44, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', padding: 6, zIndex: 50, minWidth: 200, textAlign: 'left' }}>
-                                    {[
-                                      { label: 'View Proposal', icon: Eye, action: () => { setShowPreviewModal(prop); setActiveDropdown(null); }, color: 'var(--text-primary)' },
-                                      { label: 'Reupload Proposal', icon: RefreshCw, action: () => { setShowReuploadModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
-                                      { label: 'Supporting Doc', icon: FileText, action: () => { setShowSupportingDocModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
-                                      { label: 'Delete Proposal', icon: Trash2, action: () => { setShowDeleteConfirmModal(prop.id); setActiveDropdown(null); }, color: '#ef4444', divider: true },
-                                    ].map((item, ii) => {
-                                      const ItemIcon = item.icon;
-                                      return (
-                                        <React.Fragment key={ii}>
-                                          {item.divider && <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '4px 0' }} />}
-                                          <div onClick={item.action} style={{ padding: '9px 12px', fontSize: 13, color: item.color, cursor: 'pointer', borderRadius: 7, display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = item.color === '#ef4444' ? 'rgba(239,68,68,0.06)' : 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                            <div style={{ width: 28, height: 28, borderRadius: 7, background: item.color === '#ef4444' ? 'rgba(239,68,68,0.08)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><ItemIcon size={13} color={item.color} strokeWidth={2} /></div>
-                                            <span style={{ fontWeight: 500 }}>{item.label}</span>
-                                          </div>
-                                        </React.Fragment>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                              </td>
-                            </tr>
-                          );
-                        })
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* COMPARISON SECTION */}
-              <div style={{ marginTop: 24 }}>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Proposal Comparison Matrix</div>
-                {proposals.length === 0 ? (
-                  <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
-                    Upload proposals to compare them in the matrix.
-                  </div>
-                ) : (
-                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(14,15,37,0.03)' }}>
-                    {/* Header Row */}
-                    <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
-                      <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, display: 'flex', alignItems: 'center' }}>Criteria</div>
-                      {proposals.slice(0, 3).map(p => (
-                        <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
-                          <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
-                          <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>Total Score: <span style={{ fontWeight: 600, color: '#0052cc' }}>{p.techScore}</span></div>
+                              )}
+                            </React.Fragment>
+                          ))}
                         </div>
-                      ))}
+                      </div>
                     </div>
-
-                    {/* Criteria Rows */}
-                    {SCORING_CRITERIA.map((criterion, i) => (
-                      <div key={i} style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '1px solid var(--border-subtle)' }}>
-                        <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
-                          {criterion.label}
-                          <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{criterion.weight} points</div>
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>REQUISITION DETAILS</div>
+                        <button onClick={() => setShowEditModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 8, padding: '7px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 500, color: '#0052cc', fontFamily: 'inherit', transition: 'all 0.15s ease' }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'}
+                          onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                          <Pencil size={13} strokeWidth={2} /> Edit PR Details
+                        </button>
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px 0' }}>
+                        {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', '₹45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026'], ['Justification', 'Required for modernising backend systems'], ['Contract Reference', 'N/A'], ['Pricing Model', 'Time & Materials'], ['Timeline', '6 Months']].map(([l, v]) => (
+                          <React.Fragment key={l}><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', paddingRight: 16 }}>{l}</div><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{v}</div></React.Fragment>
+                        ))}
+                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Priority</div>
+                        <div><span style={{ background: 'rgba(245,158,11,0.1)', color: '#b45309', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600 }}>Urgent</span></div>
+                      </div>
+                      <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
+                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 6 }}>Requirement Description</div>
+                      <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6 }}>
+                        We require consulting services for migrating our existing on-premise infrastructure to AWS. The engagement should cover assessment, architecture design, migration execution, and post-migration support. Expected team size: 3 senior architects for 6 months.
+                      </div>
+                      <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
+                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 12 }}>Attachments</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, background: 'var(--bg-surface-1)', cursor: 'pointer' }}>
+                          <FileText size={16} color="#0052cc" />
+                          <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</span>
                         </div>
-                        {proposals.slice(0, 3).map(p => (
-                          <div key={`c-${p.id}-${i}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 14, fontWeight: 600, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
-                            {p.criteriaScores?.[criterion.label] || 'Pending'}
+                      </div>
+                    </div>
+                  </div>
+                  {/* REASONING PANEL */}
+                  <div style={{ width: panelOpen ? 300 : 0, flexShrink: 0, borderLeft: panelOpen ? '1px solid var(--border-subtle)' : 'none', overflow: 'hidden', transition: 'width 0.25s ease', background: '#fff', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ width: 300, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                      <div style={{ padding: '16px 20px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <Brain size={16} color="#7c7cff" />
+                          <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>AI Reasoning</span>
+                        </div>
+                        <button onClick={() => { setPanelOpen(false); setSelectedNode(null); }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex', padding: 4, borderRadius: 6 }}><X size={16} /></button>
+                      </div>
+                      {selectedNode && (
+                        <div style={{ padding: '0 20px 10px', flexShrink: 0 }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{selectedNode.title}</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 3 }}>{selectedNode.time || 'Completed'}</div>
+                        </div>
+                      )}
+                      <div style={{ padding: '0 20px 10px', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>REASONING STEPS</div>
+                      <div style={{ flex: 1, overflowY: 'auto', padding: '0 20px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {(REASONING_MAP[selectedNode?.id] || []).map((step, i) => (
+                          <div key={i} style={{ background: '#fafafa', border: '1px solid #ebebeb', borderRadius: 8, padding: '10px 12px', display: 'flex', alignItems: 'flex-start', gap: 8, animation: 'fadeInUp 0.3s ease forwards', animationDelay: `${i * 0.07}s`, opacity: 0 }}>
+                            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#7c7cff', flexShrink: 0, marginTop: 5 }} />
+                            <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{step}</div>
                           </div>
                         ))}
                       </div>
-                    ))}
+                    </div>
+                  </div>
+                </div>
+              )}
 
-                    {/* Commercial Snapshot */}
-                    <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(34,197,94,0.03)' }}>
-                      <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#15803d', display: 'flex', alignItems: 'center', gap: 6 }}><Banknote size={14} /> Commercials</div>
-                      {proposals.slice(0, 3).map(p => (
-                        <div key={`comm-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(34,197,94,0.1)', fontSize: 15, fontWeight: 700, color: '#15803d', display: 'flex', alignItems: 'center' }}>
-                          {p.commercial || 'Pending'}
+              {/* RFP TAB */}
+              {activeTab === 'rfp' && (
+                <div style={{ display: 'flex' }}>
+                  <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+                    {/* TEMPLATE BANNER */}
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(135deg,rgba(0,82,204,0.1),rgba(124,124,255,0.15))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <FileText size={17} color="#7c7cff" strokeWidth={2} />
                         </div>
-                      ))}
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>Technology Consulting Standard v2.1</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template · Auto-selected by AI based on category and complexity</div>
+                        </div>
+                        <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: '#15803d', marginLeft: 8 }}>
+                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> Current: v1.2
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <button style={btnGhost} onClick={() => setVersionPaneOpen(v => !v)}
+                          onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                          <History size={13} /> Version History
+                        </button>
+                        <button style={btnGhost} onClick={() => { setNewVersionNote(''); setShowNewVersionModal(true); }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                          <Plus size={13} /> New Version
+                        </button>
+                        {!published && !isEditing && (
+                          <button style={btnBlue} onClick={() => setShowPublishConfirm(true)}
+                            onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
+                            <Send size={13} /> Publish
+                          </button>
+                        )}
+                        {published && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', fontSize: 12, fontWeight: 600, color: '#15803d' }}>
+                            <CheckCircle size={13} /> Published
+                          </div>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Risks */}
-                    <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(239,68,68,0.02)' }}>
-                      <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#b91c1c', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> Risk Profile</div>
-                      {proposals.slice(0, 3).map(p => (
-                        <div key={`risk-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(239,68,68,0.1)' }}>
-                          {(p.risks || []).map((r, ri) => (
-                            <div key={ri} style={{ fontSize: 12, color: '#991b1b', display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: (p.risks || []).length - 1 === ri ? 0 : 8 }}>
-                              <span style={{ fontSize: 14, lineHeight: 1 }}>•</span> <span style={{ lineHeight: 1.4 }}>{r}</span>
+                    {/* WYSIWYG DOC */}
+                    <WYSIWYGEditor isEditing={isEditing} htmlContent={rfpHtml} setHtmlContent={handleHtmlChange} />
+
+                    {/* SUGGESTED VENDORS */}
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SUGGESTED VENDORS</div>
+                          <div style={{ background: 'rgba(124,124,255,0.08)', color: '#7c7cff', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 700 }}>{suggestedVendors.length} Vendors</div>
+                        </div>
+                        <button
+                          onClick={() => setShowAddVendorModal(true)}
+                          style={{
+                            display: 'flex', alignItems: 'center', gap: 6,
+                            padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
+                            borderRadius: 7, background: '#fff', color: '#0052cc',
+                            fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                            transition: 'all 0.15s ease', fontFamily: 'inherit'
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}
+                        >
+                          <Plus size={12} strokeWidth={2.5} />
+                          Add Vendor
+                        </button>
+                      </div>
+                      <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                        {suggestedVendors.map((v, i) => (
+                          <div key={v.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 18px', borderBottom: i < suggestedVendors.length - 1 ? '1px solid var(--border-subtle)' : 'none', background: i === 0 ? 'rgba(124,124,255,0.02)' : '#fff', transition: 'background 0.12s' }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,124,255,0.04)'} onMouseLeave={e => e.currentTarget.style.background = i === 0 ? 'rgba(124,124,255,0.02)' : '#fff'}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
+                              <div style={{ width: 34, height: 34, borderRadius: 9, background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <Building size={14} color='var(--text-tertiary)' strokeWidth={2} />
+                              </div>
+                              <div style={{ minWidth: 180 }}>
+                                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{v.name}</div>
+                                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{v.location}</div>
+                              </div>
+                              <div style={{ flex: 1, paddingLeft: 20, borderLeft: '1px solid var(--border-subtle)' }}>
+                                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, listStyleType: 'disc' }}>
+                                  {v.rationale?.map((r, idx) => <li key={idx}>{r}</li>)}
+                                </ul>
+                              </div>
+                            </div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginLeft: 20 }}>{v.score}<span style={{ fontSize: 11, fontWeight: 500, color: '#999' }}>/100</span></div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* SCORING + COST */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                      <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SCORING CONFIG</div>
+                            <div style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>100 pts total</div>
+                          </div>
+                          <button style={{
+                            display: 'flex', alignItems: 'center', gap: 6,
+                            padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
+                            borderRadius: 7, background: '#fff', color: '#0052cc',
+                            fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                            transition: 'all 0.15s ease', fontFamily: 'inherit'
+                          }}
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}>
+                            <Pencil size={12} strokeWidth={2} />
+                            Edit
+                          </button>
+                        </div>
+
+                        <div style={{ background: 'linear-gradient(135deg, rgba(0,82,204,0.04), rgba(0,82,204,0.01))', border: '1px solid rgba(0,82,204,0.15)', borderRadius: 10, padding: '14px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div style={{ width: 32, height: 32, borderRadius: 8, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.04)', border: '1px solid rgba(0,82,204,0.1)' }}>
+                              <Target size={16} color="#0052cc" strokeWidth={2} />
+                            </div>
+                            <span style={{ fontSize: 13, fontWeight: 600, color: '#0052cc' }}>Threshold Score</span>
+                          </div>
+                          <span style={{ fontSize: 20, fontWeight: 800, color: '#0052cc' }}>60<span style={{ fontSize: 12, fontWeight: 600, marginLeft: 2, color: 'rgba(0,82,204,0.6)' }}>pts</span></span>
+                        </div>
+
+                        <div style={{ marginBottom: 16 }}>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12 }}>Core Evaluation</div>
+                          {SCORING_CRITERIA.filter(c => ['Technical Competency', 'Relevant Experience'].includes(c.label)).map(c => (
+                            <div key={c.label} style={{ marginBottom: 14 }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.label}</span>
+                                <span style={{ fontSize: 14, fontWeight: 700, color: c.color }}>{c.weight}%</span>
+                              </div>
+                              <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
+                                <div style={{ height: '100%', width: `${c.weight * 3}%`, background: c.color, borderRadius: 99 }} />
+                              </div>
                             </div>
                           ))}
-                          {(!p.risks || p.risks.length === 0) && <div style={{ fontSize: 12, color: '#991b1b' }}>Pending</div>}
                         </div>
-                      ))}
+
+                        <div>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12 }}>Proposal Details</div>
+                          {SCORING_CRITERIA.filter(c => ['Team Composition & CVs', 'Commercial Proposal', 'Approach & Methodology'].includes(c.label)).map(c => (
+                            <div key={c.label} style={{ marginBottom: 14 }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.label}</span>
+                                <span style={{ fontSize: 14, fontWeight: 700, color: c.color }}>{c.weight}%</span>
+                              </div>
+                              <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
+                                <div style={{ height: '100%', width: `${c.weight * 3}%`, background: c.color, borderRadius: 99 }} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>COST ESTIMATION</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#7c7cff', fontWeight: 600 }}><Sparkles size={11} /> AI Estimated</div>
+                        </div>
+                        <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                          {COST_ITEMS.map((item, i) => (
+                            <div key={item.phase} style={{ padding: '12px 14px', borderBottom: i < COST_ITEMS.length - 1 ? '1px solid var(--border-subtle)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                              <div><div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 2 }}>{item.phase}</div><div style={{ fontSize: 11, color: '#999' }}>{item.duration} · {item.resources}</div></div>
+                              <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a' }}>{item.estimate}</div>
+                            </div>
+                          ))}
+                          <div style={{ padding: '13px 14px', background: 'linear-gradient(135deg,rgba(0,82,204,0.04),rgba(124,124,255,0.06))', display: 'flex', justifyContent: 'space-between' }}>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Total Estimate</div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>₹45,00,000</div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* AI Recommendation Highlight */}
-                    {(() => {
-                      const completed = proposals.filter(p => p.status === 'Completed');
-                      if (completed.length === 0) return null;
-                      const winner = completed.reduce((prev, current) => {
-                        const prevScore = parseInt(prev.techScore) || 0;
-                        const currScore = parseInt(current.techScore) || 0;
-                        return (currScore > prevScore) ? current : prev;
-                      });
-
-                      return (
-                        <div style={{ padding: '20px', background: 'linear-gradient(135deg, rgba(124,124,255,0.1), rgba(0,82,204,0.05))', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                          <div style={{ width: 40, height: 40, borderRadius: 12, background: '#fff', border: '1px solid rgba(124,124,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(124,124,255,0.15)' }}>
-                            <Award size={20} color="#3d3db8" />
-                          </div>
-                          <div>
-                            <div style={{ fontSize: 15, fontWeight: 700, color: '#3d3db8', marginBottom: 4 }}>AI Recommendation: {winner.vendorName}</div>
-                            <div style={{ fontSize: 13, color: '#4a4a4a', lineHeight: 1.5 }}>Based on the evaluation criteria, {winner.vendorName} leads with a technical score of {winner.techScore}. They show exceptionally strong technical competency and relevant experience. Proceed with commercial negotiations to finalize the award.</div>
-                          </div>
-                        </div>
-                      );
-                    })()}
                   </div>
-                )}
-              </div>
-            </div>
-          )}
 
-          {/* EMPTY TABS */}
-          {['negot', 'sow', 'po', 'invoices'].includes(activeTab) && (() => {
-            const cfg = EMPTY_TABS[activeTab]; const Icon = cfg.icon;
-            return (
-              <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, gap: 20 }}>
-                <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon size={30} color={cfg.color} strokeWidth={1.5} /></div>
-                <div style={{ textAlign: 'center', maxWidth: 420 }}>
-                  <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>{cfg.title}</div>
-                  <div style={{ fontSize: 13, color: 'var(--text-tertiary)', lineHeight: 1.7 }}>{cfg.desc}</div>
+                  {/* VERSION PANE */}
+                  {versionPaneOpen && (
+                    <div style={{ width: 300, flexShrink: 0, borderLeft: '1px solid var(--border-subtle)', background: '#fff' }}>
+                      <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Version History</div>
+                        <button onClick={() => setVersionPaneOpen(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)' }}><X size={16} /></button>
+                      </div>
+                      <div style={{ padding: '8px 20px' }}>
+                        {VERSION_HISTORY.map((v, i) => (
+                          <div key={v.version} style={{ padding: '14px 0', borderBottom: i < VERSION_HISTORY.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <div style={{ width: 30, height: 30, borderRadius: 8, background: v.active ? 'linear-gradient(135deg,#0052cc,#7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  <History size={13} color={v.active ? '#fff' : 'var(--text-tertiary)'} />
+                                </div>
+                                <div>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.version}</span>
+                                    {v.active && <span style={{ background: 'rgba(34,197,94,0.08)', color: '#15803d', borderRadius: 20, padding: '1px 8px', fontSize: 9, fontWeight: 700 }}>CURRENT</span>}
+                                  </div>
+                                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{v.date}</div>
+                                </div>
+                              </div>
+                              <button style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 8px', borderRadius: 7, border: '1px solid var(--border-default)', background: '#fff', fontSize: 11, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' }}><Eye size={11} /> View</button>
+                            </div>
+                            <div style={{ fontSize: 12, color: 'var(--text-secondary)', paddingLeft: 38 }}>{v.note}</div>
+                            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', paddingLeft: 38, marginTop: 2 }}>By {v.author}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            );
-          })()}
+              )}
 
-        </div>
-
-        {/* AI CHAT PANE OVERLAY */}
-        <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: chatPaneOpen ? '50vw' : 0, flexShrink: 0, borderLeft: chatPaneOpen ? '1px solid var(--border-subtle)' : 'none', overflow: 'hidden', transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1)', background: '#fff', display: 'flex', flexDirection: 'column', zIndex: 1000, boxShadow: chatPaneOpen ? '-8px 0 32px rgba(0,0,0,0.1)' : 'none' }}>
-          <div style={{ width: '50vw', display: 'flex', flexDirection: 'column', height: '100%' }}>
-            {/* Header */}
-            <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-                <X size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', flexShrink: 0 }} onClick={() => setChatPaneOpen(false)} />
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 400 }}>
-                  Ask about this PR...
-                </div>
-              </div>
-              <div style={{ position: 'relative' }} ref={chatMenuRef}>
-                <button
-                  onClick={() => setChatMenuOpen(!chatMenuOpen)}
-                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8, borderRadius: 8, color: 'var(--text-secondary)' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                >
-                  <MoreHorizontal size={18} />
-                </button>
-                {chatMenuOpen && (
-                  <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)', padding: 6, zIndex: 500, minWidth: 180 }}>
-                    {[
-                      { icon: Edit2, label: 'Rename', action: () => setChatMenuOpen(false) },
-                      { icon: chatMenuPinned ? PinOff : Pin, label: chatMenuPinned ? 'Unpin' : 'Pin', action: () => { setChatMenuPinned(p => !p); setChatMenuOpen(false); } },
-                      { icon: Share2, label: 'Share', action: () => setChatMenuOpen(false) },
-                      { icon: Download, label: 'Download', action: () => setChatMenuOpen(false) },
-                    ].map(({ icon: Icon, label, action }) => (
-                      <div key={label} onClick={action}
-                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 7, cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', transition: 'background 0.12s ease' }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                      >
-                        <Icon size={14} color="var(--text-secondary)" />{label}
-                      </div>
-                    ))}
-                    <div style={{ height: 1, background: 'var(--border-subtle)', margin: '4px 0' }} />
-                    <div onClick={() => setChatMenuOpen(false)}
-                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 7, cursor: 'pointer', fontSize: 13, color: '#ef4444', transition: 'background 0.12s ease' }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.06)'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                    >
-                      <Trash2 size={14} color="#ef4444" />Delete
+              {/* AUDIT */}
+              {activeTab === 'audit' && (
+                <div style={{ padding: 24 }}>
+                  <div style={{ maxWidth: 820, margin: '0 auto' }}>
+                    <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                      {['all', 'ai', 'approvals'].map(f => {
+                        const isF = auditFilter === f;
+                        return <button key={f} onClick={() => setAuditFilter(f)} style={{ padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', background: isF ? 'rgba(124,124,255,0.1)' : '#fff', color: isF ? '#3d3db8' : 'var(--text-secondary)', border: `1px solid ${isF ? 'rgba(124,124,255,0.3)' : 'var(--border-default)'}` }}>
+                          {f === 'all' ? 'All Activity' : f === 'ai' ? 'AI Actions' : 'Approvals'}
+                        </button>;
+                      })}
                     </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Messages scroll area */}
-            <div ref={chatScrollRef} style={{ flex: 1, overflowY: 'auto', padding: '20px 20px 8px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {chatMessages.map((msg, i) => {
-                if (msg.role === 'status') {
-                  return (
-                    <div key={i} style={{ alignSelf: 'flex-start', display: 'flex', flexDirection: 'column', gap: 8, width: '90%', animation: 'chatFadeIn 0.2s ease forwards' }}>
-                      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                          <Sparkles size={12} color="#fff" strokeWidth={2} />
-                        </div>
-                        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(124,124,255,0.04)', border: '1px solid rgba(124,124,255,0.15)', borderRadius: 10, padding: '8px 14px' }}>
-                          <div style={{ flex: 1, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
-                            {chatReasoningComplete ? (
-                              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>Completed</span>
-                            ) : (
-                              <span style={{ animation: 'textShimmer 1.2s ease-in-out infinite', display: 'inline-block' }}>Analysing your request...</span>
-                            )}
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden' }}>
+                      {AUDIT_ENTRIES.filter(e => auditFilter === 'all' || (auditFilter === 'ai' && e.type === 'ai')).map((e, i, arr) => {
+                        const Icon = e.type === 'ai' ? Sparkles : User;
+                        const bg = e.type === 'ai' ? 'rgba(124,124,255,0.08)' : 'rgba(0,82,204,0.08)';
+                        const color = e.type === 'ai' ? '#7c7cff' : '#0052cc';
+                        return (
+                          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '14px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}
+                            onMouseEnter={ev => ev.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={ev => ev.currentTarget.style.background = 'transparent'}>
+                            <div style={{ width: 32, height: 32, borderRadius: 10, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon size={15} color={color} /></div>
+                            <div style={{ flex: 1 }}><div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{e.title}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2, lineHeight: 1.4 }}>{e.desc}</div><div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 3 }}>{e.actor}</div></div>
+                            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>{e.time}</div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }
-
-                return msg.role === 'user' ? (
-                  <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '78%', animation: 'chatFadeIn 0.2s ease forwards' }}
-                    onMouseEnter={() => setChatHoveredUserMsg(i)}
-                    onMouseLeave={() => setChatHoveredUserMsg(null)}>
-                    <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
-                      {msg.text}
+                        );
+                      })}
                     </div>
                   </div>
-                ) : (
-                  <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '82%', display: 'flex', flexDirection: 'column', gap: 6, animation: 'chatFadeIn 0.2s ease forwards' }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                      {chatMessages[i - 1]?.role !== 'status' ? (
-                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                          <Sparkles size={12} color="#fff" strokeWidth={2} />
-                        </div>
-                      ) : (
-                        <div style={{ width: 28, flexShrink: 0 }} />
-                      )}
-                      <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, paddingTop: 4 }}>
-                        {msg.text}
-                      </div>
+                </div>
+              )}
+
+              {/* PROPOSALS TAB */}
+              {activeTab === 'proposals' && (
+                <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div>
+                      <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Proposals</div>
+                      <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Manage and evaluate vendor proposals for this RFP.</div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 38 }}>
-                      <span style={{ fontSize: 11, color: 'var(--text-tertiary)', marginRight: 6 }}>Just now</span>
+                    {published && (
+                      <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}><Upload size={14} /> Upload Proposal</button>
+                    )}
+                  </div>
+
+                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'visible' }}>
+                    <div style={{ overflowX: 'auto', paddingBottom: proposals.length > 0 ? 120 : 0 }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 800 }}>
+                        <thead>
+                          <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Rank</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Vendor Name</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Upload Date</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Status</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>File Name</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Tech. Score</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Quotation</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Risks</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Version</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', textAlign: 'center' }}>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {proposals.length === 0 ? (
+                            <tr>
+                              <td colSpan={7} style={{ padding: '60px 20px', textAlign: 'center' }}>
+                                <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,82,204,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}><Upload size={24} color="#0052cc" /></div>
+                                <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>No Proposals Uploaded</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>{published ? 'Upload the first vendor proposal to start evaluation.' : 'Publish the RFP to enable proposal uploads.'}</div>
+                                {!published && <button onClick={() => setActiveTab('rfp')} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border-default)', background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit', marginTop: 20 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><FileText size={14} /> Review & Publish RFP First</button>}
+                              </td>
+                            </tr>
+                          ) : (
+                            proposals.map((prop, idx) => {
+                              // derive rank from techScore among completed proposals
+                              const completedSorted = [...proposals].filter(p => p.status === 'Completed').sort((a, b) => (parseInt(b.techScore) || 0) - (parseInt(a.techScore) || 0));
+                              const rank = prop.status === 'Completed' ? completedSorted.findIndex(p => p.id === prop.id) + 1 : null;
+                              const riskLevel = prop.risks && prop.risks.length > 0 ? (prop.risks.some(r => r.toLowerCase().includes('high')) ? 'High' : prop.risks.some(r => r.toLowerCase().includes('none')) ? 'Low' : 'Medium') : null;
+                              const riskColor = riskLevel === 'High' ? { bg: 'rgba(239,68,68,0.08)', color: '#dc2626' } : riskLevel === 'Medium' ? { bg: 'rgba(245,158,11,0.08)', color: '#b45309' } : riskLevel === 'Low' ? { bg: 'rgba(34,197,94,0.08)', color: '#15803d' } : { bg: 'var(--bg-surface-2)', color: 'var(--text-tertiary)' };
+                              return (
+                                <tr key={prop.id} style={{ borderBottom: idx < proposals.length - 1 ? '1px solid var(--border-subtle)' : 'none', transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                  <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                                    {rank ? (
+                                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: rank === 1 ? 'linear-gradient(135deg,#f59e0b,#d97706)' : rank === 2 ? 'linear-gradient(135deg,#94a3b8,#64748b)' : rank === 3 ? 'linear-gradient(135deg,#b45309,#92400e)' : 'var(--bg-surface-2)', color: rank <= 3 ? '#fff' : 'var(--text-tertiary)', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>#{rank}</div>
+                                    ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                  </td>
+                                  <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.vendorName}</td>
+                                  <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.uploadDate}</td>
+                                  <td style={{ padding: '14px 16px' }}>
+                                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 20, background: prop.status === 'Completed' ? 'rgba(34,197,94,0.1)' : 'rgba(234,179,8,0.1)', color: prop.status === 'Completed' ? '#15803d' : '#a16207', fontSize: 11, fontWeight: 600, whiteSpace: 'nowrap' }}>
+                                      {prop.status === 'Completed' ? <CheckCircle size={11} /> : <RefreshCw size={11} style={prop.status === 'Processing' ? { animation: 'spin 1s linear infinite' } : {}} />} {prop.status}
+                                    </div>
+                                  </td>
+                                  <td style={{ padding: '14px 16px', fontSize: 13, color: '#0052cc', fontWeight: 500, whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FileText size={13} />{prop.fileName}</div></td>
+                                  <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.techScore}</td>
+                                  <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#15803d', whiteSpace: 'nowrap' }}>{prop.commercial || '—'}</td>
+                                  <td style={{ padding: '14px 16px' }}>
+                                    {riskLevel ? (
+                                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: riskColor.bg, color: riskColor.color, whiteSpace: 'nowrap' }}>
+                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: riskColor.color }} />{riskLevel}
+                                      </span>
+                                    ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                  </td>
+                                  <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.version}</td>
+                                  <td style={{ padding: '14px 16px', textAlign: 'center', position: 'relative' }}>
+                                    <button onClick={() => setActiveDropdown(activeDropdown === prop.id ? null : prop.id)} style={{ border: '1px solid var(--border-default)', background: '#fff', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '5px 8px', borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.borderColor = 'var(--border-default)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#fff'; }}><MoreVertical size={15} /></button>
+                                    {activeDropdown === prop.id && (
+                                      <div style={{ position: 'absolute', right: 16, top: 44, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', padding: 6, zIndex: 50, minWidth: 200, textAlign: 'left' }}>
+                                        {[
+                                          { label: 'View Proposal', icon: Eye, action: () => { setShowPreviewModal(prop); setActiveDropdown(null); }, color: 'var(--text-primary)' },
+                                          { label: 'Reupload Proposal', icon: RefreshCw, action: () => { setShowReuploadModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
+                                          { label: 'Supporting Doc', icon: FileText, action: () => { setShowSupportingDocModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
+                                          { label: 'Delete Proposal', icon: Trash2, action: () => { setShowDeleteConfirmModal(prop.id); setActiveDropdown(null); }, color: '#ef4444', divider: true },
+                                        ].map((item, ii) => {
+                                          const ItemIcon = item.icon;
+                                          return (
+                                            <React.Fragment key={ii}>
+                                              {item.divider && <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '4px 0' }} />}
+                                              <div onClick={item.action} style={{ padding: '9px 12px', fontSize: 13, color: item.color, cursor: 'pointer', borderRadius: 7, display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = item.color === '#ef4444' ? 'rgba(239,68,68,0.06)' : 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                                <div style={{ width: 28, height: 28, borderRadius: 7, background: item.color === '#ef4444' ? 'rgba(239,68,68,0.08)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><ItemIcon size={13} color={item.color} strokeWidth={2} /></div>
+                                                <span style={{ fontWeight: 500 }}>{item.label}</span>
+                                              </div>
+                                            </React.Fragment>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* COMPARISON SECTION */}
+                  <div style={{ marginTop: 24 }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Proposal Comparison Matrix</div>
+                    {proposals.length === 0 ? (
+                      <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
+                        Upload proposals to compare them in the matrix.
+                      </div>
+                    ) : (
+                      <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(14,15,37,0.03)' }}>
+                        {/* Header Row */}
+                        <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
+                          <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, display: 'flex', alignItems: 'center' }}>Criteria</div>
+                          {proposals.slice(0, 3).map(p => (
+                            <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
+                              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
+                              <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>Total Score: <span style={{ fontWeight: 600, color: '#0052cc' }}>{p.techScore}</span></div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Criteria Rows */}
+                        {SCORING_CRITERIA.map((criterion, i) => (
+                          <div key={i} style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '1px solid var(--border-subtle)' }}>
+                            <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
+                              {criterion.label}
+                              <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{criterion.weight} points</div>
+                            </div>
+                            {proposals.slice(0, 3).map(p => (
+                              <div key={`c-${p.id}-${i}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 14, fontWeight: 600, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
+                                {p.criteriaScores?.[criterion.label] || 'Pending'}
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+
+                        {/* Commercial Snapshot */}
+                        <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(34,197,94,0.03)' }}>
+                          <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#15803d', display: 'flex', alignItems: 'center', gap: 6 }}><Banknote size={14} /> Commercials</div>
+                          {proposals.slice(0, 3).map(p => (
+                            <div key={`comm-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(34,197,94,0.1)', fontSize: 15, fontWeight: 700, color: '#15803d', display: 'flex', alignItems: 'center' }}>
+                              {p.commercial || 'Pending'}
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Risks */}
+                        <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(239,68,68,0.02)' }}>
+                          <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#b91c1c', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> Risk Profile</div>
+                          {proposals.slice(0, 3).map(p => (
+                            <div key={`risk-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(239,68,68,0.1)' }}>
+                              {(p.risks || []).map((r, ri) => (
+                                <div key={ri} style={{ fontSize: 12, color: '#991b1b', display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: (p.risks || []).length - 1 === ri ? 0 : 8 }}>
+                                  <span style={{ fontSize: 14, lineHeight: 1 }}>•</span> <span style={{ lineHeight: 1.4 }}>{r}</span>
+                                </div>
+                              ))}
+                              {(!p.risks || p.risks.length === 0) && <div style={{ fontSize: 12, color: '#991b1b' }}>Pending</div>}
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* AI Recommendation Highlight */}
+                        {(() => {
+                          const completed = proposals.filter(p => p.status === 'Completed');
+                          if (completed.length === 0) return null;
+                          const winner = completed.reduce((prev, current) => {
+                            const prevScore = parseInt(prev.techScore) || 0;
+                            const currScore = parseInt(current.techScore) || 0;
+                            return (currScore > prevScore) ? current : prev;
+                          });
+
+                          return (
+                            <div style={{ padding: '20px', background: 'linear-gradient(135deg, rgba(124,124,255,0.1), rgba(0,82,204,0.05))', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#fff', border: '1px solid rgba(124,124,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(124,124,255,0.15)' }}>
+                                <Award size={20} color="#3d3db8" />
+                              </div>
+                              <div>
+                                <div style={{ fontSize: 15, fontWeight: 700, color: '#3d3db8', marginBottom: 4 }}>AI Recommendation: {winner.vendorName}</div>
+                                <div style={{ fontSize: 13, color: '#4a4a4a', lineHeight: 1.5 }}>Based on the evaluation criteria, {winner.vendorName} leads with a technical score of {winner.techScore}. They show exceptionally strong technical competency and relevant experience. Proceed with commercial negotiations to finalize the award.</div>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* EMPTY TABS */}
+              {['negot', 'sow', 'po', 'invoices'].includes(activeTab) && (() => {
+                const cfg = EMPTY_TABS[activeTab]; const Icon = cfg.icon;
+                return (
+                  <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, gap: 20 }}>
+                    <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon size={30} color={cfg.color} strokeWidth={1.5} /></div>
+                    <div style={{ textAlign: 'center', maxWidth: 420 }}>
+                      <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>{cfg.title}</div>
+                      <div style={{ fontSize: 13, color: 'var(--text-tertiary)', lineHeight: 1.7 }}>{cfg.desc}</div>
                     </div>
                   </div>
                 );
-              })}
-            </div>
+              })()}
 
-            {/* Input bar */}
-            <div style={{ flexShrink: 0, padding: '12px 16px 16px', background: '#fff' }}>
-              <div style={{ border: `1.5px solid ${chatInput ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: chatInput ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.04)' : '0 2px 8px rgba(14,15,37,0.04)', transition: 'border-color 0.15s, box-shadow 0.15s', background: '#fff' }}>
-                <textarea
-                  ref={chatInputRef}
-                  value={chatInput}
-                  onChange={e => {
-                    setChatInput(e.target.value);
-                    if (chatInputRef.current) {
-                      chatInputRef.current.style.height = 'auto';
-                      chatInputRef.current.style.height = Math.min(chatInputRef.current.scrollHeight, 120) + 'px';
-                    }
-                  }}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      if (!chatInput.trim()) return;
-                      const userMsg = { role: 'user', text: chatInput.trim() };
-                      const statusMsg = { role: 'status' };
-                      const aiMsg = { role: 'ai', text: 'I\'m reviewing this PR and the related procurement data. Based on the workflow and documents available, here is my analysis for your query.' };
-                      setChatMessages(prev => [...prev, userMsg, statusMsg, aiMsg]);
-                      setChatInput('');
-                      if (chatInputRef.current) chatInputRef.current.style.height = 'auto';
-                    }
-                  }}
-                  placeholder="Ask about this PR..."
-                  rows={1}
-                  style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', resize: 'none', minHeight: 24, maxHeight: 120, overflowY: 'auto', fontFamily: 'Inter, sans-serif', lineHeight: 1.5 }}
-                />
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
-                  <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
-                    <Paperclip size={18} />
-                  </button>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{ fontSize: 11, color: chatInput.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>
-                      {chatInput.length} / 20000
-                    </span>
-                    <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
-                      onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
-                      <Mic size={18} strokeWidth={2} />
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (!chatInput.trim()) return;
-                        const userMsg = { role: 'user', text: chatInput.trim() };
-                        const statusMsg = { role: 'status' };
-                        const aiMsg = { role: 'ai', text: 'I\'m reviewing this PR and the related procurement data. Based on the workflow and documents available, here is my analysis for your query.' };
-                        setChatMessages(prev => [...prev, userMsg, statusMsg, aiMsg]);
-                        setChatInput('');
-                        if (chatInputRef.current) chatInputRef.current.style.height = 'auto';
-                      }}
-                      style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: chatInput.trim() ? 'pointer' : 'not-allowed', background: chatInput.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: chatInput.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
-                      <Send size={15} color={chatInput.trim() ? '#fff' : 'var(--text-tertiary)'} />
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
+
+          {/* AI CHAT PANE */}
+          {chatPaneOpen && (
+            <div style={{ width: chatPaneOpen ? '32vw' : 0, /*width: '32vw', minWidth: 350, maxWidth: 550,*/ borderLeft: '1px solid #e5e5e5', background: '#fff', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+
+              <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+
+                {/* Header */}
+
+                <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+
+                    <X size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', flexShrink: 0 }} onClick={() => setChatPaneOpen(false)} />
+
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 400 }}>
+
+                      Ask about this PR...
+
+                    </div>
+
+                  </div>
+
+                  <div style={{ position: 'relative' }} ref={chatMenuRef}>
+
+                    <button
+
+                      onClick={() => setChatMenuOpen(!chatMenuOpen)}
+
+                      style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8, borderRadius: 8, color: 'var(--text-secondary)' }}
+
+                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+
+                    >
+
+                      <MoreHorizontal size={18} />
+
+                    </button>
+
+                    {chatMenuOpen && (
+
+                      <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)', padding: 6, zIndex: 500, minWidth: 180 }}>
+
+                        {[
+
+                          { icon: Edit2, label: 'Rename', action: () => setChatMenuOpen(false) },
+
+                          { icon: chatMenuPinned ? PinOff : Pin, label: chatMenuPinned ? 'Unpin' : 'Pin', action: () => { setChatMenuPinned(p => !p); setChatMenuOpen(false); } },
+
+                          { icon: Share2, label: 'Share', action: () => setChatMenuOpen(false) },
+
+                          { icon: Download, label: 'Download', action: () => setChatMenuOpen(false) },
+
+                        ].map(({ icon: Icon, label, action }) => (
+
+                          <div key={label} onClick={action}
+
+                            style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 7, cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', transition: 'background 0.12s ease' }}
+
+                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+
+                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+
+                          >
+
+                            <Icon size={14} color="var(--text-secondary)" />{label}
+
+                          </div>
+
+                        ))}
+
+                        <div style={{ height: 1, background: 'var(--border-subtle)', margin: '4px 0' }} />
+
+                        <div onClick={() => setChatMenuOpen(false)}
+
+                          style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 7, cursor: 'pointer', fontSize: 13, color: '#ef4444', transition: 'background 0.12s ease' }}
+
+                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.06)'}
+
+                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+
+                        >
+
+                          <Trash2 size={14} color="#ef4444" />Delete
+
+                        </div>
+
+                      </div>
+
+                    )}
+
+                  </div>
+
+                </div>
+
+
+
+                {/* Messages scroll area */}
+
+                <div ref={chatScrollRef} style={{ flex: 1, overflowY: 'auto', padding: '20px 20px 8px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+                  {chatMessages.map((msg, i) => {
+
+                    if (msg.role === 'status') {
+
+                      return (
+
+                        <div key={i} style={{ alignSelf: 'flex-start', display: 'flex', flexDirection: 'column', gap: 8, width: '90%', animation: 'chatFadeIn 0.2s ease forwards' }}>
+
+                          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+
+                            <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+
+                              <Sparkles size={12} color="#fff" strokeWidth={2} />
+
+                            </div>
+
+                            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(124,124,255,0.04)', border: '1px solid rgba(124,124,255,0.15)', borderRadius: 10, padding: '8px 14px' }}>
+
+                              <div style={{ flex: 1, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
+
+                                {chatReasoningComplete ? (
+
+                                  <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>Completed</span>
+
+                                ) : (
+
+                                  <span style={{ animation: 'textShimmer 1.2s ease-in-out infinite', display: 'inline-block' }}>Analysing your request...</span>
+
+                                )}
+
+                              </div>
+
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                      );
+
+                    }
+
+
+
+                    return msg.role === 'user' ? (
+
+                      <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '78%', animation: 'chatFadeIn 0.2s ease forwards' }}
+
+                        onMouseEnter={() => setChatHoveredUserMsg(i)}
+
+                        onMouseLeave={() => setChatHoveredUserMsg(null)}>
+
+                        <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
+
+                          {msg.text}
+
+                        </div>
+
+                      </div>
+
+                    ) : (
+
+                      <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '82%', display: 'flex', flexDirection: 'column', gap: 6, animation: 'chatFadeIn 0.2s ease forwards' }}>
+
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+
+                          {chatMessages[i - 1]?.role !== 'status' ? (
+
+                            <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+
+                              <Sparkles size={12} color="#fff" strokeWidth={2} />
+
+                            </div>
+
+                          ) : (
+
+                            <div style={{ width: 28, flexShrink: 0 }} />
+
+                          )}
+
+                          <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, paddingTop: 4 }}>
+
+                            {msg.text}
+
+                          </div>
+
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 38 }}>
+
+                          <span style={{ fontSize: 11, color: 'var(--text-tertiary)', marginRight: 6 }}>Just now</span>
+
+                        </div>
+
+                      </div>
+
+                    );
+
+                  })}
+
+                </div>
+
+
+
+                {/* Input bar */}
+
+                <div style={{ flexShrink: 0, padding: '12px 16px 16px', background: '#fff' }}>
+
+                  <div style={{ border: `1.5px solid ${chatInput ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: chatInput ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.04)' : '0 2px 8px rgba(14,15,37,0.04)', transition: 'border-color 0.15s, box-shadow 0.15s', background: '#fff' }}>
+
+                    <textarea
+
+                      ref={chatInputRef}
+
+                      value={chatInput}
+
+                      onChange={e => {
+
+                        setChatInput(e.target.value);
+
+                        if (chatInputRef.current) {
+
+                          chatInputRef.current.style.height = 'auto';
+
+                          chatInputRef.current.style.height = Math.min(chatInputRef.current.scrollHeight, 120) + 'px';
+
+                        }
+
+                      }}
+
+                      onKeyDown={e => {
+
+                        if (e.key === 'Enter' && !e.shiftKey) {
+
+                          e.preventDefault();
+
+                          if (!chatInput.trim()) return;
+
+                          const userMsg = { role: 'user', text: chatInput.trim() };
+
+                          const statusMsg = { role: 'status' };
+
+                          const aiMsg = { role: 'ai', text: 'I\'m reviewing this PR and the related procurement data. Based on the workflow and documents available, here is my analysis for your query.' };
+
+                          setChatMessages(prev => [...prev, userMsg, statusMsg, aiMsg]);
+
+                          setChatInput('');
+
+                          if (chatInputRef.current) chatInputRef.current.style.height = 'auto';
+
+                        }
+
+                      }}
+
+                      placeholder="Ask about this PR..."
+
+                      rows={1}
+
+                      style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', resize: 'none', minHeight: 24, maxHeight: 120, overflowY: 'auto', fontFamily: 'Inter, sans-serif', lineHeight: 1.5 }}
+
+                    />
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
+
+                      <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }}
+
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
+
+                        <Paperclip size={18} />
+
+                      </button>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+
+                        <span style={{ fontSize: 11, color: chatInput.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>
+
+                          {chatInput.length} / 20000
+
+                        </span>
+
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+
+                          onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }}
+
+                          onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+
+                          <Mic size={18} strokeWidth={2} />
+
+                        </button>
+
+                        <button
+
+                          onClick={() => {
+
+                            if (!chatInput.trim()) return;
+
+                            const userMsg = { role: 'user', text: chatInput.trim() };
+
+                            const statusMsg = { role: 'status' };
+
+                            const aiMsg = { role: 'ai', text: 'I\'m reviewing this PR and the related procurement data. Based on the workflow and documents available, here is my analysis for your query.' };
+
+                            setChatMessages(prev => [...prev, userMsg, statusMsg, aiMsg]);
+
+                            setChatInput('');
+
+                            if (chatInputRef.current) chatInputRef.current.style.height = 'auto';
+
+                          }}
+
+                          style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: chatInput.trim() ? 'pointer' : 'not-allowed', background: chatInput.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: chatInput.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
+
+                          <Send size={15} color={chatInput.trim() ? '#fff' : 'var(--text-tertiary)'} />
+
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+          )}
+
         </div>
       </MainLayout>
     </>
