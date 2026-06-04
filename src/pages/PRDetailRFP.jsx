@@ -13,7 +13,7 @@ import {
   List, ListOrdered, Indent, Outdent, Link, Image, Printer,
   Undo2, Redo2, Code, RemoveFormatting, Pencil, Save, ChevronDown,
   Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2,
-  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check
+  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen
 } from 'lucide-react';
 
 const STATUS_CONFIG = {
@@ -860,7 +860,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [chatMenuOpen]);
-  const [showSaveToast, setShowSaveToast] = useState(false);
+  const [saveToast, setSaveToast] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('rfp');
@@ -883,6 +883,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
   const [suggestedVendors, setSuggestedVendors] = useState(VENDORS);
   const [showAddVendorModal, setShowAddVendorModal] = useState(false);
+  const [showScoringConfigModal, setShowScoringConfigModal] = useState(false);
+  const [showCostConfigModal, setShowCostConfigModal] = useState(false);
   const [selectedDummyVendors, setSelectedDummyVendors] = useState([]);
   const [vendorToast, setVendorToast] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(null);
@@ -1015,17 +1017,17 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
   return (
     <>
-      {showSaveToast && (
+      {saveToast && (
         <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
           <CheckCircle size={20} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Changes saved successfully</div>
-            <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>Requisition details have been updated.</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>{saveToast.title}</div>
+            <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{saveToast.subtext}</div>
           </div>
-          <button onClick={() => setShowSaveToast(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
+          <button onClick={() => setSaveToast(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
         </div>
       )}
-      {showEditModal && <EditModal onClose={() => setShowEditModal(false)} onSave={() => { setShowEditModal(false); setShowSaveToast(true); setTimeout(() => setShowSaveToast(false), 3000); }} />}
+      {showEditModal && <EditModal onClose={() => setShowEditModal(false)} onSave={() => { setShowEditModal(false); setSaveToast({ title: 'Changes saved successfully', subtext: 'Requisition details have been updated.' }); setTimeout(() => setSaveToast(null), 3000); }} />}
       {showRegenToast && (
         <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0f4ff', border: '1px solid rgba(124,124,255,0.25)', borderLeft: '4px solid #7c7cff', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
           <RefreshCw size={18} color="#7c7cff" style={{ flexShrink: 0, animation: 'spin 1s linear infinite' }} />
@@ -1082,6 +1084,147 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               <button onClick={() => setShowPublishConfirm(false)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
               <button onClick={handlePublish} style={{ flex: 1, padding: '11px', border: 'none', borderRadius: 10, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}
                 onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>Publish</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showScoringConfigModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowScoringConfigModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 800, padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 24 }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Edit Score Config</div>
+                <div style={{ fontSize: 13, color: '#666', marginTop: 6 }}>This score indicates the minimum requirement for proposals to be considered successful.</div>
+              </div>
+              <button onClick={() => setShowScoringConfigModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', marginBottom: 6 }}>Threshold Score</div>
+              <input type="text" defaultValue="60" style={{ width: 140, padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', background: '#fff', outline: 'none' }} />
+            </div>
+
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: '#1a1a1a' }}>Evaluation Criteria</div>
+                  <div style={{ background: '#f5f5f5', border: '1px solid #e5e5e5', borderRadius: 4, padding: '2px 6px', fontSize: 10, fontWeight: 700, color: '#666' }}>v1</div>
+                </div>
+                <button style={{ background: 'transparent', border: 'none', color: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Pencil size={12} strokeWidth={2.5} /> Edit Criteria
+                </button>
+              </div>
+
+              <div style={{ border: '1px solid #e0e0e0', borderRadius: 10, overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                  <thead>
+                    <tr style={{ background: '#fff', borderBottom: '1px solid #e0e0e0' }}>
+                      <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', width: '80px' }}>Sr No.</th>
+                      <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Category</th>
+                      <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Criteria</th>
+                      <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0', textAlign: 'center', width: '120px' }}>Weightage</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { sr: 1, cat: 'Technical Solution', crit: 'Technical Competency', w: 30 },
+                      { sr: 2, cat: 'Technical Solution', crit: 'Approach & Methodology', w: 10 },
+                      { sr: 3, cat: 'Vendor Assessment', crit: 'Relevant Experience', w: 25 },
+                      { sr: 4, cat: 'Vendor Assessment', crit: 'Team Composition & CVs', w: 20 },
+                      { sr: 5, cat: 'Compliance & Requirements', crit: 'Commercial Proposal', w: 15 },
+                    ].map((row, i) => (
+                      <tr key={i} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                        <td style={{ padding: '14px 16px', fontSize: 13, color: '#4a4a4a' }}>{row.sr}</td>
+                        <td style={{ padding: '14px 16px', fontSize: 13, color: '#666', borderLeft: '1px solid #e0e0e0' }}>{row.cat}</td>
+                        <td style={{ padding: '14px 16px', fontSize: 13, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0', display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <BookOpen size={14} color="#7c7cff" />
+                          {row.crit}
+                        </td>
+                        <td style={{ padding: '14px 16px', fontSize: 13, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0', textAlign: 'center' }}>{row.w}</td>
+                      </tr>
+                    ))}
+                    <tr style={{ background: '#f5f5f5' }}>
+                      <td colSpan={2} style={{ padding: '12px 16px' }}></td>
+                      <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#1a1a1a', textAlign: 'center', borderLeft: '1px solid #e0e0e0' }}>Total</td>
+                      <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#1a1a1a', textAlign: 'center', borderLeft: '1px solid #e0e0e0' }}>100</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10, marginTop: 8, justifyContent: 'flex-end' }}>
+              <button onClick={() => setShowScoringConfigModal(false)} style={{ padding: '10px 24px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
+              <button
+                onClick={() => {
+                  setShowScoringConfigModal(false);
+                  setSaveToast({ title: 'Changes saved successfully', subtext: 'Scoring config has been updated.' });
+                  setTimeout(() => setSaveToast(null), 3000);
+                }}
+                style={{ padding: '10px 24px', border: 'none', borderRadius: 10, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCostConfigModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowCostConfigModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 850, padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 24 }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Edit Cost Estimation</div>
+              <button onClick={() => setShowCostConfigModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
+            </div>
+
+            <div style={{ border: '1px solid #e0e0e0', borderRadius: 10, overflow: 'hidden' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: '#fff', borderBottom: '1px solid #e0e0e0' }}>
+                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a' }}>Phase</th>
+                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Module</th>
+                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Timeline</th>
+                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Resources</th>
+                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Cost (min)</th>
+                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Cost (max)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { p: 'Phase 1', m: 'Assessment', t: '2 months', r: '3 Architects', cmin: '₹10,00,000', cmax: '₹14,00,000' },
+                    { p: 'Phase 2', m: 'Implementation', t: '3 months', r: '5 Engineers', cmin: '₹20,00,000', cmax: '₹30,00,000' },
+                    { p: 'Phase 3', m: 'Support', t: '1 month', r: '2 Support Eng.', cmin: '₹6,00,000', cmax: '₹10,00,000' },
+                  ].map((row, i) => (
+                    <tr key={i} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#666' }}>{row.p}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>{row.m}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#666', borderLeft: '1px solid #e0e0e0' }}>{row.t}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#666', borderLeft: '1px solid #e0e0e0' }}>{row.r}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>{row.cmin}</td>
+                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>{row.cmax}</td>
+                    </tr>
+                  ))}
+                  <tr style={{ background: '#f5f5f5' }}>
+                    <td colSpan={4} style={{ padding: '12px 16px' }}></td>
+                    <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#1a1a1a', borderLeft: '1px solid #e0e0e0' }}>₹36,00,000</td>
+                    <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#1a1a1a', borderLeft: '1px solid #e0e0e0' }}>₹54,00,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10, marginTop: 8, justifyContent: 'flex-end' }}>
+              <button onClick={() => setShowCostConfigModal(false)} style={{ padding: '10px 24px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
+              <button
+                onClick={() => {
+                  setShowCostConfigModal(false);
+                  setSaveToast({ title: 'Changes saved successfully', subtext: 'Cost estimation details have been updated.' });
+                  setTimeout(() => setSaveToast(null), 3000);
+                }}
+                style={{ padding: '10px 24px', border: 'none', borderRadius: 10, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>
+                Save
+              </button>
             </div>
           </div>
         </div>

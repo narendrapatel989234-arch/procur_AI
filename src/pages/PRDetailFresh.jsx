@@ -449,7 +449,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
   const [panelOpen, setPanelOpen] = useState(false);
   const [prStatus, setPrStatus] = useState('Submitted');
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
-  const [showSaveToast, setShowSaveToast] = useState(false);
+  const [saveToast, setSaveToast] = useState(null);
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showApproveToast, setShowApproveToast] = useState(false);
 
@@ -592,29 +592,20 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
         </div>
       )}
 
-      {showSaveToast && (
-        <div style={{
-          position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)',
-          zIndex: 1000, background: '#f0fdf4',
-          border: '1px solid rgba(34,197,94,0.25)',
-          borderLeft: '4px solid #22c55e',
-          borderRadius: 12, padding: '14px 20px',
-          display: 'flex', alignItems: 'center', gap: 12,
-          boxShadow: '0 8px 32px rgba(14,15,37,0.1)',
-          minWidth: 340, animation: 'toastIn 0.2s ease forwards',
-        }}>
+      {saveToast && (
+        <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
           <CheckCircle size={20} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Changes saved successfully</div>
-            <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>Requisition details have been updated.</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>{saveToast.title}</div>
+            <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{saveToast.subtext}</div>
           </div>
-          <button onClick={() => setShowSaveToast(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex', padding: 2, borderRadius: 4 }}>
+          <button onClick={() => setSaveToast(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex', padding: 2, borderRadius: 4 }}>
             <X size={16} />
           </button>
         </div>
       )}
 
-      {showEditModal && <EditModal onClose={() => setShowEditModal(false)} onSave={() => { setShowEditModal(false); setShowSaveToast(true); setTimeout(() => setShowSaveToast(false), 3000); }} />}
+      {showEditModal && <EditModal onClose={() => setShowEditModal(false)} onSave={() => { setShowEditModal(false); setSaveToast({ title: 'Changes saved successfully', subtext: 'Requisition details have been updated.' }); setTimeout(() => setSaveToast(null), 3000); }} />}
 
 
 
@@ -1775,7 +1766,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
             {/* Footer */}
             <div style={{ padding: '16px 24px', borderTop: '1px solid #e8e8e8', display: 'flex', justifyContent: 'flex-end', gap: 10, flexShrink: 0 }}>
               <button onClick={() => setShowPoEditModal(false)} style={{ padding: '9px 20px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
-              <button onClick={() => { setShowPoEditModal(false); setShowSaveToast(true); setTimeout(() => setShowSaveToast(false), 3000); }} style={{ padding: '9px 24px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>Save Changes</button>
+              <button onClick={() => { setShowPoEditModal(false); setSaveToast({ title: 'Changes saved successfully', subtext: 'Purchase Order details have been updated.' }); setTimeout(() => setSaveToast(null), 3000); }} style={{ padding: '9px 24px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>Save Changes</button>
             </div>
 
           </div>
