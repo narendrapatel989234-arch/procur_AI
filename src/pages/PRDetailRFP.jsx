@@ -828,7 +828,7 @@ const REASONING_MAP = {
   10: ['RFP template selected: Technology Consulting Standard v2.1', 'Scoring config generated: 5 criteria', 'Cost estimation complete: ₹45,00,000'],
 };
 
-export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState }) {
+export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState }) {
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
   const [chatPaneOpen, setChatPaneOpen] = useState(navState?.openChatPane || false);
   const [chatMenuOpen, setChatMenuOpen] = useState(false);
@@ -880,7 +880,7 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadForm, setUploadForm] = useState({ vendorName: '', file: null, supporting: null });
   const [activeDropdown, setActiveDropdown] = useState(null);
-  
+
   const [suggestedVendors, setSuggestedVendors] = useState(VENDORS);
   const [showAddVendorModal, setShowAddVendorModal] = useState(false);
   const [selectedDummyVendors, setSelectedDummyVendors] = useState([]);
@@ -1114,7 +1114,7 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
 
             <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
               <button onClick={() => setShowAddVendorModal(false)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
-              <button 
+              <button
                 disabled={selectedDummyVendors.length === 0}
                 onClick={() => {
                   const toAdd = DUMMY_VENDORS.filter(v => selectedDummyVendors.includes(v.id));
@@ -1613,7 +1613,7 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
                       <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SUGGESTED VENDORS</div>
                       <div style={{ background: 'rgba(124,124,255,0.08)', color: '#7c7cff', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 700 }}>{suggestedVendors.length} Vendors</div>
                     </div>
-                    <button 
+                    <button
                       onClick={() => setShowAddVendorModal(true)}
                       style={{
                         display: 'flex', alignItems: 'center', gap: 6,
@@ -1657,20 +1657,63 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                   <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SCORING CONFIG</div>
-                      <div style={{ fontSize: 12, color: '#999' }}>100 pts total</div>
-                    </div>
-                    {SCORING_CRITERIA.map(c => (
-                      <div key={c.label} style={{ marginBottom: 14 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                          <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.label}</span>
-                          <span style={{ fontSize: 14, fontWeight: 700, color: c.color }}>{c.weight}%</span>
-                        </div>
-                        <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
-                          <div style={{ height: '100%', width: `${c.weight * 3}%`, background: c.color, borderRadius: 99 }} />
-                        </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SCORING CONFIG</div>
+                        <div style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>100 pts total</div>
                       </div>
-                    ))}
+                      <button style={{
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
+                        borderRadius: 7, background: '#fff', color: '#0052cc',
+                        fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                        transition: 'all 0.15s ease', fontFamily: 'inherit'
+                      }}
+                        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}>
+                        <Pencil size={12} strokeWidth={2} />
+                        Edit
+                      </button>
+                    </div>
+
+                    <div style={{ background: 'linear-gradient(135deg, rgba(0,82,204,0.04), rgba(0,82,204,0.01))', border: '1px solid rgba(0,82,204,0.15)', borderRadius: 10, padding: '14px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 32, height: 32, borderRadius: 8, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.04)', border: '1px solid rgba(0,82,204,0.1)' }}>
+                          <Target size={16} color="#0052cc" strokeWidth={2} />
+                        </div>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: '#0052cc' }}>Threshold Score</span>
+                      </div>
+                      <span style={{ fontSize: 20, fontWeight: 800, color: '#0052cc' }}>60<span style={{ fontSize: 12, fontWeight: 600, marginLeft: 2, color: 'rgba(0,82,204,0.6)' }}>pts</span></span>
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12 }}>Core Evaluation</div>
+                      {SCORING_CRITERIA.filter(c => ['Technical Competency', 'Relevant Experience'].includes(c.label)).map(c => (
+                        <div key={c.label} style={{ marginBottom: 14 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.label}</span>
+                            <span style={{ fontSize: 14, fontWeight: 700, color: c.color }}>{c.weight}%</span>
+                          </div>
+                          <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${c.weight * 3}%`, background: c.color, borderRadius: 99 }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12 }}>Proposal Details</div>
+                      {SCORING_CRITERIA.filter(c => ['Team Composition & CVs', 'Commercial Proposal', 'Approach & Methodology'].includes(c.label)).map(c => (
+                        <div key={c.label} style={{ marginBottom: 14 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.label}</span>
+                            <span style={{ fontSize: 14, fontWeight: 700, color: c.color }}>{c.weight}%</span>
+                          </div>
+                          <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
+                            <div style={{ height: '100%', width: `${c.weight * 3}%`, background: c.color, borderRadius: 99 }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
