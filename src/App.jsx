@@ -13,6 +13,7 @@ import AgentManagement from './pages/AgentManagement.jsx';
 import Templates from './pages/Templates.jsx';
 import TemplateDetail from './pages/TemplateDetail.jsx';
 import PurchaseOrders from './pages/PurchaseOrders.jsx';
+import PRDetailDraft from './pages/PRDetailDraft.jsx';
 
 const NAV_MAP = {
   'Dashboard': 'dashboard',
@@ -41,6 +42,7 @@ const PAGE_TO_NAV = {
   'prdetail': null,
   'prdetailfresh': 'Dashboard',
   'prdetailrfp': 'Dashboard',
+  'prdetaildraft': 'Dashboard',
   'login': null,
   'templates': 'Templates',
   'templatedetail': 'Templates',
@@ -80,6 +82,7 @@ export default function App() {
             {currentPage === 'templatedetail' && <TemplateDetail {...pageProps} />}
             {currentPage === 'agentmanagement' && <AgentManagement {...pageProps} />}
             {currentPage === 'prdetailrfp' && <PRDetailRFP {...pageProps} />}
+            {currentPage === 'prdetaildraft' && <PRDetailDraft {...pageProps} />}
             {currentPage === 'purchaseorders' && <PurchaseOrders {...pageProps} />}
           </div>
         </div>

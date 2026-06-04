@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X, Brain, GitBranch, ShieldCheck, Banknote, Scale, PackageCheck, UserCheck, Zap, Pencil, Calendar, Building, Tag, MapPin, ChevronDown, Upload, Eye, FileText, Send, Mic, Paperclip, Copy, ThumbsUp, ThumbsDown, RotateCcw, Edit2, MoreHorizontal, Pin, PinOff, Share2, Trash2, Layers } from 'lucide-react';
+import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X, Brain, GitBranch, ShieldCheck, Banknote, Scale, PackageCheck, UserCheck, Zap, Pencil, Calendar, Building, Tag, MapPin, ChevronDown, Upload, Eye, FileText, Send, Mic, Paperclip, Copy, ThumbsUp, ThumbsDown, RotateCcw, Edit2, MoreHorizontal, Pin, PinOff, Share2, Trash2 } from 'lucide-react';
 
 const ICONS = { User, Sparkles, GitBranch, Banknote, Scale, Zap, ShieldCheck, PackageCheck, UserCheck, CheckCircle };
 
@@ -17,7 +17,7 @@ const REASONING_MAP = {
 };
 
 const INITIAL_NODES = [
-  { id: 0, type: 'user', status: 'complete', title: 'PR Submitted', actor: 'David Kim', timestamp: 'Just now', icon: 'User' },
+  { id: 0, type: 'pending_user', status: 'pending_user', title: 'PR Submitted', actor: 'David Kim', timestamp: 'Awaiting submission', icon: 'User' },
   { id: 1, type: 'ai', status: 'waiting', title: 'AI Extraction & Folder Creation', actor: 'AI Agent', timestamp: null, icon: 'Sparkles' },
   { id: 2, type: 'ai', status: 'waiting', title: 'Routine / Complex', actor: 'AI Agent', timestamp: null, icon: 'GitBranch' },
   { id: 3, type: 'ai', status: 'waiting', title: 'CapEx / OpEx', actor: 'AI Agent', timestamp: null, icon: 'Banknote' },
@@ -32,18 +32,9 @@ const INITIAL_NODES = [
   { id: 12, type: 'system', status: 'waiting', title: 'PO Issued', actor: 'System', timestamp: null, icon: 'CheckCircle' },
 ];
 
-const AUDIT_ENTRIES = [
-  { id: 1, type: 'document', title: 'Document Uploaded', desc: 'AWS_Migration_Requirements.pdf (2.4 MB) uploaded.', actor: 'David Kim', time: '1 hour ago' },
-  { id: 2, type: 'user', title: 'PR Submitted', desc: 'Procurement request submitted for processing.', actor: 'David Kim', time: '55 minutes ago' },
-  { id: 3, type: 'ai', title: 'AI Extraction Complete', desc: 'Auto-extracted 12 fields from attached documents.', actor: 'AI Agent', time: '54 minutes ago' },
-  { id: 4, type: 'ai', title: 'AI Classification', desc: 'Classified as Complex / OpEx / Indirect.', actor: 'AI Agent', time: '54 minutes ago' },
-  { id: 5, type: 'ai', title: 'Vendor Shortlist Generated', desc: 'Identified 5 potential vendors matching criteria.', actor: 'AI Agent', time: '52 minutes ago' },
-  { id: 6, type: 'ai', title: 'Compliance & Budget Verified', desc: 'Passed all automated finance and compliance checks.', actor: 'AI Agent', time: '50 minutes ago' },
-  { id: 7, type: 'system', title: 'PO Draft Generated', desc: 'Purchase order draft created and queued for manager approval.', actor: 'System', time: '50 minutes ago' },
-];
-
 // Status badge config
 const STATUS_CONFIG = {
+  'PR Drafted': { bg: '#fff7ed', color: '#b45309' },
   'Submitted': { bg: '#e8f1fb', color: '#0052cc' },
   'In Review': { bg: '#fff3e0', color: '#e65100' },
   'Classifying': { bg: '#ede9fe', color: '#6d28d9' },
@@ -460,11 +451,11 @@ export function EditModal({ onClose, onSave }) {
   );
 }
 
-export default function PRDetailFresh({ onNavigate, userRole, navState }) {
+export default function PRDetailDraft({ onNavigate, userRole, navState }) {
   const [nodes, setNodes] = useState(INITIAL_NODES);
   const [selectedNode, setSelectedNode] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
-  const [prStatus, setPrStatus] = useState('Submitted');
+  const [prStatus, setPrStatus] = useState('PR Drafted');
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
   const [saveToast, setSaveToast] = useState(null);
   const [showApproveModal, setShowApproveModal] = useState(false);
@@ -534,24 +525,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
     setNodes(prev => prev.map(n => ids.includes(n.id) ? { ...n, status, timestamp: 'Just now' } : n));
   };
 
-  useEffect(() => {
-    const T = [
-      setTimeout(() => { upd([1], 'active'); setPrStatus('In Review'); }, 1500),
-      setTimeout(() => upd([1], 'complete'), 4000),
-      setTimeout(() => { upd([2, 3, 4], 'active'); setPrStatus('Classifying'); }, 4500),
-      setTimeout(() => upd([2, 3, 4], 'complete'), 7500),
-      setTimeout(() => { upd([5], 'active'); setPrStatus('Routing'); }, 8000),
-      setTimeout(() => upd([5], 'complete'), 10500),
-      setTimeout(() => { upd([6, 7, 8], 'active'); setPrStatus('In Validation'); }, 11000),
-      setTimeout(() => upd([6, 7, 8], 'complete'), 15000),
-      setTimeout(() => { upd([9], 'active'); setPrStatus('Compliance Check'); }, 15500),
-      setTimeout(() => upd([9], 'complete'), 18000),
-      setTimeout(() => { upd([10], 'active'); setPrStatus('PO Generated'); }, 18500),
-      setTimeout(() => upd([10], 'complete'), 21000),
-      setTimeout(() => { upd([11], 'pending_user'); setPrStatus('Approval Pending'); }, 21500),
-    ];
-    return () => T.forEach(clearTimeout);
-  }, []);
+  // Draft mode: workflow nodes remain static — no auto-progression
 
   useEffect(() => {
     if (!chatMenuOpen) return;
@@ -636,9 +610,15 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
             <ChevronRight size={14} color="#ccc" />
             <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>PR-2026-011</span>
           </div>
-          <button onClick={() => setChatPaneOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'linear-gradient(135deg, #0052cc, #7c7cff)', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, color: '#fff', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.3)', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 18px rgba(0,82,204,0.45)'} onMouseLeave={e => e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.3)'}>
-            <Sparkles size={14} strokeWidth={2} /> AI Chat
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid #ef4444', background: '#fff', cursor: 'pointer', fontSize: 13, color: '#ef4444', fontWeight: 600, fontFamily: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.background = '#fef2f2'} onMouseLeave={(e) => e.currentTarget.style.background = '#fff'}>
+              <Trash2 size={14} /> Delete PR
+            </button>
+
+            <button onClick={() => setChatPaneOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'linear-gradient(135deg, #0052cc, #7c7cff)', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, color: '#fff', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.3)', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 18px rgba(0,82,204,0.45)'} onMouseLeave={e => e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.3)'}>
+              <Sparkles size={14} strokeWidth={2} /> AI Chat
+            </button>
+          </div>
         </div>
 
         {/* HEADER */}
@@ -655,13 +635,14 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
         {/* TABS */}
         <div style={{ background: '#fff', borderBottom: '1px solid #e5e5e5', padding: '0 24px', display: 'flex', flexShrink: 0, marginTop: 12 }}>
           {[
-            { id: 'overview', label: 'Overview' },
-            { id: 'po', label: 'Purchase Order' },
-            { id: 'invoices', label: 'Invoices' },
-            { id: 'activities', label: 'Activities' },
+            { id: 'overview', label: 'Overview', locked: false },
+            { id: 'po', label: 'Purchase Order', locked: true },
+            { id: 'invoices', label: 'Invoices', locked: true },
+            { id: 'activities', label: 'Activities', locked: false },
           ].map(tab => (
-            <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: '13px 16px', fontSize: 13, fontWeight: activeTab === tab.id ? 600 : 500, borderBottom: activeTab === tab.id ? '2px solid #7c7cff' : '2px solid transparent', color: activeTab === tab.id ? '#3d3db8' : '#999', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+            <div key={tab.id} onClick={() => { if (!tab.locked) setActiveTab(tab.id); }} style={{ padding: '13px 16px', fontSize: 13, fontWeight: activeTab === tab.id ? 600 : 500, borderBottom: activeTab === tab.id ? '2px solid #7c7cff' : '2px solid transparent', color: activeTab === tab.id ? '#3d3db8' : tab.locked ? '#999' : '#444', cursor: tab.locked ? 'not-allowed' : 'pointer', transition: 'all 0.15s ease', display: 'flex', alignItems: 'center', gap: 6 }}>
               {tab.label}
+              {tab.locked && <Lock size={12} />}
             </div>
           ))}
         </div>
@@ -1007,16 +988,16 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
               <div style={{ maxWidth: 800, margin: '0 auto' }}>
                 <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a', marginBottom: 24 }}>Activity Log</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                  {AUDIT_ENTRIES.map((entry, idx, arr) => {
+                  {[
+                    { id: 1, type: 'document', title: 'Document Uploaded', desc: 'AWS_Migration_Requirements.pdf (2.4 MB) uploaded.', actor: 'David Kim', time: 'Just now' },
+                    { id: 2, type: 'user', title: 'PR Draft Created', desc: 'New procurement request draft initialized.', actor: 'David Kim', time: '2 minutes ago' },
+                  ].map((entry, idx, arr) => {
                     const isLast = idx === arr.length - 1;
                     return (
                       <div key={entry.id} style={{ display: 'flex', gap: 16, position: 'relative' }}>
                         {!isLast && <div style={{ position: 'absolute', left: 19, top: 40, bottom: -24, width: 2, background: '#e5e5e5' }} />}
                         <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#fff', border: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          {entry.type === 'document' ? <FileText size={18} color="#666" /> :
-                           entry.type === 'ai' ? <Sparkles size={18} color="#0052cc" /> :
-                           entry.type === 'system' ? <Layers size={18} color="#666" /> :
-                           <User size={18} color="#666" />}
+                          {entry.type === 'document' ? <FileText size={18} color="#666" /> : <User size={18} color="#666" />}
                         </div>
                         <div style={{ flex: 1, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 12, padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
@@ -1025,8 +1006,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                           </div>
                           <div style={{ fontSize: 13, color: '#444', lineHeight: 1.5 }}>{entry.desc}</div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 12, fontSize: 12, color: '#999' }}>
-                            {entry.type === 'ai' ? <Sparkles size={12} color="#0052cc" /> : <User size={12} />}
-                            {entry.actor}
+                            <User size={12} /> {entry.actor}
                           </div>
                         </div>
                       </div>

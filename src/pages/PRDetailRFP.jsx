@@ -13,7 +13,7 @@ import {
   List, ListOrdered, Indent, Outdent, Link, Image, Printer,
   Undo2, Redo2, Code, RemoveFormatting, Pencil, Save, ChevronDown,
   Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2,
-  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen
+  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers
 } from 'lucide-react';
 
 const STATUS_CONFIG = {
@@ -30,6 +30,7 @@ const TABS = [
   { id: 'sow', label: 'SoW' },
   { id: 'po', label: 'PO' },
   { id: 'invoices', label: 'Invoices' },
+  { id: 'activities', label: 'Activities' },
 ];
 
 const EMPTY_TABS = {
@@ -2112,29 +2113,34 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 </div>
               )}
 
-              {/* AUDIT */}
-              {activeTab === 'audit' && (
-                <div style={{ padding: 24 }}>
-                  <div style={{ maxWidth: 820, margin: '0 auto' }}>
-                    <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-                      {['all', 'ai', 'approvals'].map(f => {
-                        const isF = auditFilter === f;
-                        return <button key={f} onClick={() => setAuditFilter(f)} style={{ padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', background: isF ? 'rgba(124,124,255,0.1)' : '#fff', color: isF ? '#3d3db8' : 'var(--text-secondary)', border: `1px solid ${isF ? 'rgba(124,124,255,0.3)' : 'var(--border-default)'}` }}>
-                          {f === 'all' ? 'All Activity' : f === 'ai' ? 'AI Actions' : 'Approvals'}
-                        </button>;
-                      })}
-                    </div>
-                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden' }}>
-                      {AUDIT_ENTRIES.filter(e => auditFilter === 'all' || (auditFilter === 'ai' && e.type === 'ai')).map((e, i, arr) => {
-                        const Icon = e.type === 'ai' ? Sparkles : User;
-                        const bg = e.type === 'ai' ? 'rgba(124,124,255,0.08)' : 'rgba(0,82,204,0.08)';
-                        const color = e.type === 'ai' ? '#7c7cff' : '#0052cc';
+              {/* ACTIVITIES TAB */}
+              {activeTab === 'activities' && (
+                <div style={{ padding: '32px 40px', background: 'transparent' }}>
+                  <div style={{ maxWidth: 800, margin: '0 auto' }}>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 24 }}>Activity Log</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                      {AUDIT_ENTRIES.map((entry, idx, arr) => {
+                        const isLast = idx === arr.length - 1;
                         return (
-                          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, padding: '14px 20px', borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}
-                            onMouseEnter={ev => ev.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={ev => ev.currentTarget.style.background = 'transparent'}>
-                            <div style={{ width: 32, height: 32, borderRadius: 10, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon size={15} color={color} /></div>
-                            <div style={{ flex: 1 }}><div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{e.title}</div><div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2, lineHeight: 1.4 }}>{e.desc}</div><div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 3 }}>{e.actor}</div></div>
-                            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>{e.time}</div>
+                          <div key={idx} style={{ display: 'flex', gap: 16, position: 'relative' }}>
+                            {!isLast && <div style={{ position: 'absolute', left: 19, top: 40, bottom: -24, width: 2, background: 'var(--border-subtle)' }} />}
+                            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#fff', border: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              {entry.type === 'document' ? <FileText size={18} color="var(--text-secondary)" /> :
+                               entry.type === 'ai' ? <Sparkles size={18} color="#0052cc" /> :
+                               entry.type === 'system' ? <Layers size={18} color="var(--text-secondary)" /> :
+                               <User size={18} color="var(--text-secondary)" />}
+                            </div>
+                            <div style={{ flex: 1, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{entry.title}</div>
+                                <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{entry.time}</div>
+                              </div>
+                              <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{entry.desc}</div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 12, fontSize: 12, color: 'var(--text-tertiary)' }}>
+                                {entry.type === 'ai' ? <Sparkles size={12} color="#0052cc" /> : <User size={12} />} 
+                                {entry.actor}
+                              </div>
+                            </div>
                           </div>
                         );
                       })}

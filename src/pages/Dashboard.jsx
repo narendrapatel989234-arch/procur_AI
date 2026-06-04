@@ -141,7 +141,7 @@ const APPROVAL_ROWS = [
   { id: 'PR-2026-015', title: 'Data Center Equipment', created: '07-May-2026 16:45', stage: 'RFP', status: 'RFP Published', type: 'Complex', updated: '3 days ago', costCentre: 'IT' },
 ];
 
-const COLUMNS = ['PR ID', 'Title', 'Created Date', 'Lifecycle Stage', 'Status', 'Cost Centre', 'Type', 'Last Updated', 'Actions'];
+
 
 const FILTER_OPTIONS = {
   'Lifecycle Stage': ['Requisition', 'RFP', 'Bid Evaluation', 'Negotiation', 'Award', 'Contract / SOW', 'Purchase Order (PO)'],
@@ -606,7 +606,20 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                 display: 'flex', alignItems: 'center', gap: 6
               }}
             >
-              Approval Requests <span style={{ fontSize: 12, background: 'rgba(0,0,0,0.05)', padding: '2px 8px', borderRadius: 12, fontWeight: 700 }}>5</span>
+              Pending Requests <span style={{ fontSize: 12, background: 'rgba(0,0,0,0.05)', padding: '2px 8px', borderRadius: 12, fontWeight: 700 }}>5</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('all')}
+              style={{
+                background: 'transparent', border: 'none', borderBottom: activeTab === 'all' ? '2px solid #0052cc' : '2px solid transparent',
+                padding: '0 4px 10px', fontSize: 13, fontWeight: activeTab === 'all' ? 600 : 500,
+                color: activeTab === 'all' ? '#0052cc' : 'var(--text-tertiary)',
+                cursor: 'pointer', transition: 'all 0.15s ease',
+                display: 'flex', alignItems: 'center', gap: 6
+              }}
+            >
+              All Requests
+              {/*<span style={{ fontSize: 12, background: 'rgba(0,0,0,0.05)', padding: '2px 8px', borderRadius: 12, fontWeight: 700 }}>12</span>*/}
             </button>
           </div>
 
@@ -782,12 +795,17 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
 
                     <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
 
-                      {COLUMNS.map((col, idx) => {
-                        const widths = ['80px', '170px', '100px', '120px', '140px', '110px', '80px', '100px', '80px'];
-                        return (
+                      {(() => {
+                        const cols = activeTab === 'my'
+                          ? ['PR ID', 'Title', 'Created Date', 'Lifecycle Stage', 'Status', 'Cost Centre', 'Type', 'Last Updated']
+                          : ['PR ID', 'Title', 'Created Date', 'Created by', 'Lifecycle Stage', 'Status', 'Cost Centre', 'Type', 'Last Updated'];
 
+                        const widths = activeTab === 'my'
+                          ? ['80px', '170px', '100px', '120px', '140px', '110px', '80px', '100px']
+                          : ['80px', '160px', '100px', '120px', '120px', '130px', '110px', '80px', '100px'];
+
+                        return cols.map((col, idx) => (
                           <th key={col} onClick={() => {
-                            if (col === 'Actions') return;
                             if (sortCol === col) {
                               setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
                             } else {
@@ -795,35 +813,22 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                               setSortDir('asc');
                             }
                           }} style={{
-
                             padding: '10px 16px', fontSize: 11, fontWeight: 700,
-
                             color: 'var(--text-tertiary)', textTransform: 'uppercase',
-
                             letterSpacing: '0.5px', textAlign: 'left', whiteSpace: 'nowrap', cursor: 'pointer',
-
                             width: widths[idx], minWidth: widths[idx]
-
                           }}>
-
                             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-
                               {col}
-
-                              {col !== 'Actions' && (
-                                sortCol === col ? (
-                                  sortDir === 'asc' ? <ChevronUp size={11} color="#0052cc" strokeWidth={2} /> : <ChevronDown size={11} color="#0052cc" strokeWidth={2} />
-                                ) : (
-                                  <ArrowUpDown size={11} color="var(--text-tertiary)" strokeWidth={2} />
-                                )
+                              {sortCol === col ? (
+                                sortDir === 'asc' ? <ChevronUp size={11} color="#0052cc" strokeWidth={2} /> : <ChevronDown size={11} color="#0052cc" strokeWidth={2} />
+                              ) : (
+                                <ArrowUpDown size={11} color="var(--text-tertiary)" strokeWidth={2} />
                               )}
-
                             </span>
-
                           </th>
-
-                        )
-                      })}
+                        ));
+                      })()}
 
                     </tr>
 
@@ -849,13 +854,22 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                         const ss = STAGE_STYLES[r.stage] || STAGE_STYLES['Draft'];
                         const isDraft = r.status?.toLowerCase() === 'pr drafted';
                         return (
-                          <tr key={r.id} className="ptr" onClick={() => r.type === 'Complex' ? setCurrentPage('prdetailrfp') : setCurrentPage('prdetailfresh')} style={{
+                          <tr key={r.id} className="ptr" onClick={() => {
+                            if (r.status === 'PR Drafted') setCurrentPage('prdetaildraft');
+                            else if (r.type === 'Complex') setCurrentPage('prdetailrfp');
+                            else setCurrentPage('prdetailfresh');
+                          }} style={{
                             borderBottom: idx < paginatedRows.length - 1 ? '1px solid #f5f5f5' : 'none',
                             cursor: 'pointer'
                           }}>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.id}</td>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title}</td>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.created}</td>
+                            {activeTab !== 'my' && (
+                              <td style={{ padding: '13px 16px', fontSize: 13, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>
+                                {r.createdBy || 'David Kim'}
+                              </td>
+                            )}
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.stage}</td>
                             <td style={{ padding: '13px 16px' }}>
                               <span style={{
@@ -866,39 +880,6 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.costCentre || '—'}</td>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.type}</td>
                             <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{r.updated}</td>
-                            <td style={{ padding: '13px 16px' }}>
-                              <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                                <button className="pbtn pbtn-edit" title="Edit (Form)" onClick={(e) => { e.stopPropagation(); r.type === 'Complex' ? onNavigate('PR Detail RFP', { openEditPopup: true }) : onNavigate('PR Detail Fresh', { openEditPopup: true }); }} style={{
-                                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                                  height: 30, minWidth: 30, padding: '0 9px', boxSizing: 'border-box',
-                                  border: 'none', borderRadius: 7,
-                                  background: 'transparent',
-                                  color: 'var(--text-tertiary)', cursor: 'pointer',
-                                }}>
-                                  <Pencil size={13} strokeWidth={2} />
-                                </button>
-                                <button className="pbtn pbtn-chat" title="Chat" onClick={(e) => { e.stopPropagation(); r.type === 'Complex' ? onNavigate('PR Detail RFP', { openChatPane: true }) : onNavigate('PR Detail Fresh', { openChatPane: true }); }} style={{
-                                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                                  height: 30, minWidth: 30, padding: '0 9px', boxSizing: 'border-box',
-                                  border: 'none', borderRadius: 7,
-                                  background: 'transparent',
-                                  color: 'var(--text-tertiary)', cursor: 'pointer',
-                                }}>
-                                  <MessageSquare size={13} strokeWidth={2} />
-                                </button>
-                                {isDraft && (
-                                  <button className="pbtn pbtn-x" title="Delete" onClick={(e) => { e.stopPropagation(); setDeleteRequestId(r.id); }} style={{
-                                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                                    height: 30, minWidth: 30, padding: '0 9px', boxSizing: 'border-box',
-                                    border: 'none', borderRadius: 7,
-                                    background: 'transparent',
-                                    color: 'var(--text-tertiary)', cursor: 'pointer',
-                                  }}>
-                                    <Trash2 size={13} strokeWidth={2} />
-                                  </button>
-                                )}
-                              </div>
-                            </td>
                           </tr>
                         );
                       })
