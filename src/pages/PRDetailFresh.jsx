@@ -232,11 +232,13 @@ export function EditModal({ onClose, onSave }) {
   const [fContractRef, setFContractRef] = useState('');
   const [fDeliveryLoc, setFDeliveryLoc] = useState('Dubai'); const [fDeliveryOpen, setFDeliveryOpen] = useState(false);
   const [fTimeline, setFTimeline] = useState('Phase 1: Assessment (Month 1-2), Phase 2: Migration (Month 3-5), Phase 3: Support (Month 6)');
+  const [fSourcingMethod, setFSourcingMethod] = useState('Competitive tender'); const [fSourcingMethodOpen, setFSourcingMethodOpen] = useState(false);
 
   const fBizUnitRef = useRef(null); const fPriorityRef = useRef(null);
   const fProcCatRef = useRef(null); const fSubcatRef = useRef(null);
   const fCapexRef = useRef(null); const fUomRef = useRef(null);
   const fVendorRef = useRef(null); const fDeliveryRef = useRef(null);
+  const fSourcingMethodRef = useRef(null);
 
   useEffect(() => {
     function handler(e) {
@@ -248,6 +250,7 @@ export function EditModal({ onClose, onSave }) {
       if (fUomRef.current && !fUomRef.current.contains(e.target)) setFUomOpen(false);
       if (fVendorRef.current && !fVendorRef.current.contains(e.target)) setFVendorOpen(false);
       if (fDeliveryRef.current && !fDeliveryRef.current.contains(e.target)) setFDeliveryOpen(false);
+      if (fSourcingMethodRef.current && !fSourcingMethodRef.current.contains(e.target)) setFSourcingMethodOpen(false);
     }
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -342,6 +345,10 @@ export function EditModal({ onClose, onSave }) {
           <div>
             <EL>Justification</EL>
             <ETextarea value={fJustification} onChange={e => setFJustification(e.target.value)} placeholder="Provide justification for CapEx/OpEx selection if needed" minHeight={80} />
+          </div>
+          <div>
+            <EL>Sourcing Method <span style={{ fontSize: 11, color: '#999', fontWeight: 400, textTransform: 'none', letterSpacing: 'normal' }}>(Optional - helps in classification)</span></EL>
+            <EDrop refEl={fSourcingMethodRef} open={fSourcingMethodOpen} onToggle={() => setFSourcingMethodOpen(!fSourcingMethodOpen)} value={fSourcingMethod} placeholder="Select sourcing method" options={['Single source', 'Competitive tender']} onChange={v => setFSourcingMethod(v)} />
           </div>
 
           <Div />
@@ -728,6 +735,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                       ['Suggested Vendor', 'Open to sourcing'],
                       ['Project Name', 'Infrastructure Modernisation 2026'],
                       ['Justification', 'Required for modernising backend systems'],
+                      ['Sourcing Method', 'Competitive tender'],
                       ['Contract Reference', 'N/A'],
                       ['Pricing Model', 'Time & Materials'],
                       ['Timeline', '6 Months'],

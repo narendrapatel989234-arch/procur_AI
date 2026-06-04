@@ -611,7 +611,7 @@ function EditModal({ onClose, onSave }) {
   const [fVendorJustification, setFVendorJustification] = useState('');
   const [fContractRef, setFContractRef] = useState('');
   const [fDeliveryLoc, setFDeliveryLoc] = useState('Dubai'); const [fDeliveryOpen, setFDeliveryOpen] = useState(false);
-  const [fSourcingMethod, setFSourcingMethod] = useState(''); const [fSourcingMethodOpen, setFSourcingMethodOpen] = useState(false);
+  const [fSourcingMethod, setFSourcingMethod] = useState('Competitive tender'); const [fSourcingMethodOpen, setFSourcingMethodOpen] = useState(false);
   const [fTimeline, setFTimeline] = useState('Phase 1: Assessment (Month 1-2), Phase 2: Migration (Month 3-5), Phase 3: Support (Month 6)');
 
   const fBizUnitRef = useRef(null); const fPriorityRef = useRef(null);
@@ -1145,21 +1145,21 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 </div>
               </div>
 
-              <div style={{ border: '1px solid #e0e0e0', borderRadius: 10, overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                  <thead>
-                    <tr style={{ background: '#fff', borderBottom: '1px solid #e0e0e0' }}>
-                      <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', width: '80px' }}>Sr No.</th>
-                      <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Category</th>
-                      <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Criteria</th>
-                      <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0', textAlign: 'center', width: '120px' }}>Weightage</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {scoringConfigData.map((row, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid #e0e0e0' }}>
-                        <td style={{ padding: '14px 16px', fontSize: 13, color: '#4a4a4a' }}>{row.sr}</td>
-                        <td style={{ padding: 0, borderLeft: '1px solid #e0e0e0' }}>
+            <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', width: '80px' }}>Sr No.</th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Category</th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Criteria</th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'center', width: '120px' }}>Weightage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scoringConfigData.map((row, i) => (
+                      <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                        <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-primary)', fontWeight: 500 }}>{row.sr}</td>
+                        <td style={{ padding: 0 }}>
                           <input 
                             value={row.cat}
                             onChange={e => {
@@ -1167,10 +1167,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               newData[i].cat = e.target.value;
                               setScoringConfigData(newData);
                             }}
-                            style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: '#666', outline: 'none', fontFamily: 'inherit' }}
+                            style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
                           />
                         </td>
-                        <td style={{ padding: 0, borderLeft: '1px solid #e0e0e0' }}>
+                        <td style={{ padding: 0 }}>
                           <input 
                             value={row.crit}
                             onChange={e => {
@@ -1178,10 +1178,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               newData[i].crit = e.target.value;
                               setScoringConfigData(newData);
                             }}
-                            style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: '#4a4a4a', outline: 'none', fontFamily: 'inherit' }}
+                            style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
                           />
                         </td>
-                        <td style={{ padding: 0, borderLeft: '1px solid #e0e0e0', textAlign: 'center' }}>
+                        <td style={{ padding: 0, textAlign: 'center' }}>
                           <input 
                             type="number"
                             value={row.w}
@@ -1190,15 +1190,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               newData[i].w = parseInt(e.target.value) || 0;
                               setScoringConfigData(newData);
                             }}
-                            style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: '#4a4a4a', textAlign: 'center', outline: 'none', fontFamily: 'inherit' }}
+                            style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', textAlign: 'center', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
                           />
                         </td>
                       </tr>
                     ))}
-                    <tr style={{ background: '#f5f5f5' }}>
+                    <tr style={{ background: 'var(--bg-surface-2)', borderTop: '1px solid var(--border-subtle)' }}>
                       <td colSpan={2} style={{ padding: '12px 16px' }}></td>
-                      <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#1a1a1a', textAlign: 'center', borderLeft: '1px solid #e0e0e0' }}>Total</td>
-                      <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#1a1a1a', textAlign: 'center', borderLeft: '1px solid #e0e0e0' }}>{scoringConfigData.reduce((acc, curr) => acc + curr.w, 0)}</td>
+                      <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center' }}>Total</td>
+                      <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center' }}>{scoringConfigData.reduce((acc, curr) => acc + curr.w, 0)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1237,47 +1237,47 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               <button onClick={() => setShowCostConfigModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             </div>
 
-            <div style={{ border: '1px solid #e0e0e0', borderRadius: 10, overflow: 'hidden' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
+              <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ background: '#fff', borderBottom: '1px solid #e0e0e0' }}>
-                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a' }}>Phase</th>
-                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Module</th>
-                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Timeline</th>
-                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Resources</th>
-                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Cost (min)</th>
-                    <th style={{ padding: '14px 16px', fontSize: 12, fontWeight: 600, color: '#4a4a4a', borderLeft: '1px solid #e0e0e0' }}>Cost (max)</th>
+                  <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Phase</th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Module</th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Timeline</th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Resources</th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Cost (min)</th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Cost (max)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {costConfigData.map((row, i) => (
-                    <tr key={i} style={{ borderBottom: '1px solid #e0e0e0' }}>
+                    <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                       <td style={{ padding: 0 }}>
-                        <input value={row.p} onChange={e => { const d = [...costConfigData]; d[i].p = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: '#666', outline: 'none', fontFamily: 'inherit' }} />
+                        <input value={row.p} onChange={e => { const d = [...costConfigData]; d[i].p = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
-                      <td style={{ padding: 0, borderLeft: '1px solid #e0e0e0' }}>
-                        <input value={row.m} onChange={e => { const d = [...costConfigData]; d[i].m = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 600, color: '#4a4a4a', outline: 'none', fontFamily: 'inherit' }} />
+                      <td style={{ padding: 0 }}>
+                        <input value={row.m} onChange={e => { const d = [...costConfigData]; d[i].m = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit' }} />
                       </td>
-                      <td style={{ padding: 0, borderLeft: '1px solid #e0e0e0' }}>
-                        <input value={row.t} onChange={e => { const d = [...costConfigData]; d[i].t = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: '#666', outline: 'none', fontFamily: 'inherit' }} />
+                      <td style={{ padding: 0 }}>
+                        <input value={row.t} onChange={e => { const d = [...costConfigData]; d[i].t = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
-                      <td style={{ padding: 0, borderLeft: '1px solid #e0e0e0' }}>
-                        <input value={row.r} onChange={e => { const d = [...costConfigData]; d[i].r = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: '#666', outline: 'none', fontFamily: 'inherit' }} />
+                      <td style={{ padding: 0 }}>
+                        <input value={row.r} onChange={e => { const d = [...costConfigData]; d[i].r = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
-                      <td style={{ padding: 0, borderLeft: '1px solid #e0e0e0' }}>
-                        <input value={row.cmin} onChange={e => { const d = [...costConfigData]; d[i].cmin = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: '#4a4a4a', outline: 'none', fontFamily: 'inherit' }} />
+                      <td style={{ padding: 0 }}>
+                        <input value={row.cmin} onChange={e => { const d = [...costConfigData]; d[i].cmin = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
-                      <td style={{ padding: 0, borderLeft: '1px solid #e0e0e0' }}>
-                        <input value={row.cmax} onChange={e => { const d = [...costConfigData]; d[i].cmax = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: '#4a4a4a', outline: 'none', fontFamily: 'inherit' }} />
+                      <td style={{ padding: 0 }}>
+                        <input value={row.cmax} onChange={e => { const d = [...costConfigData]; d[i].cmax = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
                     </tr>
                   ))}
-                  <tr style={{ background: '#f5f5f5' }}>
+                  <tr style={{ background: 'var(--bg-surface-2)', borderTop: '1px solid var(--border-subtle)' }}>
                     <td colSpan={4} style={{ padding: '12px 16px' }}></td>
-                    <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#1a1a1a', borderLeft: '1px solid #e0e0e0' }}>
+                    <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
                       {'₹' + costConfigData.reduce((acc, curr) => acc + (parseInt((curr.cmin || '').replace(/[^\d]/g, ''), 10) || 0), 0).toLocaleString('en-IN')}
                     </td>
-                    <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 600, color: '#1a1a1a', borderLeft: '1px solid #e0e0e0' }}>
+                    <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
                       {'₹' + costConfigData.reduce((acc, curr) => acc + (parseInt((curr.cmax || '').replace(/[^\d]/g, ''), 10) || 0), 0).toLocaleString('en-IN')}
                     </td>
                   </tr>
@@ -1395,11 +1395,23 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             {/* Scrollable Body */}
             <div style={{ flex: 1, overflowY: 'auto', padding: '24px 32px' }}>
               {uploadForms.map((form, index) => (
-                <div key={form.id} style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: index === uploadForms.length - 1 ? 0 : 40 }}>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Vendor {index + 1} <span style={{ color: '#dc2626' }}>*</span></div>
-                    <input type="text" value={form.vendorName} onChange={e => setUploadForms(prev => prev.map(f => f.id === form.id ? { ...f, vendorName: e.target.value } : f))} placeholder="Enter vendor name" style={{ width: '100%', padding: '10px 12px', boxSizing: 'border-box', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none' }} />
+                <div key={form.id} style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: index === uploadForms.length - 1 ? 0 : 32 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>Vendor {index + 1} Details</div>
+                    {uploadForms.length > 1 && (
+                      <button 
+                        onClick={() => setUploadForms(prev => prev.filter(f => f.id !== form.id))}
+                        style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#dc2626', display: 'flex', alignItems: 'center', padding: 4 }}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
                   </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 24, background: '#fafafa', border: '1px solid var(--border-default)', borderRadius: 12, padding: '24px' }}>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Vendor Name <span style={{ color: '#dc2626' }}>*</span></div>
+                      <input type="text" value={form.vendorName} onChange={e => setUploadForms(prev => prev.map(f => f.id === form.id ? { ...f, vendorName: e.target.value } : f))} placeholder="Enter vendor name" style={{ width: '100%', padding: '10px 12px', boxSizing: 'border-box', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none' }} />
+                    </div>
                   
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
                     {/* Left Column */}
@@ -1411,16 +1423,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           onDragLeave={() => setPropFileDrag(null)}
                           onDrop={e => { e.preventDefault(); setPropFileDrag(null); const f = e.dataTransfer.files[0]; if (f) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, file: f } : uf)); }}
                           onClick={() => document.getElementById(`prop-file-input-${form.id}`).click()}
-                          style={{ flex: 1, border: `1px dashed ${propFileDrag === form.id ? '#0052cc' : 'var(--border-default)'}`, borderRadius: 10, padding: '32px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, cursor: 'pointer', background: propFileDrag === form.id ? 'rgba(0,82,204,0.02)' : '#fafafa', transition: 'all 0.15s ease' }}
-                          onMouseEnter={e => { e.currentTarget.style.borderColor = '#0052cc'; e.currentTarget.style.background = 'rgba(0,82,204,0.02)'; }}
-                          onMouseLeave={e => { if (propFileDrag !== form.id) { e.currentTarget.style.borderColor = 'var(--border-default)'; e.currentTarget.style.background = '#fafafa'; } }}
+                          style={{ flex: 1, border: `2px dashed ${propFileDrag === form.id ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer', background: propFileDrag === form.id ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.04)'; }}
+                          onMouseLeave={e => { if (propFileDrag !== form.id) { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.background = '#fafafa'; } }}
                         >
-                          <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(0,82,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Upload size={18} color="#0052cc" strokeWidth={2.5} />
+                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Upload size={16} color="#7c7cff" strokeWidth={2} />
                           </div>
                           <div style={{ textAlign: 'center' }}>
-                            <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Click to upload <span style={{ color: '#666', fontWeight: 400 }}>or drag and drop</span></div>
-                            <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>PDF, DOCX or PPT (max. 20MB)</div>
+                            <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
+                            <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT · Max 20MB</div>
                           </div>
                         </div>
                       ) : (
@@ -1455,17 +1467,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           if (files.length > 0) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, supporting: [...uf.supporting, ...files] } : uf)); 
                         }}
                         onClick={() => document.getElementById(`supp-file-input-${form.id}`).click()}
-                        style={{ flex: 1, border: `1px dashed ${suppFileDrag === form.id ? '#0052cc' : 'var(--border-default)'}`, borderRadius: 10, padding: '32px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, cursor: 'pointer', background: suppFileDrag === form.id ? 'rgba(0,82,204,0.02)' : '#fafafa', transition: 'all 0.15s ease' }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = '#0052cc'; e.currentTarget.style.background = 'rgba(0,82,204,0.02)'; }}
-                        onMouseLeave={e => { if (suppFileDrag !== form.id) { e.currentTarget.style.borderColor = 'var(--border-default)'; e.currentTarget.style.background = '#fafafa'; } }}
+                        style={{ flex: 1, border: `2px dashed ${suppFileDrag === form.id ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer', background: suppFileDrag === form.id ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.04)'; }}
+                        onMouseLeave={e => { if (suppFileDrag !== form.id) { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.background = '#fafafa'; } }}
                       >
-                        <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(0,82,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Upload size={18} color="#0052cc" strokeWidth={2.5} />
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <Upload size={16} color="#7c7cff" strokeWidth={2} />
                         </div>
                         <div style={{ textAlign: 'center' }}>
-                          <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Click to upload <span style={{ color: '#666', fontWeight: 400 }}>or drag and drop</span></div>
-                          <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>PDF, DOCX or PPT (max. 20MB)</div>
-                          <div style={{ fontSize: 11, color: '#666', marginTop: 12, lineHeight: 1.5, padding: '0 20px' }}>Upload your proposals or additional documents, which include details of both technical specifications, commercial terms or any certificates. Ensure that all documents are clear and adhere to our submission guidelines.</div>
+                          <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
+                          <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT · Max 20MB</div>
                         </div>
                       </div>
                       <input id={`supp-file-input-${form.id}`} type="file" multiple accept=".pdf,.docx,.ppt" style={{ display: 'none' }} onChange={e => { 
@@ -1493,6 +1504,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     </div>
                   </div>
                 </div>
+              </div>
               ))}
               
               <div style={{ marginTop: 24 }}>
@@ -1812,7 +1824,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         </button>
                       </div>
                       <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px 0' }}>
-                        {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', '₹45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026'], ['Justification', 'Required for modernising backend systems'], ['Contract Reference', 'N/A'], ['Pricing Model', 'Time & Materials'], ['Timeline', '6 Months'], ['Sourcing Method', fSourcingMethod || '—']].map(([l, v]) => (
+                        {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', '₹45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026'], ['Justification', 'Required for modernising backend systems'], ['Sourcing Method', 'Competitive tender'], ['Contract Reference', 'N/A'], ['Pricing Model', 'Time & Materials'], ['Timeline', '6 Months']].map(([l, v]) => (
                           <React.Fragment key={l}><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', paddingRight: 16 }}>{l}</div><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{v}</div></React.Fragment>
                         ))}
                         <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Priority</div>
@@ -2041,13 +2053,21 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </button>
                         </div>
                         <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '3fr 1.5fr 2.5fr 3fr', padding: '10px 14px', background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                            <div>Phase</div>
+                            <div>Timeline</div>
+                            <div>Resources</div>
+                            <div style={{ textAlign: 'right' }}>Estimate</div>
+                          </div>
                           {COST_ITEMS.map((item, i) => (
-                            <div key={item.phase} style={{ padding: '12px 14px', borderBottom: i < COST_ITEMS.length - 1 ? '1px solid var(--border-subtle)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                              <div><div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 2 }}>{item.phase}</div><div style={{ fontSize: 11, color: '#999' }}>{item.duration} · {item.resources}</div></div>
-                              <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a' }}>{item.estimate}</div>
+                            <div key={item.phase} style={{ display: 'grid', gridTemplateColumns: '3fr 1.5fr 2.5fr 3fr', alignItems: 'center', padding: '12px 14px', borderBottom: i < COST_ITEMS.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{item.phase}</div>
+                              <div style={{ fontSize: 12, color: '#666' }}>{item.duration}</div>
+                              <div style={{ fontSize: 12, color: '#666' }}>{item.resources}</div>
+                              <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', textAlign: 'right' }}>{item.estimate}</div>
                             </div>
                           ))}
-                          <div style={{ padding: '13px 14px', background: 'linear-gradient(135deg,rgba(0,82,204,0.04),rgba(124,124,255,0.06))', display: 'flex', justifyContent: 'space-between' }}>
+                          <div style={{ padding: '13px 14px', background: 'linear-gradient(135deg,rgba(0,82,204,0.04),rgba(124,124,255,0.06))', display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)' }}>
                             <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Total Estimate</div>
                             <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>₹38,00,000 - ₹58,00,000</div>
                           </div>
