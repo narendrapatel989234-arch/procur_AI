@@ -528,7 +528,7 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                     </div>
                   </div>
 
-                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
+                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '32px 0 16px 0' }} />
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
                     {k.subKpis.map((sub, idx) => (
