@@ -2017,6 +2017,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             </div>
           </div>
 
+
           {/* AI CHAT PANE */}
           {chatPaneOpen && (
             <div style={{ width: chatPaneOpen ? '32vw' : 0, /*width: '32vw', minWidth: 350, maxWidth: 550,*/ borderLeft: '1px solid #e5e5e5', background: '#fff', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
