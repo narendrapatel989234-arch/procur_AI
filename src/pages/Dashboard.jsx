@@ -22,11 +22,63 @@ import MainLayout from '../layouts/MainLayout.jsx';
 
 
 const KPIS = [
-  { label: 'Active Requisitions', value: '12', trend: '+2% volume vs last month', TrendIcon: TrendingUp, trendColor: '#22c55e', Icon: FileText, iconColor: '#0052cc', iconBg: 'rgba(0,82,204,0.07)' },
-  { label: 'Active RFPs', value: '8', trend: '3 Drafts | 5 Published', TrendIcon: Layers, trendColor: '#22c55e', Icon: Layers, iconColor: '#7c7cff', iconBg: 'rgba(124,124,255,0.07)' },
-  { label: 'SOW', value: '15', trend: '5 Approved & awaiting Signature | 10 Signed', TrendIcon: CheckCircle, trendColor: '#22c55e', Icon: Briefcase, iconColor: '#a21caf', iconBg: 'rgba(162,28,175,0.07)' },
-  { label: 'POs Pending', value: '24', trend: '85% PR-PO completion rate', TrendIcon: TrendingUp, trendColor: '#22c55e', Icon: Clock, iconColor: '#f59e0b', iconBg: 'rgba(245,158,11,0.07)' },
-  { label: 'Average PR-PO Cycle Time', value: '6.2d', trend: '-12% duration vs last month', TrendIcon: TrendingDown, trendColor: '#22c55e', Icon: Zap, iconColor: '#7c7cff', iconBg: 'rgba(124,124,255,0.07)' },
+  {
+    newStyle: true,
+    label: 'Active Requisitions',
+    value: '12',
+    iconBg: '#eff6ff',
+    iconColor: '#2563eb',
+    Icon: FileText,
+    subKpis: [
+      { value: '2%', trend: '↗', trendColor: '#16a34a', title: 'vs last month volume' }
+    ]
+  },
+  {
+    newStyle: true,
+    label: 'Active RFPs',
+    value: '8',
+    iconBg: '#eff6ff',
+    iconColor: '#2563eb',
+    Icon: Layers,
+    subKpis: [
+      { value: '3', title: 'Drafts' },
+      { value: '5', title: 'Published' }
+    ]
+  },
+  {
+    newStyle: true,
+    label: 'SOW',
+    value: '15',
+    iconBg: '#faf5ff',
+    iconColor: '#9333ea',
+    Icon: Briefcase,
+    subKpis: [
+      { value: '5', title: 'Pending Signature' },
+      { value: '10', title: 'Signed' }
+    ]
+  },
+  {
+    newStyle: true,
+    label: 'POs Pending',
+    value: '24',
+    iconBg: '#fffbeb',
+    iconColor: '#d97706',
+    Icon: Clock,
+    subKpis: [
+      { value: '85%', trend: '↗', trendColor: '#16a34a', title: 'PR-PO Completion rate' }
+    ]
+  },
+  {
+    newStyle: true,
+    label: 'Avg PR-PO Cycle Time',
+    value: '6.2d',
+    iconBg: '#eff6ff',
+    iconColor: '#2563eb',
+    Icon: Zap,
+    subKpis: [
+      { value: '12%', trend: '↘', trendColor: '#16a34a', title: 'vs last month' }
+    ]
+  }
 ];
 
 
@@ -462,37 +514,66 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
         {/* KPI cards */}
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 }}>
+          {KPIS.map((k, i) => {
+            if (k.newStyle) {
+              return (
+                <div key={i} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 24, padding: '16px 20px', display: 'flex', flexDirection: 'column', height: '100%', boxSizing: 'border-box' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ width: 60, height: 60, borderRadius: 16, background: k.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <k.Icon size={26} color={k.iconColor} strokeWidth={2} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 2 }}>{k.label}</div>
+                      <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>{k.value}</div>
+                    </div>
+                  </div>
 
-          {KPIS.map((k, i) => (
-            <div key={i} style={{
-              background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14,
-              padding: '12px 16px', boxShadow: '0 1px 3px rgba(14,15,37,0.05)',
-              display: 'flex', flexDirection: 'column', height: '100%'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                    {k.subKpis.map((sub, idx) => (
+                      <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                          <span style={{ fontSize: 20, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>{sub.value}</span>
+                          {sub.trend && <span style={{ fontSize: 14, fontWeight: 600, color: sub.trendColor }}>{sub.trend}</span>}
+                        </div>
+                        <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{sub.title}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <div key={i} style={{
+                background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14,
+                padding: '12px 16px', boxShadow: '0 1px 3px rgba(14,15,37,0.05)',
+                display: 'flex', flexDirection: 'column', height: '100%'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div style={{
+                    width: 32, height: 32, borderRadius: 10, background: k.iconBg,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <k.Icon size={16} color={k.iconColor} strokeWidth={2} />
+                  </div>
+                </div>
                 <div style={{
-                  width: 32, height: 32, borderRadius: 10, background: k.iconBg,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 11, fontWeight: 600, color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase', letterSpacing: '0.4px', marginTop: 10,
+                  lineHeight: 1.3
+                }}>{k.label}</div>
+                <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginTop: 2 }}>{k.value}</div>
+                <div style={{
+                  fontSize: 11, color: k.trendColor, marginTop: 10,
+                  display: 'flex', alignItems: 'flex-start', gap: 6, lineHeight: 1.4
                 }}>
-                  <k.Icon size={16} color={k.iconColor} strokeWidth={2} />
+                  <div style={{ paddingTop: 1 }}><k.TrendIcon size={12} strokeWidth={2.5} /></div>
+                  <span style={{ flex: 1 }}>{k.trend}</span>
                 </div>
               </div>
-              <div style={{
-                fontSize: 11, fontWeight: 600, color: 'var(--text-tertiary)',
-                textTransform: 'uppercase', letterSpacing: '0.4px', marginTop: 10,
-                lineHeight: 1.3
-              }}>{k.label}</div>
-              <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginTop: 2 }}>{k.value}</div>
-              <div style={{
-                fontSize: 11, color: k.trendColor, marginTop: 10,
-                display: 'flex', alignItems: 'flex-start', gap: 6, lineHeight: 1.4
-              }}>
-                <div style={{ paddingTop: 1 }}><k.TrendIcon size={12} strokeWidth={2.5} /></div>
-                <span style={{ flex: 1 }}>{k.trend}</span>
-              </div>
-            </div>
-          ))}
-
+            );
+          })}
         </div>
 
 
