@@ -534,10 +534,10 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                     {k.subKpis.map((sub, idx) => (
                       <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                          <span style={{ fontSize: 20, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>{sub.value}</span>
+                          <span style={{ fontSize: 20, fontWeight: 600, color: 'var(--text-tertiary)', letterSpacing: '-0.5px' }}>{sub.value}</span>
                           {sub.trend && <span style={{ fontSize: 14, fontWeight: 600, color: sub.trendColor }}>{sub.trend}</span>}
                         </div>
-                        <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{sub.title}</div>
+                        <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{sub.title}</div>
                       </div>
                     ))}
                   </div>

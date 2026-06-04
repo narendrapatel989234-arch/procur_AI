@@ -11,6 +11,7 @@ import ChatDetail from './pages/ChatDetail.jsx';
 import AgentManagement from './pages/AgentManagement.jsx';
 import Templates from './pages/Templates.jsx';
 import TemplateDetail from './pages/TemplateDetail.jsx';
+import PurchaseOrders from './pages/PurchaseOrders.jsx';
 
 const NAV_MAP = {
   'Dashboard': 'dashboard',
@@ -73,6 +74,7 @@ export default function App() {
       {currentPage === 'templatedetail' && <TemplateDetail {...pageProps} />}
       {currentPage === 'agentmanagement' && <AgentManagement {...pageProps} />}
       {currentPage === 'prdetailrfp' && <PRDetailRFP {...pageProps} />}
+      {currentPage === 'purchaseorders' && <PurchaseOrders {...pageProps} />}
     </>
   );
 }
