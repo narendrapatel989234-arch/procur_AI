@@ -12,7 +12,8 @@ import {
   Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, AlignJustify,
   List, ListOrdered, Indent, Outdent, Link, Image, Printer,
   Undo2, Redo2, Code, RemoveFormatting, Pencil, Save, ChevronDown,
-  Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2
+  Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2,
+  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal
 } from 'lucide-react';
 
 const STATUS_CONFIG = {
@@ -824,6 +825,36 @@ const REASONING_MAP = {
 
 export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState }) {
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
+  const [chatPaneOpen, setChatPaneOpen] = useState(navState?.openChatPane || false);
+  const [chatMenuOpen, setChatMenuOpen] = useState(false);
+  const [chatMenuPinned, setChatMenuPinned] = useState(false);
+  const chatMenuRef = useRef(null);
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState([
+    { role: 'user', text: 'Summarise the PO for me' },
+    { role: 'status' },
+    { role: 'ai', text: 'PO-2026-00412 is for AWS Cloud Migration Consulting Services with Accenture Middle East. Total value: ₹45,00,000. Engagement covers 3 senior architects for 6 months across assessment, migration and support phases. Terms: Technology & Consulting. Awaiting approval from Sarah Chen.' }
+  ]);
+  const chatInputRef = useRef(null);
+  const [chatCopiedMsgs, setChatCopiedMsgs] = useState(new Set());
+  const [chatLikedMsgs, setChatLikedMsgs] = useState(new Set());
+  const [chatDislikedMsgs, setChatDislikedMsgs] = useState(new Set());
+  const [chatRegeneratingMsgs, setChatRegeneratingMsgs] = useState(new Set());
+  const [chatHoveredUserMsg, setChatHoveredUserMsg] = useState(null);
+  const chatScrollRef = useRef(null);
+  const [chatLikedTooltipVisible, setChatLikedTooltipVisible] = useState(new Set());
+  const [chatDislikedTooltipVisible, setChatDislikedTooltipVisible] = useState(new Set());
+  const chatTooltipTimers = useRef(new Set());
+  const [chatReasoningComplete, setChatReasoningComplete] = useState(true);
+
+  useEffect(() => {
+    if (!chatMenuOpen) return;
+    function handler(e) {
+      if (chatMenuRef.current && !chatMenuRef.current.contains(e.target)) setChatMenuOpen(false);
+    }
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [chatMenuOpen]);
   const [showSaveToast, setShowSaveToast] = useState(false);
   const [selectedNode, setSelectedNode] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
@@ -1338,14 +1369,13 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
           <div style={{ height: 56, borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', padding: '0 24px', gap: 12 }}>
             <ArrowLeft size={17} color="var(--text-tertiary)" style={{ cursor: 'pointer' }} onClick={() => onNavigate('Dashboard')} />
             <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-              <span style={{ fontSize: 13, color: 'var(--text-tertiary)', cursor: 'pointer' }} onClick={() => onNavigate('Requests')}>Requests</span>
+              <span style={{ fontSize: 13, color: 'var(--text-tertiary)', cursor: 'pointer' }} onClick={() => onNavigate('Dashboard')}>Dashboard</span>
               <ChevronRight size={13} color="var(--text-tertiary)" />
               <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>PR-2026-004</span>
             </div>
             <div style={{ flex: 1 }} />
-            <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid var(--border-default)', background: '#fff', cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', fontWeight: 500, fontFamily: 'inherit' }}
-              onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-              <Download size={14} /> Export
+            <button onClick={() => setChatPaneOpen(true)} style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'linear-gradient(135deg, #0052cc, #7c7cff)', border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, color: '#fff', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.3)', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 18px rgba(0,82,204,0.45)'} onMouseLeave={e => e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.3)'}>
+              <Sparkles size={14} strokeWidth={2} /> AI Chat
             </button>
           </div>
           <div style={{ borderBottom: '1px solid var(--border-subtle)', padding: '14px 24px' }}>
@@ -1412,11 +1442,24 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
                     </button>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px 0' }}>
-                    {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', '₹45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026']].map(([l, v]) => (
+                    {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', '₹45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026'], ['Justification', 'Required for modernising backend systems'], ['Contract Reference', 'N/A'], ['Pricing Model', 'Time & Materials'], ['Timeline', '6 Months']].map(([l, v]) => (
                       <React.Fragment key={l}><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', paddingRight: 16 }}>{l}</div><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{v}</div></React.Fragment>
                     ))}
                     <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Priority</div>
                     <div><span style={{ background: 'rgba(245,158,11,0.1)', color: '#b45309', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 600 }}>Urgent</span></div>
+                  </div>
+                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 6 }}>Requirement Description</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6 }}>
+                    We require consulting services for migrating our existing on-premise infrastructure to AWS. The engagement should cover assessment, architecture design, migration execution, and post-migration support. Expected team size: 3 senior architects for 6 months.
+                  </div>
+                  <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
+                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 12 }}>Attachments</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, background: 'var(--bg-surface-1)', cursor: 'pointer' }}>
+                      <FileText size={16} color="#0052cc" />
+                      <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1834,6 +1877,173 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
             );
           })()}
 
+        </div>
+
+        {/* AI CHAT PANE OVERLAY */}
+        <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: chatPaneOpen ? '50vw' : 0, flexShrink: 0, borderLeft: chatPaneOpen ? '1px solid var(--border-subtle)' : 'none', overflow: 'hidden', transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1)', background: '#fff', display: 'flex', flexDirection: 'column', zIndex: 1000, boxShadow: chatPaneOpen ? '-8px 0 32px rgba(0,0,0,0.1)' : 'none' }}>
+          <div style={{ width: '50vw', display: 'flex', flexDirection: 'column', height: '100%' }}>
+            {/* Header */}
+            <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+                <X size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', flexShrink: 0 }} onClick={() => setChatPaneOpen(false)} />
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 400 }}>
+                  Ask about this PR...
+                </div>
+              </div>
+              <div style={{ position: 'relative' }} ref={chatMenuRef}>
+                <button
+                  onClick={() => setChatMenuOpen(!chatMenuOpen)}
+                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8, borderRadius: 8, color: 'var(--text-secondary)' }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                >
+                  <MoreHorizontal size={18} />
+                </button>
+                {chatMenuOpen && (
+                  <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)', padding: 6, zIndex: 500, minWidth: 180 }}>
+                    {[
+                      { icon: Edit2, label: 'Rename', action: () => setChatMenuOpen(false) },
+                      { icon: chatMenuPinned ? PinOff : Pin, label: chatMenuPinned ? 'Unpin' : 'Pin', action: () => { setChatMenuPinned(p => !p); setChatMenuOpen(false); } },
+                      { icon: Share2, label: 'Share', action: () => setChatMenuOpen(false) },
+                      { icon: Download, label: 'Download', action: () => setChatMenuOpen(false) },
+                    ].map(({ icon: Icon, label, action }) => (
+                      <div key={label} onClick={action}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 7, cursor: 'pointer', fontSize: 13, color: 'var(--text-primary)', transition: 'background 0.12s ease' }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <Icon size={14} color="var(--text-secondary)" />{label}
+                      </div>
+                    ))}
+                    <div style={{ height: 1, background: 'var(--border-subtle)', margin: '4px 0' }} />
+                    <div onClick={() => setChatMenuOpen(false)}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 7, cursor: 'pointer', fontSize: 13, color: '#ef4444', transition: 'background 0.12s ease' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.06)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <Trash2 size={14} color="#ef4444" />Delete
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Messages scroll area */}
+            <div ref={chatScrollRef} style={{ flex: 1, overflowY: 'auto', padding: '20px 20px 8px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {chatMessages.map((msg, i) => {
+                if (msg.role === 'status') {
+                  return (
+                    <div key={i} style={{ alignSelf: 'flex-start', display: 'flex', flexDirection: 'column', gap: 8, width: '90%', animation: 'chatFadeIn 0.2s ease forwards' }}>
+                      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                          <Sparkles size={12} color="#fff" strokeWidth={2} />
+                        </div>
+                        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(124,124,255,0.04)', border: '1px solid rgba(124,124,255,0.15)', borderRadius: 10, padding: '8px 14px' }}>
+                          <div style={{ flex: 1, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
+                            {chatReasoningComplete ? (
+                              <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>Completed</span>
+                            ) : (
+                              <span style={{ animation: 'textShimmer 1.2s ease-in-out infinite', display: 'inline-block' }}>Analysing your request...</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return msg.role === 'user' ? (
+                  <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '78%', animation: 'chatFadeIn 0.2s ease forwards' }}
+                    onMouseEnter={() => setChatHoveredUserMsg(i)}
+                    onMouseLeave={() => setChatHoveredUserMsg(null)}>
+                    <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
+                      {msg.text}
+                    </div>
+                  </div>
+                ) : (
+                  <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '82%', display: 'flex', flexDirection: 'column', gap: 6, animation: 'chatFadeIn 0.2s ease forwards' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                      {chatMessages[i - 1]?.role !== 'status' ? (
+                        <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                          <Sparkles size={12} color="#fff" strokeWidth={2} />
+                        </div>
+                      ) : (
+                        <div style={{ width: 28, flexShrink: 0 }} />
+                      )}
+                      <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, paddingTop: 4 }}>
+                        {msg.text}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 38 }}>
+                      <span style={{ fontSize: 11, color: 'var(--text-tertiary)', marginRight: 6 }}>Just now</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Input bar */}
+            <div style={{ flexShrink: 0, padding: '12px 16px 16px', background: '#fff' }}>
+              <div style={{ border: `1.5px solid ${chatInput ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: chatInput ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.04)' : '0 2px 8px rgba(14,15,37,0.04)', transition: 'border-color 0.15s, box-shadow 0.15s', background: '#fff' }}>
+                <textarea
+                  ref={chatInputRef}
+                  value={chatInput}
+                  onChange={e => {
+                    setChatInput(e.target.value);
+                    if (chatInputRef.current) {
+                      chatInputRef.current.style.height = 'auto';
+                      chatInputRef.current.style.height = Math.min(chatInputRef.current.scrollHeight, 120) + 'px';
+                    }
+                  }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      if (!chatInput.trim()) return;
+                      const userMsg = { role: 'user', text: chatInput.trim() };
+                      const statusMsg = { role: 'status' };
+                      const aiMsg = { role: 'ai', text: 'I\'m reviewing this PR and the related procurement data. Based on the workflow and documents available, here is my analysis for your query.' };
+                      setChatMessages(prev => [...prev, userMsg, statusMsg, aiMsg]);
+                      setChatInput('');
+                      if (chatInputRef.current) chatInputRef.current.style.height = 'auto';
+                    }
+                  }}
+                  placeholder="Ask about this PR..."
+                  rows={1}
+                  style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', resize: 'none', minHeight: 24, maxHeight: 120, overflowY: 'auto', fontFamily: 'Inter, sans-serif', lineHeight: 1.5 }}
+                />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
+                  <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
+                    <Paperclip size={18} />
+                  </button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontSize: 11, color: chatInput.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>
+                      {chatInput.length} / 20000
+                    </span>
+                    <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                      onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                      <Mic size={18} strokeWidth={2} />
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (!chatInput.trim()) return;
+                        const userMsg = { role: 'user', text: chatInput.trim() };
+                        const statusMsg = { role: 'status' };
+                        const aiMsg = { role: 'ai', text: 'I\'m reviewing this PR and the related procurement data. Based on the workflow and documents available, here is my analysis for your query.' };
+                        setChatMessages(prev => [...prev, userMsg, statusMsg, aiMsg]);
+                        setChatInput('');
+                        if (chatInputRef.current) chatInputRef.current.style.height = 'auto';
+                      }}
+                      style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: chatInput.trim() ? 'pointer' : 'not-allowed', background: chatInput.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: chatInput.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
+                      <Send size={15} color={chatInput.trim() ? '#fff' : 'var(--text-tertiary)'} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </MainLayout>
     </>

@@ -368,6 +368,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
     <MainLayout
       activeNav={activeNav}
       onNavigate={onNavigate}
+      userRole={userRole}
       titleComponent={<span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Templates</span>}
       searchPlaceholder={null}
     >

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Sidebar from '../layouts/Sidebar.jsx';
 import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X, Brain, GitBranch, ShieldCheck, Banknote, Scale, PackageCheck, UserCheck, Zap, Pencil, Calendar, Building, Tag, MapPin, ChevronDown, Upload, Eye, FileText, Send, Mic, Paperclip, Copy, ThumbsUp, ThumbsDown, RotateCcw, Edit2, MoreHorizontal, Pin, PinOff, Share2, Trash2 } from 'lucide-react';
 
 const ICONS = { User, Sparkles, GitBranch, Banknote, Scale, Zap, ShieldCheck, PackageCheck, UserCheck, CheckCircle };
@@ -551,7 +550,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
   const statusCfg = STATUS_CONFIG[prStatus] || { bg: '#e8f1fb', color: '#0052cc' };
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
+    <div style={{ display: 'flex', flex: 1, overflow: 'hidden', fontFamily: 'Inter, sans-serif' }}>
       <style>{`
         @keyframes pulseRing { 0%,100%{box-shadow:0 0 0 0 rgba(124,124,255,0.4)} 50%{box-shadow:0 0 0 8px rgba(124,124,255,0)} }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
@@ -617,7 +616,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
 
       {showEditModal && <EditModal onClose={() => setShowEditModal(false)} onSave={() => { setShowEditModal(false); setShowSaveToast(true); setTimeout(() => setShowSaveToast(false), 3000); }} />}
 
-      <Sidebar activeNav="Dashboard" onNavigate={onNavigate} />
+
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#fff' }}>
 
@@ -719,7 +718,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                       onMouseLeave={e => e.currentTarget.style.background = '#fff'}
                     >
                       <Pencil size={12} strokeWidth={2} />
-                      Edit Details
+                      Edit PR Details
                     </button>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px 0' }}>
@@ -737,6 +736,10 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                       ['Delivery Location', 'Dubai'],
                       ['Suggested Vendor', 'Open to sourcing'],
                       ['Project Name', 'Infrastructure Modernisation 2026'],
+                      ['Justification', 'Required for modernising backend systems'],
+                      ['Contract Reference', 'N/A'],
+                      ['Pricing Model', 'Time & Materials'],
+                      ['Timeline', '6 Months'],
                     ].map(([label, value]) => (
                       <React.Fragment key={label}>
                         <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>{label}</div>
@@ -750,6 +753,14 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                   <div style={{ fontSize: 12, fontWeight: 600, color: '#999', marginBottom: 6 }}>Requirement Description</div>
                   <div style={{ fontSize: 13, color: '#1a1a1a', lineHeight: 1.6 }}>
                     We require consulting services for migrating our existing on-premise infrastructure to AWS. The engagement should cover assessment, architecture design, migration execution, and post-migration support. Expected team size: 3 senior architects for 6 months.
+                  </div>
+                  <div style={{ height: 1, background: '#e5e5e5', margin: '16px 0' }} />
+                  <div style={{ fontSize: 12, fontWeight: 600, color: '#999', marginBottom: 12 }}>Attachments</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fcfcfc', cursor: 'pointer' }}>
+                      <FileText size={16} color="#0052cc" />
+                      <span style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Q3_Procurement_Requirements.pdf</span>
+                    </div>
                   </div>
                 </div>
               </div>

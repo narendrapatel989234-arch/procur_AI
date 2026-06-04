@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Sidebar from './layouts/Sidebar.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import ChatHistory from './pages/ChatHistory.jsx';
 import NewRequest from './pages/NewRequest.jsx';
@@ -38,8 +39,8 @@ const PAGE_TO_NAV = {
   'newchat': null,
   'chatdetail': null,
   'prdetail': null,
-  'prdetailfresh': 'Requests',
-  'prdetailrfp': 'Requests',
+  'prdetailfresh': 'Dashboard',
+  'prdetailrfp': 'Dashboard',
   'login': null,
   'templates': 'Templates',
   'templatedetail': 'Templates',
@@ -62,19 +63,27 @@ export default function App() {
 
   return (
     <>
-      {currentPage === 'login' && <Login onNavigate={handleNavigate} onLogin={(role) => setUserRole(role)} />}
-      {currentPage === 'dashboard' && <Dashboard {...pageProps} />}
-      {currentPage === 'chathistory' && <ChatHistory {...pageProps} />}
-      {currentPage === 'newchat' && <NewChat {...pageProps} />}
-      {currentPage === 'chatdetail' && <ChatDetail {...pageProps} />}
-      {currentPage === 'newrequest' && <NewRequest {...pageProps} />}
-      {currentPage === 'prdetail' && <PRDetail {...pageProps} />}
-      {currentPage === 'prdetailfresh' && <PRDetailFresh {...pageProps} />}
-      {currentPage === 'templates' && <Templates {...pageProps} />}
-      {currentPage === 'templatedetail' && <TemplateDetail {...pageProps} />}
-      {currentPage === 'agentmanagement' && <AgentManagement {...pageProps} />}
-      {currentPage === 'prdetailrfp' && <PRDetailRFP {...pageProps} />}
-      {currentPage === 'purchaseorders' && <PurchaseOrders {...pageProps} />}
+      {currentPage === 'login' ? (
+        <Login onNavigate={handleNavigate} onLogin={(role) => setUserRole(role)} />
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'row', height: '100vh', overflow: 'hidden', fontFamily: 'var(--typography-font-family-primary), Inter, sans-serif', background: 'var(--bg-default)' }}>
+          <Sidebar activeNav={activeNav} onNavigate={handleNavigate} userRole={userRole} />
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg-default)' }}>
+            {currentPage === 'dashboard' && <Dashboard {...pageProps} />}
+            {currentPage === 'chathistory' && <ChatHistory {...pageProps} />}
+            {currentPage === 'newchat' && <NewChat {...pageProps} />}
+            {currentPage === 'chatdetail' && <ChatDetail {...pageProps} />}
+            {currentPage === 'newrequest' && <NewRequest {...pageProps} />}
+            {currentPage === 'prdetail' && <PRDetail {...pageProps} />}
+            {currentPage === 'prdetailfresh' && <PRDetailFresh {...pageProps} />}
+            {currentPage === 'templates' && <Templates {...pageProps} />}
+            {currentPage === 'templatedetail' && <TemplateDetail {...pageProps} />}
+            {currentPage === 'agentmanagement' && <AgentManagement {...pageProps} />}
+            {currentPage === 'prdetailrfp' && <PRDetailRFP {...pageProps} />}
+            {currentPage === 'purchaseorders' && <PurchaseOrders {...pageProps} />}
+          </div>
+        </div>
+      )}
     </>
   );
 }

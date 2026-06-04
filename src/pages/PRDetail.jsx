@@ -421,7 +421,7 @@ export default function PRDetail({ setCurrentPage, onNavigate, activeNav , userR
                         <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Submitted 08 May 2026</div>
                       </div>
                       <button onClick={() => setShowEditModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 7, padding: '5px 12px', cursor: 'pointer', fontSize: 12, fontWeight: 500, color: '#0052cc', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                        <Pencil size={13} /> Edit Details
+                        <Pencil size={13} /> Edit PR Details
                       </button>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '10px 0px' }}>
@@ -439,6 +439,10 @@ export default function PRDetail({ setCurrentPage, onNavigate, activeNav , userR
                         ['Delivery Location', 'Dubai'],
                         ['Suggested Vendor', 'Open to sourcing'],
                         ['Project Name', 'Infrastructure Modernisation 2026'],
+                        ['Justification', 'Required for modernising backend systems'],
+                        ['Contract Reference', 'N/A'],
+                        ['Pricing Model', 'Time & Materials'],
+                        ['Timeline', '6 Months'],
                       ].map(([label, value]) => (
                         <React.Fragment key={label}>
                           <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', paddingRight: 16, width: 200 }}>{label}</div>
