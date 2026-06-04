@@ -459,7 +459,12 @@ const SCORING_CRITERIA = [
 const DUMMY_VENDORS = [
   { id: 'dv1', name: 'Acme Corp', location: 'Dubai, UAE', rationale: ['Solid IT consulting background', 'Extensive experience in enterprise projects'] },
   { id: 'dv2', name: 'TechFlow Inc', location: 'Abu Dhabi, UAE', rationale: ['Competitive pricing structure', 'Good regional delivery capabilities'] },
-  { id: 'dv3', name: 'Global Sourcing Ltd', location: 'Dubai, UAE', rationale: ['Global reputation and scale', 'High technical capabilities in AI and Cloud'] }
+  { id: 'dv3', name: 'Global Sourcing Ltd', location: 'Dubai, UAE', rationale: ['Global reputation and scale', 'High technical capabilities in AI and Cloud'] },
+  { id: 'dv4', name: 'Nexus IT Solutions', location: 'Riyadh, KSA', rationale: ['Strong local presence', 'Proven track record in government projects'] },
+  { id: 'dv5', name: 'CloudPeak Systems', location: 'Dubai, UAE', rationale: ['AWS Premier Partner', 'Excellent cloud migration capabilities'] },
+  { id: 'dv6', name: 'DataEdge Consulting', location: 'Doha, Qatar', rationale: ['Specialized in big data analytics', 'Cost-effective offshore teams'] },
+  { id: 'dv7', name: 'Pioneer Tech', location: 'Abu Dhabi, UAE', rationale: ['Deep industry expertise', 'Comprehensive support models'] },
+  { id: 'dv8', name: 'Visionary Dynamics', location: 'Dubai, UAE', rationale: ['Innovative AI solutions', 'Agile delivery methodologies'] }
 ];
 const COST_ITEMS = [
   { phase: 'Phase 1 — Assessment', duration: '2 months', resources: '3 Architects', estimate: '₹12,00,000' },
@@ -886,6 +891,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [showScoringConfigModal, setShowScoringConfigModal] = useState(false);
   const [showCostConfigModal, setShowCostConfigModal] = useState(false);
   const [selectedDummyVendors, setSelectedDummyVendors] = useState([]);
+  const [isVendorDropdownOpen, setIsVendorDropdownOpen] = useState(false);
   const [vendorToast, setVendorToast] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(null);
   const [showReuploadModal, setShowReuploadModal] = useState(null);
@@ -1232,30 +1238,48 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
       {showAddVendorModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowAddVendorModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: 480, padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 20 }} onClick={e => e.stopPropagation()}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 480, padding: '32px', minHeight: 400, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 20 }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Add Vendor</div>
-                <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Select vendors to add to the suggested list.</div>
+                <div style={{ fontSize: 13, color: '#666', marginTop: 6 }}>Select vendors to add to the suggested list.</div>
               </div>
               <button onClick={() => setShowAddVendorModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             </div>
 
-            <div style={{ border: '1px solid var(--border-default)', borderRadius: 10, overflow: 'hidden' }}>
-              {DUMMY_VENDORS.map(v => (
-                <div key={v.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--border-subtle)', background: '#fff', cursor: 'pointer' }}
-                  onClick={() => setSelectedDummyVendors(prev => prev.includes(v.id) ? prev.filter(id => id !== v.id) : [...prev, v.id])}>
-                  <div style={{ width: 18, height: 18, borderRadius: 4, border: `1.5px solid ${selectedDummyVendors.includes(v.id) ? '#0052cc' : '#ccc'}`, background: selectedDummyVendors.includes(v.id) ? '#0052cc' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {selectedDummyVendors.includes(v.id) && <Check size={12} color="#fff" strokeWidth={3} />}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{v.name}</div>
-                  </div>
+            <div style={{ position: 'relative' }}>
+              <div 
+                onClick={() => setIsVendorDropdownOpen(!isVendorDropdownOpen)}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', border: '1px solid var(--border-default)', borderRadius: 10, cursor: 'pointer', background: '#fff' }}
+              >
+                <div style={{ fontSize: 14, color: selectedDummyVendors.length > 0 ? '#1a1a1a' : '#666', fontWeight: 500 }}>
+                  {selectedDummyVendors.length > 0 ? `Vendors: ${selectedDummyVendors.length} selected` : 'Select vendors...'}
                 </div>
-              ))}
+                <ChevronDown size={16} color="#666" style={{ transform: isVendorDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }} />
+              </div>
+
+              {isVendorDropdownOpen && (
+                <>
+                  <div style={{ position: 'fixed', inset: 0, zIndex: 10 }} onClick={() => setIsVendorDropdownOpen(false)} />
+                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 6, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 20, maxHeight: 200, overflowY: 'auto' }}>
+                    {DUMMY_VENDORS.map(v => (
+                      <div key={v.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 16px', borderBottom: '1px solid var(--border-subtle)', cursor: 'pointer', transition: 'background 0.1s ease' }}
+                        onClick={() => setSelectedDummyVendors(prev => prev.includes(v.id) ? prev.filter(id => id !== v.id) : [...prev, v.id])}
+                        onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <div style={{ width: 16, height: 16, borderRadius: 4, border: `1.5px solid ${selectedDummyVendors.includes(v.id) ? '#0052cc' : '#ccc'}`, background: selectedDummyVendors.includes(v.id) ? '#0052cc' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {selectedDummyVendors.includes(v.id) && <Check size={10} color="#fff" strokeWidth={3} />}
+                        </div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{v.name}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
-            <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+            <div style={{ display: 'flex', gap: 10, marginTop: 'auto' }}>
               <button onClick={() => setShowAddVendorModal(false)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
               <button
                 disabled={selectedDummyVendors.length === 0}
