@@ -580,7 +580,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
                           zIndex: 100,
                           pointerEvents: 'none'
                         }}>
-                          Upload up to 5 files in PDF, DOCX and PPT format, up to 10 MB each
+                          Upload one PDF, DOCX, or PPT file (up to 25 MB)
                         </div>
                       )}
                       <input type="file" multiple accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={fileInputRef} onChange={(e) => {

@@ -13,7 +13,7 @@ import {
   List, ListOrdered, Indent, Outdent, Link, Image, Printer,
   Undo2, Redo2, Code, RemoveFormatting, Pencil, Save, ChevronDown,
   Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2,
-  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal
+  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check
 } from 'lucide-react';
 
 const STATUS_CONFIG = {
@@ -443,11 +443,11 @@ function WYSIWYGEditor({ isEditing, htmlContent, setHtmlContent }) {
 }
 
 const VENDORS = [
-  { id: 1, name: 'Accenture Middle East', location: 'Dubai, UAE', score: 94 },
-  { id: 2, name: 'Deloitte Technology', location: 'Abu Dhabi, UAE', score: 88 },
-  { id: 3, name: 'TCS Digital', location: 'Dubai, UAE', score: 85 },
-  { id: 4, name: 'Infosys Cloud Services', location: 'Dubai, UAE', score: 79 },
-  { id: 5, name: 'Wipro Cloud Practice', location: 'Remote / UAE Ops', score: 76 },
+  { id: 1, name: 'Accenture Middle East', location: 'Dubai, UAE', score: 94, rationale: ['Extensive cloud migration experience', 'Strong regional presence in UAE', 'High technical competency'] },
+  { id: 2, name: 'Deloitte Technology', location: 'Abu Dhabi, UAE', score: 88, rationale: ['Deep industry domain expertise', 'Proven track record in digital transformation', 'Excellent team composition'] },
+  { id: 3, name: 'TCS Digital', location: 'Dubai, UAE', score: 85, rationale: ['Cost-effective delivery model', 'Robust global delivery network', 'Strong relevant experience'] },
+  { id: 4, name: 'Infosys Cloud Services', location: 'Dubai, UAE', score: 79, rationale: ['Solid approach and methodology', 'Competitive commercial proposal', 'Good technical capabilities'] },
+  { id: 5, name: 'Wipro Cloud Practice', location: 'Remote / UAE Ops', score: 76, rationale: ['Flexible engagement model', 'Adequate relevant experience', 'Acceptable technical score'] },
 ];
 const SCORING_CRITERIA = [
   { label: 'Technical Competency', weight: 30, color: '#7c7cff' },
@@ -455,6 +455,11 @@ const SCORING_CRITERIA = [
   { label: 'Team Composition & CVs', weight: 20, color: '#22c55e' },
   { label: 'Commercial Proposal', weight: 15, color: '#f59e0b' },
   { label: 'Approach & Methodology', weight: 10, color: '#ef4444' },
+];
+const DUMMY_VENDORS = [
+  { id: 'dv1', name: 'Acme Corp', location: 'Dubai, UAE', rationale: ['Solid IT consulting background', 'Extensive experience in enterprise projects'] },
+  { id: 'dv2', name: 'TechFlow Inc', location: 'Abu Dhabi, UAE', rationale: ['Competitive pricing structure', 'Good regional delivery capabilities'] },
+  { id: 'dv3', name: 'Global Sourcing Ltd', location: 'Dubai, UAE', rationale: ['Global reputation and scale', 'High technical capabilities in AI and Cloud'] }
 ];
 const COST_ITEMS = [
   { phase: 'Phase 1 — Assessment', duration: '2 months', resources: '3 Architects', estimate: '₹12,00,000' },
@@ -875,7 +880,11 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadForm, setUploadForm] = useState({ vendorName: '', file: null, supporting: null });
   const [activeDropdown, setActiveDropdown] = useState(null);
-
+  
+  const [suggestedVendors, setSuggestedVendors] = useState(VENDORS);
+  const [showAddVendorModal, setShowAddVendorModal] = useState(false);
+  const [selectedDummyVendors, setSelectedDummyVendors] = useState([]);
+  const [vendorToast, setVendorToast] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(null);
   const [showReuploadModal, setShowReuploadModal] = useState(null);
   const [showSupportingDocModal, setShowSupportingDocModal] = useState(null);
@@ -1024,6 +1033,13 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
           <button onClick={() => setShowRegenToast(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#aaa' }}><X size={15} /></button>
         </div>
       )}
+      {vendorToast && (
+        <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
+          <CheckCircle size={18} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
+          <div style={{ fontSize: 13, fontWeight: 500, color: '#15803d', flex: 1 }}>{vendorToast}</div>
+          <button onClick={() => setVendorToast(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
+        </div>
+      )}
 
       {showNewVersionModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => { if (!newVersionGenerating) setShowNewVersionModal(false); }}>
@@ -1066,6 +1082,58 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
               <button onClick={() => setShowPublishConfirm(false)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
               <button onClick={handlePublish} style={{ flex: 1, padding: '11px', border: 'none', borderRadius: 10, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}
                 onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>Publish</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAddVendorModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowAddVendorModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 480, padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 20 }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Add Vendor</div>
+                <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Select vendors to add to the suggested list.</div>
+              </div>
+              <button onClick={() => setShowAddVendorModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
+            </div>
+
+            <div style={{ border: '1px solid var(--border-default)', borderRadius: 10, overflow: 'hidden' }}>
+              {DUMMY_VENDORS.map(v => (
+                <div key={v.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--border-subtle)', background: '#fff', cursor: 'pointer' }}
+                  onClick={() => setSelectedDummyVendors(prev => prev.includes(v.id) ? prev.filter(id => id !== v.id) : [...prev, v.id])}>
+                  <div style={{ width: 18, height: 18, borderRadius: 4, border: `1.5px solid ${selectedDummyVendors.includes(v.id) ? '#0052cc' : '#ccc'}`, background: selectedDummyVendors.includes(v.id) ? '#0052cc' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {selectedDummyVendors.includes(v.id) && <Check size={12} color="#fff" strokeWidth={3} />}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{v.name}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+              <button onClick={() => setShowAddVendorModal(false)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
+              <button 
+                disabled={selectedDummyVendors.length === 0}
+                onClick={() => {
+                  const toAdd = DUMMY_VENDORS.filter(v => selectedDummyVendors.includes(v.id));
+                  const newVendors = toAdd.map(v => ({
+                    id: Date.now() + Math.random(),
+                    name: v.name,
+                    location: v.location,
+                    score: Math.floor(Math.random() * 10) + 65,
+                    rationale: v.rationale
+                  }));
+                  setSuggestedVendors(prev => [...prev, ...newVendors]);
+                  setShowAddVendorModal(false);
+                  setSelectedDummyVendors([]);
+                  setVendorToast('Vendor(s) added successfully.');
+                  setTimeout(() => setVendorToast(null), 3000);
+                }}
+                style={{ flex: 1, padding: '11px', border: 'none', borderRadius: 10, background: selectedDummyVendors.length === 0 ? 'var(--bg-surface-2)' : '#0052cc', fontSize: 13, fontWeight: 600, cursor: selectedDummyVendors.length === 0 ? 'not-allowed' : 'pointer', color: selectedDummyVendors.length === 0 ? 'var(--text-tertiary)' : '#fff', fontFamily: 'inherit' }}>
+                Add
+              </button>
             </div>
           </div>
         </div>
@@ -1538,26 +1606,48 @@ export default function PRDetailRFP({ onNavigate, activeNav , userRole, navState
                 {/* WYSIWYG DOC */}
                 <WYSIWYGEditor isEditing={isEditing} htmlContent={rfpHtml} setHtmlContent={handleHtmlChange} />
 
-                {/* SHORTLISTED VENDORS */}
+                {/* SUGGESTED VENDORS */}
                 <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SHORTLISTED VENDORS</div>
-                    <div style={{ background: 'rgba(124,124,255,0.08)', color: '#7c7cff', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 700 }}>5 Vendors</div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SUGGESTED VENDORS</div>
+                      <div style={{ background: 'rgba(124,124,255,0.08)', color: '#7c7cff', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 700 }}>{suggestedVendors.length} Vendors</div>
+                    </div>
+                    <button 
+                      onClick={() => setShowAddVendorModal(true)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
+                        borderRadius: 7, background: '#fff', color: '#0052cc',
+                        fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                        transition: 'all 0.15s ease', fontFamily: 'inherit'
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}
+                    >
+                      <Plus size={12} strokeWidth={2.5} />
+                      Add Vendor
+                    </button>
                   </div>
                   <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
-                    {VENDORS.map((v, i) => (
-                      <div key={v.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 18px', borderBottom: i < VENDORS.length - 1 ? '1px solid var(--border-subtle)' : 'none', background: i === 0 ? 'rgba(124,124,255,0.02)' : '#fff', transition: 'background 0.12s' }}
+                    {suggestedVendors.map((v, i) => (
+                      <div key={v.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 18px', borderBottom: i < suggestedVendors.length - 1 ? '1px solid var(--border-subtle)' : 'none', background: i === 0 ? 'rgba(124,124,255,0.02)' : '#fff', transition: 'background 0.12s' }}
                         onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,124,255,0.04)'} onMouseLeave={e => e.currentTarget.style.background = i === 0 ? 'rgba(124,124,255,0.02)' : '#fff'}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}>
                           <div style={{ width: 34, height: 34, borderRadius: 9, background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                             <Building size={14} color='var(--text-tertiary)' strokeWidth={2} />
                           </div>
-                          <div>
+                          <div style={{ minWidth: 180 }}>
                             <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{v.name}</div>
                             <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{v.location}</div>
                           </div>
+                          <div style={{ flex: 1, paddingLeft: 20, borderLeft: '1px solid var(--border-subtle)' }}>
+                            <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, listStyleType: 'disc' }}>
+                              {v.rationale?.map((r, idx) => <li key={idx}>{r}</li>)}
+                            </ul>
+                          </div>
                         </div>
-                        <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{v.score}<span style={{ fontSize: 11, fontWeight: 500, color: '#999' }}>/100</span></div>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginLeft: 20 }}>{v.score}<span style={{ fontSize: 11, fontWeight: 500, color: '#999' }}>/100</span></div>
                       </div>
                     ))}
                   </div>
