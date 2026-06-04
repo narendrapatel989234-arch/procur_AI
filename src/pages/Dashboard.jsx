@@ -522,8 +522,8 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
                     <div style={{ width: 60, height: 60, borderRadius: 16, background: k.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <k.Icon size={26} color={k.iconColor} strokeWidth={2} />
                     </div>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 2 }}>{k.label}</div>
+                    <div style={{ height: 60, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>{k.label}</div>
                       <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>{k.value}</div>
                     </div>
                   </div>
