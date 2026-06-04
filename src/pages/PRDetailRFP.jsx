@@ -1640,7 +1640,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             </div>
 
             {/* PAGE BODY */}
-            <div style={{ background: 'var(--bg-surface-2)' }}>
+            <div style={{ background: 'var(--bg-surface-2)', flex: 1, overflowY: 'auto' }}>
 
               {/* OVERVIEW */}
               {activeTab === 'overview' && (
