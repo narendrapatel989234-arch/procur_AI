@@ -1151,8 +1151,8 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
       )}
 
       {/* AI CHAT PANE */}
-      <div style={{ width: chatPaneOpen ? 680 : 0, flexShrink: 0, borderLeft: chatPaneOpen ? '1px solid #e5e5e5' : 'none', overflow: 'hidden', transition: 'width 0.25s ease', background: '#fff', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ width: 680, display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ width: chatPaneOpen ? '32vw' : 0, flexShrink: 0, borderLeft: chatPaneOpen ? '1px solid #e5e5e5' : 'none', overflow: 'hidden', transition: 'width 0.25s ease', background: '#fff', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ width: '32vw', display: 'flex', flexDirection: 'column', height: '100%' }}>
 
           {/* Header — matches NewChat top bar style */}
           <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
