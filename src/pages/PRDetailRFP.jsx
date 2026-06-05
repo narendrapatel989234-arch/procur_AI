@@ -13,7 +13,7 @@ import {
   List, ListOrdered, Indent, Outdent, Link, Image, Printer,
   Undo2, Redo2, Code, RemoveFormatting, Pencil, Save, ChevronDown,
   Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2,
-  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers
+  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers, Briefcase, Globe, MessageSquare, TrendingUp, AlertCircle, HelpCircle
 } from 'lucide-react';
 
 const STATUS_CONFIG = {
@@ -470,6 +470,64 @@ const DUMMY_VENDORS = [
   { id: 'dv7', name: 'Pioneer Tech', location: 'Abu Dhabi, UAE', rationale: ['Deep industry expertise', 'Comprehensive support models'] },
   { id: 'dv8', name: 'Visionary Dynamics', location: 'Dubai, UAE', rationale: ['Innovative AI solutions', 'Agile delivery methodologies'] }
 ];
+
+const NEGOTIATION_DATA = {
+  'Accenture Middle East v1': {
+    stats: {
+      vendor: 'Accenture Middle East v1',
+      sentiment: { rating: 'Positive', score: 8.2 },
+      risks: { high: 0, medium: 2, low: 3, count: 5 },
+      gaps: 4,
+      commercial: { gap: 'Medium', detail: '+12% over budget target' },
+      batna: 'Strong - 2 Viable Alternatives',
+      overall: 82
+    },
+    marketSignals: {
+      financial: { title: 'Financial Signals', icon: TrendingUp, desc: 'Q3 revenue up 8% YoY. Operating margins improved to 15.2%. No red flags in recent 10-K filings. Strong cash position suggests low pricing desperation.' },
+      market: { title: 'Market Position', icon: BarChart2, desc: 'Maintained leader status in Gartner Magic Quadrant for Cloud Services. High customer concentration in MEA public sector. Recently lost a major banking contract in UAE.' },
+      operational: { title: 'Operational & Capacity', icon: Briefcase, desc: 'Aggressive hiring in UAE delivery centers (+15% headcount in last quarter). Bench strength is healthy. No flagged project backlogs.' },
+      news: { title: 'News & Sentiment', icon: Globe, desc: 'Positive sentiment around recent AWS Premier Tier partner renewal. No significant litigation or ESG incidents reported in the last 12 months.' }
+    },
+    technicalGaps: [
+      { type: 'gap', title: 'Data Migration Strategy', desc: 'The proposal lacks detailed rollback procedures during the cutover phase.' },
+      { type: 'strength', title: 'Security Architecture', desc: 'Exceptionally strong Zero Trust architecture design that exceeds RFP requirements.' },
+      { type: 'clarification', title: 'Support SLA', desc: 'Clarify if L3 support covers 24/7 or only standard UAE business hours.' },
+      { type: 'risk', title: 'Resource Allocation', desc: 'Key cloud architects are only allocated at 50% capacity during month 2.' },
+      { type: 'benchmark', title: 'Methodology', desc: 'Their migration automation tools benchmark 20% faster than average bidders.' }
+    ],
+    commercialPointers: [
+      'Rate card for Senior Architects is 10% above market average for UAE.',
+      'Software licensing costs are bundled; request a line-item breakdown.',
+      'Payment terms proposed are Net 30; our standard is Net 45. Push for Net 45.',
+      'Travel & Expenses (T&E) are uncapped. Negotiate a hard cap at 5% of total engagement value.'
+    ],
+    strategyBrief: {
+      opening: 'Acknowledge strong technical fit but emphasize that commercials are currently uncompetitive compared to alternative bids.',
+      target: '₹42,00,000',
+      walkAway: '₹45,00,000',
+      concessions: [
+        'Offer flexibility on start date in exchange for lower rate card.',
+        'Concede Net 30 only if T&E is fully absorbed by vendor.'
+      ],
+      batna: 'Award contract to Deloitte Technology (scored 88, priced at ₹40,50,000). Their technical score is slightly lower, but commercials are fully aligned with budget.'
+    },
+    clarificationQuestions: [
+      {
+        question: "Does the L3 support SLA cover 24/7 or only standard UAE business hours?",
+        context: "The proposal mentions 'Comprehensive L3 Support' but omits specific operational hours, which is critical for estimating off-hours risk."
+      },
+      {
+        question: "Can you provide a line-item breakdown of the bundled software licensing costs?",
+        context: "Commercial proposal bundles licensing with services, obscuring the true margins and preventing direct comparison with competitors."
+      },
+      {
+        question: "What are the specific rollback procedures planned during the cutover phase?",
+        context: "The Data Migration Strategy outlines forward progress but vaguely references 'contingency measures' without detailing rollback timelines."
+      }
+    ]
+  }
+};
+
 const COST_ITEMS = [
   { phase: 'Phase 1 — Assessment', duration: '2 months', resources: '3 Architects', estimate: '₹10,00,000 - ₹14,00,000' },
   { phase: 'Phase 2 — Migration', duration: '3 months', resources: '3 Architects + 2 Engineers', estimate: '₹20,00,000 - ₹30,00,000' },
@@ -896,6 +954,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [uploadForms, setUploadForms] = useState([{ id: Date.now(), vendorName: '', file: null, supporting: [] }]);
   const [uploadForm, setUploadForm] = useState({ vendorName: '', file: null, supporting: [] });
   const [activeDropdown, setActiveDropdown] = useState(null);
+  
+  const [selectedNegotVendorId, setSelectedNegotVendorId] = useState(null);
 
   const [suggestedVendors, setSuggestedVendors] = useState(VENDORS);
   const [showAddVendorModal, setShowAddVendorModal] = useState(false);
@@ -911,10 +971,14 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [costCurrencyOpen, setCostCurrencyOpen] = useState(false);
   const [costCurrency, setCostCurrency] = useState('AED');
   const costCurrencyRef = useRef(null);
+  
+  const [negotVendorOpen, setNegotVendorOpen] = useState(false);
+  const negotVendorRef = useRef(null);
 
   useEffect(() => {
     const handleDocClick = (e) => {
       if (costCurrencyRef.current && !costCurrencyRef.current.contains(e.target)) setCostCurrencyOpen(false);
+      if (negotVendorRef.current && !negotVendorRef.current.contains(e.target)) setNegotVendorOpen(false);
     };
     document.addEventListener('mousedown', handleDocClick);
     return () => document.removeEventListener('mousedown', handleDocClick);
@@ -2436,8 +2500,236 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 </div>
               )}
 
+              {/* NEGOTIATIONS TAB */}
+              {activeTab === 'negot' && proposals.some(p => p.status === 'Completed') && (() => {
+                const negotProposals = proposals.filter(p => p.status === 'Completed');
+                const firstNegotKey = Object.keys(NEGOTIATION_DATA)[0];
+                const activeVendorKey = selectedNegotVendorId || firstNegotKey;
+                const negotData = NEGOTIATION_DATA[activeVendorKey] || NEGOTIATION_DATA[firstNegotKey];
+                
+                return (
+                  <div style={{ padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 24, background: 'var(--bg-body)', minHeight: '80vh' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                      <div>
+                        <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Negotiation Brief</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>AI-generated strategy and stats based on the proposal.</div>
+                      </div>
+                      <div style={{ position: 'relative' }} ref={negotVendorRef}>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', marginBottom: 6 }}>Vendor Proposal</div>
+                        <button type="button" onClick={() => setNegotVendorOpen(!negotVendorOpen)} style={{ width: 240, padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', background: '#fff', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxSizing: 'border-box', fontWeight: 500 }}>
+                          {activeVendorKey} <ChevronDown size={16} style={{ transform: negotVendorOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} color="#666" />
+                        </button>
+                        {negotVendorOpen && (
+                          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100 }}>
+                            {Object.keys(NEGOTIATION_DATA).map(key => (
+                              <div key={key} onClick={() => { setSelectedNegotVendorId(key); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                {key}
+                              </div>
+                            ))}
+                            {negotProposals.filter(p => !NEGOTIATION_DATA[p.vendorName]).map(p => (
+                              <div key={p.id} onClick={() => { setSelectedNegotVendorId(p.vendorName); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                {p.vendorName}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {negotData ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                        {/* Negotiation Stats */}
+                        <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'visible', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                          <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
+                            <thead>
+                              <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)', textAlign: 'left' }}>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>VENDOR /<br/>PROPOSAL</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>SENTIMENT<br/>SCORE</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>RISKS IDENTIFIED</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>GAPS &<br/>CLARIFICATIONS</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>COMMERCIAL<br/>GAP</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>BATNA STAT</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>OVERALL<br/>SCORE</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td style={{ padding: '24px 28px', fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
+                                  <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>{negotData.stats.vendor.replace(' v1', '\nv1')}</div>
+                                </td>
+                                <td style={{ padding: '24px 28px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                    <span style={{ fontSize: 15, fontWeight: 600, color: '#16a34a' }}>{negotData.stats.sentiment.rating}</span>
+                                    <span style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>({negotData.stats.sentiment.score})</span>
+                                  </div>
+                                </td>
+                                <td style={{ padding: '24px 28px', fontSize: 14, color: 'var(--text-primary)' }}>
+                                  <div style={{ display: 'flex', gap: 20 }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                      <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 15, display: 'flex', alignItems: 'center', gap: 4 }}><AlertCircle size={12}/> {negotData.stats.risks.high}</div>
+                                      <div style={{ color: '#ef4444', fontSize: 13, fontWeight: 500 }}>High</div>
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                      <div style={{ color: '#f59e0b', fontWeight: 600, fontSize: 15 }}>{negotData.stats.risks.medium}</div>
+                                      <div style={{ color: '#f59e0b', fontSize: 13, fontWeight: 500 }}>Med</div>
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                      <div style={{ color: '#22c55e', fontWeight: 600, fontSize: 15 }}>{negotData.stats.risks.low}</div>
+                                      <div style={{ color: '#22c55e', fontSize: 13, fontWeight: 500 }}>Low</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td style={{ padding: '24px 28px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500 }}>{negotData.stats.gaps} Questions</td>
+                                <td style={{ padding: '24px 28px', fontSize: 15, color: 'var(--text-primary)' }}>
+                                  <div style={{ color: '#f59e0b', fontWeight: 600, marginBottom: 6 }}>{negotData.stats.commercial.gap}</div>
+                                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{negotData.stats.commercial.detail.replace(' target', '\ntarget')}</div>
+                                </td>
+                                <td style={{ padding: '24px 28px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500, lineHeight: 1.5 }}>
+                                  <div style={{ whiteSpace: 'pre-wrap' }}>{negotData.stats.batna.replace(' - ', ' -\n').replace(' Viable', '\nViable')}</div>
+                                </td>
+                                <td style={{ padding: '24px 28px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: '#f0fdf4', color: '#16a34a', fontWeight: 700, fontSize: 16, border: '2px solid #bbf7d0' }}>{negotData.stats.overall}</div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          </div>
+                        </div>
+                        
+                        {/* Market News and Sentiment (4 Cards) */}
+                        <div style={{ marginTop: 8 }}>
+                          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Market News and Sentiment</div>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+                            {Object.entries(negotData.marketSignals).map(([key, signal]) => {
+                              const Icon = signal.icon;
+                              return (
+                                <div key={key} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+                                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7c7cff' }}>
+                                      <Icon size={18} strokeWidth={2.5} />
+                                    </div>
+                                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{signal.title}</div>
+                                  </div>
+                                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{signal.desc}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Clarification Questions */}
+                        <div style={{ marginTop: 8 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>Clarification Questions</div>
+                            <div style={{ padding: '4px 10px', background: '#eef2ff', color: '#4f46e5', fontSize: 11, fontWeight: 600, borderRadius: 100, textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <Sparkles size={12} /> AI Generated
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                            {negotData.clarificationQuestions && negotData.clarificationQuestions.map((q, i) => (
+                              <div key={i} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px 24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)', display: 'flex', gap: 16 }}>
+                                <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                                  <HelpCircle size={16} strokeWidth={2.5} />
+                                </div>
+                                <div>
+                                  <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8, lineHeight: 1.5 }}>{q.question}</div>
+                                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, background: 'var(--bg-surface-2)', padding: '12px 16px', borderRadius: 8, borderLeft: '3px solid #ddd6fe' }}>
+                                    <span style={{ fontWeight: 600, color: '#6b7280', marginRight: 6 }}>Context:</span>
+                                    {q.context}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Stacked Layout for the rest */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
+                          
+                          {/* Technical Gaps & Clarifications */}
+                          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <AlertTriangle size={18} color="#7c7cff" /> Technical Gaps & Clarifications
+                            </div>
+                            <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
+                              {negotData.technicalGaps.map((gap, i) => (
+                                <div key={i} style={{ display: 'flex', gap: 14 }}>
+                                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: gap.type === 'strength' ? '#22c55e' : gap.type === 'risk' ? '#ef4444' : gap.type === 'clarification' ? '#f59e0b' : '#7c7cff', marginTop: 6, flexShrink: 0 }} />
+                                  <div>
+                                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>{gap.title}</div>
+                                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{gap.desc}</div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Commercial Pointers */}
+                          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <DollarSign size={18} color="#16a34a" /> Commercial Pointers
+                            </div>
+                            <div style={{ padding: '24px 24px 24px 44px' }}>
+                              <ul style={{ margin: 0, padding: 0, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.7 }}>
+                                {negotData.commercialPointers.map((ptr, i) => (
+                                  <li key={i} style={{ marginBottom: 14, paddingLeft: 8 }}>{ptr}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+
+                          {/* Strategy Brief Generator */}
+                          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <Target size={18} color="#f59e0b" /> Strategy Brief
+                            </div>
+                            <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 24, flex: 1 }}>
+                              
+                              <div>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '12px 16px', background: 'rgba(124,124,255,0.05)', borderRadius: 8, borderLeft: '3px solid #7c7cff' }}>{negotData.strategyBrief.opening}</div>
+                              </div>
+
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                                <div>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Target Goal</div>
+                                  <div style={{ fontSize: 13, color: '#15803d', fontWeight: 500, padding: '12px 16px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0', lineHeight: 1.5 }}>{negotData.strategyBrief.target}</div>
+                                </div>
+                                <div>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Walk-Away Point</div>
+                                  <div style={{ fontSize: 13, color: '#b91c1c', fontWeight: 500, padding: '12px 16px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca', lineHeight: 1.5 }}>{negotData.strategyBrief.walkAway}</div>
+                                </div>
+                              </div>
+
+                              <div>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Concession Sequence</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                                  <ol style={{ margin: 0, paddingLeft: 20 }}>
+                                    {negotData.strategyBrief.concessions.map((c, i) => <li key={i} style={{ marginBottom: 8 }}>{c}</li>)}
+                                  </ol>
+                                </div>
+                              </div>
+
+                              <div>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
+                              </div>
+
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-secondary)' }}>No negotiation data available for this vendor.</div>
+                    )}
+                  </div>
+                );
+              })()}
+
               {/* EMPTY TABS */}
-              {['negot', 'sow', 'po', 'invoices'].includes(activeTab) && (() => {
+              {((['sow', 'po', 'invoices'].includes(activeTab)) || (activeTab === 'negot' && !proposals.some(p => p.status === 'Completed'))) && (() => {
                 const cfg = EMPTY_TABS[activeTab]; const Icon = cfg.icon;
                 return (
                   <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, gap: 20 }}>
