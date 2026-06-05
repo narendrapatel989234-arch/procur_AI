@@ -2508,7 +2508,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 const negotData = NEGOTIATION_DATA[activeVendorKey] || NEGOTIATION_DATA[firstNegotKey];
                 
                 return (
-                  <div style={{ padding: '24px 32px', display: 'flex', flexDirection: 'column', gap: 24, background: 'var(--bg-body)', minHeight: '80vh' }}>
+                  <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: '#fff' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                       <div>
                         <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Negotiation Brief</div>
@@ -2544,13 +2544,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
                             <thead>
                               <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)', textAlign: 'left' }}>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>VENDOR /<br/>PROPOSAL</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>SENTIMENT<br/>SCORE</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>RISKS IDENTIFIED</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>GAPS &<br/>CLARIFICATIONS</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>COMMERCIAL<br/>GAP</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>BATNA STAT</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5 }}>OVERALL<br/>SCORE</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>VENDOR / PROPOSAL</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>SENTIMENT SCORE</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>RISKS IDENTIFIED</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>GAPS & CLARIFICATIONS</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>COMMERCIAL GAP</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>BATNA STAT</th>
+                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>OVERALL SCORE</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -2567,7 +2567,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 <td style={{ padding: '24px 28px', fontSize: 14, color: 'var(--text-primary)' }}>
                                   <div style={{ display: 'flex', gap: 20 }}>
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                      <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 15, display: 'flex', alignItems: 'center', gap: 4 }}><AlertCircle size={12}/> {negotData.stats.risks.high}</div>
+                                      <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 15 }}>{negotData.stats.risks.high}</div>
                                       <div style={{ color: '#ef4444', fontSize: 13, fontWeight: 500 }}>High</div>
                                     </div>
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
@@ -2670,8 +2670,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
                               <DollarSign size={18} color="#16a34a" /> Commercial Pointers
                             </div>
-                            <div style={{ padding: '24px 24px 24px 44px' }}>
-                              <ul style={{ margin: 0, padding: 0, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.7 }}>
+                            <div style={{ padding: '24px 24px 24px 24px' }}>
+                              <ul style={{ margin: 0, paddingLeft: 20, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.7, listStyleType: 'disc' }}>
                                 {negotData.commercialPointers.map((ptr, i) => (
                                   <li key={i} style={{ marginBottom: 14, paddingLeft: 8 }}>{ptr}</li>
                                 ))}
