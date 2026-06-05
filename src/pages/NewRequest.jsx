@@ -1865,7 +1865,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 {/* Request Title */}
                 <div style={{ marginBottom: 16 }}>
                   <FL required>Request Title</FL>
-                  <FInput value={fReqTitle} onChange={(e) => setFReqTitle(e.target.value)} placeholder="Short description of what you are requesting" />
+                  <FInput value={fReqTitle} onChange={(e) => setFReqTitle(e.target.value)} placeholder="Short title in 2-3 words" />
                   {aiFilledFields.has('fReqTitle') && <AiFilledTag />}
                 </div>
 
@@ -1874,7 +1874,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                   <div>
                     <FL required>Cost Centre</FL>
                     <FDrop refEl={fBizUnitRef} open={fBizUnitOpen} onToggle={() => setFBizUnitOpen(!fBizUnitOpen)}
-                      value={fBizUnit} placeholder="Select business unit"
+                      value={fBizUnit} placeholder="Select"
                       options={BIZ_UNITS} onChange={(v) => setFBizUnit(v)} />
                     {aiFilledFields.has('fBizUnit') && <AiFilledTag />}
                   </div>
@@ -1923,7 +1923,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 <div style={{ marginBottom: 16 }}>
                   <FL required>Procurement Category</FL>
                   <FDrop refEl={fProcCatRef} open={fProcCategoryOpen} onToggle={() => setFProcCategoryOpen(!fProcCategoryOpen)}
-                    value={fProcCategory} placeholder="Select procurement category"
+                    value={fProcCategory} placeholder="Select"
                     options={PROC_CATEGORIES} onChange={(v) => { setFProcCategory(v); setFSubcategory(''); }} />
                   {aiFilledFields.has('fProcCategory') && <AiFilledTag />}
                 </div>
@@ -1979,7 +1979,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 <div style={{ marginBottom: 16 }}>
                   <FL required>Requirement Description</FL>
                   <FTextarea value={fReqDesc} onChange={(e) => setFReqDesc(e.target.value)}
-                    placeholder="Describe the full scope including technical specifications, success metrics, quality standards, compliance requirements, expected output, and any installation or resource requirements..."
+                    placeholder="Describe the full requirement scope"
                     minHeight={120} />
                   {aiFilledFields.has('fReqDesc') && <AiFilledTag />}
                 </div>
@@ -2050,7 +2050,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                   <div>
                     <FL required>Quantity</FL>
-                    <FInput type="number" value={fQuantity} onChange={(e) => setFQuantity(e.target.value)} placeholder="Enter quantity required" />
+                    <FInput type="number" value={fQuantity} onChange={(e) => setFQuantity(e.target.value)} placeholder="Enter" />
                     {aiFilledFields.has('fQuantity') && <AiFilledTag />}
                     {specificNote}
                   </div>
@@ -2066,7 +2066,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 <div style={{ marginBottom: 16 }}>
                   <FL required>Unit of Measure</FL>
                   <FDrop refEl={fUomRef} open={fUomOpen} onToggle={() => setFUomOpen(!fUomOpen)}
-                    value={fUom} placeholder="Select unit"
+                    value={fUom} placeholder="Select Unit"
                     options={UOM_OPTS} onChange={(v) => setFUom(v)} />
                   {aiFilledFields.has('fUom') && <AiFilledTag />}
                   {specificNote}
@@ -2088,7 +2088,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 <div style={{ marginBottom: 16 }}>
                   <FL>Pricing Model</FL>
                   <FTextarea value={fCostBreakdown} onChange={(e) => setFCostBreakdown(e.target.value)}
-                    placeholder="Describe pricing model — Fixed / T&M / Milestone and provide cost breakdown if available" />
+                    placeholder="Describe pricing model — Fixed / T&M / Milestone" />
                   {aiFilledFields.has('fCostBreakdown') && <AiFilledTag />}
                 </div>
 
@@ -2101,13 +2101,13 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                   <div>
                     <FL>Suggested Vendor</FL>
                     <FDrop refEl={fVendorRef} open={fVendorOpen} onToggle={() => setFVendorOpen(!fVendorOpen)}
-                      value={fSuggestedVendor} placeholder="Select preferred vendor"
+                      value={fSuggestedVendor} placeholder="Select"
                       options={VENDOR_OPTS} onChange={(v) => setFSuggestedVendor(v)} />
                     {aiFilledFields.has('fSuggestedVendor') && <AiFilledTag />}
                   </div>
                   <div>
                     <FL>Contract Reference</FL>
-                    <FInput value={fContractRef} onChange={(e) => setFContractRef(e.target.value)} placeholder="Existing contract or renewal reference number" />
+                    <FInput value={fContractRef} onChange={(e) => setFContractRef(e.target.value)} placeholder="Existing Contract Number" />
                     {aiFilledFields.has('fContractRef') && <AiFilledTag />}
                   </div>
                 </div>
@@ -2127,7 +2127,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 <div style={{ marginBottom: 16 }}>
                   <FL required>Delivery Location</FL>
                   <FDrop refEl={fDeliveryRef} open={fDeliveryOpen} onToggle={() => setFDeliveryOpen(!fDeliveryOpen)}
-                    value={fDeliveryLoc} placeholder="Select delivery location"
+                    value={fDeliveryLoc} placeholder="Select"
                     options={DELIVERY_LOCS} onChange={(v) => setFDeliveryLoc(v)} />
                   {aiFilledFields.has('fDeliveryLoc') && <AiFilledTag />}
                   {specificNote}
@@ -2135,7 +2135,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
 
                 <div style={{ marginBottom: 16 }}>
                   <FL>Timeline</FL>
-                  <FTextarea value={fTimeline} onChange={(e) => setFTimeline(e.target.value)} placeholder="Describe phased delivery plan and key milestones" minHeight={100} />
+                  <FTextarea value={fTimeline} onChange={(e) => setFTimeline(e.target.value)} placeholder="Describe delivery timeline and milestones" minHeight={100} />
                   {aiFilledFields.has('fTimeline') && <AiFilledTag />}
                 </div>
                 {/* ── Submit row ── */}
