@@ -433,6 +433,9 @@ function WYSIWYGEditor({ isEditing, htmlContent, setHtmlContent }) {
         [contenteditable][contenteditable="false"] li { margin-bottom:4px; }
         [contenteditable][contenteditable="false"] strong { font-weight:700; color:#1a1a1a; }
         [contenteditable]:focus { outline:none; }
+        .editable-cell { border-bottom: 1px dashed #ccc !important; border-radius: 0 !important; transition: all 0.15s ease; border-top: 1px solid transparent !important; border-left: 1px solid transparent !important; border-right: 1px solid transparent !important; }
+        .editable-cell:hover { border-bottom-color: transparent !important; border: 1px solid var(--border-default) !important; background: var(--bg-surface-1) !important; border-radius: 6px !important; }
+        .editable-cell:focus { border-bottom-color: transparent !important; border: 1px solid #7c7cff !important; background: #fff !important; border-radius: 6px !important; box-shadow: 0 0 0 3px rgba(124,124,255,0.1) !important; }
         @keyframes rfpPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
     @keyframes toastIn  { from{opacity:0;transform:translateX(-50%) translateY(-10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
@@ -1154,37 +1157,40 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Category</th>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Criteria</th>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'center', width: '120px' }}>Weightage</th>
-                    <th style={{ padding: '10px 16px', width: '40px' }}></th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'center', width: '80px' }}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {scoringConfigData.map((row, i) => (
                       <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                         <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-primary)', fontWeight: 500 }}>{row.sr}</td>
-                        <td style={{ padding: 0 }}>
+                        <td style={{ padding: '4px 8px' }}>
                           <input 
+                            className="editable-cell"
                             value={row.cat}
                             onChange={e => {
                               const newData = [...scoringConfigData];
                               newData[i].cat = e.target.value;
                               setScoringConfigData(newData);
                             }}
-                            style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
+                            style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
                           />
                         </td>
-                        <td style={{ padding: 0 }}>
+                        <td style={{ padding: '4px 8px' }}>
                           <input 
+                            className="editable-cell"
                             value={row.crit}
                             onChange={e => {
                               const newData = [...scoringConfigData];
                               newData[i].crit = e.target.value;
                               setScoringConfigData(newData);
                             }}
-                            style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
+                            style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
                           />
                         </td>
-                        <td style={{ padding: 0, textAlign: 'center' }}>
+                        <td style={{ padding: '4px 8px', textAlign: 'center' }}>
                           <input 
+                            className="editable-cell"
                             type="number"
                             value={row.w}
                             onChange={e => {
@@ -1192,18 +1198,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               newData[i].w = parseInt(e.target.value) || 0;
                               setScoringConfigData(newData);
                             }}
-                            style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', textAlign: 'center', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
+                            style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', textAlign: 'center', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
                           />
                         </td>
                         <td style={{ padding: '0 16px', textAlign: 'center' }}>
-                          {row.isNew && (
-                            <button 
-                              onClick={() => setScoringConfigData(prev => prev.filter((_, idx) => idx !== i).map((r, idx) => ({ ...r, sr: idx + 1 })))}
-                              style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', color: '#ef4444' }}
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          )}
+                          <button 
+                            onClick={() => setScoringConfigData(prev => prev.filter((_, idx) => idx !== i).map((r, idx) => ({ ...r, sr: idx + 1 })))}
+                            style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'inline-flex', color: '#ef4444' }}
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -1260,39 +1264,37 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Resources</th>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Cost (min)</th>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Cost (max)</th>
-                    <th style={{ padding: '10px 16px', width: '40px' }}></th>
+                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'center', width: '80px' }}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {costConfigData.map((row, i) => (
                     <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                      <td style={{ padding: 0 }}>
-                        <input value={row.p} onChange={e => { const d = [...costConfigData]; d[i].p = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
+                      <td style={{ padding: '4px 8px' }}>
+                        <input className="editable-cell" value={row.p} onChange={e => { const d = [...costConfigData]; d[i].p = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
-                      <td style={{ padding: 0 }}>
-                        <input value={row.m} onChange={e => { const d = [...costConfigData]; d[i].m = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit' }} />
+                      <td style={{ padding: '4px 8px' }}>
+                        <input className="editable-cell" value={row.m} onChange={e => { const d = [...costConfigData]; d[i].m = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit' }} />
                       </td>
-                      <td style={{ padding: 0 }}>
-                        <input value={row.t} onChange={e => { const d = [...costConfigData]; d[i].t = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
+                      <td style={{ padding: '4px 8px' }}>
+                        <input className="editable-cell" value={row.t} onChange={e => { const d = [...costConfigData]; d[i].t = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
-                      <td style={{ padding: 0 }}>
-                        <input value={row.r} onChange={e => { const d = [...costConfigData]; d[i].r = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
+                      <td style={{ padding: '4px 8px' }}>
+                        <input className="editable-cell" value={row.r} onChange={e => { const d = [...costConfigData]; d[i].r = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
-                      <td style={{ padding: 0 }}>
-                        <input value={row.cmin} onChange={e => { const d = [...costConfigData]; d[i].cmin = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
+                      <td style={{ padding: '4px 8px' }}>
+                        <input className="editable-cell" value={row.cmin} onChange={e => { const d = [...costConfigData]; d[i].cmin = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
-                      <td style={{ padding: 0 }}>
-                        <input value={row.cmax} onChange={e => { const d = [...costConfigData]; d[i].cmax = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
+                      <td style={{ padding: '4px 8px' }}>
+                        <input className="editable-cell" value={row.cmax} onChange={e => { const d = [...costConfigData]; d[i].cmax = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
                       <td style={{ padding: '0 16px', textAlign: 'center' }}>
-                        {row.isNew && (
-                          <button 
-                            onClick={() => setCostConfigData(prev => prev.filter((_, idx) => idx !== i))}
-                            style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', color: '#ef4444' }}
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        )}
+                        <button 
+                          onClick={() => setCostConfigData(prev => prev.filter((_, idx) => idx !== i))}
+                          style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'inline-flex', color: '#ef4444' }}
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -2078,17 +2080,18 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </button>
                         </div>
                         <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
-                          <div style={{ display: 'grid', gridTemplateColumns: '3fr 1.5fr 2.5fr 3fr', padding: '10px 14px', background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '3fr 4fr 3fr', padding: '10px 14px', background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
                             <div>Phase</div>
-                            <div>Timeline</div>
-                            <div>Resources</div>
+                            <div>Timeline & Resources</div>
                             <div style={{ textAlign: 'right' }}>Estimate</div>
                           </div>
                           {COST_ITEMS.map((item, i) => (
-                            <div key={item.phase} style={{ display: 'grid', gridTemplateColumns: '3fr 1.5fr 2.5fr 3fr', alignItems: 'center', padding: '12px 14px', borderBottom: i < COST_ITEMS.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                            <div key={item.phase} style={{ display: 'grid', gridTemplateColumns: '3fr 4fr 3fr', alignItems: 'center', padding: '12px 14px', borderBottom: i < COST_ITEMS.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
                               <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{item.phase}</div>
-                              <div style={{ fontSize: 12, color: '#666' }}>{item.duration}</div>
-                              <div style={{ fontSize: 12, color: '#666' }}>{item.resources}</div>
+                              <div style={{ fontSize: 12, color: '#666', lineHeight: 1.5 }}>
+                                <div>{item.duration}</div>
+                                <div>{item.resources}</div>
+                              </div>
                               <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', textAlign: 'right' }}>{item.estimate}</div>
                             </div>
                           ))}
