@@ -37,6 +37,8 @@ const SUBCATEGORY_MAP = {
 };
 const CAPEX_OPEX_OPTS = ['CapEx', 'OpEx'];
 const UOM_OPTS = ['Units', 'Sq.ft.', 'MW', 'Trips', 'Resources', 'Licenses', 'Months', 'Hours', 'Other'];
+const SOURCING_METHODS = ['Single source', 'Competitive tender'];
+const CURRENCIES = ['USD', 'AED', 'EUR', 'GBP', 'INR', 'Other'];
 const VENDOR_OPTS = ['No Preference', 'Apple Authorised Reseller', 'Microsoft', 'SAP', 'Oracle', 'Accenture', 'Deloitte', 'TCS', 'Infosys', 'Other'];
 const DELIVERY_LOCS = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'Fujairah', 'Umm Al Quwain', 'Remote / Virtual'];
 const today = new Date().toISOString().split('T')[0];
@@ -538,8 +540,10 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
   const [fQuantity, setFQuantity] = useState('');
   const [fUnitValue, setFUnitValue] = useState('');
   const [fUom, setFUom] = useState(''); const [fUomOpen, setFUomOpen] = useState(false);
+  const [fCurrency, setFCurrency] = useState('AED'); const [fCurrencyOpen, setFCurrencyOpen] = useState(false);
   const [fBudget, setFBudget] = useState('');
   const [fCostBreakdown, setFCostBreakdown] = useState('');
+  const [fSourcingMethod, setFSourcingMethod] = useState(''); const [fSourcingMethodOpen, setFSourcingMethodOpen] = useState(false);
   const [fSuggestedVendor, setFSuggestedVendor] = useState(''); const [fVendorOpen, setFVendorOpen] = useState(false);
   const [fVendorJustification, setFVendorJustification] = useState('');
   const [fContractRef, setFContractRef] = useState('');
@@ -573,6 +577,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
   const fBizUnitRef = useRef(null); const fPriorityRef = useRef(null);
   const fProcCatRef = useRef(null); const fSubcatRef = useRef(null);
   const fCapexRef = useRef(null); const fUomRef = useRef(null);
+  const fCurrencyRef = useRef(null); const fSourcingRef = useRef(null);
   const fVendorRef = useRef(null); const fDeliveryRef = useRef(null);
 
   /* ── upload ── */
@@ -592,8 +597,10 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
   const [uQuantity, setUQuantity] = useState('25');
   const [uUnitValue, setUUnitValue] = useState('');
   const [uUom, setUUom] = useState(''); const [uUomOpen, setUUomOpen] = useState(false);
+  const [uCurrency, setUCurrency] = useState('AED'); const [uCurrencyOpen, setUCurrencyOpen] = useState(false);
   const [uBudget, setUBudget] = useState('1250000');
   const [uCostBreakdown, setUCostBreakdown] = useState('');
+  const [uSourcingMethod, setUSourcingMethod] = useState(''); const [uSourcingMethodOpen, setUSourcingMethodOpen] = useState(false);
   const [uSuggestedVendor, setUSuggestedVendor] = useState('Apple Authorised Reseller'); const [uVendorOpen, setUVendorOpen] = useState(false);
   const [uVendorJustification, setUVendorJustification] = useState('');
   const [uContractRef, setUContractRef] = useState('');
@@ -607,6 +614,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
   const uBizUnitRef = useRef(null); const uPriorityRef = useRef(null);
   const uProcCatRef = useRef(null); const uSubcatRef = useRef(null);
   const uCapexRef = useRef(null); const uUomRef = useRef(null);
+  const uCurrencyRef = useRef(null); const uSourcingRef = useRef(null);
   const uVendorRef = useRef(null); const uDeliveryRef = useRef(null);
 
   /* ── scroll chat to bottom ── */
@@ -623,6 +631,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
       if (fSubcatRef.current && !fSubcatRef.current.contains(e.target)) setFSubcategoryOpen(false);
       if (fCapexRef.current && !fCapexRef.current.contains(e.target)) setFCapexOpexOpen(false);
       if (fUomRef.current && !fUomRef.current.contains(e.target)) setFUomOpen(false);
+      if (fCurrencyRef.current && !fCurrencyRef.current.contains(e.target)) setFCurrencyOpen(false);
+      if (fSourcingRef.current && !fSourcingRef.current.contains(e.target)) setFSourcingMethodOpen(false);
       if (fVendorRef.current && !fVendorRef.current.contains(e.target)) setFVendorOpen(false);
       if (fDeliveryRef.current && !fDeliveryRef.current.contains(e.target)) setFDeliveryOpen(false);
 
@@ -632,6 +642,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
       if (uSubcatRef.current && !uSubcatRef.current.contains(e.target)) setUSubcategoryOpen(false);
       if (uCapexRef.current && !uCapexRef.current.contains(e.target)) setUCapexOpexOpen(false);
       if (uUomRef.current && !uUomRef.current.contains(e.target)) setUUomOpen(false);
+      if (uCurrencyRef.current && !uCurrencyRef.current.contains(e.target)) setUCurrencyOpen(false);
+      if (uSourcingRef.current && !uSourcingRef.current.contains(e.target)) setUSourcingMethodOpen(false);
       if (uVendorRef.current && !uVendorRef.current.contains(e.target)) setUVendorOpen(false);
       if (uDeliveryRef.current && !uDeliveryRef.current.contains(e.target)) setUDeliveryOpen(false);
     }
@@ -2123,10 +2135,21 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                 {/* Estimated Budget */}
                 <div style={{ marginBottom: 16 }}>
                   <FL required>Estimated Budget</FL>
-                  <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8, overflow: 'hidden' }}>
-                    <span style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', fontSize: 14, color: 'var(--text-tertiary)', borderRight: '1px solid var(--border-default)', whiteSpace: 'nowrap' }}>₹</span>
+                  <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8 }}>
+                    <div ref={fCurrencyRef} style={{ position: 'relative' }}>
+                      <button type="button" onClick={() => setFCurrencyOpen(!fCurrencyOpen)} style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', borderRadius: '8px 0 0 8px', fontSize: 14, color: 'var(--text-tertiary)', border: 'none', borderRight: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: 'inherit', outline: 'none' }}>
+                        {fCurrency} <ChevronDown size={14} style={{ transform: fCurrencyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                      </button>
+                      {fCurrencyOpen && (
+                        <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 100, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, minWidth: 80, marginTop: 4 }}>
+                          {CURRENCIES.map(c => (
+                            <div key={c} onClick={() => { setFCurrency(c); setFCurrencyOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, cursor: 'pointer', borderRadius: 4, color: 'var(--text-primary)' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{c}</div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                     <input type="text" value={fBudget} onChange={(e) => setFBudget(e.target.value)} placeholder="0.00"
-                      style={{ flex: 1, padding: '9px 12px', border: 'none', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }}
+                      style={{ flex: 1, padding: '9px 12px', border: 'none', borderRadius: '0 8px 8px 0', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }}
                     />
                   </div>
                   {aiFilledFields.has('fBudget') && <AiFilledTag />}
@@ -2147,17 +2170,25 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                   <div>
+                    <FL>Sourcing Method</FL>
+                    <FDrop refEl={fSourcingRef} open={fSourcingMethodOpen} onToggle={() => setFSourcingMethodOpen(!fSourcingMethodOpen)}
+                      value={fSourcingMethod} placeholder="Select"
+                      options={SOURCING_METHODS} onChange={(v) => setFSourcingMethod(v)} />
+                    {aiFilledFields.has('fSourcingMethod') && <AiFilledTag />}
+                  </div>
+                  <div>
                     <FL>Suggested Vendor</FL>
                     <FDrop refEl={fVendorRef} open={fVendorOpen} onToggle={() => setFVendorOpen(!fVendorOpen)}
                       value={fSuggestedVendor} placeholder="Select"
                       options={VENDOR_OPTS} onChange={(v) => setFSuggestedVendor(v)} />
                     {aiFilledFields.has('fSuggestedVendor') && <AiFilledTag />}
                   </div>
-                  <div>
-                    <FL>Contract Reference</FL>
-                    <FInput value={fContractRef} onChange={(e) => setFContractRef(e.target.value)} placeholder="Existing Contract Number" />
-                    {aiFilledFields.has('fContractRef') && <AiFilledTag />}
-                  </div>
+                </div>
+
+                <div style={{ marginBottom: 16 }}>
+                  <FL>Contract Reference</FL>
+                  <FInput value={fContractRef} onChange={(e) => setFContractRef(e.target.value)} placeholder="Existing Contract Number" />
+                  {aiFilledFields.has('fContractRef') && <AiFilledTag />}
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
@@ -2584,9 +2615,20 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                   </div>
                   <div style={{ marginBottom: 16 }}>
                     <UL required>Estimated Budget</UL>
-                    <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8, overflow: 'hidden' }}>
-                      <span style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', fontSize: 14, color: 'var(--text-tertiary)', borderRight: '1px solid var(--border-default)', whiteSpace: 'nowrap' }}>₹</span>
-                      <input type="text" value={uBudget} onChange={(e) => setUBudget(e.target.value)} placeholder="0.00" style={{ flex: 1, padding: '9px 12px', border: 'none', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }} />
+                    <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8 }}>
+                      <div ref={uCurrencyRef} style={{ position: 'relative' }}>
+                        <button type="button" onClick={() => setUCurrencyOpen(!uCurrencyOpen)} style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', borderRadius: '8px 0 0 8px', fontSize: 14, color: 'var(--text-tertiary)', border: 'none', borderRight: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: 'inherit', outline: 'none' }}>
+                          {uCurrency} <ChevronDown size={14} style={{ transform: uCurrencyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                        </button>
+                        {uCurrencyOpen && (
+                          <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 100, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, minWidth: 80, marginTop: 4 }}>
+                            {CURRENCIES.map(c => (
+                              <div key={c} onClick={() => { setUCurrency(c); setUCurrencyOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, cursor: 'pointer', borderRadius: 4, color: 'var(--text-primary)' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{c}</div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <input type="text" value={uBudget} onChange={(e) => setUBudget(e.target.value)} placeholder="0.00" style={{ flex: 1, padding: '9px 12px', border: 'none', borderRadius: '0 8px 8px 0', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }} />
                     </div>
                     {renderExtracted('Estimated Budget')}
                   </div>
@@ -2601,15 +2643,20 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                   <SectionLabel>Vendor Info</SectionLabel>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                     <div>
+                      <UL>Sourcing Method</UL>
+                      <UDrop refEl={uSourcingRef} open={uSourcingMethodOpen} onToggle={() => setUSourcingMethodOpen(!uSourcingMethodOpen)} value={uSourcingMethod} placeholder="Select method" options={SOURCING_METHODS} onChange={(v) => setUSourcingMethod(v)} />
+                      {renderExtracted('Sourcing Method')}
+                    </div>
+                    <div>
                       <UL>Suggested Vendor</UL>
                       <UDrop refEl={uVendorRef} open={uVendorOpen} onToggle={() => setUVendorOpen(!uVendorOpen)} value={uSuggestedVendor} placeholder="Select preferred vendor" options={VENDOR_OPTS} onChange={(v) => setUSuggestedVendor(v)} />
                       {renderExtracted('Suggested Vendor')}
                     </div>
-                    <div>
-                      <UL>Contract Reference</UL>
-                      <UInput value={uContractRef} onChange={(e) => setUContractRef(e.target.value)} placeholder="Existing contract or renewal reference number" />
-                      {renderExtracted('Contract Reference')}
-                    </div>
+                  </div>
+                  <div style={{ marginBottom: 16 }}>
+                    <UL>Contract Reference</UL>
+                    <UInput value={uContractRef} onChange={(e) => setUContractRef(e.target.value)} placeholder="Existing contract or renewal reference number" />
+                    {renderExtracted('Contract Reference')}
                   </div>
                   <div style={{ marginBottom: 16 }}>
                     <UL>Vendor Justification</UL>

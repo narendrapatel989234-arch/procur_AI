@@ -424,22 +424,22 @@ function WYSIWYGEditor({ isEditing, htmlContent, setHtmlContent }) {
         [contenteditable] strong { font-weight:700; color:#1a1a1a; }
         [contenteditable] em { font-style:italic; }
         [contenteditable] blockquote { border-left:3px solid #7c7cff; margin:12px 0; padding:8px 16px; background:rgba(124,124,255,0.04); border-radius:0 8px 8px 0; font-style:italic; color:#555; }
-        [contenteditable] table { border-collapse:collapse; width:100%; margin:12px 0; }
-        [contenteditable] td, [contenteditable] th { border:1px solid #e0e0e0; padding:8px 12px; font-size:13px; }
-        [contenteditable][contenteditable="false"] h2 { font-size:16px; font-weight:700; color:#1a1a1a; margin:28px 0 10px; padding-bottom:8px; border-bottom:1px solid #efefef; }
-        [contenteditable][contenteditable="false"] h3 { font-size:14px; font-weight:700; color:#1a1a1a; margin:20px 0 8px; }
-        [contenteditable][contenteditable="false"] p  { margin:0 0 12px; }
-        [contenteditable][contenteditable="false"] ul, [contenteditable][contenteditable="false"] ol { padding-left:22px; margin:6px 0 14px; }
-        [contenteditable][contenteditable="false"] li { margin-bottom:4px; }
-        [contenteditable][contenteditable="false"] strong { font-weight:700; color:#1a1a1a; }
-        [contenteditable]:focus { outline:none; }
-        .editable-cell { border-bottom: 1px dashed #ccc !important; border-radius: 0 !important; transition: all 0.15s ease; border-top: 1px solid transparent !important; border-left: 1px solid transparent !important; border-right: 1px solid transparent !important; }
-        .editable-cell:hover { border-bottom-color: transparent !important; border: 1px solid var(--border-default) !important; background: var(--bg-surface-1) !important; border-radius: 6px !important; }
-        .editable-cell:focus { border-bottom-color: transparent !important; border: 1px solid #7c7cff !important; background: #fff !important; border-radius: 6px !important; box-shadow: 0 0 0 3px rgba(124,124,255,0.1) !important; }
-        @keyframes rfpPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
-        @keyframes fadeInUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes toastIn  { from{opacity:0;transform:translateX(-50%) translateY(-10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
-        @keyframes spin     { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        [contenteditable] table { border-collapse:collapse; width:100%; margin:12px 0; }
+        [contenteditable] td, [contenteditable] th { border:1px solid #e0e0e0; padding:8px 12px; font-size:13px; }
+        [contenteditable][contenteditable="false"] h2 { font-size:16px; font-weight:700; color:#1a1a1a; margin:28px 0 10px; padding-bottom:8px; border-bottom:1px solid #efefef; }
+        [contenteditable][contenteditable="false"] h3 { font-size:14px; font-weight:700; color:#1a1a1a; margin:20px 0 8px; }
+        [contenteditable][contenteditable="false"] p  { margin:0 0 12px; }
+        [contenteditable][contenteditable="false"] ul, [contenteditable][contenteditable="false"] ol { padding-left:22px; margin:6px 0 14px; }
+        [contenteditable][contenteditable="false"] li { margin-bottom:4px; }
+        [contenteditable][contenteditable="false"] strong { font-weight:700; color:#1a1a1a; }
+        [contenteditable]:focus { outline:none; }
+        .editable-cell { border: 1px solid #e0e0e0 !important; border-radius: 8px !important; background: #fff !important; transition: all 0.15s ease; padding: 10px 14px !important; outline: none !important; width: 100%; box-sizing: border-box; }
+        .editable-cell:hover { border-color: #d1d5db !important; }
+        .editable-cell:focus { border-color: #7c7cff !important; box-shadow: 0 0 0 3px rgba(124,124,255,0.1) !important; }
+        @keyframes rfpPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes toastIn  { from{opacity:0;transform:translateX(-50%) translateY(-10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+        @keyframes spin     { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         .tab-btn:hover { color:var(--text-primary) !important; }
       `}</style>
     </div>
@@ -908,6 +908,48 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     { sr: 5, cat: 'Compliance & Requirements', crit: 'Commercial Proposal', w: 15 },
   ]);
   const [showCostConfigModal, setShowCostConfigModal] = useState(false);
+  const [costCurrencyOpen, setCostCurrencyOpen] = useState(false);
+  const [costCurrency, setCostCurrency] = useState('AED');
+  const costCurrencyRef = useRef(null);
+
+  useEffect(() => {
+    const handleDocClick = (e) => {
+      if (costCurrencyRef.current && !costCurrencyRef.current.contains(e.target)) setCostCurrencyOpen(false);
+    };
+    document.addEventListener('mousedown', handleDocClick);
+    return () => document.removeEventListener('mousedown', handleDocClick);
+  }, []);
+
+  const getCurrencySymbol = (cur) => {
+    switch(cur) {
+      case 'USD': return '$';
+      case 'EUR': return '€';
+      case 'GBP': return '£';
+      case 'INR': return '₹';
+      case 'AED': default: return 'AED ';
+    }
+  };
+
+  useEffect(() => {
+    const sym = getCurrencySymbol(costCurrency);
+    const locale = costCurrency === 'INR' ? 'en-IN' : 'en-US';
+    setCostConfigData(prev => prev.map(row => {
+      const numMin = (row.cmin || '').replace(/[^\d]/g, '');
+      const numMax = (row.cmax || '').replace(/[^\d]/g, '');
+      
+      const formatNum = (num) => {
+        if (!num) return '';
+        const n = parseInt(num, 10);
+        return sym + n.toLocaleString(locale);
+      };
+      
+      return {
+        ...row,
+        cmin: numMin ? formatNum(numMin) : row.cmin,
+        cmax: numMax ? formatNum(numMax) : row.cmax,
+      };
+    }));
+  }, [costCurrency]);
   const [costConfigData, setCostConfigData] = useState([
     { p: 'Phase 1', m: 'Assessment', t: '2 months', r: '3 Architects', cmin: '₹10,00,000', cmax: '₹14,00,000' },
     { p: 'Phase 2', m: 'Implementation', t: '3 months', r: '5 Engineers', cmin: '₹20,00,000', cmax: '₹30,00,000' },
@@ -1142,14 +1184,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             </div>
 
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: '#1a1a1a' }}>Evaluation Criteria</div>
-                  <div style={{ background: '#f5f5f5', border: '1px solid #e5e5e5', borderRadius: 4, padding: '2px 6px', fontSize: 10, fontWeight: 700, color: '#666' }}>v1</div>
-                </div>
-              </div>
-
-            <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
+            <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(14,15,37,0.04)', marginTop: 16 }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
@@ -1162,7 +1197,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 </thead>
                 <tbody>
                   {scoringConfigData.map((row, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                      <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
                         <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-primary)', fontWeight: 500 }}>{row.sr}</td>
                         <td style={{ padding: '4px 8px' }}>
                           <input 
@@ -1212,8 +1247,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       </tr>
                     ))}
                     <tr style={{ background: 'var(--bg-surface-2)', borderTop: '1px solid var(--border-subtle)' }}>
+                      <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Total</td>
                       <td colSpan={2} style={{ padding: '12px 16px' }}></td>
-                      <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center' }}>Total</td>
                       <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center' }}>{scoringConfigData.reduce((acc, curr) => acc + curr.w, 0)}</td>
                       <td></td>
                     </tr>
@@ -1249,8 +1284,28 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
       {showCostConfigModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowCostConfigModal(false)}>
           <div style={{ background: '#fff', borderRadius: 16, width: 850, padding: '32px', maxHeight: '85vh', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 24 }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Edit Cost Estimation</div>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexShrink: 0 }}>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Edit Cost Estimation</div>
+                <div style={{ fontSize: 13, color: '#666', marginTop: 6, marginBottom: 16 }}>Review and adjust the cost estimation parameters below.</div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', marginBottom: 6 }}>Currency</div>
+                  <div ref={costCurrencyRef} style={{ position: 'relative' }}>
+                    <button type="button" onClick={() => setCostCurrencyOpen(!costCurrencyOpen)} style={{ width: 140, padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', background: '#fff', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxSizing: 'border-box' }}>
+                      {costCurrency} <ChevronDown size={14} style={{ transform: costCurrencyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} color="#666" />
+                    </button>
+                    {costCurrencyOpen && (
+                      <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100 }}>
+                        {['AED', 'USD', 'EUR', 'GBP'].map(c => (
+                          <div key={c} onClick={() => { setCostCurrency(c); setCostCurrencyOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                            {c}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
               <button onClick={() => setShowCostConfigModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             </div>
 
@@ -1269,7 +1324,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 </thead>
                 <tbody>
                   {costConfigData.map((row, i) => (
-                    <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                    <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
                       <td style={{ padding: '4px 8px' }}>
                         <input className="editable-cell" value={row.p} onChange={e => { const d = [...costConfigData]; d[i].p = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
@@ -1301,10 +1356,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   <tr style={{ background: 'var(--bg-surface-2)', borderTop: '1px solid var(--border-subtle)' }}>
                     <td colSpan={4} style={{ padding: '12px 16px' }}></td>
                     <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
-                      {'₹' + costConfigData.reduce((acc, curr) => acc + (parseInt((curr.cmin || '').replace(/[^\d]/g, ''), 10) || 0), 0).toLocaleString('en-IN')}
+                      {getCurrencySymbol(costCurrency) + costConfigData.reduce((acc, curr) => acc + (parseInt((curr.cmin || '').replace(/[^\d]/g, ''), 10) || 0), 0).toLocaleString(costCurrency === 'INR' ? 'en-IN' : 'en-US')}
                     </td>
                     <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
-                      {'₹' + costConfigData.reduce((acc, curr) => acc + (parseInt((curr.cmax || '').replace(/[^\d]/g, ''), 10) || 0), 0).toLocaleString('en-IN')}
+                      {getCurrencySymbol(costCurrency) + costConfigData.reduce((acc, curr) => acc + (parseInt((curr.cmax || '').replace(/[^\d]/g, ''), 10) || 0), 0).toLocaleString(costCurrency === 'INR' ? 'en-IN' : 'en-US')}
                     </td>
                     <td></td>
                   </tr>
