@@ -1154,6 +1154,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Category</th>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Criteria</th>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'center', width: '120px' }}>Weightage</th>
+                    <th style={{ padding: '10px 16px', width: '40px' }}></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1194,19 +1195,30 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', textAlign: 'center', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
                           />
                         </td>
+                        <td style={{ padding: '0 16px', textAlign: 'center' }}>
+                          {row.isNew && (
+                            <button 
+                              onClick={() => setScoringConfigData(prev => prev.filter((_, idx) => idx !== i).map((r, idx) => ({ ...r, sr: idx + 1 })))}
+                              style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', color: '#ef4444' }}
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          )}
+                        </td>
                       </tr>
                     ))}
                     <tr style={{ background: 'var(--bg-surface-2)', borderTop: '1px solid var(--border-subtle)' }}>
                       <td colSpan={2} style={{ padding: '12px 16px' }}></td>
                       <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center' }}>Total</td>
                       <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center' }}>{scoringConfigData.reduce((acc, curr) => acc + curr.w, 0)}</td>
+                      <td></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
               <div style={{ marginTop: 12 }}>
                 <button 
-                  onClick={() => setScoringConfigData(prev => [...prev, { sr: prev.length + 1, cat: '', crit: '', w: 0 }])}
+                  onClick={() => setScoringConfigData(prev => [...prev, { sr: prev.length + 1, cat: '', crit: '', w: 0, isNew: true }])}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: '#0052cc', fontSize: 13, fontWeight: 500, cursor: 'pointer', padding: 0 }}
                 >
                   <Plus size={16} strokeWidth={2.5} /> Add Row
@@ -1232,15 +1244,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
       {showCostConfigModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowCostConfigModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: 850, padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 24 }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 850, padding: '32px', maxHeight: '85vh', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 24 }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
               <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Edit Cost Estimation</div>
               <button onClick={() => setShowCostConfigModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             </div>
 
-            <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
+            <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, overflowY: 'auto', flex: 1, minHeight: 0, boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
               <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
+                <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
                   <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Phase</th>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Module</th>
@@ -1248,6 +1260,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Resources</th>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Cost (min)</th>
                     <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Cost (max)</th>
+                    <th style={{ padding: '10px 16px', width: '40px' }}></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1271,6 +1284,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       <td style={{ padding: 0 }}>
                         <input value={row.cmax} onChange={e => { const d = [...costConfigData]; d[i].cmax = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '14px 16px', border: 'none', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
+                      <td style={{ padding: '0 16px', textAlign: 'center' }}>
+                        {row.isNew && (
+                          <button 
+                            onClick={() => setCostConfigData(prev => prev.filter((_, idx) => idx !== i))}
+                            style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', color: '#ef4444' }}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   ))}
                   <tr style={{ background: 'var(--bg-surface-2)', borderTop: '1px solid var(--border-subtle)' }}>
@@ -1281,21 +1304,22 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>
                       {'₹' + costConfigData.reduce((acc, curr) => acc + (parseInt((curr.cmax || '').replace(/[^\d]/g, ''), 10) || 0), 0).toLocaleString('en-IN')}
                     </td>
+                    <td></td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <div>
+            <div style={{ flexShrink: 0 }}>
               <button 
-                onClick={() => setCostConfigData(prev => [...prev, { p: '', m: '', t: '', r: '', cmin: '', cmax: '' }])}
+                onClick={() => setCostConfigData(prev => [...prev, { p: '', m: '', t: '', r: '', cmin: '', cmax: '', isNew: true }])}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: '#0052cc', fontSize: 13, fontWeight: 500, cursor: 'pointer', padding: 0 }}
               >
                 <Plus size={16} strokeWidth={2.5} /> Add Row
               </button>
             </div>
 
-            <div style={{ display: 'flex', gap: 10, marginTop: 8, justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', gap: 10, marginTop: 8, justifyContent: 'flex-end', flexShrink: 0 }}>
               <button onClick={() => setShowCostConfigModal(false)} style={{ padding: '10px 24px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
               <button
                 onClick={() => {
