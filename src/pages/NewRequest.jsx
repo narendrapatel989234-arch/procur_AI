@@ -5,7 +5,7 @@ import {
   ChevronDown, Calendar, Building, User,
   Tag, AlertCircle, AlertTriangle, LayoutDashboard, Scan, Cpu, FileCheck, MessageSquare,
   ThumbsUp, ThumbsDown, RotateCcw, Copy, Volume2, Edit2, VolumeX,
-  MoreHorizontal, Pin, PinOff, Download, Share2, Link, Wand2, Mic
+  MoreHorizontal, Pin, PinOff, Download, Share2, Link, Wand2, Mic, Check
 } from 'lucide-react';
 import MainLayout from '../layouts/MainLayout.jsx';
 
@@ -424,6 +424,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [renameValue, setRenameValue] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -1593,7 +1594,52 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                   boxShadow: inputFocused ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.06)' : '0 2px 8px rgba(14,15,37,0.06)',
                   transition: 'border-color .15s ease, box-shadow .15s ease',
                 }}>
-                  {/* Attachment pill row */}
+                  {isRecording ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '4px 0' }}>
+                      <button disabled style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, border: 'none', background: 'transparent', color: 'var(--text-tertiary)', cursor: 'not-allowed', flexShrink: 0, opacity: 0.4 }}>
+                        <Paperclip size={18} strokeWidth={2} />
+                      </button>
+                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4, overflow: 'hidden', height: 24, padding: '0 12px' }}>
+                        {[...Array(150)].map((_, i) => (
+                          <div key={i} style={{
+                            width: 3,
+                            height: [6, 10, 14, 18, 12, 8, 22, 16, 8, 12, 20, 14, 10, 14, 8][i % 15],
+                            background: 'var(--text-tertiary)',
+                            borderRadius: 2,
+                            animation: `paiVoiceBar ${0.5 + (i % 4)*0.15}s ease-in-out infinite alternate`,
+                            flexShrink: 0
+                          }} />
+                        ))}
+                        <style>{`
+                          @keyframes paiVoiceBar {
+                            0% { transform: scaleY(0.3); opacity: 0.3; }
+                            100% { transform: scaleY(1); opacity: 0.8; }
+                          }
+                        `}</style>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                        <button 
+                          onClick={() => setIsRecording(false)} 
+                          onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
+                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
+                          <X size={20} strokeWidth={2} />
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setIsRecording(false);
+                            setInputValue("I need to procure laptops for new engineering hires joining next month");
+                          }} 
+                          onMouseEnter={e => { e.currentTarget.style.color = '#22c55e'; e.currentTarget.style.background = 'rgba(34,197,94,0.08)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
+                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
+                          <Check size={20} strokeWidth={2} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Attachment pill row */}
                   {attachedFiles.length > 0 && (
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, paddingBottom: 8, borderBottom: '1px solid var(--border-subtle)', marginBottom: 4 }}>
                       {attachedFiles.map((file, i) => (
@@ -1694,7 +1740,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                     {/* Right side — Count + Send */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <span style={{ fontSize: 11, color: charCount > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{charCount} / 20000</span>
-                      <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                      <button onClick={() => setIsRecording(true)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
                         <Mic size={18} strokeWidth={2} />
                       </button>
 
@@ -1714,6 +1760,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                       </button>
                     </div>
                   </div>
+                  </>
+                  )}
                 </div>
               </div>
             </div>

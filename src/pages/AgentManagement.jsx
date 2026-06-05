@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MainLayout from '../layouts/MainLayout.jsx';
-import { Search, Calendar, Plus, MoreVertical, Bot, Edit2, X, Cpu, Layers, Zap, Activity, Database, Code, Layout, Cloud, ChevronLeft, ChevronRight, ChevronDown, CheckCircle, Eye, Pencil, Trash2 } from 'lucide-react';
+import { Search, Calendar, Plus, MoreVertical, Bot, Edit2, X, Cpu, Layers, Zap, Activity, Database, Code, Layout, Cloud, ChevronLeft, ChevronRight, ChevronDown, ArrowUp, ArrowDown, ArrowUpDown, CheckCircle, Eye, Pencil, Trash2 } from 'lucide-react';
 
 const INITIAL_AGENTS = [
   { id: 1, name: 'Deep Research', icon: Search, description: 'Performs deep web research, aggregates data across multiple sources, and extracts relevant entities for procurement analysis.', status: 'Active', lastUsed: '01/01/25', color: '#ffedd5', iconColor: '#f97316' },
@@ -40,6 +40,18 @@ export default function AgentManagement({ activeNav, onNavigate , userRole}) {
   const [openRpp, setOpenRpp] = useState(false);
   const [openActionId, setOpenActionId] = useState(null);
 
+  const [sortCol, setSortCol] = useState('name');
+  const [sortDir, setSortDir] = useState('asc');
+
+  const handleSort = (key) => {
+    if (sortCol === key) {
+      setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortCol(key);
+      setSortDir('asc');
+    }
+  };
+
   const rppRef = useRef(null);
 
   useEffect(() => {
@@ -75,9 +87,14 @@ export default function AgentManagement({ activeNav, onNavigate , userRole}) {
     return () => clearTimeout(timer);
   }, [search, agents]);
 
-  const totalRows = displayedAgents.length;
+  const sortedAgents = [...displayedAgents].sort((a, b) => {
+    if (a[sortCol] < b[sortCol]) return sortDir === 'asc' ? -1 : 1;
+    if (a[sortCol] > b[sortCol]) return sortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+  const totalRows = sortedAgents.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
-  const paginatedAgents = displayedAgents.slice((tablePage - 1) * rowsPerPage, tablePage * rowsPerPage);
+  const paginatedAgents = sortedAgents.slice((tablePage - 1) * rowsPerPage, tablePage * rowsPerPage);
 
   const showToast = (message) => {
     setToast({ message });
@@ -225,11 +242,26 @@ export default function AgentManagement({ activeNav, onNavigate , userRole}) {
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
               <thead>
                 <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
-                  <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Agent Name</th>
-                  <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', width: '40%' }}>Description</th>
-                  <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
-                  <th style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Last Used</th>
-                  <th style={{ padding: '10px 16px', textAlign: 'center', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Action</th>
+                  {[
+                    { label: 'Agent Name', key: 'name', width: 'auto' },
+                    { label: 'Description', key: 'description', width: '40%' },
+                    { label: 'Status', key: 'status', width: 'auto' },
+                    { label: 'Last Used', key: 'lastUsed', width: 'auto' },
+                    { label: 'Actions', key: null, width: 'auto' }
+                  ].map((col, idx) => (
+                    <th key={idx} onClick={() => col.key && handleSort(col.key)} style={{ padding: '10px 16px', textAlign: col.label === 'Actions' ? 'center' : 'left', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', cursor: col.key ? 'pointer' : 'default', width: col.width, userSelect: 'none' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: col.label === 'Actions' ? 'center' : 'flex-start' }}>
+                        {col.label}
+                        {col.key && (
+                          sortCol === col.key ? (
+                            <ArrowUpDown size={12} color="var(--text-tertiary)" style={{ opacity: 0.3 }} />
+                          ) : (
+                            <ArrowUpDown size={12} color="var(--text-tertiary)" style={{ opacity: 0.3 }} />
+                          )
+                        )}
+                      </div>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>

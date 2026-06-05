@@ -4,8 +4,8 @@ import {
   ArrowLeft, Send, Sparkles, FileText, Brain,
   Copy, Edit2, RotateCcw, ThumbsUp, ThumbsDown,
   VolumeX, Volume2, X, Link, CheckCircle, AlertTriangle,
-  Paperclip, MoreHorizontal, Pin, PinOff, Download, Share2, Trash2
-, Mic} from 'lucide-react';
+  Paperclip, MoreHorizontal, Pin, PinOff, Download, Share2, Trash2, Mic, Check
+} from 'lucide-react';
 
 const REASONING_STEPS_FULL = [
   { title: 'Reading procurement request', bullets: [] },
@@ -72,6 +72,7 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav , use
   const menuRef = useRef(null);
 
   const [inputText, setInputText] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [toast, setToast] = useState(null);
@@ -463,6 +464,51 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav , use
                 </div>
               )}
               <div style={{ background: 'white', border: `1.5px solid ${inputFocused ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: inputFocused ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.06)' : '0 2px 8px rgba(14,15,37,0.06)', transition: 'border-color 0.15s, box-shadow 0.15s' }}>
+                {isRecording ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '4px 0' }}>
+                    <button disabled style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, border: 'none', background: 'transparent', color: 'var(--text-tertiary)', cursor: 'not-allowed', flexShrink: 0, opacity: 0.4 }}>
+                      <Paperclip size={18} strokeWidth={2} />
+                    </button>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4, overflow: 'hidden', height: 24, padding: '0 12px' }}>
+                      {[...Array(150)].map((_, i) => (
+                        <div key={i} style={{
+                          width: 3,
+                          height: [6, 10, 14, 18, 12, 8, 22, 16, 8, 12, 20, 14, 10, 14, 8][i % 15],
+                          background: 'var(--text-tertiary)',
+                          borderRadius: 2,
+                          animation: `paiVoiceBar ${0.5 + (i % 4)*0.15}s ease-in-out infinite alternate`,
+                          flexShrink: 0
+                        }} />
+                      ))}
+                      <style>{`
+                        @keyframes paiVoiceBar {
+                          0% { transform: scaleY(0.3); opacity: 0.3; }
+                          100% { transform: scaleY(1); opacity: 0.8; }
+                        }
+                      `}</style>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                      <button 
+                        onClick={() => setIsRecording(false)} 
+                        onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
+                        style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
+                        <X size={20} strokeWidth={2} />
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setIsRecording(false);
+                          setInputText("I need to procure laptops for new engineering hires joining next month");
+                        }} 
+                        onMouseEnter={e => { e.currentTarget.style.color = '#22c55e'; e.currentTarget.style.background = 'rgba(34,197,94,0.08)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
+                        style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
+                        <Check size={20} strokeWidth={2} />
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
                 <textarea ref={textareaRef} value={inputText}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (inputText.trim()) handleSend(); } }}
                   onChange={(e) => { setInputText(e.target.value); if (textareaRef.current) { textareaRef.current.style.height = 'auto'; textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 154) + 'px'; } }}
@@ -530,13 +576,17 @@ export default function ChatDetail({ setCurrentPage, onNavigate, activeNav , use
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <span style={{ fontSize: 11, color: inputText.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{inputText.length} / 20000</span>
-                    <Mic size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.color = '#0052cc'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-tertiary)'} />
+                    <button onClick={() => setIsRecording(true)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                      <Mic size={18} strokeWidth={2} />
+                    </button>
                       <button onClick={handleSend} disabled={!inputText.trim()}
                       style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: inputText.trim() ? 'pointer' : 'not-allowed', background: inputText.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: inputText.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
                       <Send size={15} color={inputText.trim() ? 'white' : 'var(--text-tertiary)'} />
                     </button>
                   </div>
                 </div>
+                </>
+                )}
               </div>
             </div>
           </div>

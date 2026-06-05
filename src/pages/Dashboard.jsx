@@ -608,19 +608,21 @@ export default function Dashboard({ setCurrentPage, onNavigate, activeNav, userR
             >
               Pending Requests <span style={{ fontSize: 12, background: 'rgba(0,0,0,0.05)', padding: '2px 8px', borderRadius: 12, fontWeight: 700 }}>5</span>
             </button>
-            <button
-              onClick={() => setActiveTab('all')}
-              style={{
-                background: 'transparent', border: 'none', borderBottom: activeTab === 'all' ? '2px solid #0052cc' : '2px solid transparent',
-                padding: '0 4px 10px', fontSize: 13, fontWeight: activeTab === 'all' ? 600 : 500,
-                color: activeTab === 'all' ? '#0052cc' : 'var(--text-tertiary)',
-                cursor: 'pointer', transition: 'all 0.15s ease',
-                display: 'flex', alignItems: 'center', gap: 6
-              }}
-            >
-              All Requests
-              {/*<span style={{ fontSize: 12, background: 'rgba(0,0,0,0.05)', padding: '2px 8px', borderRadius: 12, fontWeight: 700 }}>12</span>*/}
-            </button>
+            {userRole !== 'analyst' && (
+              <button
+                onClick={() => setActiveTab('all')}
+                style={{
+                  background: 'transparent', border: 'none', borderBottom: activeTab === 'all' ? '2px solid #0052cc' : '2px solid transparent',
+                  padding: '0 4px 10px', fontSize: 13, fontWeight: activeTab === 'all' ? 600 : 500,
+                  color: activeTab === 'all' ? '#0052cc' : 'var(--text-tertiary)',
+                  cursor: 'pointer', transition: 'all 0.15s ease',
+                  display: 'flex', alignItems: 'center', gap: 6
+                }}
+              >
+                All Requests
+                {/*<span style={{ fontSize: 12, background: 'rgba(0,0,0,0.05)', padding: '2px 8px', borderRadius: 12, fontWeight: 700 }}>12</span>*/}
+              </button>
+            )}
           </div>
 
 

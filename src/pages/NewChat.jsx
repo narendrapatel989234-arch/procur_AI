@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MainLayout from '../layouts/MainLayout.jsx';
-import { Plus, Paperclip, ChevronDown, Mic, Send, Sparkles, FileText, BarChart2, Package, ArrowLeft, X, Copy, CheckCircle, ThumbsUp, ThumbsDown, RotateCcw, Edit2, AlertTriangle, MoreHorizontal, Pin, PinOff, Share2, Download, Trash2, Scale } from 'lucide-react';
+import { Plus, Paperclip, ChevronDown, Mic, Send, Sparkles, FileText, BarChart2, Package, ArrowLeft, X, Copy, CheckCircle, ThumbsUp, ThumbsDown, RotateCcw, Edit2, AlertTriangle, MoreHorizontal, Pin, PinOff, Share2, Download, Trash2, Scale, Check } from 'lucide-react';
 
 export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRole }) {
   const [inputFocused, setInputFocused] = useState(false);
   const [inputText, setInputText] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [toast, setToast] = useState(null);
   const textareaRef = useRef(null);
@@ -283,12 +284,14 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
 
               {!hasStarted ? (
                 <>
-                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, rgb(0, 82, 204), rgb(124, 124, 255))', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginBottom: 24, boxShadow: '0 4px 12px rgba(0,82,204,0.15)' }}>
-                    <Sparkles size={20} color="#fff" strokeWidth={2} />
-                  </div>
-                  <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 12, letterSpacing: '-0.3px' }}>How can I help you today?</div>
-                  <div style={{ fontSize: 15, color: 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.6 }}>
-                    I can assist with creating purchase requests, analyzing vendor contracts,<br />tracking orders, and evaluating supply chain metrics.
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, rgb(0, 82, 204), rgb(124, 124, 255))', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginBottom: 24, boxShadow: '0 4px 12px rgba(0,82,204,0.15)' }}>
+                      <Sparkles size={20} color="#fff" strokeWidth={2} />
+                    </div>
+                    <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 12, letterSpacing: '-0.3px', textAlign: 'center' }}>How can I help you today?</div>
+                    <div style={{ fontSize: 15, color: 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.6 }}>
+                      I can assist with creating purchase requests, analyzing vendor contracts,<br />tracking orders, and evaluating supply chain metrics.
+                    </div>
                   </div>
 
                   {/* Starter Prompts */}
@@ -523,7 +526,52 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
                     transition: 'border-color 0.15s, box-shadow 0.15s',
                   }}
                 >
-                  {/* Textarea row */}
+                  {isRecording ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '4px 0' }}>
+                      <button disabled style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, border: 'none', background: 'transparent', color: 'var(--text-tertiary)', cursor: 'not-allowed', flexShrink: 0, opacity: 0.4 }}>
+                        <Paperclip size={18} strokeWidth={2} />
+                      </button>
+                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4, overflow: 'hidden', height: 24, padding: '0 12px' }}>
+                        {[...Array(150)].map((_, i) => (
+                          <div key={i} style={{
+                            width: 3,
+                            height: [6, 10, 14, 18, 12, 8, 22, 16, 8, 12, 20, 14, 10, 14, 8][i % 15],
+                            background: 'var(--text-tertiary)',
+                            borderRadius: 2,
+                            animation: `paiVoiceBar ${0.5 + (i % 4)*0.15}s ease-in-out infinite alternate`,
+                            flexShrink: 0
+                          }} />
+                        ))}
+                        <style>{`
+                          @keyframes paiVoiceBar {
+                            0% { transform: scaleY(0.3); opacity: 0.3; }
+                            100% { transform: scaleY(1); opacity: 0.8; }
+                          }
+                        `}</style>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                        <button 
+                          onClick={() => setIsRecording(false)} 
+                          onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
+                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
+                          <X size={20} strokeWidth={2} />
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setIsRecording(false);
+                            setInputText("I need to procure laptops for new engineering hires joining next month");
+                          }} 
+                          onMouseEnter={e => { e.currentTarget.style.color = '#22c55e'; e.currentTarget.style.background = 'rgba(34,197,94,0.08)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
+                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
+                          <Check size={20} strokeWidth={2} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Textarea row */}
                   <textarea
                     ref={textareaRef}
                     value={inputText}
@@ -611,7 +659,7 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
                       <span style={{ fontSize: 11, color: inputText.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>
                         {inputText.length} / 20000
                       </span>
-                      <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                      <button onClick={() => setIsRecording(true)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
                         <Mic size={18} strokeWidth={2} />
                       </button>
                       <button
@@ -629,6 +677,8 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
                       </button>
                     </div>
                   </div>
+                  </>
+                  )}
                 </div>
               </div>
             </div>
