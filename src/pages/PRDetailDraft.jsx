@@ -457,6 +457,7 @@ export default function PRDetailDraft({ onNavigate, userRole, navState }) {
   const [panelOpen, setPanelOpen] = useState(false);
   const [prStatus, setPrStatus] = useState('PR Drafted');
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [saveToast, setSaveToast] = useState(null);
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showApproveToast, setShowApproveToast] = useState(false);
@@ -598,6 +599,27 @@ export default function PRDetailDraft({ onNavigate, userRole, navState }) {
 
       {showEditModal && <EditModal onClose={() => setShowEditModal(false)} onSave={() => { setShowEditModal(false); setSaveToast({ title: 'Changes saved successfully', subtext: 'Requisition details have been updated.' }); setTimeout(() => setSaveToast(null), 3000); }} />}
 
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1100, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'fadeIn 0.2s ease' }}>
+          <div style={{ width: 400, background: '#fff', borderRadius: 16, padding: 32, boxShadow: '0 20px 40px rgba(0,0,0,0.15)', textAlign: 'center', animation: 'fadeIn 0.2s ease' }}>
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#fee2e2', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+              <Trash2 size={24} />
+            </div>
+            <h3 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 12px 0' }}>Delete PR</h3>
+            <p style={{ fontSize: 14, color: 'var(--text-secondary)', margin: '0 0 8px 0', lineHeight: 1.5 }}>Are you sure you want to delete this PR?</p>
+            <p style={{ fontSize: 13, fontWeight: 600, color: '#ef4444', margin: '0 0 28px 0' }}>Action performed is irreversable.</p>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button onClick={() => setShowDeleteConfirm(false)} style={{ flex: 1, padding: '0 16px', height: 42, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-primary)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
+              <button onClick={() => {
+                setShowDeleteConfirm(false);
+                onNavigate('Dashboard');
+              }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#ef4444', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
 
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#fff' }}>
@@ -611,7 +633,7 @@ export default function PRDetailDraft({ onNavigate, userRole, navState }) {
             <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>PR-2026-011</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid #ef4444', background: '#fff', cursor: 'pointer', fontSize: 13, color: '#ef4444', fontWeight: 600, fontFamily: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.background = '#fef2f2'} onMouseLeave={(e) => e.currentTarget.style.background = '#fff'}>
+            <button onClick={() => setShowDeleteConfirm(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid #ef4444', background: '#fff', cursor: 'pointer', fontSize: 13, color: '#ef4444', fontWeight: 600, fontFamily: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.background = '#fef2f2'} onMouseLeave={(e) => e.currentTarget.style.background = '#fff'}>
               <Trash2 size={14} /> Delete PR
             </button>
 
