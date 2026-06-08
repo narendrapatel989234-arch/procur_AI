@@ -948,13 +948,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [isEditing, setIsEditing] = useState(false);
   const [rfpHtml, setRfpHtml] = useState(INITIAL_HTML);
   const [savedHtml, setSavedHtml] = useState(INITIAL_HTML);
+  const [showAwardModal, setShowAwardModal] = useState(false);
+  const [selectedAwardVendor, setSelectedAwardVendor] = useState('');
+  const [showAwardSuccessToast, setShowAwardSuccessToast] = useState(false);
 
   const [proposals, setProposals] = useState([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadForms, setUploadForms] = useState([{ id: Date.now(), vendorName: '', file: null, supporting: [] }]);
   const [uploadForm, setUploadForm] = useState({ vendorName: '', file: null, supporting: [] });
   const [activeDropdown, setActiveDropdown] = useState(null);
-  
+
   const [selectedNegotVendorId, setSelectedNegotVendorId] = useState(null);
 
   const [suggestedVendors, setSuggestedVendors] = useState(VENDORS);
@@ -971,7 +974,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [costCurrencyOpen, setCostCurrencyOpen] = useState(false);
   const [costCurrency, setCostCurrency] = useState('AED');
   const costCurrencyRef = useRef(null);
-  
+
   const [negotVendorOpen, setNegotVendorOpen] = useState(false);
   const negotVendorRef = useRef(null);
 
@@ -985,7 +988,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   }, []);
 
   const getCurrencySymbol = (cur) => {
-    switch(cur) {
+    switch (cur) {
       case 'USD': return '$';
       case 'EUR': return '€';
       case 'GBP': return '£';
@@ -1000,13 +1003,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     setCostConfigData(prev => prev.map(row => {
       const numMin = (row.cmin || '').replace(/[^\d]/g, '');
       const numMax = (row.cmax || '').replace(/[^\d]/g, '');
-      
+
       const formatNum = (num) => {
         if (!num) return '';
         const n = parseInt(num, 10);
-        return sym + n.toLocaleString(locale);
+        return n.toLocaleString(locale);
       };
-      
+
       return {
         ...row,
         cmin: numMin ? formatNum(numMin) : row.cmin,
@@ -1015,10 +1018,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     }));
   }, [costCurrency]);
   const [costConfigData, setCostConfigData] = useState([
-    { p: 'Phase 1', m: 'Assessment', t: '2 months', r: '3 Architects', cmin: '₹10,00,000', cmax: '₹14,00,000' },
-    { p: 'Phase 2', m: 'Implementation', t: '3 months', r: '5 Engineers', cmin: '₹20,00,000', cmax: '₹30,00,000' },
-    { p: 'Phase 3', m: 'Support', t: '1 month', r: '2 Support Eng.', cmin: '₹6,00,000', cmax: '₹10,00,000' },
-    { p: 'PM & Coordination', m: 'Project Mgmt', t: '6 months', r: '1 Project Manager', cmin: '₹2,00,000', cmax: '₹4,00,000' },
+    { p: 'Phase 1', m: 'Assessment', t: '2 months', r: '3 Architects', cmin: '10,00,000', cmax: '14,00,000' },
+    { p: 'Phase 2', m: 'Implementation', t: '3 months', r: '5 Engineers', cmin: '20,00,000', cmax: '30,00,000' },
+    { p: 'Phase 3', m: 'Support', t: '1 month', r: '2 Support Eng.', cmin: '6,00,000', cmax: '10,00,000' },
+    { p: 'PM & Coordination', m: 'Project Mgmt', t: '6 months', r: '1 Project Manager', cmin: '2,00,000', cmax: '4,00,000' },
   ]);
   const [selectedDummyVendors, setSelectedDummyVendors] = useState([]);
   const [isVendorDropdownOpen, setIsVendorDropdownOpen] = useState(false);
@@ -1043,7 +1046,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     const now = new Date();
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const dateStr = `${String(now.getDate()).padStart(2, '0')}-${months[now.getMonth()]}-${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    
+
     const newProps = validForms.map((form, idx) => ({
       id: Date.now() + idx,
       vendorName: form.vendorName,
@@ -1057,7 +1060,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
       criteriaScores: {},
       state: null
     }));
-    
+
     setProposals([...proposals, ...newProps]);
     setShowUploadModal(false); setPropFileDrag(null); setSuppFileDrag(null);
     setUploadForms([{ id: Date.now(), vendorName: '', file: null, supporting: [] }]);
@@ -1248,23 +1251,23 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             </div>
 
             <div>
-            <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(14,15,37,0.04)', marginTop: 16 }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                  <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
-                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', width: '80px' }}>Sr No.</th>
-                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Category</th>
-                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Criteria</th>
-                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'center', width: '120px' }}>Weightage</th>
-                    <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'center', width: '80px' }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {scoringConfigData.map((row, i) => (
+              <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, overflow: 'hidden', boxShadow: '0 1px 4px rgba(14,15,37,0.04)', marginTop: 16 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                  <thead>
+                    <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                      <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', width: '80px' }}>Sr No.</th>
+                      <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Category</th>
+                      <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Criteria</th>
+                      <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'center', width: '120px' }}>Weightage</th>
+                      <th style={{ padding: '10px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'center', width: '80px' }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {scoringConfigData.map((row, i) => (
                       <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
                         <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-primary)', fontWeight: 500 }}>{row.sr}</td>
                         <td style={{ padding: '4px 8px' }}>
-                          <input 
+                          <input
                             className="editable-cell"
                             value={row.cat}
                             onChange={e => {
@@ -1276,7 +1279,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           />
                         </td>
                         <td style={{ padding: '4px 8px' }}>
-                          <input 
+                          <input
                             className="editable-cell"
                             value={row.crit}
                             onChange={e => {
@@ -1288,7 +1291,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           />
                         </td>
                         <td style={{ padding: '4px 8px', textAlign: 'center' }}>
-                          <input 
+                          <input
                             className="editable-cell"
                             type="number"
                             value={row.w}
@@ -1301,7 +1304,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           />
                         </td>
                         <td style={{ padding: '0 16px', textAlign: 'center' }}>
-                          <button 
+                          <button
                             onClick={() => setScoringConfigData(prev => prev.filter((_, idx) => idx !== i).map((r, idx) => ({ ...r, sr: idx + 1 })))}
                             style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'inline-flex', color: '#ef4444' }}
                           >
@@ -1320,7 +1323,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 </table>
               </div>
               <div style={{ marginTop: 12 }}>
-                <button 
+                <button
                   onClick={() => setScoringConfigData(prev => [...prev, { sr: prev.length + 1, cat: '', crit: '', w: 0, isNew: true }])}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: '#0052cc', fontSize: 13, fontWeight: 500, cursor: 'pointer', padding: 0 }}
                 >
@@ -1408,7 +1411,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         <input className="editable-cell" value={row.cmax} onChange={e => { const d = [...costConfigData]; d[i].cmax = e.target.value; setCostConfigData(d); }} style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-primary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }} />
                       </td>
                       <td style={{ padding: '0 16px', textAlign: 'center' }}>
-                        <button 
+                        <button
                           onClick={() => setCostConfigData(prev => prev.filter((_, idx) => idx !== i))}
                           style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'inline-flex', color: '#ef4444' }}
                         >
@@ -1432,7 +1435,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             </div>
 
             <div style={{ flexShrink: 0 }}>
-              <button 
+              <button
                 onClick={() => setCostConfigData(prev => [...prev, { p: '', m: '', t: '', r: '', cmin: '', cmax: '', isNew: true }])}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: '#0052cc', fontSize: 13, fontWeight: 500, cursor: 'pointer', padding: 0 }}
               >
@@ -1468,7 +1471,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             </div>
 
             <div style={{ position: 'relative' }}>
-              <div 
+              <div
                 onClick={() => setIsVendorDropdownOpen(!isVendorDropdownOpen)}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', border: '1px solid var(--border-default)', borderRadius: 10, cursor: 'pointer', background: '#fff' }}
               >
@@ -1545,7 +1548,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>Vendor {index + 1} Details</div>
                     {uploadForms.length > 1 && (
-                      <button 
+                      <button
                         onClick={() => setUploadForms(prev => prev.filter(f => f.id !== form.id))}
                         style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#dc2626', display: 'flex', alignItems: 'center', padding: 4 }}
                       >
@@ -1558,20 +1561,64 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Vendor Name <span style={{ color: '#dc2626' }}>*</span></div>
                       <input type="text" value={form.vendorName} onChange={e => setUploadForms(prev => prev.map(f => f.id === form.id ? { ...f, vendorName: e.target.value } : f))} placeholder="Enter vendor name" style={{ width: '100%', padding: '10px 12px', boxSizing: 'border-box', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none' }} />
                     </div>
-                  
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-                    {/* Left Column */}
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Proposal Attachment <span style={{ color: '#dc2626' }}>*</span></div>
-                      {!form.file ? (
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                      {/* Left Column */}
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Proposal Attachment <span style={{ color: '#dc2626' }}>*</span></div>
+                        {!form.file ? (
+                          <div
+                            onDragOver={e => { e.preventDefault(); setPropFileDrag(form.id); }}
+                            onDragLeave={() => setPropFileDrag(null)}
+                            onDrop={e => { e.preventDefault(); setPropFileDrag(null); const f = e.dataTransfer.files[0]; if (f) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, file: f } : uf)); }}
+                            onClick={() => document.getElementById(`prop-file-input-${form.id}`).click()}
+                            style={{ flex: 1, border: `2px dashed ${propFileDrag === form.id ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer', background: propFileDrag === form.id ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
+                            onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.04)'; }}
+                            onMouseLeave={e => { if (propFileDrag !== form.id) { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.background = '#fafafa'; } }}
+                          >
+                            <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <Upload size={16} color="#7c7cff" strokeWidth={2} />
+                            </div>
+                            <div style={{ textAlign: 'center' }}>
+                              <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
+                              <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT · Max 20MB</div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                              <FileText size={20} color="#dc2626" />
+                              <div>
+                                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{form.file.name}</div>
+                                <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{(form.file.size / (1024 * 1024)).toFixed(1)} MB</div>
+                              </div>
+                            </div>
+                            <button onClick={() => setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, file: null } : uf))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#999', padding: 4 }}><X size={14} /></button>
+                          </div>
+                        )}
+                        <input id={`prop-file-input-${form.id}`} type="file" accept=".pdf,.docx,.ppt" style={{ display: 'none' }} onChange={e => { if (e.target.files[0]) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, file: e.target.files[0] } : uf)); }} />
+                      </div>
+
+                      {/* Right Column */}
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>Supporting Documents</div>
+                          <div style={{ fontSize: 12, color: '#666' }}>({form.supporting.length} Documents)</div>
+                        </div>
+
                         <div
-                          onDragOver={e => { e.preventDefault(); setPropFileDrag(form.id); }}
-                          onDragLeave={() => setPropFileDrag(null)}
-                          onDrop={e => { e.preventDefault(); setPropFileDrag(null); const f = e.dataTransfer.files[0]; if (f) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, file: f } : uf)); }}
-                          onClick={() => document.getElementById(`prop-file-input-${form.id}`).click()}
-                          style={{ flex: 1, border: `2px dashed ${propFileDrag === form.id ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer', background: propFileDrag === form.id ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
+                          onDragOver={e => { e.preventDefault(); setSuppFileDrag(form.id); }}
+                          onDragLeave={() => setSuppFileDrag(null)}
+                          onDrop={e => {
+                            e.preventDefault();
+                            setSuppFileDrag(null);
+                            const files = Array.from(e.dataTransfer.files);
+                            if (files.length > 0) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, supporting: [...uf.supporting, ...files] } : uf));
+                          }}
+                          onClick={() => document.getElementById(`supp-file-input-${form.id}`).click()}
+                          style={{ flex: 1, border: `2px dashed ${suppFileDrag === form.id ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer', background: suppFileDrag === form.id ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
                           onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.04)'; }}
-                          onMouseLeave={e => { if (propFileDrag !== form.id) { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.background = '#fafafa'; } }}
+                          onMouseLeave={e => { if (suppFileDrag !== form.id) { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.background = '#fafafa'; } }}
                         >
                           <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <Upload size={16} color="#7c7cff" strokeWidth={2} />
@@ -1581,80 +1628,36 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT · Max 20MB</div>
                           </div>
                         </div>
-                      ) : (
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                            <FileText size={20} color="#dc2626" />
-                            <div>
-                              <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{form.file.name}</div>
-                              <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{(form.file.size / (1024 * 1024)).toFixed(1)} MB</div>
-                            </div>
-                          </div>
-                          <button onClick={() => setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, file: null } : uf))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#999', padding: 4 }}><X size={14} /></button>
-                        </div>
-                      )}
-                      <input id={`prop-file-input-${form.id}`} type="file" accept=".pdf,.docx,.ppt" style={{ display: 'none' }} onChange={e => { if (e.target.files[0]) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, file: e.target.files[0] } : uf)); }} />
-                    </div>
+                        <input id={`supp-file-input-${form.id}`} type="file" multiple accept=".pdf,.docx,.ppt" style={{ display: 'none' }} onChange={e => {
+                          const files = Array.from(e.target.files);
+                          if (files.length > 0) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, supporting: [...uf.supporting, ...files] } : uf));
+                          e.target.value = null;
+                        }} />
 
-                    {/* Right Column */}
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>Supporting Documents</div>
-                        <div style={{ fontSize: 12, color: '#666' }}>({form.supporting.length} Documents)</div>
-                      </div>
-                      
-                      <div
-                        onDragOver={e => { e.preventDefault(); setSuppFileDrag(form.id); }}
-                        onDragLeave={() => setSuppFileDrag(null)}
-                        onDrop={e => { 
-                          e.preventDefault(); 
-                          setSuppFileDrag(null); 
-                          const files = Array.from(e.dataTransfer.files); 
-                          if (files.length > 0) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, supporting: [...uf.supporting, ...files] } : uf)); 
-                        }}
-                        onClick={() => document.getElementById(`supp-file-input-${form.id}`).click()}
-                        style={{ flex: 1, border: `2px dashed ${suppFileDrag === form.id ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer', background: suppFileDrag === form.id ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.04)'; }}
-                        onMouseLeave={e => { if (suppFileDrag !== form.id) { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.background = '#fafafa'; } }}
-                      >
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Upload size={16} color="#7c7cff" strokeWidth={2} />
-                        </div>
-                        <div style={{ textAlign: 'center' }}>
-                          <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
-                          <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT · Max 20MB</div>
-                        </div>
-                      </div>
-                      <input id={`supp-file-input-${form.id}`} type="file" multiple accept=".pdf,.docx,.ppt" style={{ display: 'none' }} onChange={e => { 
-                        const files = Array.from(e.target.files);
-                        if (files.length > 0) setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, supporting: [...uf.supporting, ...files] } : uf)); 
-                        e.target.value = null;
-                      }} />
-
-                      {form.supporting.length > 0 && (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 16 }}>
-                          {form.supporting.map((suppFile, idx) => (
-                            <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, width: 'calc(50% - 6px)', boxSizing: 'border-box' }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' }}>
-                                <FileText size={20} color="#dc2626" style={{ flexShrink: 0 }} />
-                                <div style={{ overflow: 'hidden' }}>
-                                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{suppFile.name}</div>
-                                  <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{(suppFile.size / (1024 * 1024)).toFixed(1)} MB</div>
+                        {form.supporting.length > 0 && (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 16 }}>
+                            {form.supporting.map((suppFile, idx) => (
+                              <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, width: 'calc(50% - 6px)', boxSizing: 'border-box' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' }}>
+                                  <FileText size={20} color="#dc2626" style={{ flexShrink: 0 }} />
+                                  <div style={{ overflow: 'hidden' }}>
+                                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{suppFile.name}</div>
+                                    <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{(suppFile.size / (1024 * 1024)).toFixed(1)} MB</div>
+                                  </div>
                                 </div>
+                                <button onClick={() => setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, supporting: uf.supporting.filter((_, i) => i !== idx) } : uf))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#999', padding: 4, flexShrink: 0 }}><X size={14} /></button>
                               </div>
-                              <button onClick={() => setUploadForms(prev => prev.map(uf => uf.id === form.id ? { ...uf, supporting: uf.supporting.filter((_, i) => i !== idx) } : uf))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#999', padding: 4, flexShrink: 0 }}><X size={14} /></button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               ))}
-              
+
               <div style={{ marginTop: 24 }}>
-                <button 
+                <button
                   onClick={() => setUploadForms(prev => [...prev, { id: Date.now(), vendorName: '', file: null, supporting: [] }])}
                   style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: '#0052cc', fontSize: 14, fontWeight: 500, cursor: 'pointer', padding: 0 }}
                   onMouseEnter={e => e.currentTarget.style.color = '#0041a3'}
@@ -1906,7 +1909,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   <Sparkles size={14} strokeWidth={2} /> AI Chat
                 </button>
               </div>
-              <div style={{ borderBottom: '1px solid var(--border-subtle)', padding: '14px 24px' }}>
+              <div style={{ padding: '14px 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                   <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>AWS Cloud Migration Consulting</div>
                   <div style={{ background: 'rgba(124,124,255,0.08)', border: '1px solid rgba(124,124,255,0.2)', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 600, color: '#7c7cff', display: 'flex', alignItems: 'center', gap: 5 }}>
@@ -1920,7 +1923,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   ))}
                 </div>
               </div>
-              <div style={{ borderBottom: '1px solid var(--border-subtle)', padding: '0 24px', display: 'flex' }}>
+              <div style={{ padding: '0 24px', display: 'flex' }}>
                 {TABS.map(tab => {
                   const isActive = activeTab === tab.id;
                   return <button key={tab.id} className="tab-btn" onClick={() => setActiveTab(tab.id)} style={{ padding: '13px 16px', fontSize: 13, fontWeight: isActive ? 600 : 500, border: 'none', borderBottom: `2px solid ${isActive ? '#7c7cff' : 'transparent'}`, background: 'transparent', cursor: 'pointer', color: isActive ? '#3d3db8' : 'var(--text-secondary)', fontFamily: 'inherit', transition: 'all 0.15s ease' }}>{tab.label}</button>;
@@ -2121,15 +2124,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SCORING CONFIG</div>
                             <div style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>100 pts total</div>
                           </div>
-                          <button 
+                          <button
                             onClick={() => setShowScoringConfigModal(true)}
                             style={{
-                            display: 'flex', alignItems: 'center', gap: 6,
-                            padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
-                            borderRadius: 7, background: '#fff', color: '#0052cc',
-                            fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                            transition: 'all 0.15s ease', fontFamily: 'inherit'
-                          }}
+                              display: 'flex', alignItems: 'center', gap: 6,
+                              padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
+                              borderRadius: 7, background: '#fff', color: '#0052cc',
+                              fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                              transition: 'all 0.15s ease', fontFamily: 'inherit'
+                            }}
                             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
                             onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}>
                             <Pencil size={12} strokeWidth={2} />
@@ -2204,19 +2207,21 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             <div>Timeline & Resources</div>
                             <div style={{ textAlign: 'right' }}>Estimate</div>
                           </div>
-                          {COST_ITEMS.map((item, i) => (
-                            <div key={item.phase} style={{ display: 'grid', gridTemplateColumns: '3fr 4fr 3fr', alignItems: 'center', padding: '12px 14px', borderBottom: i < COST_ITEMS.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{item.phase}</div>
+                          {costConfigData.map((item, i) => (
+                            <div key={i} style={{ display: 'grid', gridTemplateColumns: '3fr 4fr 3fr', alignItems: 'center', padding: '12px 14px', borderBottom: i < costConfigData.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{item.p}{item.m ? ` — ${item.m}` : ''}</div>
                               <div style={{ fontSize: 12, color: '#666', lineHeight: 1.5 }}>
-                                <div>{item.duration}</div>
-                                <div>{item.resources}</div>
+                                <div>{item.t}</div>
+                                <div>{item.r}</div>
                               </div>
-                              <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', textAlign: 'right' }}>{item.estimate}</div>
+                              <div style={{ fontSize: 13, fontWeight: 700, color: '#1a1a1a', textAlign: 'right' }}>{item.cmin} - {item.cmax}</div>
                             </div>
                           ))}
                           <div style={{ padding: '13px 14px', background: 'linear-gradient(135deg,rgba(0,82,204,0.04),rgba(124,124,255,0.06))', display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border-subtle)' }}>
                             <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Total Estimate</div>
-                            <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>₹38,00,000 - ₹58,00,000</div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>
+                              {getCurrencySymbol(costCurrency)}{costConfigData.reduce((acc, curr) => acc + (parseInt((curr.cmin || '').replace(/[^\d]/g, ''), 10) || 0), 0).toLocaleString(costCurrency === 'INR' ? 'en-IN' : 'en-US')} - {getCurrencySymbol(costCurrency)}{costConfigData.reduce((acc, curr) => acc + (parseInt((curr.cmax || '').replace(/[^\d]/g, ''), 10) || 0), 0).toLocaleString(costCurrency === 'INR' ? 'en-IN' : 'en-US')}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -2272,9 +2277,9 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             {!isLast && <div style={{ position: 'absolute', left: 19, top: 40, bottom: -24, width: 2, background: 'var(--border-subtle)' }} />}
                             <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#fff', border: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                               {entry.type === 'document' ? <FileText size={18} color="var(--text-secondary)" /> :
-                               entry.type === 'ai' ? <Sparkles size={18} color="#0052cc" /> :
-                               entry.type === 'system' ? <Layers size={18} color="var(--text-secondary)" /> :
-                               <User size={18} color="var(--text-secondary)" />}
+                                entry.type === 'ai' ? <Sparkles size={18} color="#0052cc" /> :
+                                  entry.type === 'system' ? <Layers size={18} color="var(--text-secondary)" /> :
+                                    <User size={18} color="var(--text-secondary)" />}
                             </div>
                             <div style={{ flex: 1, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
@@ -2283,7 +2288,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               </div>
                               <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{entry.desc}</div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 12, fontSize: 12, color: 'var(--text-tertiary)' }}>
-                                {entry.type === 'ai' ? <Sparkles size={12} color="#0052cc" /> : <User size={12} />} 
+                                {entry.type === 'ai' ? <Sparkles size={12} color="#0052cc" /> : <User size={12} />}
                                 {entry.actor}
                               </div>
                             </div>
@@ -2297,19 +2302,20 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
               {/* PROPOSALS TAB */}
               {activeTab === 'proposals' && (
-                <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div>
-                      <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Proposals</div>
-                      <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Manage and evaluate vendor proposals for this RFP.</div>
+                <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, background: 'transparent' }}>
+                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROPOSALS</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Manage and evaluate vendor proposals for this RFP.</div>
+                      </div>
+                      {published && (
+                        <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}><Upload size={14} /> Upload Proposal</button>
+                      )}
                     </div>
-                    {published && (
-                      <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}><Upload size={14} /> Upload Proposal</button>
-                    )}
-                  </div>
 
-                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'visible' }}>
-                    <div style={{ overflowX: 'auto', paddingBottom: proposals.length > 0 ? 120 : 0 }}>
+                    <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'visible' }}>
+                      <div style={{ overflowX: 'auto', paddingBottom: proposals.length > 0 ? 120 : 0 }}>
                       <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 800 }}>
                         <thead>
                           <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
@@ -2329,7 +2335,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         <tbody>
                           {proposals.length === 0 ? (
                             <tr>
-                              <td colSpan={7} style={{ padding: '60px 20px', textAlign: 'center' }}>
+                              <td colSpan={11} style={{ padding: '60px 20px', textAlign: 'center' }}>
                                 <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,82,204,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}><Upload size={24} color="#0052cc" /></div>
                                 <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>No Proposals Uploaded</div>
                                 <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>{published ? 'Upload the first vendor proposal to start evaluation.' : 'Publish the RFP to enable proposal uploads.'}</div>
@@ -2411,16 +2417,18 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       </table>
                     </div>
                   </div>
+                </div>
+
 
                   {/* COMPARISON SECTION */}
-                  <div style={{ marginTop: 24 }}>
-                    <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Proposal Comparison Matrix</div>
+                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 20 }}>PROPOSAL COMPARISON MATRIX</div>
                     {proposals.length === 0 ? (
                       <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
                         Upload proposals to compare them in the matrix.
                       </div>
                     ) : (
-                      <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(14,15,37,0.03)' }}>
+                      <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
                         {/* Header Row */}
                         <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
                           <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, display: 'flex', alignItems: 'center' }}>Criteria</div>
@@ -2506,151 +2514,177 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 const firstNegotKey = Object.keys(NEGOTIATION_DATA)[0];
                 const activeVendorKey = selectedNegotVendorId || firstNegotKey;
                 const negotData = NEGOTIATION_DATA[activeVendorKey] || NEGOTIATION_DATA[firstNegotKey];
-                
-                return (
-                  <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: '#fff' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                      <div>
-                        <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Negotiation Brief</div>
-                        <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>AI-generated strategy and stats based on the proposal.</div>
-                      </div>
-                      <div style={{ position: 'relative' }} ref={negotVendorRef}>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', marginBottom: 6 }}>Vendor Proposal</div>
-                        <button type="button" onClick={() => setNegotVendorOpen(!negotVendorOpen)} style={{ width: 240, padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', background: '#fff', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxSizing: 'border-box', fontWeight: 500 }}>
-                          {activeVendorKey} <ChevronDown size={16} style={{ transform: negotVendorOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} color="#666" />
-                        </button>
-                        {negotVendorOpen && (
-                          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100 }}>
-                            {Object.keys(NEGOTIATION_DATA).map(key => (
-                              <div key={key} onClick={() => { setSelectedNegotVendorId(key); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                {key}
-                              </div>
-                            ))}
-                            {negotProposals.filter(p => !NEGOTIATION_DATA[p.vendorName]).map(p => (
-                              <div key={p.id} onClick={() => { setSelectedNegotVendorId(p.vendorName); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                {p.vendorName}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
 
-                    {negotData ? (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                        {/* Negotiation Stats */}
-                        <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'visible', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                          <div style={{ overflowX: 'auto' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
+                return (
+                  <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: 'transparent' }}>
+                    
+                    {/* SECTION 1: Negotiation Brief & Table */}
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                        <div>
+                          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>NEGOTIATION BRIEF</div>
+                          <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>AI-generated strategy and stats based on vendor proposals.</div>
+                        </div>
+                        <button onClick={() => setShowAwardModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
+                          <Award size={14} /> Award Project
+                        </button>
+                      </div>
+
+                      <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                        <div style={{ overflowX: 'auto' }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
                             <thead>
                               <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)', textAlign: 'left' }}>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>VENDOR / PROPOSAL</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>SENTIMENT SCORE</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>RISKS IDENTIFIED</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>GAPS & CLARIFICATIONS</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>COMMERCIAL GAP</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>BATNA STAT</th>
-                                <th style={{ padding: '24px 28px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, lineHeight: 1.5, whiteSpace: 'nowrap' }}>OVERALL SCORE</th>
+                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>VENDOR / PROPOSAL</th>
+                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>SENTIMENT SCORE</th>
+                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>RISKS IDENTIFIED</th>
+                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>GAPS & CLARIFICATIONS</th>
+                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>COMMERCIAL GAP</th>
+                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>BATNA STAT</th>
+                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>OVERALL SCORE</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <td style={{ padding: '24px 28px', fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
-                                  <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>{negotData.stats.vendor.replace(' v1', '\nv1')}</div>
-                                </td>
-                                <td style={{ padding: '24px 28px' }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                    <span style={{ fontSize: 15, fontWeight: 600, color: '#16a34a' }}>{negotData.stats.sentiment.rating}</span>
-                                    <span style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>({negotData.stats.sentiment.score})</span>
-                                  </div>
-                                </td>
-                                <td style={{ padding: '24px 28px', fontSize: 14, color: 'var(--text-primary)' }}>
-                                  <div style={{ display: 'flex', gap: 20 }}>
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                      <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 15 }}>{negotData.stats.risks.high}</div>
-                                      <div style={{ color: '#ef4444', fontSize: 13, fontWeight: 500 }}>High</div>
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                      <div style={{ color: '#f59e0b', fontWeight: 600, fontSize: 15 }}>{negotData.stats.risks.medium}</div>
-                                      <div style={{ color: '#f59e0b', fontSize: 13, fontWeight: 500 }}>Med</div>
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                      <div style={{ color: '#22c55e', fontWeight: 600, fontSize: 15 }}>{negotData.stats.risks.low}</div>
-                                      <div style={{ color: '#22c55e', fontSize: 13, fontWeight: 500 }}>Low</div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td style={{ padding: '24px 28px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500 }}>{negotData.stats.gaps} Questions</td>
-                                <td style={{ padding: '24px 28px', fontSize: 15, color: 'var(--text-primary)' }}>
-                                  <div style={{ color: '#f59e0b', fontWeight: 600, marginBottom: 6 }}>{negotData.stats.commercial.gap}</div>
-                                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{negotData.stats.commercial.detail.replace(' target', '\ntarget')}</div>
-                                </td>
-                                <td style={{ padding: '24px 28px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500, lineHeight: 1.5 }}>
-                                  <div style={{ whiteSpace: 'pre-wrap' }}>{negotData.stats.batna.replace(' - ', ' -\n').replace(' Viable', '\nViable')}</div>
-                                </td>
-                                <td style={{ padding: '24px 28px' }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: '50%', background: '#f0fdf4', color: '#16a34a', fontWeight: 700, fontSize: 16, border: '2px solid #bbf7d0' }}>{negotData.stats.overall}</div>
-                                </td>
-                              </tr>
+                              {negotProposals.map((p, idx) => {
+                                const vData = NEGOTIATION_DATA[p.vendorName] || negotData;
+                                return (
+                                  <tr key={p.id} style={{ borderBottom: idx < negotProposals.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                                    <td style={{ padding: '14px 16px', fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
+                                      <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>{p.vendorName.replace(' v1', '\nv1')}</div>
+                                    </td>
+                                    <td style={{ padding: '14px 16px' }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        <span style={{ fontSize: 15, fontWeight: 600, color: '#16a34a' }}>{vData.stats.sentiment.rating}</span>
+                                        <span style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>({vData.stats.sentiment.score})</span>
+                                      </div>
+                                    </td>
+                                    <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)' }}>
+                                      <div style={{ display: 'flex', gap: 20 }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                          <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 15 }}>{vData.stats.risks.high}</div>
+                                          <div style={{ color: '#ef4444', fontSize: 13, fontWeight: 500 }}>High</div>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                          <div style={{ color: '#f59e0b', fontWeight: 600, fontSize: 15 }}>{vData.stats.risks.medium}</div>
+                                          <div style={{ color: '#f59e0b', fontSize: 13, fontWeight: 500 }}>Med</div>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                          <div style={{ color: '#22c55e', fontWeight: 600, fontSize: 15 }}>{vData.stats.risks.low}</div>
+                                          <div style={{ color: '#22c55e', fontSize: 13, fontWeight: 500 }}>Low</div>
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td style={{ padding: '14px 16px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500 }}>{vData.stats.gaps} Questions</td>
+                                    <td style={{ padding: '14px 16px', fontSize: 15, color: 'var(--text-primary)' }}>
+                                      <div style={{ color: '#f59e0b', fontWeight: 600, marginBottom: 6 }}>{vData.stats.commercial.gap}</div>
+                                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{vData.stats.commercial.detail.replace(' target', '\ntarget')}</div>
+                                    </td>
+                                    <td style={{ padding: '14px 16px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500, lineHeight: 1.5 }}>
+                                      <div style={{ whiteSpace: 'pre-wrap' }}>{vData.stats.batna.replace(' - ', ' -\n').replace(' Viable', '\nViable')}</div>
+                                    </td>
+                                    <td style={{ padding: '14px 16px' }}>
+                                      <div style={{ color: '#16a34a', fontWeight: 700, fontSize: 16 }}>{p.techScore || vData.stats.overall}</div>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SECTION 2: Vendor Proposal & Dropdown & Details */}
+                    {negotData ? (
+                      <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                          <div>
+                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>VENDOR PROPOSAL DETAILS</div>
+                            <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Detailed analysis and negotiation strategy for the selected vendor.</div>
+                          </div>
+                          <div style={{ position: 'relative' }} ref={negotVendorRef}>
+                            <button type="button" onClick={() => setNegotVendorOpen(!negotVendorOpen)} style={{ width: 240, padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', background: '#fff', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxSizing: 'border-box', fontWeight: 500 }}>
+                              {activeVendorKey} <ChevronDown size={16} style={{ transform: negotVendorOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} color="#666" />
+                            </button>
+                            {negotVendorOpen && (
+                              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100 }}>
+                                {Object.keys(NEGOTIATION_DATA).map(key => (
+                                  <div key={key} onClick={() => { setSelectedNegotVendorId(key); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                    {key}
+                                  </div>
+                                ))}
+                                {negotProposals.filter(p => !NEGOTIATION_DATA[p.vendorName]).map(p => (
+                                  <div key={p.id} onClick={() => { setSelectedNegotVendorId(p.vendorName); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                    {p.vendorName}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
-                        
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+
                         {/* Market News and Sentiment (4 Cards) */}
-                        <div style={{ marginTop: 8 }}>
-                          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Market News and Sentiment</div>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-                            {Object.entries(negotData.marketSignals).map(([key, signal]) => {
-                              const Icon = signal.icon;
-                              return (
-                                <div key={key} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-                                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7c7cff' }}>
-                                      <Icon size={18} strokeWidth={2.5} />
+                        <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                          <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                            MARKET NEWS AND SENTIMENT
+                          </div>
+                          <div style={{ padding: 24 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+                              {Object.entries(negotData.marketSignals).map(([key, signal]) => {
+                                const Icon = signal.icon;
+                                return (
+                                  <div key={key} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+                                      <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7c7cff' }}>
+                                        <Icon size={18} strokeWidth={2.5} />
+                                      </div>
+                                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{signal.title}</div>
                                     </div>
-                                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{signal.title}</div>
+                                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{signal.desc}</div>
                                   </div>
-                                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{signal.desc}</div>
-                                </div>
-                              );
-                            })}
+                                );
+                              })}
+                            </div>
                           </div>
                         </div>
 
                         {/* Clarification Questions */}
-                        <div style={{ marginTop: 8 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>Clarification Questions</div>
+                        <div style={{ marginTop: 8, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                          <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>CLARIFICATION QUESTIONS</div>
                             <div style={{ padding: '4px 10px', background: '#eef2ff', color: '#4f46e5', fontSize: 11, fontWeight: 600, borderRadius: 100, textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 4 }}>
                               <Sparkles size={12} /> AI Generated
                             </div>
                           </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                            {negotData.clarificationQuestions && negotData.clarificationQuestions.map((q, i) => (
-                              <div key={i} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px 24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)', display: 'flex', gap: 16 }}>
-                                <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                                  <HelpCircle size={16} strokeWidth={2.5} />
-                                </div>
-                                <div>
-                                  <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8, lineHeight: 1.5 }}>{q.question}</div>
-                                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, background: 'var(--bg-surface-2)', padding: '12px 16px', borderRadius: 8, borderLeft: '3px solid #ddd6fe' }}>
-                                    <span style={{ fontWeight: 600, color: '#6b7280', marginRight: 6 }}>Context:</span>
-                                    {q.context}
+                          <div style={{ padding: 24 }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                              {negotData.clarificationQuestions && negotData.clarificationQuestions.map((q, i) => (
+                                <div key={i} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px 24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)', display: 'flex', gap: 16 }}>
+                                  <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                                    <HelpCircle size={16} strokeWidth={2.5} />
+                                  </div>
+                                  <div>
+                                    <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8, lineHeight: 1.5 }}>{q.question}</div>
+                                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, background: 'var(--bg-surface-2)', padding: '12px 16px', borderRadius: 8, borderLeft: '3px solid #ddd6fe' }}>
+                                      <span style={{ fontWeight: 600, color: '#6b7280', marginRight: 6 }}>Context:</span>
+                                      {q.context}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
                         </div>
 
                         {/* Stacked Layout for the rest */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
-                          
+
                           {/* Technical Gaps & Clarifications */}
                           <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                              <AlertTriangle size={18} color="#7c7cff" /> Technical Gaps & Clarifications
+                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              TECHNICAL GAPS & CLARIFICATIONS
                             </div>
                             <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
                               {negotData.technicalGaps.map((gap, i) => (
@@ -2667,8 +2701,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                           {/* Commercial Pointers */}
                           <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                              <DollarSign size={18} color="#16a34a" /> Commercial Pointers
+                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              COMMERCIAL POINTERS
                             </div>
                             <div style={{ padding: '24px 24px 24px 24px' }}>
                               <ul style={{ margin: 0, paddingLeft: 20, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.7, listStyleType: 'disc' }}>
@@ -2681,24 +2715,32 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                           {/* Strategy Brief Generator */}
                           <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                              <Target size={18} color="#f59e0b" /> Strategy Brief
+                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              STRATEGY BRIEF
                             </div>
                             <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 24, flex: 1 }}>
-                              
-                              <div>
-                                <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '12px 16px', background: 'rgba(124,124,255,0.05)', borderRadius: 8, borderLeft: '3px solid #7c7cff' }}>{negotData.strategyBrief.opening}</div>
-                              </div>
 
-                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
+                                <div>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
+                                  <div style={{ fontSize: 13, color: '#0052cc', fontWeight: 500, padding: '12px 16px', background: 'rgba(0,82,204,0.04)', borderRadius: 8, border: '1px solid rgba(0,82,204,0.2)', lineHeight: 1.5, height: '100%', boxSizing: 'border-box' }}>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>₹38,00,000</div>
+                                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{negotData.strategyBrief.opening}</div>
+                                  </div>
+                                </div>
                                 <div>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Target Goal</div>
-                                  <div style={{ fontSize: 13, color: '#15803d', fontWeight: 500, padding: '12px 16px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0', lineHeight: 1.5 }}>{negotData.strategyBrief.target}</div>
+                                  <div style={{ fontSize: 13, color: '#15803d', fontWeight: 500, padding: '12px 16px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0', lineHeight: 1.5, height: '100%', boxSizing: 'border-box' }}>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.target}</div>
+                                    <div style={{ fontSize: 11, color: '#166534' }}>Ideal settlement point.</div>
+                                  </div>
                                 </div>
                                 <div>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Walk-Away Point</div>
-                                  <div style={{ fontSize: 13, color: '#b91c1c', fontWeight: 500, padding: '12px 16px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca', lineHeight: 1.5 }}>{negotData.strategyBrief.walkAway}</div>
+                                  <div style={{ fontSize: 13, color: '#b91c1c', fontWeight: 500, padding: '12px 16px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca', lineHeight: 1.5, height: '100%', boxSizing: 'border-box' }}>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.walkAway}</div>
+                                    <div style={{ fontSize: 11, color: '#991b1b' }}>Maximum acceptable threshold.</div>
+                                  </div>
                                 </div>
                               </div>
 
@@ -2718,9 +2760,9 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                             </div>
                           </div>
-
                         </div>
                       </div>
+                    </div>
                     ) : (
                       <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-secondary)' }}>No negotiation data available for this vendor.</div>
                     )}
@@ -3081,6 +3123,56 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
         </div>
       </MainLayout>
+
+      {/* Award Project Modal */}
+      {showAwardModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowAwardModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 480, padding: 24, boxShadow: '0 20px 60px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Award Project</div>
+                <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Select the vendor to award this project to.</div>
+              </div>
+              <button onClick={() => setShowAwardModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, margin: '16px 0' }}>
+              {proposals.filter(p => p.status === 'Completed').map(p => (
+                <div key={p.id} onClick={() => setSelectedAwardVendor(p.vendorName)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', border: `1px solid ${selectedAwardVendor === p.vendorName ? '#0052cc' : 'var(--border-subtle)'}`, borderRadius: 10, background: selectedAwardVendor === p.vendorName ? 'rgba(0,82,204,0.04)' : '#fff', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                  <div style={{ width: 16, height: 16, borderRadius: '50%', border: `1.5px solid ${selectedAwardVendor === p.vendorName ? '#0052cc' : '#ccc'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: '#fff' }}>
+                    {selectedAwardVendor === p.vendorName && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#0052cc' }} />}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>Tech Score: <span style={{ fontWeight: 600 }}>{p.techScore}</span></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 16 }}>
+              <button onClick={() => setShowAwardModal(false)} style={{ padding: '10px 20px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
+              <button disabled={!selectedAwardVendor} onClick={() => {
+                setShowAwardModal(false);
+                setShowAwardSuccessToast(true);
+                setTimeout(() => setShowAwardSuccessToast(false), 3000);
+              }} style={{ padding: '10px 24px', border: 'none', borderRadius: 8, background: selectedAwardVendor ? '#0052cc' : '#ccc', fontSize: 13, fontWeight: 600, cursor: selectedAwardVendor ? 'pointer' : 'not-allowed', color: '#fff', fontFamily: 'inherit' }}>Submit</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Award Success Toast */}
+      {showAwardSuccessToast && (
+        <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
+          <CheckCircle size={20} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Project Awarded Successfully</div>
+            <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{selectedAwardVendor} has been notified.</div>
+          </div>
+          <button onClick={() => setShowAwardSuccessToast(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
+        </div>
+      )}
     </>
   );
 }

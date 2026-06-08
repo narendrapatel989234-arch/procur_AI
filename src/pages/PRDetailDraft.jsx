@@ -627,8 +627,10 @@ export default function PRDetailDraft({ onNavigate, userRole, navState }) {
             <div style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a' }}>AWS Cloud Migration Consulting</div>
             <div style={{ background: statusCfg.bg, color: statusCfg.color, borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 600, transition: 'all 0.4s ease' }}>{prStatus}</div>
           </div>
-          <div style={{ fontSize: 13, color: '#999', display: 'flex', gap: 8 }}>
-            <span>David Kim</span><span>·</span><span>Created Today</span><span>·</span><span>Engineering</span><span>·</span><span>Technology and Consulting</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+            {[[User, 'David Kim'], [Calendar, 'Created 08 May 2026'], [Building, 'Engineering'], [Tag, 'Technology and Consulting'], [MapPin, 'Dubai, UAE']].map(([Icon, text]) => (
+              <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon size={12} color="var(--text-tertiary)" /><span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{text}</span></div>
+            ))}
           </div>
         </div>
 

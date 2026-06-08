@@ -4,7 +4,7 @@ import {
   ArrowLeft, Download, Sparkles, User, CheckCircle, Clock, Lock,
   ChevronRight, ChevronDown, X, FileText, FileCheck, MessageSquare,
   ExternalLink, Building, Calendar, Tag, Pencil, Upload,
-  Activity, TrendingUp, Package, Layers
+  Activity, TrendingUp, Package, Layers, MapPin
 } from 'lucide-react';
 
 const BIZ_UNITS = ['DDAIS', 'Finance', 'Engineering', 'Operations', 'Marketing', 'HR', 'Legal', 'Procurement', 'IT', 'Other'];
@@ -306,10 +306,9 @@ export default function PRDetail({ setCurrentPage, onNavigate, activeNav , userR
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><User size={13} color="var(--text-tertiary)" /><span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>David Kim</span></div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Calendar size={13} color="var(--text-tertiary)" /><span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Created 08 May 2026</span></div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Building size={13} color="var(--text-tertiary)" /><span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Engineering</span></div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Tag size={13} color="var(--text-tertiary)" /><span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Technology and Consulting</span></div>
+            {[[User, 'David Kim'], [Calendar, 'Created 08 May 2026'], [Building, 'Engineering'], [Tag, 'Technology and Consulting'], [MapPin, 'Dubai, UAE']].map(([Icon, text]) => (
+              <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 4 }}><Icon size={12} color="var(--text-tertiary)" /><span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>{text}</span></div>
+            ))}
           </div>
         </div>
 
