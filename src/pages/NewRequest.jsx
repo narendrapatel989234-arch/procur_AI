@@ -5,7 +5,7 @@ import {
   ChevronDown, Calendar, Building, User,
   Tag, AlertCircle, AlertTriangle, LayoutDashboard, Scan, Cpu, FileCheck, MessageSquare,
   ThumbsUp, ThumbsDown, RotateCcw, Copy, Volume2, Edit2, VolumeX,
-  MoreHorizontal, Pin, PinOff, Download, Share2, Link, Wand2, Mic, Check
+  MoreHorizontal, Pin, PinOff, Download, Share2, Link, Wand2, Mic, Check, Brain
 } from 'lucide-react';
 import MainLayout from '../layouts/MainLayout.jsx';
 
@@ -1026,11 +1026,14 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
         </div>
       )}
 
-      {/* ═══ TOP BAR ═══ */}
-      <div style={{
-        height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0, position: 'relative',
-      }}>
+      <div style={{ display: 'flex', flexDirection: 'row', height: '100%', overflow: 'hidden' }}>
+        
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+          {/* ═══ TOP BAR ═══ */}
+          <div style={{
+            height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0, position: 'relative',
+          }}>
         {/* Left */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
           <div onClick={handleBack} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--text-tertiary)' }}>
@@ -1132,9 +1135,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
 
       {/* ═══ MODE: CHAT ═══ */}
       {activeMode === 'chat' && (
-        <div style={{ display: 'flex', flexDirection: 'row', height: '100%', overflow: 'hidden', background: 'var(--bg-default)' }}>
-          {/* Left: Chat Area */}
-          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg-default)' }}>
 
             {/* Messages / empty state */}
             <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: hasMessages ? '24px' : '40px 24px 24px', gap: hasMessages ? 16 : 0 }}>
@@ -1778,84 +1779,6 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
               </div>
             </div>
           </div>
-
-          {/* Right: Reasoning Panel */}
-          <div style={{
-            maxWidth: showReasoningPanel ? 300 : 0, width: '100%', flexShrink: 0,
-            borderLeft: showReasoningPanel ? '1px solid var(--border-subtle)' : 'none',
-            background: '#fff', display: 'flex', flexDirection: 'column', overflow: 'hidden',
-            transition: 'max-width 0.25s ease'
-          }}>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: 300 }}>
-              {/* Panel Header */}
-              <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Agent Reasoning</div>
-                <button onClick={() => setShowReasoningPanel(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                  <X size={16} />
-                </button>
-              </div>
-              {/* Thinking Steps label */}
-              <div style={{ padding: '12px 20px 8px', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Sparkles size={12} color="#7c7cff" />
-                Thinking Steps
-              </div>
-              {/* Steps list */}
-              <div style={{ flex: 1, overflowY: 'auto', padding: '8px 20px 20px', display: 'flex', flexDirection: 'column', gap: 0, position: 'relative' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: 28,
-                  top: 18,
-                  bottom: 18,
-                  width: 1,
-                  background: 'var(--border-subtle)',
-                  zIndex: 0,
-                }} />
-                {reasoningSteps.map((step, i) => (
-                  <div key={i} style={{
-                    display: 'flex', flexDirection: 'column',
-                    background: step.status === 'active' ? 'rgba(124,124,255,0.06)' : 'var(--bg-surface-1)',
-                    border: step.status === 'active' ? '1px solid rgba(124,124,255,0.15)' : '1px solid var(--border-subtle)',
-                    borderRadius: 8, padding: '10px 12px', marginBottom: 8,
-                    position: 'relative', zIndex: 1,
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                      <div style={{
-                        width: 8, height: 8, borderRadius: '50%', marginTop: 4, flexShrink: 0,
-                        background: step.status === 'active' ? '#7c7cff' : '#1a1a1a',
-                        animation: step.status === 'active' ? 'pulse 1.4s ease-in-out infinite' : 'none',
-                        position: 'relative', zIndex: 2,
-                      }} />
-                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: step.status === 'active' ? '#3d3db8' : '#4a4a4a' }}>
-                          {step.status === 'active' ? (
-                            <span>
-                              {step.title.substring(0, typedTitles[i] ?? 0)}
-                              {(typedTitles[i] ?? 0) < step.title.length && (
-                                <span style={{ display: 'inline-block', width: 1.5, height: '0.9em', background: '#7c7cff', marginLeft: 2, verticalAlign: 'middle', animation: 'blink 0.7s step-end infinite' }} />
-                              )}
-                            </span>
-                          ) : (
-                            step.title
-                          )}
-                        </div>
-                        {step.status === 'complete' && step.bullets && step.bullets.length > 0 && (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4 }}>
-                            {step.bullets.map((b, bi) => (
-                              <div key={bi} style={{ fontSize: 11, color: 'var(--text-tertiary)', lineHeight: 1.5, display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-                                <span style={{ flexShrink: 0 }}>·</span>
-                                <span>{b}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
       )}
 
       {/* ═══ MODE: FORM ═══ */}
@@ -2768,6 +2691,80 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
           </div>
         </div>
       )}
+
+        </div>
+
+        {/* Right: Reasoning Panel */}
+        {activeMode === 'chat' && (
+          <div style={{
+            maxWidth: showReasoningPanel ? 300 : 0, width: '100%', flexShrink: 0,
+            borderLeft: showReasoningPanel ? '1px solid var(--border-subtle)' : 'none',
+            background: '#fff', display: 'flex', flexDirection: 'column', overflow: 'hidden',
+            transition: 'max-width 0.25s ease'
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: 300 }}>
+              {/* Panel Header */}
+              <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Brain size={16} color="#7c7cff" />
+                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Agent Reasoning</div>
+                </div>
+                <button onClick={() => setShowReasoningPanel(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  <X size={16} />
+                </button>
+              </div>
+              {/* Thinking Steps label */}
+              <div style={{ padding: '4px 20px 12px', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Sparkles size={12} color="#7c7cff" />
+                Thinking Steps
+              </div>
+              {/* Steps list */}
+              <div style={{ flex: 1, overflowY: 'auto', padding: '8px 20px 20px', display: 'flex', flexDirection: 'column', gap: 0, position: 'relative' }}>
+                <div style={{
+                  position: 'absolute',
+                  left: 28,
+                  top: 18,
+                  bottom: 18,
+                  width: 1,
+                  background: 'var(--border-subtle)',
+                  zIndex: 0,
+                }} />
+                {reasoningSteps.map((step, i) => (
+                  <div key={i} style={{ display: 'flex', flexDirection: 'column', background: step.status === 'active' ? 'rgba(124,124,255,0.06)' : 'var(--bg-surface-1)', border: step.status === 'active' ? '1px solid rgba(124,124,255,0.15)' : '1px solid var(--border-subtle)', borderRadius: 8, padding: '10px 12px', marginBottom: 8, position: 'relative', zIndex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                      <div style={{ width: 8, height: 8, borderRadius: '50%', marginTop: 4, flexShrink: 0, background: step.status === 'active' ? '#7c7cff' : '#1a1a1a', animation: step.status === 'active' ? 'pulse 1.4s ease-in-out infinite' : 'none', position: 'relative', zIndex: 2 }} />
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: step.status === 'active' ? '#3d3db8' : '#4a4a4a' }}>
+                          {step.status === 'active' ? (
+                            <span>
+                              {step.title.substring(0, typedTitles[i] ?? 0)}
+                              {(typedTitles[i] ?? 0) < step.title.length && (
+                                <span style={{ display: 'inline-block', width: 1.5, height: '0.9em', background: '#7c7cff', marginLeft: 2, verticalAlign: 'middle', animation: 'blink 0.7s step-end infinite' }} />
+                              )}
+                            </span>
+                          ) : (
+                            step.title
+                          )}
+                        </div>
+                        {step.status === 'complete' && step.bullets && step.bullets.length > 0 && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4 }}>
+                            {step.bullets.map((b, bi) => (
+                              <div key={bi} style={{ fontSize: 11, color: 'var(--text-tertiary)', lineHeight: 1.5, display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                                <span style={{ flexShrink: 0 }}>·</span><span>{b}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+      </div>
 
       {showRenameModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}

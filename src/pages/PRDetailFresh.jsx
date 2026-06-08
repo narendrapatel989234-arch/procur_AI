@@ -473,6 +473,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [showPoEditModal, setShowPoEditModal] = useState(false);
   const [showPoPreview, setShowPoPreview] = useState(false);
+  const [showAttachmentPreview, setShowAttachmentPreview] = useState(false);
 
   const [chatPaneOpen, setChatPaneOpen] = useState(navState?.openChatPane || false);
   const [chatMenuOpen, setChatMenuOpen] = useState(false);
@@ -768,9 +769,10 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                   <div style={{ height: 1, background: '#e5e5e5', margin: '16px 0' }} />
                   <div style={{ fontSize: 12, fontWeight: 600, color: '#999', marginBottom: 12 }}>Attachments</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fcfcfc', cursor: 'pointer' }}>
+                    <div onClick={() => setShowAttachmentPreview(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fcfcfc', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.borderColor = '#7c7cff'} onMouseLeave={e => e.currentTarget.style.borderColor = '#e0e0e0'}>
                       <FileText size={16} color="#0052cc" />
                       <span style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Q3_Procurement_Requirements.pdf</span>
+                      <Eye size={14} color="#999" style={{ marginLeft: 8 }} />
                     </div>
                   </div>
                 </div>
@@ -1457,6 +1459,43 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
 
         </div>
       </div>
+
+      {showAttachmentPreview && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowAttachmentPreview(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: '82vw', maxWidth: 920, height: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+            <div style={{ padding: '16px 24px', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 9, background: 'rgba(0,82,204,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <FileText size={16} color="#0052cc" />
+                </div>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Attachment Preview</div>
+                  <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>Q3_Procurement_Requirements.pdf</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid #e0e0e0', background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#666', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                  <Download size={13} /> Download
+                </button>
+                <button onClick={() => setShowAttachmentPreview(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 6, borderRadius: 8 }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+            <div style={{ flex: 1, overflowY: 'auto', background: '#f0f0f0', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 0 40px', gap: 20 }}>
+              <div style={{ background: '#fff', width: 700, minHeight: 900, borderRadius: 4, boxShadow: '0 2px 12px rgba(0,0,0,0.12)', padding: '48px 60px', boxSizing: 'border-box', position: 'relative' }}>
+                <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, color: '#0d1f3c' }}>Q3 Procurement Requirements</div>
+                <div style={{ fontSize: 14, color: '#555', lineHeight: 1.6, marginBottom: 16 }}>
+                  This document outlines the core requirements and specifications for the upcoming Q3 procurement cycle.
+                </div>
+                <div style={{ fontSize: 14, color: '#555', lineHeight: 1.6, marginBottom: 16 }}>
+                  Scope of work includes cloud migration, enterprise architecture updates, and long-term support metrics.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showPoEditModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowPoEditModal(false)}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MainLayout from '../layouts/MainLayout.jsx';
-import { Plus, Paperclip, ChevronDown, Mic, Send, Sparkles, FileText, BarChart2, Package, ArrowLeft, X, Copy, CheckCircle, ThumbsUp, ThumbsDown, RotateCcw, Edit2, AlertTriangle, MoreHorizontal, Pin, PinOff, Share2, Download, Trash2, Scale, Check } from 'lucide-react';
+import { Plus, Paperclip, ChevronDown, Mic, Send, Sparkles, FileText, BarChart2, Package, ArrowLeft, X, Copy, CheckCircle, ThumbsUp, ThumbsDown, RotateCcw, Edit2, AlertTriangle, MoreHorizontal, Pin, PinOff, Share2, Download, Trash2, Scale, Check, Brain } from 'lucide-react';
 
 export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRole }) {
   const [inputFocused, setInputFocused] = useState(false);
@@ -232,9 +232,11 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
         @keyframes spinOnce { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
       `}</style>
       <MainLayout userRole={userRole} activeNav="Chat History" onNavigate={onNavigate} titleComponent={null} searchPlaceholder={null}>
+        <div style={{ display: 'flex', flexDirection: 'row', height: '100%', overflow: 'hidden' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
 
-        {/* ── Top Bar (Header) ── */}
-        <div style={{
+            {/* ── Top Bar (Header) ── */}
+            <div style={{
           height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', zIndex: 10
         }}>
@@ -275,11 +277,9 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
           )}
         </div>
 
-        {/* ── Main Chat Thread Area ── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
-
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            {/* Messages Scroll Area */}
+            {/* ── Main Chat Thread Area ── */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden', background: 'var(--bg-default)' }}>
+              {/* Messages Scroll Area */}
             <div className="chat-scroll" ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: hasStarted ? '24px' : '40px 24px 24px', display: 'flex', flexDirection: 'column', justifyContent: hasStarted ? 'flex-start' : 'center', gap: hasStarted ? 16 : 0 }}>
 
               {!hasStarted ? (
@@ -683,14 +683,16 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Right: Reasoning Panel */}
-          <div style={{
-            maxWidth: showReasoningPanel ? 300 : 0, width: '100%', flexShrink: 0,
-            borderLeft: showReasoningPanel ? '1px solid var(--border-subtle)' : 'none',
-            background: '#fff', display: 'flex', flexDirection: 'column', overflow: 'hidden',
-            transition: 'max-width 0.25s ease'
-          }}>
+        {/* Right: Reasoning Panel */}
+        <div style={{
+          maxWidth: showReasoningPanel ? 300 : 0, width: '100%', flexShrink: 0,
+          borderLeft: showReasoningPanel ? '1px solid var(--border-subtle)' : 'none',
+          background: '#fff', display: 'flex', flexDirection: 'column', overflow: 'hidden',
+          transition: 'max-width 0.25s ease'
+        }}>
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: 300 }}>
             {/* Toast */}
             {toast && (
               <div style={{
@@ -720,7 +722,10 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: 300 }}>
               {/* Panel Header */}
               <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Agent Reasoning</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Brain size={16} color="#7c7cff" />
+                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Agent Reasoning</span>
+                </div>
                 <button onClick={() => setShowReasoningPanel(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                   <X size={16} />
                 </button>
@@ -795,8 +800,9 @@ export default function NewChat({ setCurrentPage, onNavigate, activeNav, userRol
             </div>
           </div>
         </div>
+      </div>
 
-        {showRenameModal && (
+      {showRenameModal && (
           <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             onClick={() => setShowRenameModal(false)}>
             <div style={{ background: '#fff', borderRadius: 16, padding: '28px', width: 440, boxShadow: '0 16px 48px rgba(0,0,0,0.15)' }}

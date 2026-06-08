@@ -2315,10 +2315,18 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     </div>
 
                     <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'visible' }}>
-                      <div style={{ overflowX: 'auto', paddingBottom: proposals.length > 0 ? 120 : 0 }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 800 }}>
-                        <thead>
-                          <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                      {proposals.length === 0 ? (
+                        <div style={{ padding: '80px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,82,204,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}><Upload size={24} color="#0052cc" /></div>
+                          <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>No Proposals Uploaded</div>
+                          <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>{published ? 'Upload the first vendor proposal to start evaluation.' : 'Publish the RFP to enable proposal uploads.'}</div>
+                          {!published && <button onClick={() => setActiveTab('rfp')} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border-default)', background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit', marginTop: 20 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><FileText size={14} /> Review & Publish RFP First</button>}
+                        </div>
+                      ) : (
+                        <div style={{ overflowX: 'auto', paddingBottom: 120 }}>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 800 }}>
+                            <thead>
+                              <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
                             <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Rank</th>
                             <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Vendor Name</th>
                             <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Upload Date</th>
@@ -2333,17 +2341,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </tr>
                         </thead>
                         <tbody>
-                          {proposals.length === 0 ? (
-                            <tr>
-                              <td colSpan={11} style={{ padding: '60px 20px', textAlign: 'center' }}>
-                                <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,82,204,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}><Upload size={24} color="#0052cc" /></div>
-                                <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>No Proposals Uploaded</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>{published ? 'Upload the first vendor proposal to start evaluation.' : 'Publish the RFP to enable proposal uploads.'}</div>
-                                {!published && <button onClick={() => setActiveTab('rfp')} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border-default)', background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit', marginTop: 20 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><FileText size={14} /> Review & Publish RFP First</button>}
-                              </td>
-                            </tr>
-                          ) : (
-                            proposals.map((prop, idx) => {
+                          {proposals.map((prop, idx) => {
                               // derive rank from techScore among completed proposals
                               const completedSorted = [...proposals].filter(p => p.status === 'Completed').sort((a, b) => (parseInt(b.techScore) || 0) - (parseInt(a.techScore) || 0));
                               const rank = prop.status === 'Completed' ? completedSorted.findIndex(p => p.id === prop.id) + 1 : null;
@@ -2411,13 +2409,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   </td>
                                 </tr>
                               );
-                            })
-                          )}
+                            })}
                         </tbody>
                       </table>
                     </div>
-                  </div>
+                  )}
                 </div>
+              </div>
 
 
                   {/* COMPARISON SECTION */}
