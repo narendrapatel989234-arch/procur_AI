@@ -2427,55 +2427,59 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       </div>
                     ) : (
                       <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
-                        {/* Header Row */}
-                        <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
-                          <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, display: 'flex', alignItems: 'center' }}>Criteria</div>
-                          {proposals.slice(0, 3).map(p => (
-                            <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
-                              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
-                              <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>Total Score: <span style={{ fontWeight: 600, color: '#0052cc' }}>{p.techScore}</span></div>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Criteria Rows */}
-                        {SCORING_CRITERIA.map((criterion, i) => (
-                          <div key={i} style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '1px solid var(--border-subtle)' }}>
-                            <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
-                              {criterion.label}
-                              <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{criterion.weight} points</div>
-                            </div>
-                            {proposals.slice(0, 3).map(p => (
-                              <div key={`c-${p.id}-${i}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 14, fontWeight: 600, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
-                                {p.criteriaScores?.[criterion.label] || 'Pending'}
-                              </div>
-                            ))}
-                          </div>
-                        ))}
-
-                        {/* Commercial Snapshot */}
-                        <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(34,197,94,0.03)' }}>
-                          <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#15803d', display: 'flex', alignItems: 'center', gap: 6 }}><Banknote size={14} /> Commercials</div>
-                          {proposals.slice(0, 3).map(p => (
-                            <div key={`comm-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(34,197,94,0.1)', fontSize: 15, fontWeight: 700, color: '#15803d', display: 'flex', alignItems: 'center' }}>
-                              {p.commercial || 'Pending'}
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Risks */}
-                        <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${Math.min(proposals.length, 3)}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(239,68,68,0.02)' }}>
-                          <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#b91c1c', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> Risk Profile</div>
-                          {proposals.slice(0, 3).map(p => (
-                            <div key={`risk-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(239,68,68,0.1)' }}>
-                              {(p.risks || []).map((r, ri) => (
-                                <div key={ri} style={{ fontSize: 12, color: '#991b1b', display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: (p.risks || []).length - 1 === ri ? 0 : 8 }}>
-                                  <span style={{ fontSize: 14, lineHeight: 1 }}>•</span> <span style={{ lineHeight: 1.4 }}>{r}</span>
+                        <div style={{ overflowX: 'auto' }}>
+                          <div style={{ minWidth: 200 + (proposals.length * 250) }}>
+                            {/* Header Row */}
+                            <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
+                              <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, display: 'flex', alignItems: 'center' }}>Criteria</div>
+                              {proposals.map(p => (
+                                <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
+                                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
+                                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>Total Score: <span style={{ fontWeight: 600, color: '#0052cc' }}>{p.techScore}</span></div>
                                 </div>
                               ))}
-                              {(!p.risks || p.risks.length === 0) && <div style={{ fontSize: 12, color: '#991b1b' }}>Pending</div>}
                             </div>
-                          ))}
+
+                            {/* Criteria Rows */}
+                            {SCORING_CRITERIA.map((criterion, i) => (
+                              <div key={i} style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)' }}>
+                                <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
+                                  {criterion.label}
+                                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{criterion.weight} points</div>
+                                </div>
+                                {proposals.map(p => (
+                                  <div key={`c-${p.id}-${i}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 14, fontWeight: 600, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
+                                    {p.criteriaScores?.[criterion.label] || 'Pending'}
+                                  </div>
+                                ))}
+                              </div>
+                            ))}
+
+                            {/* Commercial Snapshot */}
+                            <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(34,197,94,0.03)' }}>
+                              <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#15803d', display: 'flex', alignItems: 'center', gap: 6 }}><Banknote size={14} /> Commercials</div>
+                              {proposals.map(p => (
+                                <div key={`comm-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(34,197,94,0.1)', fontSize: 15, fontWeight: 700, color: '#15803d', display: 'flex', alignItems: 'center' }}>
+                                  {p.commercial || 'Pending'}
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Risks */}
+                            <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(239,68,68,0.02)' }}>
+                              <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#b91c1c', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> Risk Profile</div>
+                              {proposals.map(p => (
+                                <div key={`risk-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(239,68,68,0.1)' }}>
+                                  {(p.risks || []).map((r, ri) => (
+                                    <div key={ri} style={{ fontSize: 12, color: '#991b1b', display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: (p.risks || []).length - 1 === ri ? 0 : 8 }}>
+                                      <span style={{ fontSize: 14, lineHeight: 1 }}>•</span> <span style={{ lineHeight: 1.4 }}>{r}</span>
+                                    </div>
+                                  ))}
+                                  {(!p.risks || p.risks.length === 0) && <div style={{ fontSize: 12, color: '#991b1b' }}>Pending</div>}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         </div>
 
                         {/* AI Recommendation Highlight */}
