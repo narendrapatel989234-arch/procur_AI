@@ -13,7 +13,7 @@ import {
   List, ListOrdered, Indent, Outdent, Link, Image, Printer,
   Undo2, Redo2, Code, RemoveFormatting, Pencil, Save, ChevronDown,
   Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2,
-  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers, Briefcase, Globe, MessageSquare, TrendingUp, AlertCircle, HelpCircle, Lock, Search, ArrowUpDown, Filter
+  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers, Briefcase, Globe, MessageSquare, TrendingUp, AlertCircle, HelpCircle, Lock, Search, ArrowUpDown, Filter, ShieldCheck, PieChart, FileText as FileTextIcon
 } from 'lucide-react';
 
 const STATUS_CONFIG = {
@@ -1112,6 +1112,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [suppDocDrag, setSuppDocDrag] = useState(false);
   const [propFileDrag, setPropFileDrag] = useState(null);
   const [suppFileDrag, setSuppFileDrag] = useState(null);
+  const [matrixExpanded, setMatrixExpanded] = useState({ g1: true, g2: true, g3: true, g4: true, g5: true, g6: true, g7: true });
 
   const prStatus = published ? 'RFP Published' : 'Pending RFP Approval';
   const statusCfg = STATUS_CONFIG[prStatus];
@@ -1840,7 +1841,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>PROPOSAL DETAILS</div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 32 }}>
                     {[
-                      ['Vendor Name', showPreviewModal.vendorName],
+                      ['Vendor Name', showPreviewModal.vendorName || 'Zeta Technology'],
                       ['Status', showPreviewModal.status || 'Active'],
                       ['State', showPreviewModal.state || 'Submitted'],
                       ['Tech. Score', showPreviewModal.techScore],
@@ -1955,9 +1956,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         { v: 'Vendor B', p: 'T&M', b: '$450,000', d: '$80,000', w: '$40,000', m: '$100,000', e: '$25,000', pr: '$20,000', t: '$715,000', r: 3 },
                         { v: 'Vendor C', p: 'Hybrid', b: '$550,000', d: '$40,000', w: 'Included ($0)', m: '$50,000', e: '$15,000', pr: '$10,000', t: '$665,000', r: 1 },
                       ];
-                      let vendorData = mockTcoData.find(d => d.v === showPreviewModal.vendorName);
+                      const vendorName = showPreviewModal.vendorName || 'Zeta Technology';
+                      let vendorData = mockTcoData.find(d => d.v === vendorName);
                       if (!vendorData) {
-                        vendorData = { v: showPreviewModal.vendorName, p: 'Hybrid', b: '$550,000', d: '$40,000', w: 'Included ($0)', m: '$50,000', e: '$15,000', pr: '$10,000', t: showPreviewModal.commercial || '$665,000', r: 1 };
+                        vendorData = { v: vendorName, p: 'Hybrid', b: '$550,000', d: '$40,000', w: 'Included ($0)', m: '$50,000', e: '$15,000', pr: '$10,000', t: showPreviewModal.commercial || '$665,000', r: 1 };
                       }
 
                       const details = [
@@ -2005,15 +2007,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     <div key={page} style={{ background: '#fff', width: 680, minHeight: page === 1 ? 900 : 600, borderRadius: 4, boxShadow: '0 2px 12px rgba(0,0,0,0.12)', padding: '48px 64px', boxSizing: 'border-box', position: 'relative' }}>
                       {/* Page header */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #2563eb', paddingBottom: 8, marginBottom: 40 }}>
-                        <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic', textDecoration: 'line-through' }}>{showPreviewModal.vendorName}</div>
+                        <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic', textDecoration: 'line-through' }}>{showPreviewModal.vendorName || 'Zeta Technology'}</div>
                         <div style={{ fontSize: 10, color: '#999' }}>PRD v4.1 &nbsp;|&nbsp; Phase 1 Final &nbsp;|&nbsp; Confidential</div>
                       </div>
                       {page === 1 ? (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 60 }}>
-                          <div style={{ fontSize: 42, fontWeight: 800, color: '#1a1a1a', letterSpacing: '-1px', marginBottom: 16 }}>{showPreviewModal.vendorName.toUpperCase().split(' ')[0]}</div>
+                          <div style={{ fontSize: 42, fontWeight: 800, color: '#1a1a1a', letterSpacing: '-1px', marginBottom: 16 }}>{(showPreviewModal.vendorName || 'Zeta Technology').toUpperCase().split(' ')[0]}</div>
                           <div style={{ fontSize: 16, fontWeight: 700, color: '#2563eb', marginBottom: 48, textAlign: 'center' }}>Proposal for AWS Cloud Migration Consulting Services</div>
                           <div style={{ textAlign: 'center', marginBottom: 12 }}><div style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a' }}>Technical & Commercial Proposal</div></div>
-                          <div style={{ textAlign: 'center', color: '#555', fontSize: 14, marginBottom: 6 }}>Version 1.0 &nbsp;|&nbsp; {showPreviewModal.uploadDate}</div>
+                          <div style={{ textAlign: 'center', color: '#555', fontSize: 14, marginBottom: 6 }}>Version 1.0 &nbsp;|&nbsp; {showPreviewModal.uploadDate || '17 Sept 2025'}</div>
                           <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic', marginTop: 80 }}>Prepared in response to RFP-2026-004 issued by DDAIS Group</div>
                           <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic' }}>Confidential — For Evaluation Purposes Only</div>
                         </div>
@@ -2849,82 +2851,159 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       ) : (
                         <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
                           <div style={{ overflowX: 'auto' }}>
-                            <div style={{ minWidth: 200 + (proposals.length * 250) }}>
+                            <div style={{ minWidth: 250 + (proposals.length * 250) }}>
                               {/* Header Row */}
-                              <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
-                                <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, display: 'flex', alignItems: 'center' }}>Criteria</div>
+                              <div style={{ display: 'grid', gridTemplateColumns: `250px repeat(${proposals.length}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
+                                <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 13, display: 'flex', alignItems: 'center' }}>Features</div>
                                 {proposals.map(p => (
                                   <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
                                     <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
-                                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>Total Score: <span style={{ fontWeight: 600, color: '#0052cc' }}>{p.techScore}</span></div>
                                   </div>
                                 ))}
                               </div>
 
-                              {/* Criteria Rows */}
-                              {SCORING_CRITERIA.map((criterion, i) => (
-                                <div key={i} style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)' }}>
-                                  <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
-                                    {criterion.label}
-                                    <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{criterion.weight} points</div>
-                                  </div>
-                                  {proposals.map(p => (
-                                    <div key={`c-${p.id}-${i}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 14, fontWeight: 600, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
-                                      {p.criteriaScores?.[criterion.label] || 'Pending'}
-                                    </div>
-                                  ))}
-                                </div>
-                              ))}
+                              {/* Matrix Groups */}
+                              {(() => {
+                                const toggleGroup = (g) => setMatrixExpanded(prev => ({ ...prev, [g]: !prev[g] }));
+                                const getVendorNegotData = (vName) => {
+                                  const k = Object.keys(NEGOTIATION_DATA).find(key => key.toLowerCase().includes(vName.toLowerCase().split(' ')[0]));
+                                  return k ? NEGOTIATION_DATA[k] : null;
+                                };
+                                const rankedProposals = [...proposals].sort((a, b) => parseInt(b.techScore || 0) - parseInt(a.techScore || 0));
+                                const getRank = (pid) => {
+                                  const r = rankedProposals.findIndex(p => p.id === pid) + 1;
+                                  return r > 0 ? `#${r}` : '-';
+                                };
 
-                              {/* Commercial Snapshot */}
-                              <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(34,197,94,0.03)' }}>
-                                <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#15803d', display: 'flex', alignItems: 'center', gap: 6 }}><Banknote size={14} /> Commercials</div>
-                                {proposals.map(p => (
-                                  <div key={`comm-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(34,197,94,0.1)', fontSize: 15, fontWeight: 700, color: '#15803d', display: 'flex', alignItems: 'center' }}>
-                                    {p.commercial || 'Pending'}
-                                  </div>
-                                ))}
-                              </div>
+                                const matrixGroups = [
+                                  {
+                                    id: 'g1', title: 'Vendor Overview', icon: Briefcase,
+                                    rows: [
+                                      { label: 'Vendor Name', getValue: p => <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName}</span> },
+                                      { label: 'State / Pass / Fail Status', getValue: p => p.state === 'pass' ? <span style={{ color: '#15803d', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>PASS</span> : (p.state === 'fail' ? <span style={{ color: '#b91c1c', background: 'rgba(239,68,68,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>FAIL</span> : 'Pending') },
+                                      { label: 'Rank', getValue: p => <span style={{ fontWeight: 600 }}>{getRank(p.id)}</span> }
+                                    ]
+                                  },
+                                  {
+                                    id: 'g2', title: 'Technical Evaluation', icon: Layers,
+                                    rows: [
+                                      { label: 'Technical Score', getValue: p => <span style={{ fontWeight: 700, color: '#0052cc' }}>{p.techScore || 'Pending'}</span> },
+                                      { label: 'Evaluation Criteria', isHeader: true },
+                                      ...SCORING_CRITERIA.map(c => ({
+                                        label: c.label, isSub: true, getValue: p => p.criteriaScores?.[c.label] || '-'
+                                      }))
+                                    ]
+                                  },
+                                  {
+                                    id: 'g3', title: 'Commercial Evaluation', icon: Banknote,
+                                    rows: [
+                                      { label: 'Quotation', getValue: p => <span style={{ fontWeight: 700, color: '#15803d' }}>{p.commercial || 'Pending'}</span> },
+                                      { label: 'Commercials', getValue: p => getVendorNegotData(p.vendorName)?.stats?.commercial?.detail || '-' }
+                                    ]
+                                  },
+                                  {
+                                    id: 'g4', title: 'Risk & Due Diligence', icon: ShieldCheck,
+                                    rows: [
+                                      { label: 'Risk Profile', getValue: p => {
+                                          const risks = p.risks || [];
+                                          if (risks.length === 0) return 'Pending';
+                                          return (
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                              {risks.map((r, i) => <div key={i} style={{ fontSize: 12, color: '#b91c1c', lineHeight: 1.3 }}>• {r}</div>)}
+                                            </div>
+                                          );
+                                      } },
+                                      { label: 'High', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.high ?? '-' },
+                                      { label: 'Medium', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.medium ?? '-' },
+                                      { label: 'Low', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.low ?? '-' }
+                                    ]
+                                  },
+                                  {
+                                    id: 'g5', title: 'Market Intelligence & Sentiment', icon: PieChart,
+                                    rows: [
+                                      { label: 'Sentiment Score', getValue: p => {
+                                          const s = getVendorNegotData(p.vendorName)?.stats?.sentiment;
+                                          return s ? `${s.score}/10 (${s.rating})` : '-';
+                                      }}
+                                    ]
+                                  },
+                                  {
+                                    id: 'g6', title: 'Clarifications & Discussions', icon: MessageSquare,
+                                    rows: [
+                                      { label: 'Open Questions', getValue: p => {
+                                          const q = getVendorNegotData(p.vendorName)?.clarificationQuestions;
+                                          return q ? `${q.length} Questions` : '-';
+                                      }}
+                                    ]
+                                  },
+                                  {
+                                    id: 'g7', title: 'Executive Summary', icon: BookOpen,
+                                    rows: [
+                                      { label: 'Summary', getValue: p => {
+                                          const b = getVendorNegotData(p.vendorName)?.stats?.batna;
+                                          return b ? <div style={{ fontSize: 12, lineHeight: 1.4 }}>{b}</div> : '-';
+                                      }}
+                                    ]
+                                  }
+                                ];
 
-                              {/* Risks */}
-                              <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(239,68,68,0.02)' }}>
-                                <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#b91c1c', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> Risk Profile</div>
-                                {proposals.map(p => (
-                                  <div key={`risk-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(239,68,68,0.1)' }}>
-                                    {(p.risks || []).map((r, ri) => (
-                                      <div key={ri} style={{ fontSize: 12, color: '#991b1b', display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: (p.risks || []).length - 1 === ri ? 0 : 8 }}>
-                                        <span style={{ fontSize: 14, lineHeight: 1 }}>•</span> <span style={{ lineHeight: 1.4 }}>{r}</span>
+                                return matrixGroups.map((group, gIdx) => {
+                                  const isExpanded = matrixExpanded[group.id];
+                                  const GroupIcon = group.icon;
+                                  return (
+                                    <React.Fragment key={group.id}>
+                                      {/* Group Header Row */}
+                                      <div 
+                                        onClick={() => toggleGroup(group.id)}
+                                        style={{ 
+                                          display: 'grid', gridTemplateColumns: `250px repeat(${proposals.length}, 1fr)`, 
+                                          background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)', 
+                                          cursor: 'pointer', transition: 'background 0.1s' 
+                                        }}
+                                        onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
+                                        onMouseLeave={e => e.currentTarget.style.background = '#f8fafc'}
+                                      >
+                                        <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+                                          <ChevronRight size={18} color="var(--text-tertiary)" style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', flexShrink: 0 }} />
+                                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: 6, background: 'rgba(0,82,204,0.08)' }}>
+                                            <GroupIcon size={14} color="#0052cc" />
+                                          </div>
+                                          {group.title}
+                                        </div>
+                                        {/* Empty cells for vendors */}
+                                        {proposals.map((p, i) => (
+                                          <div key={`gh-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid transparent' }} />
+                                        ))}
                                       </div>
-                                    ))}
-                                    {(!p.risks || p.risks.length === 0) && <div style={{ fontSize: 12, color: '#991b1b' }}>Pending</div>}
-                                  </div>
-                                ))}
-                              </div>
+
+                                      {/* Group Content Rows */}
+                                      {isExpanded && group.rows.map((row, rIdx) => (
+                                        <div key={rIdx} style={{ display: 'grid', gridTemplateColumns: `250px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
+                                          <div style={{ 
+                                            padding: '14px 20px', fontSize: row.isHeader ? 12 : 13, 
+                                            fontWeight: row.isHeader ? 700 : 500, 
+                                            color: row.isHeader ? 'var(--text-tertiary)' : 'var(--text-secondary)', 
+                                            textTransform: row.isHeader ? 'uppercase' : 'none',
+                                            paddingLeft: row.isSub ? 40 : 20,
+                                            display: 'flex', alignItems: 'center'
+                                          }}>
+                                            {row.isSub && <ChevronRight size={14} color="var(--text-tertiary)" style={{ marginRight: 6 }} />}
+                                            {row.label}
+                                          </div>
+                                          {proposals.map(p => (
+                                            <div key={`gr-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 13, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
+                                              {row.isHeader ? '' : row.getValue(p)}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      ))}
+                                    </React.Fragment>
+                                  );
+                                });
+                              })()}
+
                             </div>
                           </div>
-
-                          {/* AI Recommendation Highlight */}
-                          {(() => {
-                            const completed = proposals.filter(p => p.status === 'Completed');
-                            if (completed.length === 0) return null;
-                            const winner = completed.reduce((prev, current) => {
-                              const prevScore = parseInt(prev.techScore) || 0;
-                              const currScore = parseInt(current.techScore) || 0;
-                              return (currScore > prevScore) ? current : prev;
-                            });
-
-                            return (
-                              <div style={{ padding: '20px', background: 'linear-gradient(135deg, rgba(124,124,255,0.1), rgba(0,82,204,0.05))', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                                <div style={{ width: 40, height: 40, borderRadius: 12, background: '#fff', border: '1px solid rgba(124,124,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(124,124,255,0.15)' }}>
-                                  <Award size={20} color="#3d3db8" />
-                                </div>
-                                <div>
-                                  <div style={{ fontSize: 15, fontWeight: 700, color: '#3d3db8', marginBottom: 4 }}>AI Recommendation: {winner.vendorName}</div>
-                                  <div style={{ fontSize: 13, color: '#4a4a4a', lineHeight: 1.5 }}>Based on the evaluation criteria, {winner.vendorName} leads with a technical score of {winner.techScore}. They show exceptionally strong technical competency and relevant experience. Proceed with commercial negotiations to finalize the award.</div>
-                                </div>
-                              </div>
-                            );
-                          })()}
                         </div>
                       )}
                     </div>
