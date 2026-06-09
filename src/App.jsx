@@ -11,6 +11,7 @@ import NewChat from './pages/NewChat.jsx';
 import ChatDetail from './pages/ChatDetail.jsx';
 import AgentManagement from './pages/AgentManagement.jsx';
 import Templates from './pages/Templates.jsx';
+import ClauseManagement from './pages/ClauseManagement.jsx';
 import TemplateDetail from './pages/TemplateDetail.jsx';
 import PurchaseOrders from './pages/PurchaseOrders.jsx';
 import PRDetailDraft from './pages/PRDetailDraft.jsx';
@@ -27,6 +28,7 @@ const NAV_MAP = {
   'PR Detail RFP': 'prdetailrfp',
   'Login': 'login',
   'Templates': 'templates',
+  'Clause Management': 'clausemanagement',
   'Template Detail': 'templatedetail',
   'Agent Management': 'agentmanagement',
 };
@@ -45,6 +47,7 @@ const PAGE_TO_NAV = {
   'prdetaildraft': 'Dashboard',
   'login': null,
   'templates': 'Templates',
+  'clausemanagement': 'Clause Management',
   'templatedetail': 'Templates',
   'agentmanagement': 'Agent Management',
 };
@@ -79,6 +82,7 @@ export default function App() {
             {currentPage === 'prdetail' && <PRDetail {...pageProps} />}
             {currentPage === 'prdetailfresh' && <PRDetailFresh {...pageProps} />}
             {currentPage === 'templates' && <Templates {...pageProps} />}
+            {currentPage === 'clausemanagement' && <ClauseManagement {...pageProps} />}
             {currentPage === 'templatedetail' && <TemplateDetail {...pageProps} />}
             {currentPage === 'agentmanagement' && <AgentManagement {...pageProps} />}
             {currentPage === 'prdetailrfp' && <PRDetailRFP {...pageProps} />}

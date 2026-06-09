@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { LayoutDashboard, MessageSquare, Receipt, Plus, Zap, PanelLeftClose, PanelLeft, Settings, HelpCircle, LogOut, ChevronDown, Layers, Bot, Cpu } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Receipt, Plus, Zap, PanelLeftClose, PanelLeft, Settings, HelpCircle, LogOut, ChevronDown, Layers, Bot, Cpu, FileText } from 'lucide-react';
 
 const NAV = [
   { name: 'Dashboard', Icon: LayoutDashboard },
   { name: 'Chat History', Icon: MessageSquare },
   { name: 'Purchase Orders', Icon: Receipt },
   { name: 'Templates', Icon: Layers },
+  { name: 'Clause Management', Icon: FileText },
   { name: 'Agent Management', Icon: Cpu },
 ];
 

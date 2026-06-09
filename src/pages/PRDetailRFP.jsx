@@ -162,9 +162,9 @@ const INITIAL_HTML = `<h2>1. Introduction &amp; Background</h2>
 <p><strong>Deadline:</strong> 15 June 2026, 17:00 GST &nbsp;|&nbsp; <strong>Validity:</strong> 90 days from submission</p>
 <ul><li>Technical Proposal (max 40 pages, PDF)</li><li>Commercial Proposal (separate sealed document)</li><li>Company Profile &amp; Credentials</li><li>CVs of proposed team members</li><li>Reference letters from at least 2 comparable projects</li><li>Valid trade licence and ISO certification copies</li></ul>`;
 
-const WYSIWYGEditor = ({ 
-  isEditing, 
-  htmlContent, 
+const WYSIWYGEditor = ({
+  isEditing,
+  htmlContent,
   setHtmlContent,
   docType = 'Request for Proposal',
   docTitle = 'AWS Cloud Migration Consulting Services',
@@ -235,7 +235,6 @@ const WYSIWYGEditor = ({
             <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.2px', color: '#7c7cff', marginBottom: 10 }}>{docType}</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: '#1a1a1a', lineHeight: 1.25, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 12 }}>
               {docTitle}
-              {version && <span style={{ fontSize: 11, fontWeight: 600, background: '#e0e7ff', color: '#4338ca', padding: '4px 10px', borderRadius: 12 }}>Current Version: {version}</span>}
             </div>
             <div style={{ fontSize: 13, color: '#888' }}>{docSubtitle}</div>
           </div>
@@ -243,9 +242,7 @@ const WYSIWYGEditor = ({
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, marginLeft: 32, flexShrink: 0 }}>
             {!isEditing ? (
               <div style={{ display: 'flex', gap: 8 }}>
-                <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                  <History size={13} strokeWidth={2.2} /> Version History
-                </button>
+
                 <button
                   onMouseDown={e => e.preventDefault()}
                   onClick={() => setHtmlContent('__EDIT__')}
@@ -1028,7 +1025,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [activeVendorDrop, setActiveVendorDrop] = useState(null);
   const [activeFilterDrop, setActiveFilterDrop] = useState(null);
-  
+
   // Proposals Tab Search, Filters, and Sorting State
   const [propSearchTerm, setPropSearchTerm] = useState('');
   const [propFilterScore, setPropFilterScore] = useState('All');
@@ -1778,7 +1775,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
       {showPreviewModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowPreviewModal(null)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: '80vw', maxWidth: 1000, height: '88vh', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+          <div style={{ background: '#fff', borderRadius: 16, width: '80vw', maxWidth: 1000, height: '88vh', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 80px rgba(0,0,0,0.25)', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
             {/* Header */}
             <div style={{ padding: '24px 32px 0', borderBottom: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
@@ -1810,7 +1807,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
             {/* Content area */}
             <div style={{ flex: 1, overflowY: 'auto', background: previewActiveTab === 'Preview' ? '#f0f0f0' : '#fff', display: 'flex', flexDirection: 'column', padding: previewActiveTab === 'Preview' ? '24px 0' : '24px 32px' }}>
-              
+
               {previewActiveTab === 'Summary' && (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   {/* Title & Metadata */}
@@ -1840,14 +1837,14 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   </div>
 
                   {/* Vendor Details as Text */}
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>VENDOR DETAILS</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>PROPOSAL DETAILS</div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 32 }}>
                     {[
-                      ['Vendor Name', showPreviewModal.vendorName], 
+                      ['Vendor Name', showPreviewModal.vendorName],
                       ['Status', showPreviewModal.status || 'Active'],
                       ['State', showPreviewModal.state || 'Submitted'],
-                      ['Tech. Score', showPreviewModal.techScore], 
-                      ['Quotation', showPreviewModal.commercial || 'Pending'], 
+                      ['Tech. Score', showPreviewModal.techScore],
+                      ['Quotation', showPreviewModal.commercial || 'Pending'],
                       ['Risks', showPreviewModal.risk || 'Low']
                     ].map(([label, value], li) => (
                       <div key={li} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -1907,18 +1904,18 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                   {/* Risks */}
                   <div style={{ marginBottom: 32 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>RISKS</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>RISKS IDENTIFIED</div>
                     <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
                       <div style={{ overflowX: 'auto' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 900 }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 900, tableLayout: 'fixed' }}>
                           <thead>
                             <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)' }}>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Sr No.</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Category</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Criteria</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Risk Description</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Impact</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Justification</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '5%' }}>Sr No.</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '13%' }}>Category</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '13%' }}>Criteria</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '39%' }}>Risk Description</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '10%' }}>Impact</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '20%' }}>Justification</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1932,12 +1929,12 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               { id: 7, cat: 'Vendor Assessment', crit: 'Vendor Assessment', desc: 'Insufficient domain expertise leading to poor project outcomes', impact: 'Insignificant', j: 'Prior implementations shown as references' },
                             ].map((row, i, arr) => (
                               <tr key={i} style={{ borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.id}</td>
-                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.cat}</td>
-                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.crit}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.id}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.cat}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.crit}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.desc}</td>
-                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.impact}</td>
-                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', minWidth: 250 }}>{row.j}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.impact}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.j}</td>
                               </tr>
                             ))}
                           </tbody>
@@ -1952,48 +1949,52 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               {previewActiveTab === 'TCO Normalization' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 24, height: '100%' }}>
                   <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                    <div style={{ overflowX: 'auto' }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 1000 }}>
-                        <thead>
-                          <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Vendor</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Pricing Model</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Base Cost</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Delivery Cost</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Warranty Cost</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Maintenance Cost</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Escalation Cost</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Penalty / Risk Cost</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Total TCO</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', textAlign: 'center' }}>Commercial Rank</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {[
-                            { v: 'Vendor A', p: 'Lump Sum', b: '$500,000', d: '$50,000', w: '$20,000', m: '$60,000', e: '$10,000', pr: '$5,000', t: '$645,000', r: 2 },
-                            { v: 'Vendor B', p: 'T&M', b: '$450,000', d: '$80,000', w: '$40,000', m: '$100,000', e: '$25,000', pr: '$20,000', t: '$715,000', r: 3 },
-                            { v: 'Vendor C', p: 'Hybrid', b: '$550,000', d: '$40,000', w: 'Included ($0)', m: '$50,000', e: '$15,000', pr: '$10,000', t: '$665,000', r: 1 },
-                          ].map((row, idx, arr) => (
-                            <tr key={idx} style={{ borderBottom: idx < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{row.v}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.p}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.b}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.d}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.w}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.m}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.e}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.pr}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{row.t}</td>
-                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: row.r === 1 ? '#15803d' : 'var(--text-secondary)', whiteSpace: 'nowrap', textAlign: 'center' }}>
-                                <div style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: '50%', background: row.r === 1 ? '#dcfce7' : 'var(--bg-surface-2)', alignItems: 'center', justifyContent: 'center' }}>{row.r}</div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                    {(() => {
+                      const mockTcoData = [
+                        { v: 'Vendor A', p: 'Lump Sum', b: '$500,000', d: '$50,000', w: '$20,000', m: '$60,000', e: '$10,000', pr: '$5,000', t: '$645,000', r: 2 },
+                        { v: 'Vendor B', p: 'T&M', b: '$450,000', d: '$80,000', w: '$40,000', m: '$100,000', e: '$25,000', pr: '$20,000', t: '$715,000', r: 3 },
+                        { v: 'Vendor C', p: 'Hybrid', b: '$550,000', d: '$40,000', w: 'Included ($0)', m: '$50,000', e: '$15,000', pr: '$10,000', t: '$665,000', r: 1 },
+                      ];
+                      let vendorData = mockTcoData.find(d => d.v === showPreviewModal.vendorName);
+                      if (!vendorData) {
+                        vendorData = { v: showPreviewModal.vendorName, p: 'Hybrid', b: '$550,000', d: '$40,000', w: 'Included ($0)', m: '$50,000', e: '$15,000', pr: '$10,000', t: showPreviewModal.commercial || '$665,000', r: 1 };
+                      }
 
+                      const details = [
+                        ['Vendor', vendorData.v],
+                        ['Pricing Model', vendorData.p],
+                        ['Base Cost', vendorData.b],
+                        ['Delivery Cost', vendorData.d],
+                        ['Warranty Cost', vendorData.w],
+                        ['Maintenance Cost', vendorData.m],
+                        ['Escalation Cost', vendorData.e],
+                        ['Penalty / Risk Cost', vendorData.pr],
+                        ['Total TCO', vendorData.t, true],
+                        ['Commercial Rank', vendorData.r, false, true]
+                      ];
+
+                      return (
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                          <tbody>
+                            {details.map(([label, val, isTotal, isRank], idx) => (
+                              <tr key={idx} style={{ borderBottom: idx < details.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                                <td style={{ padding: '16px 24px', width: '35%', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', background: 'var(--bg-surface-1)', borderRight: '1px solid var(--border-subtle)' }}>
+                                  {label}
+                                </td>
+                                <td style={{ padding: '16px 24px', fontSize: isTotal ? 15 : 14, fontWeight: isTotal ? 700 : 500, color: 'var(--text-primary)' }}>
+                                  {isRank ? (
+                                    <div style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: '50%', background: val === 1 ? '#dcfce7' : 'var(--bg-surface-2)', color: val === 1 ? '#15803d' : 'var(--text-secondary)', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700 }}>{val}</div>
+                                  ) : (
+                                    val
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      );
+                    })()}
+                  </div>
                 </div>
               )}
 
@@ -2113,11 +2114,11 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 <div
                   onDragOver={e => { e.preventDefault(); setSuppDocDrag(true); }}
                   onDragLeave={() => setSuppDocDrag(false)}
-                  onDrop={e => { 
-                    e.preventDefault(); 
-                    setSuppDocDrag(false); 
-                    const files = Array.from(e.dataTransfer.files); 
-                    if (files.length > 0) setUploadForm(prev => ({ ...prev, supporting: [...(Array.isArray(prev.supporting) ? prev.supporting : []), ...files] })); 
+                  onDrop={e => {
+                    e.preventDefault();
+                    setSuppDocDrag(false);
+                    const files = Array.from(e.dataTransfer.files);
+                    if (files.length > 0) setUploadForm(prev => ({ ...prev, supporting: [...(Array.isArray(prev.supporting) ? prev.supporting : []), ...files] }));
                   }}
                   onClick={() => document.getElementById('supp-doc-input').click()}
                   style={{ border: `2px dashed ${suppDocDrag ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer', background: suppDocDrag ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
@@ -2133,7 +2134,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   </div>
                 </div>
                 <input id="supp-doc-input" type="file" multiple accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} onChange={e => { if (e.target.files.length > 0) setUploadForm(prev => ({ ...prev, supporting: [...(Array.isArray(prev.supporting) ? prev.supporting : []), ...Array.from(e.target.files)] })); }} />
-                
+
                 {Array.isArray(uploadForm.supporting) && uploadForm.supporting.length > 0 && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 16 }}>
                     {uploadForm.supporting.map((file, i) => (
@@ -2612,7 +2613,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 if (propFilterState !== 'All') {
                   filtered = filtered.filter(p => p.state && p.state.toLowerCase() === propFilterState.toLowerCase());
                 }
-                
+
                 if (propSortConfig.field) {
                   filtered.sort((a, b) => {
                     let aVal = a[propSortConfig.field];
@@ -2665,7 +2666,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             </div>
                             <input type="text" value={propSearchTerm} onChange={e => setPropSearchTerm(e.target.value)} placeholder="Search proposals..." style={{ width: '100%', padding: '9px 12px 9px 36px', boxSizing: 'border-box', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none' }} />
                           </div>
-                          
+
                           {/* Filters */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <div style={{ width: 140 }}>
@@ -2705,7 +2706,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 value={propFilterDate}
                                 options={['All', 'Today', 'Last 7 Days', 'Last 30 Days']}
                                 onChange={val => setPropFilterDate(val)}
-                                renderOption={(val, isBtn) => isBtn ? `Date: ${val}` : val}
+                                renderOption={(val, isBtn) => isBtn ? `Date Range: ${val}` : val}
                               />
                             </div>
                           </div>
@@ -2743,191 +2744,191 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   // derive rank from techScore among completed proposals
                                   const completedSorted = [...proposals].filter(p => p.status === 'Completed').sort((a, b) => (parseInt(b.techScore) || 0) - (parseInt(a.techScore) || 0));
                                   const rank = prop.status === 'Completed' ? completedSorted.findIndex(p => p.id === prop.id) + 1 : null;
-                              const riskLevel = prop.risks && prop.risks.length > 0 ? (prop.risks.some(r => r.toLowerCase().includes('high')) ? 'High' : prop.risks.some(r => r.toLowerCase().includes('none')) ? 'Low' : 'Medium') : null;
-                              const riskColor = riskLevel === 'High' ? { bg: 'rgba(239,68,68,0.08)', color: '#dc2626' } : riskLevel === 'Medium' ? { bg: 'rgba(245,158,11,0.08)', color: '#b45309' } : riskLevel === 'Low' ? { bg: 'rgba(34,197,94,0.08)', color: '#15803d' } : { bg: 'var(--bg-surface-2)', color: 'var(--text-tertiary)' };
-                              return (
-                                <tr key={prop.id} style={{ borderBottom: idx < proposals.length - 1 ? '1px solid var(--border-subtle)' : 'none', transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                  <td style={{ padding: '14px 16px', textAlign: 'center' }}>
-                                    {rank ? (
-                                      <div style={{ width: 28, height: 28, borderRadius: '50%', background: rank === 1 ? 'linear-gradient(135deg,#f59e0b,#d97706)' : rank === 2 ? 'linear-gradient(135deg,#94a3b8,#64748b)' : rank === 3 ? 'linear-gradient(135deg,#b45309,#92400e)' : 'var(--bg-surface-2)', color: rank <= 3 ? '#fff' : 'var(--text-tertiary)', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>#{rank}</div>
-                                    ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
-                                  </td>
-                                  <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.vendorName}</td>
-                                  <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.uploadDate}</td>
-                                  <td style={{ padding: '14px 16px', fontSize: 13, whiteSpace: 'nowrap' }}>
-                                    {prop.status === 'Processing' ? (
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#a16207', fontWeight: 500 }}>
-                                        <RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} /> {prop.status}
-                                      </div>
-                                    ) : (
-                                      <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{prop.status}</span>
-                                    )}
-                                  </td>
-                                  <td style={{ padding: '14px 16px' }}>
-                                    {prop.state ? (
-                                      <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: prop.state === 'pass' ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: prop.state === 'pass' ? '#15803d' : '#dc2626', textTransform: 'capitalize', whiteSpace: 'nowrap' }}>
-                                        {prop.state}
-                                      </span>
-                                    ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
-                                  </td>
-                                  <td style={{ padding: '14px 16px', fontSize: 13, color: '#0052cc', fontWeight: 500, whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FileText size={13} />{prop.fileName}</div></td>
-                                  <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.techScore}</td>
-                                  <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#15803d', whiteSpace: 'nowrap' }}>{prop.commercial || '—'}</td>
-                                  <td style={{ padding: '14px 16px' }}>
-                                    {riskLevel ? (
-                                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: riskColor.bg, color: riskColor.color, whiteSpace: 'nowrap' }}>
-                                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: riskColor.color }} />{riskLevel}
-                                      </span>
-                                    ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
-                                  </td>
-                                  <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.version}</td>
-                                  <td style={{ padding: '14px 16px', textAlign: 'center' }}>
-                                    <div style={{ position: 'relative', display: 'inline-flex' }}>
-                                      <button
-                                      onClick={(e) => { e.stopPropagation(); setActiveDropdown(activeDropdown === prop.id ? null : prop.id); }}
-                                      style={{
-                                        padding: '8px', borderRadius: '50%', background: 'transparent', border: 'none',
-                                        color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', transition: 'background 0.15s ease'
-                                      }}
-                                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
-                                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                                    >
-                                      <MoreVertical size={18} />
-                                    </button>
+                                  const riskLevel = prop.risks && prop.risks.length > 0 ? (prop.risks.some(r => r.toLowerCase().includes('high')) ? 'High' : prop.risks.some(r => r.toLowerCase().includes('none')) ? 'Low' : 'Medium') : null;
+                                  const riskColor = riskLevel === 'High' ? { bg: 'rgba(239,68,68,0.08)', color: '#dc2626' } : riskLevel === 'Medium' ? { bg: 'rgba(245,158,11,0.08)', color: '#b45309' } : riskLevel === 'Low' ? { bg: 'rgba(34,197,94,0.08)', color: '#15803d' } : { bg: 'var(--bg-surface-2)', color: 'var(--text-tertiary)' };
+                                  return (
+                                    <tr key={prop.id} style={{ borderBottom: idx < proposals.length - 1 ? '1px solid var(--border-subtle)' : 'none', transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                      <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                                        {rank ? (
+                                          <div style={{ width: 28, height: 28, borderRadius: '50%', background: rank === 1 ? 'linear-gradient(135deg,#f59e0b,#d97706)' : rank === 2 ? 'linear-gradient(135deg,#94a3b8,#64748b)' : rank === 3 ? 'linear-gradient(135deg,#b45309,#92400e)' : 'var(--bg-surface-2)', color: rank <= 3 ? '#fff' : 'var(--text-tertiary)', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>#{rank}</div>
+                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                      </td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.vendorName}</td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.uploadDate}</td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, whiteSpace: 'nowrap' }}>
+                                        {prop.status === 'Processing' ? (
+                                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#a16207', fontWeight: 500 }}>
+                                            <RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} /> {prop.status}
+                                          </div>
+                                        ) : (
+                                          <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{prop.status}</span>
+                                        )}
+                                      </td>
+                                      <td style={{ padding: '14px 16px' }}>
+                                        {prop.state ? (
+                                          <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: prop.state === 'pass' ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: prop.state === 'pass' ? '#15803d' : '#dc2626', textTransform: 'capitalize', whiteSpace: 'nowrap' }}>
+                                            {prop.state}
+                                          </span>
+                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                      </td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, color: '#0052cc', fontWeight: 500, whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FileText size={13} />{prop.fileName}</div></td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.techScore}</td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#15803d', whiteSpace: 'nowrap' }}>{prop.commercial || '—'}</td>
+                                      <td style={{ padding: '14px 16px' }}>
+                                        {riskLevel ? (
+                                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: riskColor.bg, color: riskColor.color, whiteSpace: 'nowrap' }}>
+                                            <div style={{ width: 6, height: 6, borderRadius: '50%', background: riskColor.color }} />{riskLevel}
+                                          </span>
+                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                      </td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.version}</td>
+                                      <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                                        <div style={{ position: 'relative', display: 'inline-flex' }}>
+                                          <button
+                                            onClick={(e) => { e.stopPropagation(); setActiveDropdown(activeDropdown === prop.id ? null : prop.id); }}
+                                            style={{
+                                              padding: '8px', borderRadius: '50%', background: 'transparent', border: 'none',
+                                              color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', transition: 'background 0.15s ease'
+                                            }}
+                                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+                                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                                          >
+                                            <MoreVertical size={18} />
+                                          </button>
 
-                                    {activeDropdown === prop.id && (
-                                      <div style={{
-                                        position: 'absolute', right: '100%', top: 0, marginRight: 8,
-                                        background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, zIndex: 50, minWidth: 160,
-                                        display: 'flex', flexDirection: 'column', textAlign: 'left'
-                                      }}>
-                                        {[
-                                          { label: 'View Proposal', icon: Eye, action: () => { setShowPreviewModal(prop); setActiveDropdown(null); }, color: 'var(--text-primary)' },
-                                          { label: 'Reupload Proposal', icon: RefreshCw, action: () => { setShowReuploadModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
-                                          { label: 'Supporting Doc', icon: FileText, action: () => { setShowSupportingDocModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
-                                          { label: 'Delete Proposal', icon: Trash2, action: () => { setShowDeleteConfirmModal(prop.id); setActiveDropdown(null); }, color: 'var(--colors-red-500)', divider: true, danger: true },
-                                        ].map((item, ii) => {
-                                          const ItemIcon = item.icon;
-                                          return (
-                                            <React.Fragment key={ii}>
-                                              {item.divider && <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '4px 0' }} />}
-                                              <div
-                                                onClick={(e) => { e.stopPropagation(); item.action(); }}
-                                                style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: item.color, cursor: 'pointer', borderRadius: 6, transition: 'background 0.1s ease' }}
-                                                onMouseEnter={e => e.currentTarget.style.background = item.danger ? 'var(--status-error-bg)' : 'var(--bg-surface-2)'}
-                                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                                              >
-                                                <ItemIcon size={14} color={item.danger ? 'var(--colors-red-500)' : 'var(--text-secondary)'} style={{ flexShrink: 0 }} /> {item.label}
-                                              </div>
-                                            </React.Fragment>
-                                          );
-                                        })}
-                                      </div>
-                                    )}
-                                    </div>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-
-                  {/* COMPARISON SECTION */}
-                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 20 }}>PROPOSAL COMPARISON MATRIX</div>
-                    {proposals.length === 0 ? (
-                      <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
-                        Upload proposals to compare them in the matrix.
+                                          {activeDropdown === prop.id && (
+                                            <div style={{
+                                              position: 'absolute', right: '100%', top: 0, marginRight: 8,
+                                              background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
+                                              boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, zIndex: 50, minWidth: 160,
+                                              display: 'flex', flexDirection: 'column', textAlign: 'left'
+                                            }}>
+                                              {[
+                                                { label: 'View Proposal', icon: Eye, action: () => { setShowPreviewModal(prop); setActiveDropdown(null); }, color: 'var(--text-primary)' },
+                                                { label: 'Reupload Proposal', icon: RefreshCw, action: () => { setShowReuploadModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
+                                                { label: 'Supporting Doc', icon: FileText, action: () => { setShowSupportingDocModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
+                                                { label: 'Delete Proposal', icon: Trash2, action: () => { setShowDeleteConfirmModal(prop.id); setActiveDropdown(null); }, color: 'var(--colors-red-500)', divider: true, danger: true },
+                                              ].map((item, ii) => {
+                                                const ItemIcon = item.icon;
+                                                return (
+                                                  <React.Fragment key={ii}>
+                                                    {item.divider && <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '4px 0' }} />}
+                                                    <div
+                                                      onClick={(e) => { e.stopPropagation(); item.action(); }}
+                                                      style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: item.color, cursor: 'pointer', borderRadius: 6, transition: 'background 0.1s ease' }}
+                                                      onMouseEnter={e => e.currentTarget.style.background = item.danger ? 'var(--status-error-bg)' : 'var(--bg-surface-2)'}
+                                                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                                                    >
+                                                      <ItemIcon size={14} color={item.danger ? 'var(--colors-red-500)' : 'var(--text-secondary)'} style={{ flexShrink: 0 }} /> {item.label}
+                                                    </div>
+                                                  </React.Fragment>
+                                                );
+                                              })}
+                                            </div>
+                                          )}
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
-                        <div style={{ overflowX: 'auto' }}>
-                          <div style={{ minWidth: 200 + (proposals.length * 250) }}>
-                            {/* Header Row */}
-                            <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
-                              <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, display: 'flex', alignItems: 'center' }}>Criteria</div>
-                              {proposals.map(p => (
-                                <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
-                                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
-                                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>Total Score: <span style={{ fontWeight: 600, color: '#0052cc' }}>{p.techScore}</span></div>
-                                </div>
-                              ))}
-                            </div>
+                    </div>
 
-                            {/* Criteria Rows */}
-                            {SCORING_CRITERIA.map((criterion, i) => (
-                              <div key={i} style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)' }}>
-                                <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
-                                  {criterion.label}
-                                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{criterion.weight} points</div>
-                                </div>
+
+                    {/* COMPARISON SECTION */}
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 20 }}>PROPOSAL COMPARISON MATRIX</div>
+                      {proposals.length === 0 ? (
+                        <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
+                          Upload proposals to compare them in the matrix.
+                        </div>
+                      ) : (
+                        <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                          <div style={{ overflowX: 'auto' }}>
+                            <div style={{ minWidth: 200 + (proposals.length * 250) }}>
+                              {/* Header Row */}
+                              <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
+                                <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 12, display: 'flex', alignItems: 'center' }}>Criteria</div>
                                 {proposals.map(p => (
-                                  <div key={`c-${p.id}-${i}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 14, fontWeight: 600, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
-                                    {p.criteriaScores?.[criterion.label] || 'Pending'}
+                                  <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
+                                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
+                                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>Total Score: <span style={{ fontWeight: 600, color: '#0052cc' }}>{p.techScore}</span></div>
                                   </div>
                                 ))}
                               </div>
-                            ))}
 
-                            {/* Commercial Snapshot */}
-                            <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(34,197,94,0.03)' }}>
-                              <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#15803d', display: 'flex', alignItems: 'center', gap: 6 }}><Banknote size={14} /> Commercials</div>
-                              {proposals.map(p => (
-                                <div key={`comm-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(34,197,94,0.1)', fontSize: 15, fontWeight: 700, color: '#15803d', display: 'flex', alignItems: 'center' }}>
-                                  {p.commercial || 'Pending'}
-                                </div>
-                              ))}
-                            </div>
-
-                            {/* Risks */}
-                            <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(239,68,68,0.02)' }}>
-                              <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#b91c1c', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> Risk Profile</div>
-                              {proposals.map(p => (
-                                <div key={`risk-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(239,68,68,0.1)' }}>
-                                  {(p.risks || []).map((r, ri) => (
-                                    <div key={ri} style={{ fontSize: 12, color: '#991b1b', display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: (p.risks || []).length - 1 === ri ? 0 : 8 }}>
-                                      <span style={{ fontSize: 14, lineHeight: 1 }}>•</span> <span style={{ lineHeight: 1.4 }}>{r}</span>
+                              {/* Criteria Rows */}
+                              {SCORING_CRITERIA.map((criterion, i) => (
+                                <div key={i} style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)' }}>
+                                  <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
+                                    {criterion.label}
+                                    <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{criterion.weight} points</div>
+                                  </div>
+                                  {proposals.map(p => (
+                                    <div key={`c-${p.id}-${i}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 14, fontWeight: 600, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
+                                      {p.criteriaScores?.[criterion.label] || 'Pending'}
                                     </div>
                                   ))}
-                                  {(!p.risks || p.risks.length === 0) && <div style={{ fontSize: 12, color: '#991b1b' }}>Pending</div>}
                                 </div>
                               ))}
+
+                              {/* Commercial Snapshot */}
+                              <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(34,197,94,0.03)' }}>
+                                <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#15803d', display: 'flex', alignItems: 'center', gap: 6 }}><Banknote size={14} /> Commercials</div>
+                                {proposals.map(p => (
+                                  <div key={`comm-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(34,197,94,0.1)', fontSize: 15, fontWeight: 700, color: '#15803d', display: 'flex', alignItems: 'center' }}>
+                                    {p.commercial || 'Pending'}
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Risks */}
+                              <div style={{ display: 'grid', gridTemplateColumns: `200px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: 'rgba(239,68,68,0.02)' }}>
+                                <div style={{ padding: '14px 20px', fontSize: 13, fontWeight: 600, color: '#b91c1c', display: 'flex', alignItems: 'center', gap: 6 }}><AlertTriangle size={14} /> Risk Profile</div>
+                                {proposals.map(p => (
+                                  <div key={`risk-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid rgba(239,68,68,0.1)' }}>
+                                    {(p.risks || []).map((r, ri) => (
+                                      <div key={ri} style={{ fontSize: 12, color: '#991b1b', display: 'flex', alignItems: 'flex-start', gap: 6, marginBottom: (p.risks || []).length - 1 === ri ? 0 : 8 }}>
+                                        <span style={{ fontSize: 14, lineHeight: 1 }}>•</span> <span style={{ lineHeight: 1.4 }}>{r}</span>
+                                      </div>
+                                    ))}
+                                    {(!p.risks || p.risks.length === 0) && <div style={{ fontSize: 12, color: '#991b1b' }}>Pending</div>}
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           </div>
+
+                          {/* AI Recommendation Highlight */}
+                          {(() => {
+                            const completed = proposals.filter(p => p.status === 'Completed');
+                            if (completed.length === 0) return null;
+                            const winner = completed.reduce((prev, current) => {
+                              const prevScore = parseInt(prev.techScore) || 0;
+                              const currScore = parseInt(current.techScore) || 0;
+                              return (currScore > prevScore) ? current : prev;
+                            });
+
+                            return (
+                              <div style={{ padding: '20px', background: 'linear-gradient(135deg, rgba(124,124,255,0.1), rgba(0,82,204,0.05))', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 12, background: '#fff', border: '1px solid rgba(124,124,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(124,124,255,0.15)' }}>
+                                  <Award size={20} color="#3d3db8" />
+                                </div>
+                                <div>
+                                  <div style={{ fontSize: 15, fontWeight: 700, color: '#3d3db8', marginBottom: 4 }}>AI Recommendation: {winner.vendorName}</div>
+                                  <div style={{ fontSize: 13, color: '#4a4a4a', lineHeight: 1.5 }}>Based on the evaluation criteria, {winner.vendorName} leads with a technical score of {winner.techScore}. They show exceptionally strong technical competency and relevant experience. Proceed with commercial negotiations to finalize the award.</div>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
-
-                        {/* AI Recommendation Highlight */}
-                        {(() => {
-                          const completed = proposals.filter(p => p.status === 'Completed');
-                          if (completed.length === 0) return null;
-                          const winner = completed.reduce((prev, current) => {
-                            const prevScore = parseInt(prev.techScore) || 0;
-                            const currScore = parseInt(current.techScore) || 0;
-                            return (currScore > prevScore) ? current : prev;
-                          });
-
-                          return (
-                            <div style={{ padding: '20px', background: 'linear-gradient(135deg, rgba(124,124,255,0.1), rgba(0,82,204,0.05))', display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                              <div style={{ width: 40, height: 40, borderRadius: 12, background: '#fff', border: '1px solid rgba(124,124,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 4px 12px rgba(124,124,255,0.15)' }}>
-                                <Award size={20} color="#3d3db8" />
-                              </div>
-                              <div>
-                                <div style={{ fontSize: 15, fontWeight: 700, color: '#3d3db8', marginBottom: 4 }}>AI Recommendation: {winner.vendorName}</div>
-                                <div style={{ fontSize: 13, color: '#4a4a4a', lineHeight: 1.5 }}>Based on the evaluation criteria, {winner.vendorName} leads with a technical score of {winner.techScore}. They show exceptionally strong technical competency and relevant experience. Proceed with commercial negotiations to finalize the award.</div>
-                              </div>
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
                 );
               })()}
 
@@ -2940,7 +2941,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                 return (
                   <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: 'transparent' }}>
-                    
+
                     {/* SECTION 1: Negotiation Brief & Table */}
                     <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
@@ -3048,144 +3049,144 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
 
-                        {/* Market News and Sentiment (4 Cards) */}
-                        <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                          <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                            MARKET NEWS AND SENTIMENT
-                          </div>
-                          <div style={{ padding: 24 }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-                              {Object.entries(negotData.marketSignals).map(([key, signal]) => {
-                                const Icon = signal.icon;
-                                return (
-                                  <div key={key} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-                                      <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7c7cff' }}>
-                                        <Icon size={18} strokeWidth={2.5} />
+                          {/* Market News and Sentiment (4 Cards) */}
+                          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                              MARKET NEWS AND SENTIMENT
+                            </div>
+                            <div style={{ padding: 24 }}>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+                                {Object.entries(negotData.marketSignals).map(([key, signal]) => {
+                                  const Icon = signal.icon;
+                                  return (
+                                    <div key={key} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+                                        <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7c7cff' }}>
+                                          <Icon size={18} strokeWidth={2.5} />
+                                        </div>
+                                        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{signal.title}</div>
                                       </div>
-                                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{signal.title}</div>
+                                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{signal.desc}</div>
                                     </div>
-                                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{signal.desc}</div>
-                                  </div>
-                                );
-                              })}
+                                  );
+                                })}
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        {/* Clarification Questions */}
-                        <div style={{ marginTop: 8, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                          <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', gap: 12 }}>
-                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>CLARIFICATION QUESTIONS</div>
-                            <div style={{ padding: '4px 10px', background: '#eef2ff', color: '#4f46e5', fontSize: 11, fontWeight: 600, borderRadius: 100, textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 4 }}>
-                              <Sparkles size={12} /> AI Generated
+                          {/* Clarification Questions */}
+                          <div style={{ marginTop: 8, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', gap: 12 }}>
+                              <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>CLARIFICATION QUESTIONS</div>
+                              <div style={{ padding: '4px 10px', background: '#eef2ff', color: '#4f46e5', fontSize: 11, fontWeight: 600, borderRadius: 100, textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <Sparkles size={12} /> AI Generated
+                              </div>
                             </div>
-                          </div>
-                          <div style={{ padding: 24 }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                              {negotData.clarificationQuestions && negotData.clarificationQuestions.map((q, i) => (
-                                <div key={i} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px 24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)', display: 'flex', gap: 16 }}>
-                                  <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                                    <HelpCircle size={16} strokeWidth={2.5} />
-                                  </div>
-                                  <div>
-                                    <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8, lineHeight: 1.5 }}>{q.question}</div>
-                                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, background: 'var(--bg-surface-2)', padding: '12px 16px', borderRadius: 8, borderLeft: '3px solid #ddd6fe' }}>
-                                      <span style={{ fontWeight: 600, color: '#6b7280', marginRight: 6 }}>Context:</span>
-                                      {q.context}
+                            <div style={{ padding: 24 }}>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                {negotData.clarificationQuestions && negotData.clarificationQuestions.map((q, i) => (
+                                  <div key={i} style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '20px 24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)', display: 'flex', gap: 16 }}>
+                                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#f5f3ff', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                                      <HelpCircle size={16} strokeWidth={2.5} />
+                                    </div>
+                                    <div>
+                                      <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8, lineHeight: 1.5 }}>{q.question}</div>
+                                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, background: 'var(--bg-surface-2)', padding: '12px 16px', borderRadius: 8, borderLeft: '3px solid #ddd6fe' }}>
+                                        <span style={{ fontWeight: 600, color: '#6b7280', marginRight: 6 }}>Context:</span>
+                                        {q.context}
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Stacked Layout for the rest */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
-
-                          {/* Technical Gaps & Clarifications */}
-                          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                              TECHNICAL GAPS & CLARIFICATIONS
-                            </div>
-                            <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
-                              {negotData.technicalGaps.map((gap, i) => (
-                                <div key={i} style={{ display: 'flex', gap: 14 }}>
-                                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: gap.type === 'strength' ? '#22c55e' : gap.type === 'risk' ? '#ef4444' : gap.type === 'clarification' ? '#f59e0b' : '#7c7cff', marginTop: 6, flexShrink: 0 }} />
-                                  <div>
-                                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>{gap.title}</div>
-                                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{gap.desc}</div>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Commercial Pointers */}
-                          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                              COMMERCIAL POINTERS
-                            </div>
-                            <div style={{ padding: '24px 24px 24px 24px' }}>
-                              <ul style={{ margin: 0, paddingLeft: 20, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.7, listStyleType: 'disc' }}>
-                                {negotData.commercialPointers.map((ptr, i) => (
-                                  <li key={i} style={{ marginBottom: 14, paddingLeft: 8 }}>{ptr}</li>
                                 ))}
-                              </ul>
+                              </div>
                             </div>
                           </div>
 
-                          {/* Strategy Brief Generator */}
-                          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                              STRATEGY BRIEF
+                          {/* Stacked Layout for the rest */}
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 8 }}>
+
+                            {/* Technical Gaps & Clarifications */}
+                            <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                              <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                TECHNICAL GAPS & CLARIFICATIONS
+                              </div>
+                              <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
+                                {negotData.technicalGaps.map((gap, i) => (
+                                  <div key={i} style={{ display: 'flex', gap: 14 }}>
+                                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: gap.type === 'strength' ? '#22c55e' : gap.type === 'risk' ? '#ef4444' : gap.type === 'clarification' ? '#f59e0b' : '#7c7cff', marginTop: 6, flexShrink: 0 }} />
+                                    <div>
+                                      <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>{gap.title}</div>
+                                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{gap.desc}</div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                            <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 24, flex: 1 }}>
 
-                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
-                                <div>
-                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
-                                  <div style={{ fontSize: 13, color: '#0052cc', fontWeight: 500, padding: '12px 16px', background: 'rgba(0,82,204,0.04)', borderRadius: 8, border: '1px solid rgba(0,82,204,0.2)', lineHeight: 1.5, height: '100%', boxSizing: 'border-box' }}>
-                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>₹38,00,000</div>
-                                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{negotData.strategyBrief.opening}</div>
+                            {/* Commercial Pointers */}
+                            <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                              <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                COMMERCIAL POINTERS
+                              </div>
+                              <div style={{ padding: '24px 24px 24px 24px' }}>
+                                <ul style={{ margin: 0, paddingLeft: 20, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.7, listStyleType: 'disc' }}>
+                                  {negotData.commercialPointers.map((ptr, i) => (
+                                    <li key={i} style={{ marginBottom: 14, paddingLeft: 8 }}>{ptr}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+
+                            {/* Strategy Brief Generator */}
+                            <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                              <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                STRATEGY BRIEF
+                              </div>
+                              <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 24, flex: 1 }}>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
+                                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
+                                    <div style={{ flex: 1, fontSize: 13, color: '#0052cc', fontWeight: 500, padding: '12px 16px', background: 'rgba(0,82,204,0.04)', borderRadius: 8, border: '1px solid rgba(0,82,204,0.2)', lineHeight: 1.5, boxSizing: 'border-box' }}>
+                                      <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>₹38,00,000</div>
+                                      <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{negotData.strategyBrief.opening}</div>
+                                    </div>
+                                  </div>
+                                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Target Goal</div>
+                                    <div style={{ flex: 1, fontSize: 13, color: '#15803d', fontWeight: 500, padding: '12px 16px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0', lineHeight: 1.5, boxSizing: 'border-box' }}>
+                                      <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.target}</div>
+                                      <div style={{ fontSize: 11, color: '#166534' }}>Ideal settlement point.</div>
+                                    </div>
+                                  </div>
+                                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Walk-Away Point</div>
+                                    <div style={{ flex: 1, fontSize: 13, color: '#b91c1c', fontWeight: 500, padding: '12px 16px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca', lineHeight: 1.5, boxSizing: 'border-box' }}>
+                                      <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.walkAway}</div>
+                                      <div style={{ fontSize: 11, color: '#991b1b' }}>Maximum acceptable threshold.</div>
+                                    </div>
                                   </div>
                                 </div>
+
                                 <div>
-                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Target Goal</div>
-                                  <div style={{ fontSize: 13, color: '#15803d', fontWeight: 500, padding: '12px 16px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0', lineHeight: 1.5, height: '100%', boxSizing: 'border-box' }}>
-                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.target}</div>
-                                    <div style={{ fontSize: 11, color: '#166534' }}>Ideal settlement point.</div>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Concession Sequence</div>
+                                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                                    <ol style={{ margin: 0, paddingLeft: 20 }}>
+                                      {negotData.strategyBrief.concessions.map((c, i) => <li key={i} style={{ marginBottom: 8 }}>{c}</li>)}
+                                    </ol>
                                   </div>
                                 </div>
+
                                 <div>
-                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Walk-Away Point</div>
-                                  <div style={{ fontSize: 13, color: '#b91c1c', fontWeight: 500, padding: '12px 16px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca', lineHeight: 1.5, height: '100%', boxSizing: 'border-box' }}>
-                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.walkAway}</div>
-                                    <div style={{ fontSize: 11, color: '#991b1b' }}>Maximum acceptable threshold.</div>
-                                  </div>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
+                                  <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
                                 </div>
-                              </div>
 
-                              <div>
-                                <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Concession Sequence</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                                  <ol style={{ margin: 0, paddingLeft: 20 }}>
-                                    {negotData.strategyBrief.concessions.map((c, i) => <li key={i} style={{ marginBottom: 8 }}>{c}</li>)}
-                                  </ol>
-                                </div>
                               </div>
-
-                              <div>
-                                <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
-                              </div>
-
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
                     ) : (
                       <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-secondary)' }}>No negotiation data available for this vendor.</div>
                     )}
@@ -3212,34 +3213,34 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           {SOW_TEMPLATES.map((tmpl, idx) => {
                             const isSelected = selectedSowTemplateId === tmpl.id;
                             return (
-                              <div key={tmpl.id} 
-                                   onClick={() => setSelectedSowTemplateId(tmpl.id)}
-                                   style={{ 
-                                     border: `2px solid ${isSelected ? '#0052cc' : '#e5e7eb'}`, 
-                                     borderRadius: 16, 
-                                     padding: 24, 
-                                     background: isSelected ? '#f4f8ff' : '#fff', 
-                                     cursor: 'pointer', 
-                                     transition: 'all 0.2s', 
-                                     position: 'relative',
-                                     boxShadow: isSelected ? '0 8px 24px rgba(0,82,204,0.1)' : '0 2px 10px rgba(0,0,0,0.03)',
-                                     display: 'flex',
-                                     flexDirection: 'column'
-                                   }}
-                                   onMouseEnter={(e) => {
-                                     if (!isSelected) {
-                                       e.currentTarget.style.borderColor = '#d1d5db';
-                                       e.currentTarget.style.transform = 'translateY(-2px)';
-                                       e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.06)';
-                                     }
-                                   }}
-                                   onMouseLeave={(e) => {
-                                     if (!isSelected) {
-                                       e.currentTarget.style.borderColor = '#e5e7eb';
-                                       e.currentTarget.style.transform = 'translateY(0)';
-                                       e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.03)';
-                                     }
-                                   }}>
+                              <div key={tmpl.id}
+                                onClick={() => setSelectedSowTemplateId(tmpl.id)}
+                                style={{
+                                  border: `2px solid ${isSelected ? '#0052cc' : '#e5e7eb'}`,
+                                  borderRadius: 16,
+                                  padding: 24,
+                                  background: isSelected ? '#f4f8ff' : '#fff',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.2s',
+                                  position: 'relative',
+                                  boxShadow: isSelected ? '0 8px 24px rgba(0,82,204,0.1)' : '0 2px 10px rgba(0,0,0,0.03)',
+                                  display: 'flex',
+                                  flexDirection: 'column'
+                                }}
+                                onMouseEnter={(e) => {
+                                  if (!isSelected) {
+                                    e.currentTarget.style.borderColor = '#d1d5db';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.06)';
+                                  }
+                                }}
+                                onMouseLeave={(e) => {
+                                  if (!isSelected) {
+                                    e.currentTarget.style.borderColor = '#e5e7eb';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.03)';
+                                  }
+                                }}>
                                 {tmpl.recommended && (
                                   <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #10b981, #047857)', color: '#fff', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, padding: '6px 14px', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 12px rgba(16,185,129,0.3)', whiteSpace: 'nowrap' }}>
                                     ✨ AI Recommended
@@ -3296,15 +3297,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 } else if (sowStage === 'drafting') {
                   return (
                     <div style={{ padding: 24, background: '#fafafa', minHeight: 'calc(100vh - 120px)' }}>
-                       <WYSIWYGEditor 
-                         isEditing={isSowEditing} 
-                         htmlContent={sowHtmlContent} 
-                         setHtmlContent={handleSowHtmlChange}
-                         docType="Statement of Work"
-                         docTitle={SOW_TEMPLATES.find(t => t.id === selectedSowTemplateId)?.title || 'Statement of Work'}
-                         docSubtitle="DDAIS Group · Procurement Division · PR-2026-004"
-                         version="V1.0"
-                       />
+                      <WYSIWYGEditor
+                        isEditing={isSowEditing}
+                        htmlContent={sowHtmlContent}
+                        setHtmlContent={handleSowHtmlChange}
+                        docType="Statement of Work"
+                        docTitle={SOW_TEMPLATES.find(t => t.id === selectedSowTemplateId)?.title || 'Statement of Work'}
+                        docSubtitle="DDAIS Group · Procurement Division · PR-2026-004"
+                        version="V1.0"
+                      />
                     </div>
                   );
                 }
@@ -3675,7 +3676,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               </div>
               <button onClick={() => setShowAwardModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             </div>
-            
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, margin: '16px 0' }}>
               {proposals.filter(p => p.status === 'Completed').map(p => (
                 <div key={p.id} onClick={() => setSelectedAwardVendor(p.vendorName)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', border: `1px solid ${selectedAwardVendor === p.vendorName ? '#0052cc' : 'var(--border-subtle)'}`, borderRadius: 10, background: selectedAwardVendor === p.vendorName ? 'rgba(0,82,204,0.04)' : '#fff', cursor: 'pointer', transition: 'all 0.15s ease' }}>
