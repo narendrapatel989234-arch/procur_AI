@@ -2879,8 +2879,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   {
                                     id: 'g1', title: 'Vendor Overview', icon: Briefcase,
                                     rows: [
-                                      { label: 'Vendor Name', getValue: p => <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName}</span> },
-                                      { label: 'State / Pass / Fail Status', getValue: p => p.state === 'pass' ? <span style={{ color: '#15803d', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>PASS</span> : (p.state === 'fail' ? <span style={{ color: '#b91c1c', background: 'rgba(239,68,68,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>FAIL</span> : 'Pending') },
+                                      // { label: 'Vendor Name', getValue: p => <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName}</span> },
+                                      { label: 'State', getValue: p => p.state === 'pass' ? <span style={{ color: '#15803d', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>PASS</span> : (p.state === 'fail' ? <span style={{ color: '#b91c1c', background: 'rgba(239,68,68,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>FAIL</span> : 'Pending') },
                                       { label: 'Rank', getValue: p => <span style={{ fontWeight: 600 }}>{getRank(p.id)}</span> }
                                     ]
                                   },
@@ -2904,7 +2904,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   {
                                     id: 'g4', title: 'Risk & Due Diligence', icon: ShieldCheck,
                                     rows: [
-                                      { label: 'Risk Profile', getValue: p => {
+                                      {
+                                        label: 'Risk Profile', getValue: p => {
                                           const risks = p.risks || [];
                                           if (risks.length === 0) return 'Pending';
                                           return (
@@ -2912,7 +2913,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                               {risks.map((r, i) => <div key={i} style={{ fontSize: 12, color: '#b91c1c', lineHeight: 1.3 }}>• {r}</div>)}
                                             </div>
                                           );
-                                      } },
+                                        }
+                                      },
                                       { label: 'High', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.high ?? '-' },
                                       { label: 'Medium', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.medium ?? '-' },
                                       { label: 'Low', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.low ?? '-' }
@@ -2921,28 +2923,34 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   {
                                     id: 'g5', title: 'Market Intelligence & Sentiment', icon: PieChart,
                                     rows: [
-                                      { label: 'Sentiment Score', getValue: p => {
+                                      {
+                                        label: 'Sentiment Score', getValue: p => {
                                           const s = getVendorNegotData(p.vendorName)?.stats?.sentiment;
                                           return s ? `${s.score}/10 (${s.rating})` : '-';
-                                      }}
+                                        }
+                                      }
                                     ]
                                   },
                                   {
                                     id: 'g6', title: 'Clarifications & Discussions', icon: MessageSquare,
                                     rows: [
-                                      { label: 'Open Questions', getValue: p => {
+                                      {
+                                        label: 'Open Questions', getValue: p => {
                                           const q = getVendorNegotData(p.vendorName)?.clarificationQuestions;
                                           return q ? `${q.length} Questions` : '-';
-                                      }}
+                                        }
+                                      }
                                     ]
                                   },
                                   {
                                     id: 'g7', title: 'Executive Summary', icon: BookOpen,
                                     rows: [
-                                      { label: 'Summary', getValue: p => {
+                                      {
+                                        label: 'Summary', getValue: p => {
                                           const b = getVendorNegotData(p.vendorName)?.stats?.batna;
                                           return b ? <div style={{ fontSize: 12, lineHeight: 1.4 }}>{b}</div> : '-';
-                                      }}
+                                        }
+                                      }
                                     ]
                                   }
                                 ];
@@ -2953,12 +2961,12 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   return (
                                     <React.Fragment key={group.id}>
                                       {/* Group Header Row */}
-                                      <div 
+                                      <div
                                         onClick={() => toggleGroup(group.id)}
-                                        style={{ 
-                                          display: 'grid', gridTemplateColumns: `250px repeat(${proposals.length}, 1fr)`, 
-                                          background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)', 
-                                          cursor: 'pointer', transition: 'background 0.1s' 
+                                        style={{
+                                          display: 'grid', gridTemplateColumns: `250px repeat(${proposals.length}, 1fr)`,
+                                          background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)',
+                                          cursor: 'pointer', transition: 'background 0.1s'
                                         }}
                                         onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
                                         onMouseLeave={e => e.currentTarget.style.background = '#f8fafc'}
@@ -2979,10 +2987,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                       {/* Group Content Rows */}
                                       {isExpanded && group.rows.map((row, rIdx) => (
                                         <div key={rIdx} style={{ display: 'grid', gridTemplateColumns: `250px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
-                                          <div style={{ 
-                                            padding: '14px 20px', fontSize: row.isHeader ? 12 : 13, 
-                                            fontWeight: row.isHeader ? 700 : 500, 
-                                            color: row.isHeader ? 'var(--text-tertiary)' : 'var(--text-secondary)', 
+                                          <div style={{
+                                            padding: '14px 20px', fontSize: row.isHeader ? 12 : 13,
+                                            fontWeight: row.isHeader ? 700 : 500,
+                                            color: row.isHeader ? 'var(--text-tertiary)' : 'var(--text-secondary)',
                                             textTransform: row.isHeader ? 'uppercase' : 'none',
                                             paddingLeft: row.isSub ? 40 : 20,
                                             display: 'flex', alignItems: 'center'
