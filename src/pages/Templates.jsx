@@ -8,21 +8,21 @@ import {
 } from 'lucide-react';
 
 const TEMPLATE_ROWS = [
-  { id: 'TPL-001', name: 'IT Hardware Procurement Standard', category: 'Custom App', version: 'v2.3', status: 'Published', owner: 'David Kim', modified: '01-Jun-2026 10:30' },
-  { id: 'TPL-002', name: 'SaaS License Agreement Template', category: 'Data', version: 'v1.1', status: 'Published', owner: 'Sarah Chen', modified: '30-May-2026 14:20' },
-  { id: 'TPL-003', name: 'Consulting Services RFP', category: 'AI', version: 'v3.0', status: 'Published', owner: 'David Kim', modified: '29-May-2026 09:15' },
-  { id: 'TPL-004', name: 'Office Supplies Routine Order', category: 'Low-Code', version: 'v1.0', status: 'Draft', owner: 'Mike Ross', modified: '28-May-2026 16:45' },
-  { id: 'TPL-005', name: 'Cloud Infrastructure RFQ', category: 'AI', version: 'v2.1', status: 'Published', owner: 'Sarah Chen', modified: '27-May-2026 11:00' },
-  { id: 'TPL-006', name: 'Marketing Agency Evaluation', category: 'Custom App', version: 'v1.4', status: 'Draft', owner: 'David Kim', modified: '26-May-2026 08:30' },
-  { id: 'TPL-007', name: 'Legal Services Procurement', category: 'Data', version: 'v2.0', status: 'Archived', owner: 'Mike Ross', modified: '25-May-2026 13:20' },
-  { id: 'TPL-008', name: 'Construction & Facilities RFP', category: 'Low-Code', version: 'v1.2', status: 'Published', owner: 'Sarah Chen', modified: '24-May-2026 10:10' },
-  { id: 'TPL-009', name: 'Data Analytics Platform RFQ', category: 'AI', version: 'v1.0', status: 'Draft', owner: 'David Kim', modified: '23-May-2026 15:55' },
-  { id: 'TPL-010', name: 'HR Onboarding Supplies Template', category: 'Low-Code', version: 'v3.1', status: 'Published', owner: 'Mike Ross', modified: '22-May-2026 09:00' },
-  { id: 'TPL-011', name: 'Security Audit Services RFP', category: 'Custom App', version: 'v1.0', status: 'Archived', owner: 'Sarah Chen', modified: '21-May-2026 14:30' },
-  { id: 'TPL-012', name: 'ERP System Upgrade Evaluation', category: 'AI', version: 'v2.2', status: 'Published', owner: 'David Kim', modified: '20-May-2026 11:15' },
-  { id: 'TPL-013', name: 'Fleet Management Procurement', category: 'Data', version: 'v1.3', status: 'Draft', owner: 'Mike Ross', modified: '19-May-2026 08:45' },
-  { id: 'TPL-014', name: 'Training & Development RFP', category: 'Low-Code', version: 'v1.1', status: 'Published', owner: 'Sarah Chen', modified: '18-May-2026 16:00' },
-  { id: 'TPL-015', name: 'Telecom Services Renewal Template', category: 'Custom App', version: 'v2.0', status: 'Archived', owner: 'David Kim', modified: '17-May-2026 10:30' },
+  { id: 'TPL-001', name: 'IT Hardware Procurement Standard', type: 'Purchase Requisition', category: 'Custom App', version: 'v2.3', status: 'Published', owner: 'David Kim', modified: '01-Jun-2026 10:30' },
+  { id: 'TPL-002', name: 'SaaS License Agreement Template', type: 'Purchase Order', category: 'Data', version: 'v1.1', status: 'Published', owner: 'Sarah Chen', modified: '30-May-2026 14:20' },
+  { id: 'TPL-003', name: 'Consulting Services RFP', type: 'RFP', category: 'AI', version: 'v3.0', status: 'Published', owner: 'David Kim', modified: '29-May-2026 09:15' },
+  { id: 'TPL-004', name: 'Office Supplies Routine Order', type: 'Purchase Requisition', category: 'Low-Code', version: 'v1.0', status: 'Draft', owner: 'Mike Ross', modified: '28-May-2026 16:45' },
+  { id: 'TPL-005', name: 'Cloud Infrastructure RFQ', type: 'RFP', category: 'AI', version: 'v2.1', status: 'Published', owner: 'Sarah Chen', modified: '27-May-2026 11:00' },
+  { id: 'TPL-006', name: 'Marketing Agency Evaluation', type: 'Proposal', category: 'Custom App', version: 'v1.4', status: 'Draft', owner: 'David Kim', modified: '26-May-2026 08:30' },
+  { id: 'TPL-007', name: 'Legal Services Procurement', type: 'SOW', category: 'Data', version: 'v2.0', status: 'Archived', owner: 'Mike Ross', modified: '25-May-2026 13:20' },
+  { id: 'TPL-008', name: 'Construction & Facilities RFP', type: 'RFP', category: 'Low-Code', version: 'v1.2', status: 'Published', owner: 'Sarah Chen', modified: '24-May-2026 10:10' },
+  { id: 'TPL-009', name: 'Data Analytics Platform RFQ', type: 'RFP', category: 'AI', version: 'v1.0', status: 'Draft', owner: 'David Kim', modified: '23-May-2026 15:55' },
+  { id: 'TPL-010', name: 'HR Onboarding Supplies Template', type: 'Purchase Requisition', category: 'Low-Code', version: 'v3.1', status: 'Published', owner: 'Mike Ross', modified: '22-May-2026 09:00' },
+  { id: 'TPL-011', name: 'Security Audit Services RFP', type: 'RFP', category: 'Custom App', version: 'v1.0', status: 'Archived', owner: 'Sarah Chen', modified: '21-May-2026 14:30' },
+  { id: 'TPL-012', name: 'ERP System Upgrade Evaluation', type: 'Proposal', category: 'AI', version: 'v2.2', status: 'Published', owner: 'David Kim', modified: '20-May-2026 11:15' },
+  { id: 'TPL-013', name: 'Fleet Management Procurement', type: 'Purchase Order', category: 'Data', version: 'v1.3', status: 'Draft', owner: 'Mike Ross', modified: '19-May-2026 08:45' },
+  { id: 'TPL-014', name: 'Training & Development RFP', type: 'RFP', category: 'Low-Code', version: 'v1.1', status: 'Published', owner: 'Sarah Chen', modified: '18-May-2026 16:00' },
+  { id: 'TPL-015', name: 'Telecom Services Renewal Template', type: 'SOW', category: 'Custom App', version: 'v2.0', status: 'Archived', owner: 'David Kim', modified: '17-May-2026 10:30' },
 ];
 
 const STATUS_STYLES = {
@@ -39,6 +39,7 @@ const CATEGORY_STYLES = {
 };
 
 const FILTER_OPTIONS = {
+  'Template Type': ['Purchase Requisition', 'RFP', 'Proposal', 'SOW', 'Purchase Order'],
   'Category': ['AI', 'Data', 'Low-Code', 'Custom App'],
   'Status': ['Draft', 'Published', 'Archived'],
   'Owner': ['David Kim', 'Sarah Chen', 'Mike Ross'],
@@ -156,6 +157,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
 
   const [openFilter, setOpenFilter] = useState(null);
   const [activeFilters, setActiveFilters] = useState({
+    'Template Type': [],
     'Category': [],
     'Status': [],
     'Owner': []
@@ -220,7 +222,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
   };
 
   const handleClearAllFilters = () => {
-    setActiveFilters({ Category: [], Status: [], Owner: [] });
+    setActiveFilters({ 'Template Type': [], Category: [], Status: [], Owner: [] });
     setTableSearch('');
   };
 
@@ -256,6 +258,11 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
           r.name.toLowerCase().includes(q) ||
           r.owner.toLowerCase().includes(q)
         );
+      }
+
+      // template type filter
+      if (activeFilters['Template Type'] && activeFilters['Template Type'].length > 0) {
+        filtered = filtered.filter(r => activeFilters['Template Type'].includes(r.type));
       }
 
       // category filter
@@ -442,6 +449,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
                   {[
                     { label: 'Template ID', key: 'id', width: 100 },
                     { label: 'Name', key: 'name', width: 240 },
+                    { label: 'Template Type', key: 'type', width: 150 },
                     { label: 'Category', key: 'category', width: 130 },
                     { label: 'Version', key: 'version', width: 90 },
                     { label: 'Status', key: 'status', width: 110 },
@@ -471,7 +479,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
                 {isSearching ? (
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      {Array.from({ length: 8 }).map((_, j) => (
+                      {Array.from({ length: 9 }).map((_, j) => (
                         <td key={j} style={{ padding: '16px 20px' }}>
                           <div className="skeleton-box" style={{ height: 16, width: j === 1 ? '80%' : '60%' }} />
                         </td>
@@ -480,7 +488,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
                   ))
                 ) : paginatedRows.length === 0 ? (
                   <tr>
-                    <td colSpan={8} style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
+                    <td colSpan={9} style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
                       No templates found matching your search.
                     </td>
                   </tr>
@@ -492,6 +500,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
                       <tr key={row.id} className="tptr" onClick={() => onNavigate('templatedetail')} style={{ borderBottom: idx < paginatedRows.length - 1 ? '1px solid var(--border-subtle)' : 'none', cursor: 'pointer' }}>
                         <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.id}</td>
                         <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)' }}>{row.name}</td>
+                        <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 400, color: 'var(--text-secondary)' }}>{row.type}</td>
                         <td style={{ padding: '13px 16px' }}>
                           <span style={{ display: 'inline-flex', padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: catStyle.background, color: catStyle.color }}>{row.category}</span>
                         </td>

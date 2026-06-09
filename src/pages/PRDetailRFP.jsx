@@ -13,7 +13,7 @@ import {
   List, ListOrdered, Indent, Outdent, Link, Image, Printer,
   Undo2, Redo2, Code, RemoveFormatting, Pencil, Save, ChevronDown,
   Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2,
-  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers, Briefcase, Globe, MessageSquare, TrendingUp, AlertCircle, HelpCircle
+  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers, Briefcase, Globe, MessageSquare, TrendingUp, AlertCircle, HelpCircle, Lock, Search, ArrowUpDown, Filter
 } from 'lucide-react';
 
 const STATUS_CONFIG = {
@@ -36,7 +36,7 @@ const TABS = [
 const EMPTY_TABS = {
   proposals: { icon: Package, color: '#7c7cff', title: 'No Proposals Yet', desc: 'Proposals will appear here once the RFP is published and vendors submit their bids.' },
   negot: { icon: Brain, color: '#0052cc', title: 'Negotiations', desc: 'AI-powered negotiation insights will be available once a vendor is shortlisted.' },
-  sow: { icon: FileCheck, color: '#22c55e', title: 'SoW Not Started', desc: 'The Statement of Work drafting process begins after a vendor is awarded.' },
+  sow: { icon: Lock, color: '#6b7280', title: 'SoW Not Started', desc: 'The Statement of Work drafting process begins after a vendor is awarded. Please complete negotiations and award the project first.' },
   po: { icon: Receipt, color: '#f59e0b', title: 'Purchase Order Pending', desc: 'A Purchase Order will be generated here once the SoW is finalized and signed.' },
   invoices: { icon: DollarSign, color: '#6d28d9', title: 'Invoice Tracking', desc: 'Invoice management will be available once the engagement is active.' },
 };
@@ -162,7 +162,15 @@ const INITIAL_HTML = `<h2>1. Introduction &amp; Background</h2>
 <p><strong>Deadline:</strong> 15 June 2026, 17:00 GST &nbsp;|&nbsp; <strong>Validity:</strong> 90 days from submission</p>
 <ul><li>Technical Proposal (max 40 pages, PDF)</li><li>Commercial Proposal (separate sealed document)</li><li>Company Profile &amp; Credentials</li><li>CVs of proposed team members</li><li>Reference letters from at least 2 comparable projects</li><li>Valid trade licence and ISO certification copies</li></ul>`;
 
-function WYSIWYGEditor({ isEditing, htmlContent, setHtmlContent }) {
+const WYSIWYGEditor = ({ 
+  isEditing, 
+  htmlContent, 
+  setHtmlContent,
+  docType = 'Request for Proposal',
+  docTitle = 'AWS Cloud Migration Consulting Services',
+  docSubtitle = 'DDAIS Group · Procurement Division · RFP-2026-004',
+  version = 'V1.1'
+}) => {
   const editorRef = useRef(null);
   const [fmt, setFmt] = useState({});
   const [showFmtMenu, setShowFmtMenu] = useState(false);
@@ -224,22 +232,30 @@ function WYSIWYGEditor({ isEditing, htmlContent, setHtmlContent }) {
       <div style={{ background: 'linear-gradient(135deg,rgba(0,82,204,0.03),rgba(124,124,255,0.05))', padding: '28px 52px 22px', borderBottom: '1px solid var(--border-subtle)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.2px', color: '#7c7cff', marginBottom: 10 }}>Request for Proposal</div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: '#1a1a1a', lineHeight: 1.25, marginBottom: 6 }}>AWS Cloud Migration Consulting Services</div>
-            <div style={{ fontSize: 13, color: '#888' }}>DDAIS Group · Procurement Division · RFP-2026-004</div>
+            <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.2px', color: '#7c7cff', marginBottom: 10 }}>{docType}</div>
+            <div style={{ fontSize: 24, fontWeight: 700, color: '#1a1a1a', lineHeight: 1.25, marginBottom: 6, display: 'flex', alignItems: 'center', gap: 12 }}>
+              {docTitle}
+              {version && <span style={{ fontSize: 11, fontWeight: 600, background: '#e0e7ff', color: '#4338ca', padding: '4px 10px', borderRadius: 12 }}>Current Version: {version}</span>}
+            </div>
+            <div style={{ fontSize: 13, color: '#888' }}>{docSubtitle}</div>
           </div>
           {/* Edit / Save / Discard — RIGHT SIDE of header */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, marginLeft: 32, flexShrink: 0 }}>
             {!isEditing ? (
-              <button
-                onMouseDown={e => e.preventDefault()}
-                onClick={() => setHtmlContent('__EDIT__')}
-                style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1.5px solid rgba(124,124,255,0.35)', background: 'rgba(124,124,255,0.06)', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#7c7cff', fontFamily: 'inherit' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,124,255,0.12)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(124,124,255,0.06)'}
-              >
-                <Pencil size={13} strokeWidth={2.2} /> Edit Document
-              </button>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                  <History size={13} strokeWidth={2.2} /> Version History
+                </button>
+                <button
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={() => setHtmlContent('__EDIT__')}
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1.5px solid rgba(124,124,255,0.35)', background: 'rgba(124,124,255,0.06)', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#7c7cff', fontFamily: 'inherit' }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,124,255,0.12)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(124,124,255,0.06)'}
+                >
+                  <Pencil size={13} strokeWidth={2.2} /> Edit Document
+                </button>
+              </div>
             ) : (
               <div style={{ display: 'flex', gap: 8 }}>
                 <button onClick={() => setHtmlContent('__DISCARD__')} style={{ padding: '7px 14px', borderRadius: 8, border: '1px solid #e0e0e0', background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#666', fontFamily: 'inherit' }}>Discard</button>
@@ -534,6 +550,54 @@ const COST_ITEMS = [
   { phase: 'Phase 3 — Stabilisation', duration: '1 month', resources: '2 Architects', estimate: '₹6,00,000 - ₹10,00,000' },
   { phase: 'PM & Coordination', duration: '6 months', resources: '1 Project Manager', estimate: '₹2,00,000 - ₹4,00,000' },
 ];
+
+const SOW_TEMPLATES = [
+  {
+    id: 't1',
+    title: 'Cloud Migration Master SOW',
+    recommended: true,
+    matchScore: 98,
+    rationale: 'Perfectly matches RFP context. Historically proven structure for AWS enterprise migrations with a 99% compliance acceptance rate.',
+    tags: ['AWS', 'Enterprise', 'High Compliance'],
+    sections: ['Scope of Work', 'Deliverables', 'Milestones', 'Assumptions', 'Exclusions', 'Acceptance Criteria', 'SLA Definitions', 'Clauses']
+  },
+  {
+    id: 't2',
+    title: 'Agile IT Delivery SOW',
+    recommended: false,
+    matchScore: 85,
+    rationale: 'Alternative focused on sprint-based delivery and iterative milestones. Good for flexible timelines.',
+    tags: ['Agile', 'Iterative', 'T&M'],
+    sections: ['Sprint Schedules', 'Backlog Refinement', 'Definition of Done', 'Retrospectives', 'Acceptance Criteria', 'Team Velocity']
+  },
+  {
+    id: 't3',
+    title: 'Managed Services SOW',
+    recommended: false,
+    matchScore: 78,
+    rationale: 'Alternative leaning towards ongoing support and SLA management rather than pure migration execution.',
+    tags: ['Support', 'SLA Heavy', 'OpEx'],
+    sections: ['Service Desk', 'Incident Management', 'Problem Management', 'SLA Definitions', 'Penalties & Credits', 'Reporting Metrics']
+  }
+];
+
+const SOW_INITIAL_HTML = `<h2>1. Scope of Work</h2>
+<p>This Statement of Work covers the complete end-to-end migration of existing on-premise infrastructure to AWS, including assessment, execution, and stabilisation phases.</p>
+<h2>2. Deliverables</h2>
+<ul><li>Architecture Design Document</li><li>Migration Runbook</li><li>Security Configuration Plan</li></ul>
+<h2>3. Milestones</h2>
+<ul><li><strong>M1:</strong> Assessment Complete (Month 2)</li><li><strong>M2:</strong> Migration Complete (Month 5)</li><li><strong>M3:</strong> Stabilisation Sign-off (Month 6)</li></ul>
+<h2>4. Assumptions</h2>
+<p>The client will provide timely access to necessary on-premise systems and designate a primary technical point of contact.</p>
+<h2>5. Exclusions</h2>
+<p>Application code refactoring and database schema redesign are explicitly excluded from this SOW.</p>
+<h2>6. Acceptance Criteria</h2>
+<p>All migrated workloads must pass the defined UAT scripts with zero critical or high severity defects.</p>
+<h2>7. SLA Definitions</h2>
+<p>Post-migration hypercare support mandates a 15-minute response time for Sev 1 incidents and 4 hours for Sev 2 incidents.</p>
+<h2>8. Clauses</h2>
+<p><em>[Standard Confidentiality Clause]</em><br/><em>[Data Protection Clause - UAE Context]</em></p>`;
+
 const VERSION_HISTORY = [
   { version: 'v1.2', date: '10 May 2026 · 14:32', author: 'AI Agent', note: 'Scoring criteria updated, cost estimation refined', active: true },
   { version: 'v1.1', date: '09 May 2026 · 16:10', author: 'AI Agent', note: 'Supplier research findings incorporated', active: false },
@@ -937,6 +1001,11 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [selectedNode, setSelectedNode] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('rfp');
+  const [sowStage, setSowStage] = useState('template_selection');
+  const [selectedSowTemplateId, setSelectedSowTemplateId] = useState('t1');
+  const [sowHtmlContent, setSowHtmlContent] = useState('');
+  const [isSowEditing, setIsSowEditing] = useState(false);
+  const [sowSavedHtml, setSowSavedHtml] = useState('');
   const [versionPaneOpen, setVersionPaneOpen] = useState(false);
   const [showNewVersionModal, setShowNewVersionModal] = useState(false);
   const [newVersionNote, setNewVersionNote] = useState('');
@@ -957,6 +1026,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [uploadForms, setUploadForms] = useState([{ id: Date.now(), vendorName: '', file: null, supporting: [] }]);
   const [uploadForm, setUploadForm] = useState({ vendorName: '', file: null, supporting: [] });
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [activeVendorDrop, setActiveVendorDrop] = useState(null);
+  const [activeFilterDrop, setActiveFilterDrop] = useState(null);
+  
+  // Proposals Tab Search, Filters, and Sorting State
+  const [propSearchTerm, setPropSearchTerm] = useState('');
+  const [propFilterScore, setPropFilterScore] = useState('All');
+  const [propFilterRisk, setPropFilterRisk] = useState('All');
+  const [propFilterState, setPropFilterState] = useState('All');
+  const [propFilterDate, setPropFilterDate] = useState('All');
+  const [propSortConfig, setPropSortConfig] = useState({ field: null, direction: 'desc' });
 
   const [selectedNegotVendorId, setSelectedNegotVendorId] = useState(null);
 
@@ -1027,6 +1106,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [isVendorDropdownOpen, setIsVendorDropdownOpen] = useState(false);
   const [vendorToast, setVendorToast] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(null);
+  const [previewActiveTab, setPreviewActiveTab] = useState('Summary');
   const [showReuploadModal, setShowReuploadModal] = useState(null);
   const [showSupportingDocModal, setShowSupportingDocModal] = useState(null);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(null);
@@ -1155,6 +1235,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     if (val === '__SAVE__') { setSavedHtml(rfpHtml); setIsEditing(false); return; }
     if (val === '__DISCARD__') { setRfpHtml(savedHtml); setIsEditing(false); return; }
     setRfpHtml(val);
+  };
+
+  const handleSowHtmlChange = (val) => {
+    if (val === '__EDIT__') { setIsSowEditing(true); return; }
+    if (val === '__SAVE__') { setSowSavedHtml(sowHtmlContent); setIsSowEditing(false); return; }
+    if (val === '__DISCARD__') { setSowHtmlContent(sowSavedHtml); setIsSowEditing(false); return; }
+    setSowHtmlContent(val);
   };
 
   const btnGhost = { display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' };
@@ -1559,7 +1646,14 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 24, background: '#fafafa', border: '1px solid var(--border-default)', borderRadius: 12, padding: '24px' }}>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Vendor Name <span style={{ color: '#dc2626' }}>*</span></div>
-                      <input type="text" value={form.vendorName} onChange={e => setUploadForms(prev => prev.map(f => f.id === form.id ? { ...f, vendorName: e.target.value } : f))} placeholder="Enter vendor name" style={{ width: '100%', padding: '10px 12px', boxSizing: 'border-box', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none' }} />
+                      <EDrop
+                        open={activeVendorDrop === form.id}
+                        onToggle={() => setActiveVendorDrop(activeVendorDrop === form.id ? null : form.id)}
+                        value={form.vendorName}
+                        placeholder="Select a vendor"
+                        options={VENDORS.map(v => v.name)}
+                        onChange={val => setUploadForms(prev => prev.map(f => f.id === form.id ? { ...f, vendorName: val } : f))}
+                      />
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
@@ -1684,66 +1778,262 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
       {showPreviewModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowPreviewModal(null)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: '80vw', maxWidth: 900, height: '88vh', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+          <div style={{ background: '#fff', borderRadius: 16, width: '80vw', maxWidth: 1000, height: '88vh', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
             {/* Header */}
-            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9, background: 'rgba(0,82,204,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FileText size={16} color="#0052cc" /></div>
+            <div style={{ padding: '24px 32px 0', borderBottom: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{showPreviewModal.fileName}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{showPreviewModal.vendorName} · Uploaded {showPreviewModal.uploadDate} · {showPreviewModal.version}</div>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>{showPreviewModal.fileName}</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 16px', borderRadius: 8, border: '1px solid var(--border-default)', background: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><Download size={14} /> Download</button>
+                  <button onClick={() => setShowPreviewModal(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex', padding: 8, borderRadius: 8 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><X size={18} /></button>
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><Download size={13} /> Download</button>
-                <button onClick={() => setShowPreviewModal(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex', padding: 6, borderRadius: 8 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><X size={18} /></button>
+              <div style={{ display: 'flex', gap: 24 }}>
+                {['Summary', 'TCO Normalization', 'Preview'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setPreviewActiveTab(tab)}
+                    style={{
+                      background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, padding: '0 0 12px 0',
+                      color: previewActiveTab === tab ? '#0052cc' : 'var(--text-secondary)',
+                      borderBottom: previewActiveTab === tab ? '2px solid #0052cc' : '2px solid transparent',
+                      transition: 'all 0.2s', fontFamily: 'inherit'
+                    }}
+                  >
+                    {tab}
+                  </button>
+                ))}
               </div>
             </div>
-            {/* Document preview area */}
-            <div style={{ flex: 1, overflowY: 'auto', background: '#f0f0f0', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px 0', gap: 16 }}>
-              {/* Simulated document pages */}
-              {[1, 2].map(page => (
-                <div key={page} style={{ background: '#fff', width: 680, minHeight: page === 1 ? 900 : 600, borderRadius: 4, boxShadow: '0 2px 12px rgba(0,0,0,0.12)', padding: '48px 64px', boxSizing: 'border-box', position: 'relative' }}>
-                  {/* Page header */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #2563eb', paddingBottom: 8, marginBottom: 40 }}>
-                    <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic', textDecoration: 'line-through' }}>{showPreviewModal.vendorName}</div>
-                    <div style={{ fontSize: 10, color: '#999' }}>PRD v4.1 &nbsp;|&nbsp; Phase 1 Final &nbsp;|&nbsp; Confidential</div>
+
+            {/* Content area */}
+            <div style={{ flex: 1, overflowY: 'auto', background: previewActiveTab === 'Preview' ? '#f0f0f0' : '#fff', display: 'flex', flexDirection: 'column', padding: previewActiveTab === 'Preview' ? '24px 0' : '24px 32px' }}>
+              
+              {previewActiveTab === 'Summary' && (
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {/* Title & Metadata */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                    <div style={{ background: '#dcfce7', color: '#15803d', padding: '4px 10px', borderRadius: 6, fontWeight: 700, fontSize: 16 }}>#{showPreviewModal.rank || 2}</div>
+                    <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--text-primary)' }}>{showPreviewModal.vendorName || 'Zeta Technology'}</div>
+                    <div style={{ border: '1px solid var(--border-default)', padding: '2px 8px', borderRadius: 4, fontSize: 12, color: 'var(--text-secondary)' }}>{showPreviewModal.version || 'V1.1'}</div>
                   </div>
-                  {page === 1 ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 60 }}>
-                      <div style={{ fontSize: 42, fontWeight: 800, color: '#1a1a1a', letterSpacing: '-1px', marginBottom: 16 }}>{showPreviewModal.vendorName.toUpperCase().split(' ')[0]}</div>
-                      <div style={{ fontSize: 16, fontWeight: 700, color: '#2563eb', marginBottom: 48, textAlign: 'center' }}>Proposal for AWS Cloud Migration Consulting Services</div>
-                      <div style={{ textAlign: 'center', marginBottom: 12 }}><div style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a' }}>Technical & Commercial Proposal</div></div>
-                      <div style={{ textAlign: 'center', color: '#555', fontSize: 14, marginBottom: 6 }}>Version 1.0 &nbsp;|&nbsp; {showPreviewModal.uploadDate}</div>
-                      <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic', marginTop: 80 }}>Prepared in response to RFP-2026-004 issued by DDAIS Group</div>
-                      <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic' }}>Confidential — For Evaluation Purposes Only</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 24 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-tertiary)', fontSize: 12 }}>
+                      <Calendar size={14} /> Uploaded on: {showPreviewModal.uploadDate || '17 Sept 2025'}
                     </div>
-                  ) : (
+                  </div>
+
+                  {/* Why ranked */}
+                  <div style={{ background: 'rgba(139, 92, 246, 0.04)', border: '1px solid rgba(139, 92, 246, 0.2)', borderRadius: 8, padding: 20, marginBottom: 32, display: 'flex', gap: 16 }}>
+                    <Sparkles size={24} color="#8b5cf6" style={{ flexShrink: 0, marginTop: 2 }} />
                     <div>
-                      <div style={{ fontSize: 18, fontWeight: 700, color: '#2563eb', marginBottom: 16, borderBottom: '1px solid #e5e7eb', paddingBottom: 8 }}>Proposal Summary</div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, border: '1px solid #e5e7eb', borderRadius: 4, overflow: 'hidden', marginBottom: 24 }}>
-                        {[['Vendor Name', showPreviewModal.vendorName], ['File', showPreviewModal.fileName], ['Technical Score', showPreviewModal.techScore], ['Commercial', showPreviewModal.commercial || 'Pending'], ['Version', showPreviewModal.version], ['Status', showPreviewModal.status]].map(([label, value], li) => (
-                          <React.Fragment key={li}>
-                            <div style={{ padding: '10px 14px', background: li % 2 === 0 ? '#f8fafc' : '#fff', borderBottom: '1px solid #e5e7eb', fontSize: 12, fontWeight: 600, color: '#374151' }}>{label}</div>
-                            <div style={{ padding: '10px 14px', background: li % 2 === 0 ? '#f8fafc' : '#fff', borderBottom: '1px solid #e5e7eb', borderLeft: '1px solid #e5e7eb', fontSize: 12, color: '#1a1a1a' }}>{value}</div>
-                          </React.Fragment>
-                        ))}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+                        <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Why ranked #{showPreviewModal.rank || 2}</span>
+                        <span style={{ background: 'rgba(139, 92, 246, 0.1)', color: '#7c3aed', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 12 }}>AI Powered</span>
                       </div>
-                      <div style={{ fontSize: 18, fontWeight: 700, color: '#2563eb', marginBottom: 12, borderBottom: '1px solid #e5e7eb', paddingBottom: 8 }}>Evaluation Criteria Scores</div>
-                      {Object.entries(showPreviewModal.criteriaScores || {}).map(([criterion, score], ci) => (
-                        <div key={ci} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #f3f4f6', fontSize: 13 }}>
-                          <span style={{ color: '#374151' }}>{criterion}</span>
-                          <span style={{ fontWeight: 700, color: '#1a1a1a' }}>{score}</span>
-                        </div>
-                      ))}
+                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                        {showPreviewModal.vendorName || 'Zeta Technology'} ranks {showPreviewModal.rank || 2} for its strong project management and resource allocation. It excels in risk mitigation, budget management, and timely project delivery. Although some team members were overallocated, proactive solutions have maintained consistent performance and client satisfaction.
+                      </div>
                     </div>
-                  )}
-                  {/* Page footer */}
-                  <div style={{ position: 'absolute', bottom: 32, left: 64, right: 64, display: 'flex', justifyContent: 'center', borderTop: '1.5px solid #2563eb', paddingTop: 8 }}>
-                    <span style={{ fontSize: 10, color: '#999' }}>Page {page} of 2</span>
                   </div>
+
+                  {/* Vendor Details as Text */}
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>VENDOR DETAILS</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 32 }}>
+                    {[
+                      ['Vendor Name', showPreviewModal.vendorName], 
+                      ['Status', showPreviewModal.status || 'Active'],
+                      ['State', showPreviewModal.state || 'Submitted'],
+                      ['Tech. Score', showPreviewModal.techScore], 
+                      ['Quotation', showPreviewModal.commercial || 'Pending'], 
+                      ['Risks', showPreviewModal.risk || 'Low']
+                    ].map(([label, value], li) => (
+                      <div key={li} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)' }}>{label}</span>
+                        <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{value}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* PROPOSAL COMPARISON MATRIX */}
+                  <div style={{ marginBottom: 32 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>PROPOSAL COMPARISON MATRIX</div>
+                    <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                      <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 800 }}>
+                          <thead>
+                            <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)' }}>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Sr No.</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Criteria</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Category</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textAlign: 'center', whiteSpace: 'nowrap' }}>Weightage</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textAlign: 'center', whiteSpace: 'nowrap' }}>Score</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Justification</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              { id: 1, crit: 'Solution Architecture Quality', cat: 'Technical Solution', w: 30, s: 28, j: 'Exceeds expectations with robust microservices design' },
+                              { id: 2, crit: 'Technology Stack Modernity', cat: 'Technical Solution', w: 20, s: 18, j: 'Uses modern, cloud-native stack with great community support' },
+                              { id: 3, crit: 'Scalability Assessment', cat: 'Technical Solution', w: 20, s: 20, j: 'Highly scalable architecture using auto-scaling groups' },
+                              { id: 4, crit: 'Functional Requirement Coverage', cat: 'Compliance & Requirements', w: 15, s: 14, j: 'Meets 95% of out-of-the-box functional requirements' },
+                              { id: 5, crit: 'Technical Requirement Fulfillment', cat: 'Compliance & Requirements', w: 5, s: 4, j: 'Meets all SLA and security requirements with minor gaps in logging' },
+                              { id: 6, crit: 'Company Credibility', cat: 'Vendor Assessment', w: 5, s: 2, j: 'Well established in the market with good references' },
+                              { id: 7, crit: 'Relevant Experience', cat: 'Vendor Assessment', w: 5, s: 0, j: 'Lacks specific domain experience for this exact module' },
+                            ].map((row, i) => (
+                              <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.id}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.crit}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.cat}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', textAlign: 'center', whiteSpace: 'nowrap' }}>{row.w}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', textAlign: 'center', whiteSpace: 'nowrap' }}>{row.s}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', minWidth: 250 }}>{row.j}</td>
+                              </tr>
+                            ))}
+                            <tr style={{ background: '#f1f5f9', borderTop: '2px solid var(--border-subtle)' }}>
+                              <td colSpan={2} style={{ padding: '14px 16px' }}></td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center' }}>Total</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center' }}>100</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', textAlign: 'center' }}>88</td>
+                              <td style={{ padding: '14px 16px' }}></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Risks */}
+                  <div style={{ marginBottom: 32 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>RISKS</div>
+                    <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                      <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 900 }}>
+                          <thead>
+                            <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)' }}>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Sr No.</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Category</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Criteria</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Risk Description</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Impact</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Justification</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              { id: 1, cat: 'Technical Solution', crit: 'Technical Solution', desc: 'Risk of prolonged system downtime due to poor architecture design', impact: 'Catastrophic', j: 'Vendor has committed to 99.99% SLA and provided architecture reviews' },
+                              { id: 2, cat: 'Technical Solution', crit: 'Technical Solution', desc: 'Potential data breaches arising from weak security controls', impact: 'Major', j: 'Comprehensive SOC2 Type 2 report provided, mitigating major concerns' },
+                              { id: 3, cat: 'Technical Solution', crit: 'Technical Solution', desc: 'Limited scalability that may hinder future business growth', impact: 'Moderate', j: 'Current architecture supports 5x expected load' },
+                              { id: 4, cat: 'Compliance & Requirements', crit: 'Compliance & Requirements', desc: 'Failure to comply with GDPR and industry-specific regulations', impact: 'Moderate', j: 'DPAs and compliance clauses to be heavily enforced in contract' },
+                              { id: 5, cat: 'Compliance & Requirements', crit: 'Compliance & Requirements', desc: 'Incomplete or missing legal documentation impacting contracts', impact: 'Minor', j: 'Legal team has reviewed and cleared most redlines' },
+                              { id: 6, cat: 'Vendor Assessment', crit: 'Vendor Assessment', desc: 'Financial instability that could disrupt long-term project delivery', impact: 'Minor', j: 'D&B report shows stable financials over last 3 years' },
+                              { id: 7, cat: 'Vendor Assessment', crit: 'Vendor Assessment', desc: 'Insufficient domain expertise leading to poor project outcomes', impact: 'Insignificant', j: 'Prior implementations shown as references' },
+                            ].map((row, i, arr) => (
+                              <tr key={i} style={{ borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.id}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.cat}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.crit}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.desc}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.impact}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', minWidth: 250 }}>{row.j}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
-              ))}
+              )}
+
+              {previewActiveTab === 'TCO Normalization' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 24, height: '100%' }}>
+                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                    <div style={{ overflowX: 'auto' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 1000 }}>
+                        <thead>
+                          <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Vendor</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Pricing Model</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Base Cost</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Delivery Cost</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Warranty Cost</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Maintenance Cost</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Escalation Cost</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Penalty / Risk Cost</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Total TCO</th>
+                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', textAlign: 'center' }}>Commercial Rank</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[
+                            { v: 'Vendor A', p: 'Lump Sum', b: '$500,000', d: '$50,000', w: '$20,000', m: '$60,000', e: '$10,000', pr: '$5,000', t: '$645,000', r: 2 },
+                            { v: 'Vendor B', p: 'T&M', b: '$450,000', d: '$80,000', w: '$40,000', m: '$100,000', e: '$25,000', pr: '$20,000', t: '$715,000', r: 3 },
+                            { v: 'Vendor C', p: 'Hybrid', b: '$550,000', d: '$40,000', w: 'Included ($0)', m: '$50,000', e: '$15,000', pr: '$10,000', t: '$665,000', r: 1 },
+                          ].map((row, idx, arr) => (
+                            <tr key={idx} style={{ borderBottom: idx < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{row.v}</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.p}</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.b}</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.d}</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.w}</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.m}</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.e}</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.pr}</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{row.t}</td>
+                              <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: row.r === 1 ? '#15803d' : 'var(--text-secondary)', whiteSpace: 'nowrap', textAlign: 'center' }}>
+                                <div style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: '50%', background: row.r === 1 ? '#dcfce7' : 'var(--bg-surface-2)', alignItems: 'center', justifyContent: 'center' }}>{row.r}</div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+
+              {previewActiveTab === 'Preview' && (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+                  {/* Simulated document pages */}
+                  {[1, 2].map(page => (
+                    <div key={page} style={{ background: '#fff', width: 680, minHeight: page === 1 ? 900 : 600, borderRadius: 4, boxShadow: '0 2px 12px rgba(0,0,0,0.12)', padding: '48px 64px', boxSizing: 'border-box', position: 'relative' }}>
+                      {/* Page header */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1.5px solid #2563eb', paddingBottom: 8, marginBottom: 40 }}>
+                        <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic', textDecoration: 'line-through' }}>{showPreviewModal.vendorName}</div>
+                        <div style={{ fontSize: 10, color: '#999' }}>PRD v4.1 &nbsp;|&nbsp; Phase 1 Final &nbsp;|&nbsp; Confidential</div>
+                      </div>
+                      {page === 1 ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 60 }}>
+                          <div style={{ fontSize: 42, fontWeight: 800, color: '#1a1a1a', letterSpacing: '-1px', marginBottom: 16 }}>{showPreviewModal.vendorName.toUpperCase().split(' ')[0]}</div>
+                          <div style={{ fontSize: 16, fontWeight: 700, color: '#2563eb', marginBottom: 48, textAlign: 'center' }}>Proposal for AWS Cloud Migration Consulting Services</div>
+                          <div style={{ textAlign: 'center', marginBottom: 12 }}><div style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a' }}>Technical & Commercial Proposal</div></div>
+                          <div style={{ textAlign: 'center', color: '#555', fontSize: 14, marginBottom: 6 }}>Version 1.0 &nbsp;|&nbsp; {showPreviewModal.uploadDate}</div>
+                          <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic', marginTop: 80 }}>Prepared in response to RFP-2026-004 issued by DDAIS Group</div>
+                          <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic' }}>Confidential — For Evaluation Purposes Only</div>
+                        </div>
+                      ) : (
+                        <div>
+                          <div style={{ fontSize: 18, fontWeight: 700, color: '#2563eb', marginBottom: 16, borderBottom: '1px solid #e5e7eb', paddingBottom: 8 }}>Proposal Details</div>
+                          <div style={{ fontSize: 13, color: '#555', lineHeight: '1.6' }}>
+                            <p style={{ marginBottom: 12 }}>This document details the complete methodology, timeline, and commercial terms associated with the provided technical response. All terms described herein are valid for 90 days from the date of submission.</p>
+                            <p style={{ marginBottom: 12 }}>The implementation approach is segmented into 4 core phases: Discovery, Architecture Design, Migration, and Post-Go-Live Support. Each phase includes key deliverables, acceptance criteria, and specific milestones that align with the payment schedule.</p>
+                            <p>For further clarifications regarding any aspect of this proposal, please contact the designated account representative listed on page 1.</p>
+                          </div>
+                        </div>
+                      )}
+                      {/* Page footer */}
+                      <div style={{ position: 'absolute', bottom: 32, left: 64, right: 64, display: 'flex', justifyContent: 'center', borderTop: '1.5px solid #2563eb', paddingTop: 8 }}>
+                        <span style={{ fontSize: 10, color: '#999' }}>Page {page} of 2</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1762,60 +2052,39 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Proposal Attachment <span style={{ color: '#dc2626' }}>*</span></div>
-                <div
-                  onDragOver={e => { e.preventDefault(); setReupFileDrag(true); }}
-                  onDragLeave={() => setReupFileDrag(false)}
-                  onDrop={e => { e.preventDefault(); setReupFileDrag(false); const f = e.dataTransfer.files[0]; if (f) setUploadForm(prev => ({ ...prev, file: f })); }}
-                  onClick={() => document.getElementById('reup-file-input').click()}
-                  style={{ border: `2px dashed ${reupFileDrag ? '#7c7cff' : uploadForm.file ? '#22c55e' : '#e0e0e0'}`, borderRadius: 10, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer', background: reupFileDrag ? 'rgba(124,124,255,0.04)' : uploadForm.file ? 'rgba(34,197,94,0.03)' : '#fafafa', transition: 'all 0.15s ease' }}
-                  onMouseEnter={e => { if (!uploadForm.file) e.currentTarget.style.borderColor = '#7c7cff'; }}
-                  onMouseLeave={e => { if (!reupFileDrag && !uploadForm.file) e.currentTarget.style.borderColor = '#e0e0e0'; }}
-                >
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: uploadForm.file ? 'rgba(34,197,94,0.1)' : 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {uploadForm.file ? <CheckCircle size={16} color="#22c55e" strokeWidth={2} /> : <Upload size={16} color="#7c7cff" strokeWidth={2} />}
-                  </div>
-                  {uploadForm.file ? (
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>{uploadForm.file.name}</div>
-                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>Click to replace</div>
+                {!uploadForm.file ? (
+                  <div
+                    onDragOver={e => { e.preventDefault(); setReupFileDrag(true); }}
+                    onDragLeave={() => setReupFileDrag(false)}
+                    onDrop={e => { e.preventDefault(); setReupFileDrag(false); const f = e.dataTransfer.files[0]; if (f) setUploadForm(prev => ({ ...prev, file: f })); }}
+                    onClick={() => document.getElementById('reup-file-input').click()}
+                    style={{ border: `2px dashed ${reupFileDrag ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer', background: reupFileDrag ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.04)'; }}
+                    onMouseLeave={e => { if (!reupFileDrag) { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.background = '#fafafa'; } }}
+                  >
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Upload size={16} color="#7c7cff" strokeWidth={2} />
                     </div>
-                  ) : (
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop file here or <span style={{ color: '#7c7cff', fontWeight: 600 }}>browse</span></div>
                       <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX · Max 25MB</div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <FileText size={20} color="#dc2626" />
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{uploadForm.file.name}</div>
+                        <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{(uploadForm.file.size / (1024 * 1024)).toFixed(1)} MB</div>
+                      </div>
+                    </div>
+                    <button onClick={() => setUploadForm(prev => ({ ...prev, file: null }))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#999', padding: 4 }}><X size={14} /></button>
+                  </div>
+                )}
                 <input id="reup-file-input" type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} onChange={e => { if (e.target.files[0]) setUploadForm(prev => ({ ...prev, file: e.target.files[0] })); }} />
               </div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Supporting Documents</div>
-                <div
-                  onDragOver={e => { e.preventDefault(); setReupSuppDrag(true); }}
-                  onDragLeave={() => setReupSuppDrag(false)}
-                  onDrop={e => { e.preventDefault(); setReupSuppDrag(false); const f = e.dataTransfer.files[0]; if (f) setUploadForm(prev => ({ ...prev, supporting: f })); }}
-                  onClick={() => document.getElementById('reup-supp-input').click()}
-                  style={{ border: `2px dashed ${reupSuppDrag ? '#7c7cff' : uploadForm.supporting ? '#22c55e' : '#e0e0e0'}`, borderRadius: 10, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer', background: reupSuppDrag ? 'rgba(124,124,255,0.04)' : uploadForm.supporting ? 'rgba(34,197,94,0.03)' : '#fafafa', transition: 'all 0.15s ease' }}
-                  onMouseEnter={e => { if (!uploadForm.supporting) e.currentTarget.style.borderColor = '#7c7cff'; }}
-                  onMouseLeave={e => { if (!reupSuppDrag && !uploadForm.supporting) e.currentTarget.style.borderColor = '#e0e0e0'; }}
-                >
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: uploadForm.supporting ? 'rgba(34,197,94,0.1)' : 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {uploadForm.supporting ? <CheckCircle size={16} color="#22c55e" strokeWidth={2} /> : <Upload size={16} color="#7c7cff" strokeWidth={2} />}
-                  </div>
-                  {uploadForm.supporting ? (
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>{uploadForm.supporting.name}</div>
-                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>Click to replace</div>
-                    </div>
-                  ) : (
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop file here or <span style={{ color: '#7c7cff', fontWeight: 600 }}>browse</span></div>
-                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX · Max 25MB</div>
-                    </div>
-                  )}
-                </div>
-                <input id="reup-supp-input" type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} onChange={e => { if (e.target.files[0]) setUploadForm(prev => ({ ...prev, supporting: e.target.files[0] })); }} />
-              </div>
+              {/* Removed Supporting Documents section from Reupload Modal */}
             </div>
             <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
               <button onClick={() => setShowReuploadModal(null)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
@@ -1827,47 +2096,65 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
       {showSupportingDocModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowSupportingDocModal(null)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: 480, padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 20 }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 480, height: 600, maxHeight: '90vh', padding: 0, boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+            <div style={{ padding: '32px 32px 24px', borderBottom: '1px solid var(--border-subtle)', flexShrink: 0, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Upload Supporting Document</div>
                 <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Add additional documents without replacing the main proposal.</div>
               </div>
               <button onClick={() => setShowSupportingDocModal(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ padding: '24px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Supporting Document Attachment</div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>Supporting Documents</div>
+                  <div style={{ fontSize: 12, color: '#666' }}>({Array.isArray(uploadForm.supporting) ? uploadForm.supporting.length : 0} Documents)</div>
+                </div>
                 <div
                   onDragOver={e => { e.preventDefault(); setSuppDocDrag(true); }}
                   onDragLeave={() => setSuppDocDrag(false)}
-                  onDrop={e => { e.preventDefault(); setSuppDocDrag(false); const f = e.dataTransfer.files[0]; if (f) setUploadForm(prev => ({ ...prev, supporting: f })); }}
+                  onDrop={e => { 
+                    e.preventDefault(); 
+                    setSuppDocDrag(false); 
+                    const files = Array.from(e.dataTransfer.files); 
+                    if (files.length > 0) setUploadForm(prev => ({ ...prev, supporting: [...(Array.isArray(prev.supporting) ? prev.supporting : []), ...files] })); 
+                  }}
                   onClick={() => document.getElementById('supp-doc-input').click()}
-                  style={{ border: `2px dashed ${suppDocDrag ? '#7c7cff' : uploadForm.supporting ? '#22c55e' : '#e0e0e0'}`, borderRadius: 10, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer', background: suppDocDrag ? 'rgba(124,124,255,0.04)' : uploadForm.supporting ? 'rgba(34,197,94,0.03)' : '#fafafa', transition: 'all 0.15s ease' }}
-                  onMouseEnter={e => { if (!uploadForm.supporting) e.currentTarget.style.borderColor = '#7c7cff'; }}
-                  onMouseLeave={e => { if (!suppDocDrag && !uploadForm.supporting) e.currentTarget.style.borderColor = '#e0e0e0'; }}
+                  style={{ border: `2px dashed ${suppDocDrag ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer', background: suppDocDrag ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.04)'; }}
+                  onMouseLeave={e => { if (!suppDocDrag) { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.background = '#fafafa'; } }}
                 >
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: uploadForm.supporting ? 'rgba(34,197,94,0.1)' : 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {uploadForm.supporting ? <CheckCircle size={16} color="#22c55e" strokeWidth={2} /> : <Upload size={16} color="#7c7cff" strokeWidth={2} />}
+                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Upload size={16} color="#7c7cff" strokeWidth={2} />
                   </div>
-                  {uploadForm.supporting ? (
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>{uploadForm.supporting.name}</div>
-                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>Click to replace</div>
-                    </div>
-                  ) : (
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop file here or <span style={{ color: '#7c7cff', fontWeight: 600 }}>browse</span></div>
-                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX · Max 25MB</div>
-                    </div>
-                  )}
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files here or <span style={{ color: '#7c7cff', fontWeight: 600 }}>browse</span></div>
+                    <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX · Max 25MB</div>
+                  </div>
                 </div>
-                <input id="supp-doc-input" type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} onChange={e => { if (e.target.files[0]) setUploadForm(prev => ({ ...prev, supporting: e.target.files[0] })); }} />
+                <input id="supp-doc-input" type="file" multiple accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} onChange={e => { if (e.target.files.length > 0) setUploadForm(prev => ({ ...prev, supporting: [...(Array.isArray(prev.supporting) ? prev.supporting : []), ...Array.from(e.target.files)] })); }} />
+                
+                {Array.isArray(uploadForm.supporting) && uploadForm.supporting.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 16 }}>
+                    {uploadForm.supporting.map((file, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <FileText size={16} color="#0052cc" />
+                          <div>
+                            <div style={{ fontSize: 12, fontWeight: 500, color: '#1a1a1a' }}>{file.name}</div>
+                            <div style={{ fontSize: 10, color: '#999' }}>{(file.size / 1024).toFixed(1)} KB</div>
+                          </div>
+                        </div>
+                        <button onClick={(e) => { e.stopPropagation(); setUploadForm(prev => ({ ...prev, supporting: prev.supporting.filter((_, idx) => idx !== i) })); }} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#999', padding: 4 }}><X size={14} /></button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
+            <div style={{ padding: '24px 32px', borderTop: '1px solid var(--border-subtle)', flexShrink: 0, display: 'flex', gap: 10 }}>
               <button onClick={() => setShowSupportingDocModal(null)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
-              <button onClick={() => { setShowSupportingDocModal(null); setUploadForm({ vendorName: '', file: null, supporting: [] }); }} disabled={uploadForm.supporting.length === 0} style={{ flex: 1, padding: '11px', border: 'none', borderRadius: 10, background: uploadForm.supporting.length === 0 ? 'var(--bg-surface-2)' : '#0052cc', fontSize: 13, fontWeight: 600, cursor: uploadForm.supporting.length === 0 ? 'not-allowed' : 'pointer', color: uploadForm.supporting.length === 0 ? 'var(--text-tertiary)' : '#fff', fontFamily: 'inherit' }}>Upload</button>
+              <button onClick={() => { setShowSupportingDocModal(null); setUploadForm({ vendorName: '', file: null, supporting: [] }); }} disabled={!uploadForm.supporting || uploadForm.supporting.length === 0} style={{ flex: 1, padding: '11px', border: 'none', borderRadius: 10, background: (!uploadForm.supporting || uploadForm.supporting.length === 0) ? 'var(--bg-surface-2)' : '#0052cc', fontSize: 13, fontWeight: 600, cursor: (!uploadForm.supporting || uploadForm.supporting.length === 0) ? 'not-allowed' : 'pointer', color: (!uploadForm.supporting || uploadForm.supporting.length === 0) ? 'var(--text-tertiary)' : '#fff', fontFamily: 'inherit' }}>Upload</button>
             </div>
           </div>
         </div>
@@ -2301,50 +2588,161 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               )}
 
               {/* PROPOSALS TAB */}
-              {activeTab === 'proposals' && (
-                <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, background: 'transparent' }}>
-                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                      <div>
-                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROPOSALS</div>
-                        <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Manage and evaluate vendor proposals for this RFP.</div>
-                      </div>
-                      {published && (
-                        <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}><Upload size={14} /> Upload Proposal</button>
-                      )}
-                    </div>
+              {activeTab === 'proposals' && (() => {
+                let filtered = [...proposals];
+                if (propSearchTerm) {
+                  const lowerSearch = propSearchTerm.toLowerCase();
+                  filtered = filtered.filter(p => p.vendorName.toLowerCase().includes(lowerSearch) || p.fileName.toLowerCase().includes(lowerSearch));
+                }
+                if (propFilterScore !== 'All') {
+                  filtered = filtered.filter(p => {
+                    const score = parseInt(p.techScore) || 0;
+                    if (propFilterScore === '>90') return score > 90;
+                    if (propFilterScore === '80-90') return score >= 80 && score <= 90;
+                    if (propFilterScore === '<80') return score < 80;
+                    return true;
+                  });
+                }
+                if (propFilterRisk !== 'All') {
+                  filtered = filtered.filter(p => {
+                    const riskLevel = p.risks && p.risks.length > 0 ? (p.risks.some(r => r.toLowerCase().includes('high')) ? 'High' : p.risks.some(r => r.toLowerCase().includes('none')) ? 'Low' : 'Medium') : 'Unknown';
+                    return riskLevel === propFilterRisk;
+                  });
+                }
+                if (propFilterState !== 'All') {
+                  filtered = filtered.filter(p => p.state && p.state.toLowerCase() === propFilterState.toLowerCase());
+                }
+                
+                if (propSortConfig.field) {
+                  filtered.sort((a, b) => {
+                    let aVal = a[propSortConfig.field];
+                    let bVal = b[propSortConfig.field];
+                    if (propSortConfig.field === 'techScore') {
+                      aVal = parseInt(aVal) || 0;
+                      bVal = parseInt(bVal) || 0;
+                    } else if (propSortConfig.field === 'commercial') {
+                      aVal = parseFloat((aVal || '0').replace(/[^0-9.]/g, ''));
+                      bVal = parseFloat((bVal || '0').replace(/[^0-9.]/g, ''));
+                    }
+                    if (aVal < bVal) return propSortConfig.direction === 'asc' ? -1 : 1;
+                    if (aVal > bVal) return propSortConfig.direction === 'asc' ? 1 : -1;
+                    return 0;
+                  });
+                }
 
-                    <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'visible' }}>
-                      {proposals.length === 0 ? (
-                        <div style={{ padding: '80px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,82,204,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}><Upload size={24} color="#0052cc" /></div>
-                          <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>No Proposals Uploaded</div>
-                          <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>{published ? 'Upload the first vendor proposal to start evaluation.' : 'Publish the RFP to enable proposal uploads.'}</div>
-                          {!published && <button onClick={() => setActiveTab('rfp')} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border-default)', background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit', marginTop: 20 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><FileText size={14} /> Review & Publish RFP First</button>}
+                const handleSort = (field) => {
+                  let direction = 'desc';
+                  if (propSortConfig.field === field && propSortConfig.direction === 'desc') {
+                    direction = 'asc';
+                  }
+                  setPropSortConfig({ field, direction });
+                };
+
+                const SortIcon = ({ field }) => {
+                  const isActive = propSortConfig.field === field;
+                  return <ArrowUpDown size={12} color={isActive ? "#0052cc" : "#ccc"} style={{ marginLeft: 4, transform: isActive && propSortConfig.direction === 'asc' ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />;
+                };
+
+                return (
+                  <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, background: 'transparent' }}>
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                        <div>
+                          <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROPOSALS</div>
+                          <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Manage and evaluate vendor proposals for this RFP.</div>
                         </div>
-                      ) : (
-                        <div style={{ overflowX: 'auto', paddingBottom: 120 }}>
-                          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 800 }}>
-                            <thead>
-                              <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Rank</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Vendor Name</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Upload Date</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Status</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>State</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>File Name</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Tech. Score</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Quotation</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Risks</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Version</th>
-                            <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', textAlign: 'center' }}>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {proposals.map((prop, idx) => {
-                              // derive rank from techScore among completed proposals
-                              const completedSorted = [...proposals].filter(p => p.status === 'Completed').sort((a, b) => (parseInt(b.techScore) || 0) - (parseInt(a.techScore) || 0));
-                              const rank = prop.status === 'Completed' ? completedSorted.findIndex(p => p.id === prop.id) + 1 : null;
+                        {published && (
+                          <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}><Upload size={14} /> Upload Proposal</button>
+                        )}
+                      </div>
+
+                      {proposals.length > 0 && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                          {/* Search */}
+                          <div style={{ position: 'relative', flex: 1, maxWidth: 300 }}>
+                            <div style={{ position: 'absolute', top: '50%', left: 12, transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}>
+                              <Search size={14} color="#999" />
+                            </div>
+                            <input type="text" value={propSearchTerm} onChange={e => setPropSearchTerm(e.target.value)} placeholder="Search proposals..." style={{ width: '100%', padding: '9px 12px 9px 36px', boxSizing: 'border-box', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 13, color: 'var(--text-primary)', fontFamily: 'inherit', outline: 'none' }} />
+                          </div>
+                          
+                          {/* Filters */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{ width: 140 }}>
+                              <EDrop
+                                open={activeFilterDrop === 'score'}
+                                onToggle={() => setActiveFilterDrop(activeFilterDrop === 'score' ? null : 'score')}
+                                value={propFilterScore}
+                                options={['All', '>90', '80-90', '<80']}
+                                onChange={val => setPropFilterScore(val)}
+                                renderOption={(val, isBtn) => isBtn ? `Score: ${val}` : val}
+                              />
+                            </div>
+                            <div style={{ width: 140 }}>
+                              <EDrop
+                                open={activeFilterDrop === 'risk'}
+                                onToggle={() => setActiveFilterDrop(activeFilterDrop === 'risk' ? null : 'risk')}
+                                value={propFilterRisk}
+                                options={['All', 'Low', 'Medium', 'High']}
+                                onChange={val => setPropFilterRisk(val)}
+                                renderOption={(val, isBtn) => isBtn ? `Risk: ${val}` : val}
+                              />
+                            </div>
+                            <div style={{ width: 140 }}>
+                              <EDrop
+                                open={activeFilterDrop === 'state'}
+                                onToggle={() => setActiveFilterDrop(activeFilterDrop === 'state' ? null : 'state')}
+                                value={propFilterState}
+                                options={['All', 'Pass', 'Fail']}
+                                onChange={val => setPropFilterState(val)}
+                                renderOption={(val, isBtn) => isBtn ? `State: ${val}` : val}
+                              />
+                            </div>
+                            <div style={{ width: 150 }}>
+                              <EDrop
+                                open={activeFilterDrop === 'date'}
+                                onToggle={() => setActiveFilterDrop(activeFilterDrop === 'date' ? null : 'date')}
+                                value={propFilterDate}
+                                options={['All', 'Today', 'Last 7 Days', 'Last 30 Days']}
+                                onChange={val => setPropFilterDate(val)}
+                                renderOption={(val, isBtn) => isBtn ? `Date: ${val}` : val}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'visible' }}>
+                        {proposals.length === 0 ? (
+                          <div style={{ padding: '80px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,82,204,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}><Upload size={24} color="#0052cc" /></div>
+                            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>No Proposals Uploaded</div>
+                            <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>{published ? 'Upload the first vendor proposal to start evaluation.' : 'Publish the RFP to enable proposal uploads.'}</div>
+                            {!published && <button onClick={() => setActiveTab('rfp')} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '10px 20px', borderRadius: 10, border: '1px solid var(--border-default)', background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit', marginTop: 20 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><FileText size={14} /> Review & Publish RFP First</button>}
+                          </div>
+                        ) : (
+                          <div style={{ overflowX: 'auto', paddingBottom: 120 }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 800 }}>
+                              <thead>
+                                <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Rank</th>
+                                  <th onClick={() => handleSort('vendorName')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Vendor Name <SortIcon field="vendorName" /></div></th>
+                                  <th onClick={() => handleSort('uploadDate')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Upload Date <SortIcon field="uploadDate" /></div></th>
+                                  <th onClick={() => handleSort('status')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Status <SortIcon field="status" /></div></th>
+                                  <th onClick={() => handleSort('state')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>State <SortIcon field="state" /></div></th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>File Name</th>
+                                  <th onClick={() => handleSort('techScore')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Tech. Score <SortIcon field="techScore" /></div></th>
+                                  <th onClick={() => handleSort('commercial')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Quotation <SortIcon field="commercial" /></div></th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Risks</th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Version</th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', textAlign: 'center' }}>Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {filtered.map((prop, idx) => {
+                                  // derive rank from techScore among completed proposals
+                                  const completedSorted = [...proposals].filter(p => p.status === 'Completed').sort((a, b) => (parseInt(b.techScore) || 0) - (parseInt(a.techScore) || 0));
+                                  const rank = prop.status === 'Completed' ? completedSorted.findIndex(p => p.id === prop.id) + 1 : null;
                               const riskLevel = prop.risks && prop.risks.length > 0 ? (prop.risks.some(r => r.toLowerCase().includes('high')) ? 'High' : prop.risks.some(r => r.toLowerCase().includes('none')) ? 'Low' : 'Medium') : null;
                               const riskColor = riskLevel === 'High' ? { bg: 'rgba(239,68,68,0.08)', color: '#dc2626' } : riskLevel === 'Medium' ? { bg: 'rgba(245,158,11,0.08)', color: '#b45309' } : riskLevel === 'Low' ? { bg: 'rgba(34,197,94,0.08)', color: '#15803d' } : { bg: 'var(--bg-surface-2)', color: 'var(--text-tertiary)' };
                               return (
@@ -2383,29 +2781,51 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                     ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
                                   </td>
                                   <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.version}</td>
-                                  <td style={{ padding: '14px 16px', textAlign: 'center', position: 'relative' }}>
-                                    <button onClick={() => setActiveDropdown(activeDropdown === prop.id ? null : prop.id)} style={{ border: '1px solid var(--border-default)', background: '#fff', cursor: 'pointer', color: 'var(--text-tertiary)', padding: '5px 8px', borderRadius: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.borderColor = 'var(--border-default)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#fff'; }}><MoreVertical size={15} /></button>
+                                  <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                                    <div style={{ position: 'relative', display: 'inline-flex' }}>
+                                      <button
+                                      onClick={(e) => { e.stopPropagation(); setActiveDropdown(activeDropdown === prop.id ? null : prop.id); }}
+                                      style={{
+                                        padding: '8px', borderRadius: '50%', background: 'transparent', border: 'none',
+                                        color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', transition: 'background 0.15s ease'
+                                      }}
+                                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+                                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                                    >
+                                      <MoreVertical size={18} />
+                                    </button>
+
                                     {activeDropdown === prop.id && (
-                                      <div style={{ position: 'absolute', right: 16, top: 44, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', padding: 6, zIndex: 50, minWidth: 200, textAlign: 'left' }}>
+                                      <div style={{
+                                        position: 'absolute', right: '100%', top: 0, marginRight: 8,
+                                        background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, zIndex: 50, minWidth: 160,
+                                        display: 'flex', flexDirection: 'column', textAlign: 'left'
+                                      }}>
                                         {[
                                           { label: 'View Proposal', icon: Eye, action: () => { setShowPreviewModal(prop); setActiveDropdown(null); }, color: 'var(--text-primary)' },
                                           { label: 'Reupload Proposal', icon: RefreshCw, action: () => { setShowReuploadModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
                                           { label: 'Supporting Doc', icon: FileText, action: () => { setShowSupportingDocModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
-                                          { label: 'Delete Proposal', icon: Trash2, action: () => { setShowDeleteConfirmModal(prop.id); setActiveDropdown(null); }, color: '#ef4444', divider: true },
+                                          { label: 'Delete Proposal', icon: Trash2, action: () => { setShowDeleteConfirmModal(prop.id); setActiveDropdown(null); }, color: 'var(--colors-red-500)', divider: true, danger: true },
                                         ].map((item, ii) => {
                                           const ItemIcon = item.icon;
                                           return (
                                             <React.Fragment key={ii}>
                                               {item.divider && <div style={{ borderTop: '1px solid var(--border-subtle)', margin: '4px 0' }} />}
-                                              <div onClick={item.action} style={{ padding: '9px 12px', fontSize: 13, color: item.color, cursor: 'pointer', borderRadius: 7, display: 'flex', alignItems: 'center', gap: 10, transition: 'background 0.12s' }} onMouseEnter={e => e.currentTarget.style.background = item.color === '#ef4444' ? 'rgba(239,68,68,0.06)' : 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                                <div style={{ width: 28, height: 28, borderRadius: 7, background: item.color === '#ef4444' ? 'rgba(239,68,68,0.08)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><ItemIcon size={13} color={item.color} strokeWidth={2} /></div>
-                                                <span style={{ fontWeight: 500 }}>{item.label}</span>
+                                              <div
+                                                onClick={(e) => { e.stopPropagation(); item.action(); }}
+                                                style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: item.color, cursor: 'pointer', borderRadius: 6, transition: 'background 0.1s ease' }}
+                                                onMouseEnter={e => e.currentTarget.style.background = item.danger ? 'var(--status-error-bg)' : 'var(--bg-surface-2)'}
+                                                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                                              >
+                                                <ItemIcon size={14} color={item.danger ? 'var(--colors-red-500)' : 'var(--text-secondary)'} style={{ flexShrink: 0 }} /> {item.label}
                                               </div>
                                             </React.Fragment>
                                           );
                                         })}
                                       </div>
                                     )}
+                                    </div>
                                   </td>
                                 </tr>
                               );
@@ -2508,7 +2928,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     )}
                   </div>
                 </div>
-              )}
+                );
+              })()}
 
               {/* NEGOTIATIONS TAB */}
               {activeTab === 'negot' && proposals.some(p => p.status === 'Completed') && (() => {
@@ -2772,8 +3193,125 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 );
               })()}
 
+              {/* SOW TAB CONTENT */}
+              {activeTab === 'sow' && selectedAwardVendor && (() => {
+                if (sowStage === 'template_selection') {
+                  return (
+                    <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: 'transparent' }}>
+                      <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
+                          <div>
+                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>STATEMENT OF WORK GENERATION</div>
+                            <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, lineHeight: 1.5, maxWidth: 800 }}>
+                              The project has been awarded to <strong style={{ color: 'var(--text-primary)' }}>{selectedAwardVendor}</strong>. Please select a template to generate the initial SOW draft. The AI agent has analyzed the RFP, vendor proposal, and context to recommend the best templates.
+                            </div>
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, marginBottom: 32 }}>
+                          {SOW_TEMPLATES.map((tmpl, idx) => {
+                            const isSelected = selectedSowTemplateId === tmpl.id;
+                            return (
+                              <div key={tmpl.id} 
+                                   onClick={() => setSelectedSowTemplateId(tmpl.id)}
+                                   style={{ 
+                                     border: `2px solid ${isSelected ? '#0052cc' : '#e5e7eb'}`, 
+                                     borderRadius: 16, 
+                                     padding: 24, 
+                                     background: isSelected ? '#f4f8ff' : '#fff', 
+                                     cursor: 'pointer', 
+                                     transition: 'all 0.2s', 
+                                     position: 'relative',
+                                     boxShadow: isSelected ? '0 8px 24px rgba(0,82,204,0.1)' : '0 2px 10px rgba(0,0,0,0.03)',
+                                     display: 'flex',
+                                     flexDirection: 'column'
+                                   }}
+                                   onMouseEnter={(e) => {
+                                     if (!isSelected) {
+                                       e.currentTarget.style.borderColor = '#d1d5db';
+                                       e.currentTarget.style.transform = 'translateY(-2px)';
+                                       e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.06)';
+                                     }
+                                   }}
+                                   onMouseLeave={(e) => {
+                                     if (!isSelected) {
+                                       e.currentTarget.style.borderColor = '#e5e7eb';
+                                       e.currentTarget.style.transform = 'translateY(0)';
+                                       e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.03)';
+                                     }
+                                   }}>
+                                {tmpl.recommended && (
+                                  <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #10b981, #047857)', color: '#fff', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, padding: '6px 14px', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 12px rgba(16,185,129,0.3)', whiteSpace: 'nowrap' }}>
+                                    ✨ AI Recommended
+                                  </div>
+                                )}
+                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 16, marginTop: tmpl.recommended ? 12 : 0 }}>
+                                  <div style={{ width: 22, height: 22, borderRadius: '50%', border: `2px solid ${isSelected ? '#0052cc' : '#d1d5db'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2, background: isSelected ? '#fff' : 'transparent', transition: 'all 0.2s' }}>
+                                    {isSelected && <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#0052cc', animation: 'fadeIn 0.2s ease-out' }} />}
+                                  </div>
+                                  <div>
+                                    <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a', lineHeight: 1.3 }}>{tmpl.title}</div>
+                                    <div style={{ fontSize: 13, color: '#0052cc', fontWeight: 600, marginTop: 4 }}>Match Score: {tmpl.matchScore}%</div>
+                                  </div>
+                                </div>
+                                <div style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.6, marginBottom: 20 }}>
+                                  {tmpl.rationale}
+                                </div>
+                                <div style={{ background: isSelected ? '#fff' : '#fafafa', borderRadius: 8, padding: '12px 14px', marginBottom: 20, border: '1px solid #e5e7eb', flex: 1 }}>
+                                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#6b7280', marginBottom: 8 }}>Included Sections</div>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                    {tmpl.sections.map(sec => (
+                                      <div key={sec} style={{ fontSize: 12, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        <div style={{ width: 4, height: 4, borderRadius: '50%', background: isSelected ? '#0052cc' : '#9ca3af' }} />
+                                        {sec}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 'auto' }}>
+                                  {tmpl.tags.map(tag => (
+                                    <div key={tag} style={{ fontSize: 11, color: isSelected ? '#0052cc' : '#4b5563', background: isSelected ? 'rgba(0,82,204,0.06)' : '#fff', padding: '4px 12px', borderRadius: 100, fontWeight: 600, border: `1px solid ${isSelected ? 'rgba(0,82,204,0.2)' : '#e5e7eb'}` }}>{tag}</div>
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderTop: '1px solid var(--border-subtle)', paddingTop: 24 }}>
+                          <button onClick={() => {
+                            setSowHtmlContent(SOW_INITIAL_HTML);
+                            setSowSavedHtml(SOW_INITIAL_HTML);
+                            setSowStage('drafting');
+                          }} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 24px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 4px 14px rgba(0,82,204,0.25)', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.background = '#0041a3'; e.currentTarget.style.transform = 'translateY(-1px)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#0052cc'; e.currentTarget.style.transform = 'translateY(0)'; }}>
+                            <Check size={18} strokeWidth={2.5} /> Accept & Generate SOW
+                          </button>
+                          <button style={{ padding: '11px 24px', border: '1px solid #d1d5db', borderRadius: 8, background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#4b5563', fontFamily: 'inherit', transition: 'all 0.2s' }} onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                } else if (sowStage === 'drafting') {
+                  return (
+                    <div style={{ padding: 24, background: '#fafafa', minHeight: 'calc(100vh - 120px)' }}>
+                       <WYSIWYGEditor 
+                         isEditing={isSowEditing} 
+                         htmlContent={sowHtmlContent} 
+                         setHtmlContent={handleSowHtmlChange}
+                         docType="Statement of Work"
+                         docTitle={SOW_TEMPLATES.find(t => t.id === selectedSowTemplateId)?.title || 'Statement of Work'}
+                         docSubtitle="DDAIS Group · Procurement Division · PR-2026-004"
+                         version="V1.0"
+                       />
+                    </div>
+                  );
+                }
+              })()}
+
               {/* EMPTY TABS */}
-              {((['sow', 'po', 'invoices'].includes(activeTab)) || (activeTab === 'negot' && !proposals.some(p => p.status === 'Completed'))) && (() => {
+              {((['po', 'invoices'].includes(activeTab)) || (activeTab === 'sow' && !selectedAwardVendor) || (activeTab === 'negot' && !proposals.some(p => p.status === 'Completed'))) && (() => {
                 const cfg = EMPTY_TABS[activeTab]; const Icon = cfg.icon;
                 return (
                   <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, gap: 20 }}>
