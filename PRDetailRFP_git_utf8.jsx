@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+﻿import React, { useState, useRef, useEffect, useCallback } from 'react';
 import MainLayout from '../layouts/MainLayout.jsx';
 import {
   ArrowLeft, Download, Sparkles, User, CheckCircle,
@@ -42,33 +42,33 @@ const EMPTY_TABS = {
 };
 
 const WORKFLOW_GROUPS = [
-  { id: 'g0', type: 'single', node: { id: 0, status: 'complete', type: 'user', title: 'PR Submitted', actor: 'David Kim', time: '08 May · 09:12', icon: User } },
-  { id: 'g1', type: 'single', node: { id: 1, status: 'complete', type: 'ai', title: 'AI Extraction & Folder Creation', actor: 'AI Agent', time: '08 May · 09:14', icon: Sparkles } },
+  { id: 'g0', type: 'single', node: { id: 0, status: 'complete', type: 'user', title: 'PR Submitted', actor: 'David Kim', time: '08 May ┬╖ 09:12', icon: User } },
+  { id: 'g1', type: 'single', node: { id: 1, status: 'complete', type: 'ai', title: 'AI Extraction & Folder Creation', actor: 'AI Agent', time: '08 May ┬╖ 09:14', icon: Sparkles } },
   {
     id: 'g2', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 2, status: 'complete', type: 'ai', title: 'Routine / Complex', actor: 'AI Agent', time: '08 May · 09:15', icon: GitBranch },
-      { id: 3, status: 'complete', type: 'ai', title: 'CapEx / OpEx', actor: 'AI Agent', time: '08 May · 09:15', icon: Banknote },
-      { id: 4, status: 'complete', type: 'ai', title: 'Direct / Indirect', actor: 'AI Agent', time: '08 May · 09:15', icon: Scale },
+      { id: 2, status: 'complete', type: 'ai', title: 'Routine / Complex', actor: 'AI Agent', time: '08 May ┬╖ 09:15', icon: GitBranch },
+      { id: 3, status: 'complete', type: 'ai', title: 'CapEx / OpEx', actor: 'AI Agent', time: '08 May ┬╖ 09:15', icon: Banknote },
+      { id: 4, status: 'complete', type: 'ai', title: 'Direct / Indirect', actor: 'AI Agent', time: '08 May ┬╖ 09:15', icon: Scale },
     ]
   },
-  { id: 'g3', type: 'single', node: { id: 5, status: 'complete', type: 'ai', title: 'Routing Decision', actor: 'AI Agent', time: '08 May · 09:16', icon: GitBranch } },
+  { id: 'g3', type: 'single', node: { id: 5, status: 'complete', type: 'ai', title: 'Routing Decision', actor: 'AI Agent', time: '08 May ┬╖ 09:16', icon: GitBranch } },
   {
     id: 'g4', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 6, status: 'complete', type: 'ai', title: 'Budget Check', actor: 'AI Agent', time: '08 May · 09:17', icon: Banknote },
-      { id: 7, status: 'complete', type: 'ai', title: 'Compliance Validation', actor: 'AI Agent', time: '08 May · 09:17', icon: Shield },
+      { id: 6, status: 'complete', type: 'ai', title: 'Budget Check', actor: 'AI Agent', time: '08 May ┬╖ 09:17', icon: Banknote },
+      { id: 7, status: 'complete', type: 'ai', title: 'Compliance Validation', actor: 'AI Agent', time: '08 May ┬╖ 09:17', icon: Shield },
     ]
   },
   {
     id: 'g5', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 8, status: 'complete', type: 'ai', title: 'RFQ Template Select', actor: 'AI Agent', time: '09 May · 11:00', icon: FileText },
-      { id: 9, status: 'complete', type: 'ai', title: 'Supplier Research', actor: 'AI Agent', time: '09 May · 11:02', icon: Users },
+      { id: 8, status: 'complete', type: 'ai', title: 'RFQ Template Select', actor: 'AI Agent', time: '09 May ┬╖ 11:00', icon: FileText },
+      { id: 9, status: 'complete', type: 'ai', title: 'Supplier Research', actor: 'AI Agent', time: '09 May ┬╖ 11:02', icon: Users },
     ]
   },
   {
     id: 'g6', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 10, status: 'complete', type: 'ai', title: 'Generate RFP', actor: 'AI Agent', time: '10 May · 14:30', icon: Sparkles },
-      { id: 11, status: 'complete', type: 'ai', title: 'Scoring Config', actor: 'AI Agent', time: '10 May · 14:31', icon: Target },
-      { id: 12, status: 'complete', type: 'ai', title: 'Cost Estimation', actor: 'AI Agent', time: '10 May · 14:32', icon: DollarSign },
+      { id: 10, status: 'complete', type: 'ai', title: 'Generate RFP', actor: 'AI Agent', time: '10 May ┬╖ 14:30', icon: Sparkles },
+      { id: 11, status: 'complete', type: 'ai', title: 'Scoring Config', actor: 'AI Agent', time: '10 May ┬╖ 14:31', icon: Target },
+      { id: 12, status: 'complete', type: 'ai', title: 'Cost Estimation', actor: 'AI Agent', time: '10 May ┬╖ 14:32', icon: DollarSign },
     ]
   },
   { id: 'g7', type: 'single', node: { id: 13, status: 'pending_user', type: 'user', title: 'RFP Approval', actor: 'David Kim', time: 'Awaiting action', icon: UserCheck } },
@@ -134,29 +134,29 @@ function Arrow({ dashed = false }) {
   );
 }
 
-/* ════════════════════════════════════════
+/* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
    WYSIWYG EDITOR
-════════════════════════════════════════ */
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
 const INITIAL_HTML = `<h2>1. Introduction &amp; Background</h2>
 <p>DDAIS Group invites qualified technology consulting firms to submit proposals for the provision of AWS Cloud Migration Consulting Services. This Request for Proposal (RFP) outlines the scope of work, evaluation criteria, and submission requirements.</p>
 <p>DDAIS Group is undertaking a strategic initiative to migrate its existing on-premise infrastructure to Amazon Web Services (AWS). The engagement requires a team of senior cloud architects with demonstrable experience in large-scale enterprise migrations, security hardening, and post-migration optimisation.</p>
 <h2>2. Scope of Work</h2>
 <p>The selected vendor will be required to deliver the following:</p>
-<p><strong>Phase 1 — Assessment &amp; Architecture Design (Months 1–2)</strong></p>
+<p><strong>Phase 1 ΓÇö Assessment &amp; Architecture Design (Months 1ΓÇô2)</strong></p>
 <ul><li>Comprehensive assessment of existing on-premise infrastructure</li><li>AWS architecture design and migration strategy documentation</li><li>Risk assessment and mitigation plan</li><li>Stakeholder alignment workshops (minimum 3 sessions)</li></ul>
-<p><strong>Phase 2 — Migration Execution (Months 3–5)</strong></p>
-<ul><li>Phased migration of workloads to AWS (non-production → production)</li><li>Data migration with zero-downtime requirements</li><li>Security configuration and IAM policy implementation</li><li>Network topology redesign (VPC, subnets, security groups)</li></ul>
-<p><strong>Phase 3 — Stabilisation &amp; Handover (Month 6)</strong></p>
+<p><strong>Phase 2 ΓÇö Migration Execution (Months 3ΓÇô5)</strong></p>
+<ul><li>Phased migration of workloads to AWS (non-production ΓåÆ production)</li><li>Data migration with zero-downtime requirements</li><li>Security configuration and IAM policy implementation</li><li>Network topology redesign (VPC, subnets, security groups)</li></ul>
+<p><strong>Phase 3 ΓÇö Stabilisation &amp; Handover (Month 6)</strong></p>
 <ul><li>Post-migration performance optimisation</li><li>Knowledge transfer sessions for internal IT team</li><li>Final documentation and runbook delivery</li><li>30-day hypercare support</li></ul>
 <h2>3. Vendor Eligibility Requirements</h2>
 <p>Vendors must meet <strong>ALL</strong> of the following criteria to be considered:</p>
 <ul><li>Minimum 5 years of experience in cloud consulting engagements</li><li>AWS Premier or Advanced Partner status (mandatory)</li><li>At least 3 completed enterprise migration projects of similar scale (&gt;500 VMs)</li><li>Presence or operations capability in UAE / Dubai</li><li>ISO 27001 certified or equivalent information security certification</li><li>Minimum team: 3 Senior Cloud Architects + 2 Security Engineers + 1 Project Manager</li></ul>
 <h2>4. Commercial Terms</h2>
-<p><strong>Pricing Model:</strong> Time &amp; Materials (T&amp;M)<br/><strong>Estimated Budget:</strong> ₹45,00,000 / AED 2,000,000<br/><strong>Payment:</strong> Monthly invoicing against verified milestones<br/><strong>Currency:</strong> AED (preferred) or USD</p>
+<p><strong>Pricing Model:</strong> Time &amp; Materials (T&amp;M)<br/><strong>Estimated Budget:</strong> Γé╣45,00,000 / AED 2,000,000<br/><strong>Payment:</strong> Monthly invoicing against verified milestones<br/><strong>Currency:</strong> AED (preferred) or USD</p>
 <ul><li>Daily rates per resource level (Junior / Senior / Principal)</li><li>Estimated total resource days per phase</li><li>Travel and expenses policy (if applicable)</li><li>Any licensing or tooling costs separate from professional services</li></ul>
 <h2>5. Evaluation Criteria</h2>
 <p>Proposals will be scored across the following dimensions:</p>
-<ul><li>Technical Competency — <strong>30 points</strong></li><li>Relevant Experience — <strong>25 points</strong></li><li>Team Composition &amp; CVs — <strong>20 points</strong></li><li>Commercial Proposal — <strong>15 points</strong></li><li>Approach &amp; Methodology — <strong>10 points</strong></li></ul>
+<ul><li>Technical Competency ΓÇö <strong>30 points</strong></li><li>Relevant Experience ΓÇö <strong>25 points</strong></li><li>Team Composition &amp; CVs ΓÇö <strong>20 points</strong></li><li>Commercial Proposal ΓÇö <strong>15 points</strong></li><li>Approach &amp; Methodology ΓÇö <strong>10 points</strong></li></ul>
 <p>Vendors scoring below 60 points will not be considered. DDAIS Group reserves the right to negotiate with the top 2 vendors.</p>
 <h2>6. Submission Requirements &amp; Deadline</h2>
 <p><strong>Deadline:</strong> 15 June 2026, 17:00 GST &nbsp;|&nbsp; <strong>Validity:</strong> 90 days from submission</p>
@@ -168,10 +168,8 @@ const WYSIWYGEditor = ({
   setHtmlContent,
   docType = 'Request for Proposal',
   docTitle = 'AWS Cloud Migration Consulting Services',
-  docSubtitle = 'DDAIS Group · Procurement Division · RFP-2026-004',
-  version = 'V1.1',
-  onAddClauseClick,
-  hideEditButton = false
+  docSubtitle = 'DDAIS Group ┬╖ Procurement Division ┬╖ RFP-2026-004',
+  version = 'V1.1'
 }) => {
   const editorRef = useRef(null);
   const [fmt, setFmt] = useState({});
@@ -181,10 +179,8 @@ const WYSIWYGEditor = ({
   const [bgColor, setBgColor] = useState('#ffff00');
 
   useEffect(() => {
-    if (editorRef.current && editorRef.current.innerHTML !== htmlContent) {
-      editorRef.current.innerHTML = htmlContent;
-    }
-  }, [htmlContent]);
+    if (editorRef.current) editorRef.current.innerHTML = htmlContent;
+  }, []);
 
   const updateFmt = useCallback(() => {
     try {
@@ -232,7 +228,7 @@ const WYSIWYGEditor = ({
   return (
     <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden', boxShadow: '0 1px 6px rgba(14,15,37,0.05)' }}>
 
-      {/* DOC HEADER — Edit button lives here */}
+      {/* DOC HEADER ΓÇö Edit button lives here */}
       <div style={{ background: 'linear-gradient(135deg,rgba(0,82,204,0.03),rgba(124,124,255,0.05))', padding: '28px 52px 22px', borderBottom: '1px solid var(--border-subtle)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <div style={{ flex: 1 }}>
@@ -242,29 +238,23 @@ const WYSIWYGEditor = ({
             </div>
             <div style={{ fontSize: 13, color: '#888' }}>{docSubtitle}</div>
           </div>
-          {/* Edit / Save / Discard — RIGHT SIDE of header */}
+          {/* Edit / Save / Discard ΓÇö RIGHT SIDE of header */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, marginLeft: 32, flexShrink: 0 }}>
             {!isEditing ? (
               <div style={{ display: 'flex', gap: 8 }}>
-                {!hideEditButton && (
-                  <button
-                    onMouseDown={e => e.preventDefault()}
-                    onClick={() => setHtmlContent('__EDIT__')}
-                    style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1.5px solid rgba(124,124,255,0.35)', background: 'rgba(124,124,255,0.06)', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#7c7cff', fontFamily: 'inherit' }}
-                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,124,255,0.12)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(124,124,255,0.06)'}
-                  >
-                    <Pencil size={13} strokeWidth={2.2} /> Edit Document
-                  </button>
-                )}
+
+                <button
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={() => setHtmlContent('__EDIT__')}
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1.5px solid rgba(124,124,255,0.35)', background: 'rgba(124,124,255,0.06)', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#7c7cff', fontFamily: 'inherit' }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,124,255,0.12)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(124,124,255,0.06)'}
+                >
+                  <Pencil size={13} strokeWidth={2.2} /> Edit Document
+                </button>
               </div>
             ) : (
               <div style={{ display: 'flex', gap: 8 }}>
-                {isEditing && docType === 'Statement of Work' && (
-                  <button onClick={onAddClauseClick} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', borderRadius: 8, border: '1.5px solid rgba(124,124,255,0.35)', background: 'rgba(124,124,255,0.06)', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#7c7cff', fontFamily: 'inherit' }}>
-                    <Plus size={13} strokeWidth={2.2} /> Add Clause
-                  </button>
-                )}
                 <button onClick={() => setHtmlContent('__DISCARD__')} style={{ padding: '7px 14px', borderRadius: 8, border: '1px solid #e0e0e0', background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#666', fontFamily: 'inherit' }}>Discard</button>
                 <button onClick={() => setHtmlContent('__SAVE__')} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}
                   onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
@@ -287,7 +277,7 @@ const WYSIWYGEditor = ({
         </div>
       </div>
 
-      {/* WYSIWYG TOOLBAR — appears below header when editing */}
+      {/* WYSIWYG TOOLBAR ΓÇö appears below header when editing */}
       {isEditing && (
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, padding: '6px 12px', borderBottom: '1px solid var(--border-subtle)', background: '#fafafa', position: 'sticky', top: 145, zIndex: 20 }}>
 
@@ -438,15 +428,15 @@ const WYSIWYGEditor = ({
       />
 
       <style>{`
-        [contenteditable] h2 { font-size:16px; font-weight:700; color:#1a1a1a; margin:28px 0 10px; padding-bottom:8px; border-bottom:1px solid #efefef; }
-        [contenteditable] h3 { font-size:14px; font-weight:700; color:#1a1a1a; margin:20px 0 8px; }
-        [contenteditable] h4 { font-size:13px; font-weight:700; color:#1a1a1a; margin:16px 0 6px; }
-        [contenteditable] p  { margin:0 0 12px; }
-        [contenteditable] ul, [contenteditable] ol { padding-left:22px; margin:6px 0 14px; }
-        [contenteditable] li { margin-bottom:4px; }
-        [contenteditable] strong { font-weight:700; color:#1a1a1a; }
-        [contenteditable] em { font-style:italic; }
-        [contenteditable] blockquote { border-left:3px solid #7c7cff; margin:12px 0; padding:8px 16px; background:rgba(124,124,255,0.04); border-radius:0 8px 8px 0; font-style:italic; color:#555; }
+┬á ┬á ┬á ┬á [contenteditable] h2 { font-size:16px; font-weight:700; color:#1a1a1a; margin:28px 0 10px; padding-bottom:8px; border-bottom:1px solid #efefef; }
+┬á ┬á ┬á ┬á [contenteditable] h3 { font-size:14px; font-weight:700; color:#1a1a1a; margin:20px 0 8px; }
+┬á ┬á ┬á ┬á [contenteditable] h4 { font-size:13px; font-weight:700; color:#1a1a1a; margin:16px 0 6px; }
+┬á ┬á ┬á ┬á [contenteditable] p ┬á{ margin:0 0 12px; }
+┬á ┬á ┬á ┬á [contenteditable] ul, [contenteditable] ol { padding-left:22px; margin:6px 0 14px; }
+┬á ┬á ┬á ┬á [contenteditable] li { margin-bottom:4px; }
+┬á ┬á ┬á ┬á [contenteditable] strong { font-weight:700; color:#1a1a1a; }
+┬á ┬á ┬á ┬á [contenteditable] em { font-style:italic; }
+┬á ┬á ┬á ┬á [contenteditable] blockquote { border-left:3px solid #7c7cff; margin:12px 0; padding:8px 16px; background:rgba(124,124,255,0.04); border-radius:0 8px 8px 0; font-style:italic; color:#555; }
         [contenteditable] table { border-collapse:collapse; width:100%; margin:12px 0; }
         [contenteditable] td, [contenteditable] th { border:1px solid #e0e0e0; padding:8px 12px; font-size:13px; }
         [contenteditable][contenteditable="false"] h2 { font-size:16px; font-weight:700; color:#1a1a1a; margin:28px 0 10px; padding-bottom:8px; border-bottom:1px solid #efefef; }
@@ -463,8 +453,8 @@ const WYSIWYGEditor = ({
         @keyframes fadeInUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
     @keyframes toastIn  { from{opacity:0;transform:translateX(-50%) translateY(-10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
         @keyframes spin     { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        .tab-btn:hover { color:var(--text-primary) !important; }
-      `}</style>
+┬á ┬á ┬á ┬á .tab-btn:hover { color:var(--text-primary) !important; }
+┬á ┬á ┬á `}</style>
     </div>
   );
 }
@@ -526,13 +516,13 @@ const NEGOTIATION_DATA = {
     ],
     strategyBrief: {
       opening: 'Acknowledge strong technical fit but emphasize that commercials are currently uncompetitive compared to alternative bids.',
-      target: '₹42,00,000',
-      walkAway: '₹45,00,000',
+      target: 'Γé╣42,00,000',
+      walkAway: 'Γé╣45,00,000',
       concessions: [
         'Offer flexibility on start date in exchange for lower rate card.',
         'Concede Net 30 only if T&E is fully absorbed by vendor.'
       ],
-      batna: 'Award contract to Deloitte Technology (scored 88, priced at ₹40,50,000). Their technical score is slightly lower, but commercials are fully aligned with budget.'
+      batna: 'Award contract to Deloitte Technology (scored 88, priced at Γé╣40,50,000). Their technical score is slightly lower, but commercials are fully aligned with budget.'
     },
     clarificationQuestions: [
       {
@@ -552,10 +542,10 @@ const NEGOTIATION_DATA = {
 };
 
 const COST_ITEMS = [
-  { phase: 'Phase 1 — Assessment', duration: '2 months', resources: '3 Architects', estimate: '₹10,00,000 - ₹14,00,000' },
-  { phase: 'Phase 2 — Migration', duration: '3 months', resources: '3 Architects + 2 Engineers', estimate: '₹20,00,000 - ₹30,00,000' },
-  { phase: 'Phase 3 — Stabilisation', duration: '1 month', resources: '2 Architects', estimate: '₹6,00,000 - ₹10,00,000' },
-  { phase: 'PM & Coordination', duration: '6 months', resources: '1 Project Manager', estimate: '₹2,00,000 - ₹4,00,000' },
+  { phase: 'Phase 1 ΓÇö Assessment', duration: '2 months', resources: '3 Architects', estimate: 'Γé╣10,00,000 - Γé╣14,00,000' },
+  { phase: 'Phase 2 ΓÇö Migration', duration: '3 months', resources: '3 Architects + 2 Engineers', estimate: 'Γé╣20,00,000 - Γé╣30,00,000' },
+  { phase: 'Phase 3 ΓÇö Stabilisation', duration: '1 month', resources: '2 Architects', estimate: 'Γé╣6,00,000 - Γé╣10,00,000' },
+  { phase: 'PM & Coordination', duration: '6 months', resources: '1 Project Manager', estimate: 'Γé╣2,00,000 - Γé╣4,00,000' },
 ];
 
 const SOW_TEMPLATES = [
@@ -606,20 +596,20 @@ const SOW_INITIAL_HTML = `<h2>1. Scope of Work</h2>
 <p><em>[Standard Confidentiality Clause]</em><br/><em>[Data Protection Clause - UAE Context]</em></p>`;
 
 const VERSION_HISTORY = [
-  { version: 'v1.2', date: '10 May 2026 · 14:32', author: 'AI Agent', note: 'Scoring criteria updated, cost estimation refined', active: true },
-  { version: 'v1.1', date: '09 May 2026 · 16:10', author: 'AI Agent', note: 'Supplier research findings incorporated', active: false },
-  { version: 'v1.0', date: '09 May 2026 · 11:00', author: 'AI Agent', note: 'Initial RFP generated from PR fields', active: false },
+  { version: 'v1.2', date: '10 May 2026 ┬╖ 14:32', author: 'AI Agent', note: 'Scoring criteria updated, cost estimation refined', active: true },
+  { version: 'v1.1', date: '09 May 2026 ┬╖ 16:10', author: 'AI Agent', note: 'Supplier research findings incorporated', active: false },
+  { version: 'v1.0', date: '09 May 2026 ┬╖ 11:00', author: 'AI Agent', note: 'Initial RFP generated from PR fields', active: false },
 ];
 const AUDIT_ENTRIES = [
-  { type: 'ai', title: 'RFP Generated (v1.2)', desc: 'AI updated RFP with refined scoring config and cost estimation.', actor: 'AI Agent', time: '10 May · 14:32' },
-  { type: 'ai', title: 'Scoring Config Finalised', desc: 'Evaluation criteria weights set: Technical 30%, Experience 25%, etc.', actor: 'AI Agent', time: '10 May · 14:31' },
-  { type: 'ai', title: 'Cost Estimation Complete', desc: 'AI estimated ₹45,00,000 based on T&M rates in UAE market.', actor: 'AI Agent', time: '10 May · 14:30' },
-  { type: 'ai', title: 'Supplier Research Complete', desc: '5 vendors shortlisted from 847 by AWS partner status and UAE presence.', actor: 'AI Agent', time: '09 May · 11:02' },
-  { type: 'ai', title: 'RFQ Template Selected', desc: 'Technology Consulting Standard v2.1 selected by AI.', actor: 'AI Agent', time: '09 May · 11:00' },
-  { type: 'ai', title: 'Compliance Validation Passed', desc: 'Policy §4.2 check passed. RFP mandatory for complex engagements >₹10L.', actor: 'AI Agent', time: '08 May · 09:17' },
-  { type: 'ai', title: 'Budget Check Passed', desc: 'Engineering cost centre budget headroom: ₹15,00,000.', actor: 'AI Agent', time: '08 May · 09:17' },
-  { type: 'ai', title: 'AI Classification: Complex', desc: 'Classified Complex (92% confidence). ₹45L exceeds ₹10L threshold.', actor: 'AI Agent', time: '08 May · 09:16' },
-  { type: 'user', title: 'PR Created', desc: 'PR-2026-004 created via document upload by David Kim.', actor: 'David Kim', time: '08 May · 09:12' },
+  { type: 'ai', title: 'RFP Generated (v1.2)', desc: 'AI updated RFP with refined scoring config and cost estimation.', actor: 'AI Agent', time: '10 May ┬╖ 14:32' },
+  { type: 'ai', title: 'Scoring Config Finalised', desc: 'Evaluation criteria weights set: Technical 30%, Experience 25%, etc.', actor: 'AI Agent', time: '10 May ┬╖ 14:31' },
+  { type: 'ai', title: 'Cost Estimation Complete', desc: 'AI estimated Γé╣45,00,000 based on T&M rates in UAE market.', actor: 'AI Agent', time: '10 May ┬╖ 14:30' },
+  { type: 'ai', title: 'Supplier Research Complete', desc: '5 vendors shortlisted from 847 by AWS partner status and UAE presence.', actor: 'AI Agent', time: '09 May ┬╖ 11:02' },
+  { type: 'ai', title: 'RFQ Template Selected', desc: 'Technology Consulting Standard v2.1 selected by AI.', actor: 'AI Agent', time: '09 May ┬╖ 11:00' },
+  { type: 'ai', title: 'Compliance Validation Passed', desc: 'Policy ┬º4.2 check passed. RFP mandatory for complex engagements >Γé╣10L.', actor: 'AI Agent', time: '08 May ┬╖ 09:17' },
+  { type: 'ai', title: 'Budget Check Passed', desc: 'Engineering cost centre budget headroom: Γé╣15,00,000.', actor: 'AI Agent', time: '08 May ┬╖ 09:17' },
+  { type: 'ai', title: 'AI Classification: Complex', desc: 'Classified Complex (92% confidence). Γé╣45L exceeds Γé╣10L threshold.', actor: 'AI Agent', time: '08 May ┬╖ 09:16' },
+  { type: 'user', title: 'PR Created', desc: 'PR-2026-004 created via document upload by David Kim.', actor: 'David Kim', time: '08 May ┬╖ 09:12' },
 ];
 
 const BIZ_UNITS = ['DDAIS', 'Finance', 'Engineering', 'Operations', 'Marketing', 'HR', 'Legal', 'Procurement', 'IT', 'Other'];
@@ -784,7 +774,7 @@ function EditModal({ onClose, onSave }) {
         <div style={{ padding: '20px 24px', borderBottom: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div>
             <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a' }}>Edit Requisition Details</div>
-            <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>PR-2026-011 · AWS Cloud Migration Consulting</div>
+            <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>PR-2026-011 ┬╖ AWS Cloud Migration Consulting</div>
           </div>
           <button onClick={onClose} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 6, borderRadius: 8 }}><X size={18} /></button>
         </div>
@@ -834,7 +824,7 @@ function EditModal({ onClose, onSave }) {
           </div>
           <div>
             <EL required>Spend Category</EL>
-            <div style={{ padding: '9px 12px', background: '#f5f5f5', border: '1px solid #e8e8e8', borderRadius: 8, fontSize: 14, color: '#666' }}>{spendCategory || '—'}</div>
+            <div style={{ padding: '9px 12px', background: '#f5f5f5', border: '1px solid #e8e8e8', borderRadius: 8, fontSize: 14, color: '#666' }}>{spendCategory || 'ΓÇö'}</div>
             <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>Auto-selected based on category</div>
           </div>
           <div>
@@ -881,7 +871,7 @@ function EditModal({ onClose, onSave }) {
                 <Upload size={16} color="#7c7cff" strokeWidth={2} />
               </div>
               <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
-              <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX, XLSX · Max 25MB</div>
+              <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX, XLSX ┬╖ Max 25MB</div>
             </div>
             <input id="edit-modal-file-input" type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} />
             <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>Existing attachment: Q3_Procurement_Requirements.pdf</div>
@@ -915,7 +905,7 @@ function EditModal({ onClose, onSave }) {
           </div>
           <div>
             <EL>Pricing Model</EL>
-            <ETextarea value={fCostBreakdown} onChange={e => setFCostBreakdown(e.target.value)} placeholder="Describe pricing model — Fixed / T&M / Milestone" minHeight={70} />
+            <ETextarea value={fCostBreakdown} onChange={e => setFCostBreakdown(e.target.value)} placeholder="Describe pricing model ΓÇö Fixed / T&M / Milestone" minHeight={70} />
           </div>
 
           <Div />
@@ -961,37 +951,18 @@ function EditModal({ onClose, onSave }) {
 
 const REASONING_MAP = {
   1: ['Reading uploaded PR document', 'Extracting 21 procurement fields', '14 fields auto-extracted with high confidence', 'Creating document folder in SharePoint', 'Linking PR metadata to folder'],
-  2: ['Analysing spend value: ₹45,00,000', 'Threshold check: exceeds ₹10L complex limit', 'Multi-phase engagement detected', 'Decision: Complex procurement'],
+  2: ['Analysing spend value: Γé╣45,00,000', 'Threshold check: exceeds Γé╣10L complex limit', 'Multi-phase engagement detected', 'Decision: Complex procurement'],
   3: ['Budget nature: ongoing operational spend', 'No capital asset creation involved', 'Decision: OpEx'],
   4: ['Category: Technology and Consulting', 'Not directly linked to production output', 'Decision: Indirect Spend'],
   5: ['PR classified as Complex', 'Value above threshold - manager approval required', 'Routing to: Sarah Chen (L2 approver)', 'SLA target: 15 July 2026'],
-  6: ['Approved budget for Engineering: ₹60,00,000', 'PR value: ₹45,00,000', 'Remaining headroom: ₹15,00,000', 'Budget check: PASSED'],
+  6: ['Approved budget for Engineering: Γé╣60,00,000', 'PR value: Γé╣45,00,000', 'Remaining headroom: Γé╣15,00,000', 'Budget check: PASSED'],
   7: ['Cost centre ENG-402 validated', 'CapEx/OpEx classification confirmed: OpEx', 'Finance policy check: PASSED'],
   8: ['Vendor compliance status: all 5 vendors active', 'Policy 4.2 check: RFP required for complex', 'Compliance check: PASSED'],
   9: ['Queried vendor database: 847 vendors', 'Applied AWS partner filter + UAE location', '5 vendors shortlisted by confidence score'],
-  10: ['RFP template selected: Technology Consulting Standard v2.1', 'Scoring config generated: 5 criteria', 'Cost estimation complete: ₹45,00,000'],
+  10: ['RFP template selected: Technology Consulting Standard v2.1', 'Scoring config generated: 5 criteria', 'Cost estimation complete: Γé╣45,00,000'],
 };
 
-const SOW_CLAUSES = [
-  { id: 'c1', clause: 'Intellectual Property Rights', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
-  { id: 'c2', clause: 'Confidentiality and Non-Disclosure', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
-  { id: 'c3', clause: 'Payment Terms & Milestones', type: 'Payment Terms', geo: 'UAE', risk: 'Low' },
-  { id: 'c4', clause: 'Termination and Transition', type: 'Termination', geo: 'Global', risk: 'High' },
-  { id: 'c5', clause: 'Liability and Indemnification', type: 'Liability', geo: 'Global', risk: 'High' },
-  { id: 'c6', clause: 'Dispute Resolution Mechanism', type: 'Indemnity', geo: 'UAE', risk: 'Medium' },
-  { id: 'c7', clause: 'Service Level Agreement (SLA)', type: 'Warranty', geo: 'Global', risk: 'Low' },
-];
-
 export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState }) {
-  const [showAddClauseModal, setShowAddClauseModal] = useState(false);
-  const [clauseSearch, setClauseSearch] = useState('');
-  const [clauseTypeFilter, setClauseTypeFilter] = useState('');
-  const [geoFilter, setGeoFilter] = useState('');
-  const [riskFilter, setRiskFilter] = useState('');
-  const [addedSowClauses, setAddedSowClauses] = useState(['c1', 'c2']);
-  const [draftSelectedClauses, setDraftSelectedClauses] = useState([]);
-  const [hasSavedSow, setHasSavedSow] = useState(false);
-
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
   const [chatPaneOpen, setChatPaneOpen] = useState(navState?.openChatPane || false);
   const [chatMenuOpen, setChatMenuOpen] = useState(false);
@@ -1001,7 +972,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [chatMessages, setChatMessages] = useState([
     { role: 'user', text: 'Summarise the PO for me' },
     { role: 'status' },
-    { role: 'ai', text: 'PO-2026-00412 is for AWS Cloud Migration Consulting Services with Accenture Middle East. Total value: ₹45,00,000. Engagement covers 3 senior architects for 6 months across assessment, migration and support phases. Terms: Technology & Consulting. Awaiting approval from Sarah Chen.' }
+    { role: 'ai', text: 'PO-2026-00412 is for AWS Cloud Migration Consulting Services with Accenture Middle East. Total value: Γé╣45,00,000. Engagement covers 3 senior architects for 6 months across assessment, migration and support phases. Terms: Technology & Consulting. Awaiting approval from Sarah Chen.' }
   ]);
   const chatInputRef = useRef(null);
   const [chatCopiedMsgs, setChatCopiedMsgs] = useState(new Set());
@@ -1014,33 +985,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [chatDislikedTooltipVisible, setChatDislikedTooltipVisible] = useState(new Set());
   const chatTooltipTimers = useRef(new Set());
   const [chatReasoningComplete, setChatReasoningComplete] = useState(true);
-
-  // PO form fields
-  const [poLogoFile, setPoLogoFile] = useState(null);
-  const poLogoInputRef = useRef(null);
-  const [poAddress, setPoAddress] = useState('DDAIS Group\\nProcurement Division\\nDubai Internet City, Building 17\\nDubai, UAE');
-  const [poSupplierName, setPoSupplierName] = useState('Accenture Middle East');
-  const [poSupplierAddress, setPoSupplierAddress] = useState('Accenture Middle East LLC\\nAlSalam Tower, 34th Floor\\nDubai, UAE');
-  const [poSupplierContact, setPoSupplierContact] = useState('+971 4 278 5000');
-  const [poBuyerName, setPoBuyerName] = useState('David Kim');
-  const [poTermsCategory, setPoTermsCategory] = useState('Technology and Consulting');
-  const [poTermsCategoryOpen, setPoTermsCategoryOpen] = useState(false);
-  const [poIssueDate, setPoIssueDate] = useState('2026-05-31');
-  const [poChangeNo, setPoChangeNo] = useState('0');
-  const [poInstructions, setPoInstructions] = useState('Please deliver all services as per the agreed Statement of Work. Engagement to commence on 01 June 2026.');
-  const [poNumber, setPoNumber] = useState('PO-2026-00412');
-  const [poSpecialInstructions, setPoSpecialInstructions] = useState('• All invoices must reference the PO number.\\n• Invoices to be submitted monthly by the 25th.\\n• Work may not commence without a signed copy of this PO.\\n• Any changes to scope must be approved in writing.');
-  const [poTermsConditions, setPoTermsConditions] = useState('• Payment terms: Net 30 days from invoice date.\\n• All work must comply with DDAIS Group vendor code of conduct.\\n• The supplier shall maintain ISO 27001 certification throughout the engagement.\\n• Disputes to be resolved under UAE jurisdiction.\\n• This PO is subject to DDAIS Group standard procurement policy v4.2.');
-
-  // PO line items
-  const [poLineItems, setPoLineItems] = useState([
-    { ln: '1', matCode: 'DDD-NONCOD72415-1 (DDD-C24010)', prTaskNo: 'ADI23000727-2 / E00001-E01', prItem: 'N1', description: 'AWS Cloud Migration Consulting Services — Assessment, architecture design, migration execution and post-migration support as per agreed SOW', uom: 'Resources', quantity: '1', unitPrice: '45,00,000.00', amount: '45,00,000.00', delDate: '15-Jul-2026' },
-  ]);
-
-  const poTermsCatRef = useRef(null);
-  const [showPoEditModal, setShowPoEditModal] = useState(false);
-  const [showPoPreview, setShowPoPreview] = useState(false);
-  const [showApproveModal, setShowApproveModal] = useState(false);
 
   useEffect(() => {
     if (!chatMenuOpen) return;
@@ -1122,9 +1066,9 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const getCurrencySymbol = (cur) => {
     switch (cur) {
       case 'USD': return '$';
-      case 'EUR': return '€';
-      case 'GBP': return '£';
-      case 'INR': return '₹';
+      case 'EUR': return 'Γé¼';
+      case 'GBP': return '┬ú';
+      case 'INR': return 'Γé╣';
       case 'AED': default: return 'AED ';
     }
   };
@@ -1293,14 +1237,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
   const handleSowHtmlChange = (val) => {
     if (val === '__EDIT__') { setIsSowEditing(true); return; }
-    if (val === '__SAVE__') { 
-      setSowSavedHtml(sowHtmlContent); 
-      setIsSowEditing(false); 
-      setHasSavedSow(true);
-      setSaveToast({ title: 'SOW Saved Successfully', subtext: 'The statement of work has been updated.' });
-      setTimeout(() => setSaveToast(null), 3000);
-      return; 
-    }
+    if (val === '__SAVE__') { setSowSavedHtml(sowHtmlContent); setIsSowEditing(false); return; }
     if (val === '__DISCARD__') { setSowHtmlContent(sowSavedHtml); setIsSowEditing(false); return; }
     setSowHtmlContent(val);
   };
@@ -1736,7 +1673,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             </div>
                             <div style={{ textAlign: 'center' }}>
                               <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
-                              <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT · Max 20MB</div>
+                              <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT ┬╖ Max 20MB</div>
                             </div>
                           </div>
                         ) : (
@@ -1780,7 +1717,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </div>
                           <div style={{ textAlign: 'center' }}>
                             <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
-                            <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT · Max 20MB</div>
+                            <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT ┬╖ Max 20MB</div>
                           </div>
                         </div>
                         <input id={`supp-file-input-${form.id}`} type="file" multiple accept=".pdf,.docx,.ppt" style={{ display: 'none' }} onChange={e => {
@@ -2080,7 +2017,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           <div style={{ textAlign: 'center', marginBottom: 12 }}><div style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a' }}>Technical & Commercial Proposal</div></div>
                           <div style={{ textAlign: 'center', color: '#555', fontSize: 14, marginBottom: 6 }}>Version 1.0 &nbsp;|&nbsp; {showPreviewModal.uploadDate || '17 Sept 2025'}</div>
                           <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic', marginTop: 80 }}>Prepared in response to RFP-2026-004 issued by DDAIS Group</div>
-                          <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic' }}>Confidential — For Evaluation Purposes Only</div>
+                          <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic' }}>Confidential ΓÇö For Evaluation Purposes Only</div>
                         </div>
                       ) : (
                         <div>
@@ -2133,7 +2070,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop file here or <span style={{ color: '#7c7cff', fontWeight: 600 }}>browse</span></div>
-                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX · Max 25MB</div>
+                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX ┬╖ Max 25MB</div>
                     </div>
                   </div>
                 ) : (
@@ -2195,7 +2132,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   </div>
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files here or <span style={{ color: '#7c7cff', fontWeight: 600 }}>browse</span></div>
-                    <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX · Max 25MB</div>
+                    <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX ┬╖ Max 25MB</div>
                   </div>
                 </div>
                 <input id="supp-doc-input" type="file" multiple accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} onChange={e => { if (e.target.files.length > 0) setUploadForm(prev => ({ ...prev, supporting: [...(Array.isArray(prev.supporting) ? prev.supporting : []), ...Array.from(e.target.files)] })); }} />
@@ -2293,7 +2230,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   <div style={{ flex: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, width: '100%' }}>
                     <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden' }}>
                       <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROCUREMENT WORKFLOW — COMPLEX PR</div>
+                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROCUREMENT WORKFLOW ΓÇö COMPLEX PR</div>
                         <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'var(--text-tertiary)' }}>
                           {[['#7c7cff', 'AI Action'], ['#0052cc', 'User Action'], ['#f59e0b', 'Pending'], ['#ccc', 'Upcoming']].map(([c, l]) => (
                             <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: c, opacity: c === '#ccc' ? 0.5 : 1 }} />{l}</div>
@@ -2326,7 +2263,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         </button>
                       </div>
                       <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px 0' }}>
-                        {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', '₹45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026'], ['Justification', 'Required for modernising backend systems'], ['Sourcing Method', 'Competitive tender'], ['Contract Reference', 'N/A'], ['Pricing Model', 'Time & Materials'], ['Timeline', '6 Months']].map(([l, v]) => (
+                        {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', 'Γé╣45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026'], ['Justification', 'Required for modernising backend systems'], ['Sourcing Method', 'Competitive tender'], ['Contract Reference', 'N/A'], ['Pricing Model', 'Time & Materials'], ['Timeline', '6 Months']].map(([l, v]) => (
                           <React.Fragment key={l}><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', paddingRight: 16 }}>{l}</div><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{v}</div></React.Fragment>
                         ))}
                         <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Priority</div>
@@ -2390,7 +2327,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         </div>
                         <div>
                           <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>Technology Consulting Standard v2.1</div>
-                          <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template · Auto-selected by AI based on category and complexity</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template ┬╖ Auto-selected by AI based on category and complexity</div>
                         </div>
                         <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: '#15803d', marginLeft: 8 }}>
                           <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> Current: v1.2
@@ -2562,7 +2499,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </div>
                           {costConfigData.map((item, i) => (
                             <div key={i} style={{ display: 'grid', gridTemplateColumns: '3fr 4fr 3fr', alignItems: 'center', padding: '12px 14px', borderBottom: i < costConfigData.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{item.p}{item.m ? ` — ${item.m}` : ''}</div>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{item.p}{item.m ? ` ΓÇö ${item.m}` : ''}</div>
                               <div style={{ fontSize: 12, color: '#666', lineHeight: 1.5 }}>
                                 <div>{item.t}</div>
                                 <div>{item.r}</div>
@@ -2816,7 +2753,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                       <td style={{ padding: '14px 16px', textAlign: 'center' }}>
                                         {rank ? (
                                           <div style={{ width: 28, height: 28, borderRadius: '50%', background: rank === 1 ? 'linear-gradient(135deg,#f59e0b,#d97706)' : rank === 2 ? 'linear-gradient(135deg,#94a3b8,#64748b)' : rank === 3 ? 'linear-gradient(135deg,#b45309,#92400e)' : 'var(--bg-surface-2)', color: rank <= 3 ? '#fff' : 'var(--text-tertiary)', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>#{rank}</div>
-                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>ΓÇö</span>}
                                       </td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.vendorName}</td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.uploadDate}</td>
@@ -2834,17 +2771,17 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                           <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: prop.state === 'pass' ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: prop.state === 'pass' ? '#15803d' : '#dc2626', textTransform: 'capitalize', whiteSpace: 'nowrap' }}>
                                             {prop.state}
                                           </span>
-                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>ΓÇö</span>}
                                       </td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, color: '#0052cc', fontWeight: 500, whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FileText size={13} />{prop.fileName}</div></td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.techScore}</td>
-                                      <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#15803d', whiteSpace: 'nowrap' }}>{prop.commercial || '—'}</td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#15803d', whiteSpace: 'nowrap' }}>{prop.commercial || 'ΓÇö'}</td>
                                       <td style={{ padding: '14px 16px' }}>
                                         {riskLevel ? (
                                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: riskColor.bg, color: riskColor.color, whiteSpace: 'nowrap' }}>
                                             <div style={{ width: 6, height: 6, borderRadius: '50%', background: riskColor.color }} />{riskLevel}
                                           </span>
-                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>ΓÇö</span>}
                                       </td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.version}</td>
                                       <td style={{ padding: '14px 16px', textAlign: 'center' }}>
@@ -2973,7 +2910,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                           if (risks.length === 0) return 'Pending';
                                           return (
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                                              {risks.map((r, i) => <div key={i} style={{ fontSize: 12, color: '#b91c1c', lineHeight: 1.3 }}>• {r}</div>)}
+                                              {risks.map((r, i) => <div key={i} style={{ fontSize: 12, color: '#b91c1c', lineHeight: 1.3 }}>ΓÇó {r}</div>)}
                                             </div>
                                           );
                                         }
@@ -3298,7 +3235,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                                     <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
                                     <div style={{ flex: 1, fontSize: 13, color: '#0052cc', fontWeight: 500, padding: '12px 16px', background: 'rgba(0,82,204,0.04)', borderRadius: 8, border: '1px solid rgba(0,82,204,0.2)', lineHeight: 1.5, boxSizing: 'border-box' }}>
-                                      <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>₹38,00,000</div>
+                                      <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>Γé╣38,00,000</div>
                                       <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{negotData.strategyBrief.opening}</div>
                                     </div>
                                   </div>
@@ -3393,7 +3330,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 }}>
                                 {tmpl.recommended && (
                                   <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #10b981, #047857)', color: '#fff', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, padding: '6px 14px', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 12px rgba(16,185,129,0.3)', whiteSpace: 'nowrap' }}>
-                                    ✨ Top Recommendation
+                                    Γ£¿ AI Recommended
                                   </div>
                                 )}
                                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 16, marginTop: tmpl.recommended ? 12 : 0 }}>
@@ -3445,240 +3382,24 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     </div>
                   );
                 } else if (sowStage === 'drafting') {
-                  const tmplTitle = SOW_TEMPLATES.find(t => t.id === selectedSowTemplateId)?.title || 'Statement of Work';
                   return (
-                    <div style={{ padding: 24, background: '#fafafa', minHeight: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                      {/* SOW TEMPLATE BANNER */}
-                      <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(135deg,rgba(0,82,204,0.1),rgba(124,124,255,0.15))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <FileText size={17} color="#7c7cff" strokeWidth={2} />
-                          </div>
-                          <div>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{tmplTitle}</div>
-                            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template · Auto-selected by AI based on category and complexity</div>
-                          </div>
-                          <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: '#15803d', marginLeft: 8 }}>
-                            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> Current: v1.0
-                          </div>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <button style={btnGhost} onClick={() => setVersionPaneOpen(v => !v)}
-                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                            <History size={13} /> Version History
-                          </button>
-                          <button style={btnGhost} onClick={() => { setNewVersionNote(''); setShowNewVersionModal(true); }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                            <Plus size={13} /> New Version
-                          </button>
-                          <button style={btnBlue} onClick={() => setActiveTab('po')}
-                            onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                            <Check size={13} /> Accept
-                          </button>
-                        </div>
-                      </div>
-
+                    <div style={{ padding: 24, background: '#fafafa', minHeight: 'calc(100vh - 120px)' }}>
                       <WYSIWYGEditor
                         isEditing={isSowEditing}
                         htmlContent={sowHtmlContent}
                         setHtmlContent={handleSowHtmlChange}
                         docType="Statement of Work"
-                        docTitle={tmplTitle}
-                        docSubtitle="DDAIS Group · Procurement Division · PR-2026-004"
+                        docTitle={SOW_TEMPLATES.find(t => t.id === selectedSowTemplateId)?.title || 'Statement of Work'}
+                        docSubtitle="DDAIS Group ┬╖ Procurement Division ┬╖ PR-2026-004"
                         version="V1.0"
-                        onAddClauseClick={() => {
-                          setDraftSelectedClauses([...addedSowClauses]);
-                          setShowAddClauseModal(true);
-                        }}
-                        hideEditButton={hasSavedSow}
                       />
                     </div>
                   );
                 }
               })()}
 
-              {/* PO TAB */}
-              {activeTab === 'po' && (
-                <div style={{ flex: 1, overflowY: 'auto', background: '#f5f5f7', padding: 24 }}>
-
-                  {/* ACTION BAR */}
-                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '14px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    {/* Left: PO doc identity */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <FileText size={18} color="#0052cc" strokeWidth={1.8} />
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Purchase Order</div>
-                        <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <span style={{ color: '#0052cc', fontWeight: 600 }}>{poNumber}</span>
-                          <span>·</span>
-                          <span>AI-generated</span>
-                          <span>·</span>
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 20, background: 'rgba(245,158,11,0.1)', color: '#b45309', fontSize: 11, fontWeight: 600 }}>
-                            <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#b45309' }} />
-                            Awaiting Approval
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right: CTAs */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <button onClick={() => setShowPoPreview(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1px solid var(--border-default)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                        <Eye size={14} /> Preview
-                      </button>
-                      <button onClick={() => setShowPoEditModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 16px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit', transition: 'all 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                        <Pencil size={13} strokeWidth={2} /> Edit
-                      </button>
-                      {userRole === 'manager' && (
-                        <button onClick={() => setShowApproveModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 20px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#003fa3'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,82,204,0.35)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#0052cc'; e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.25)'; }}>
-                          <CheckCircle size={14} /> Approve PO
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px' }}>
-
-                    {/* ── BUYER INFO ── */}
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>BUYER INFORMATION</div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16, display: 'flex', alignItems: 'center' }}>Company Logo</div>
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <div style={{ width: 36, height: 36, borderRadius: 8, background: 'linear-gradient(135deg, #0d1f3c, #0052cc)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <span style={{ color: '#fff', fontSize: 13, fontWeight: 800, letterSpacing: '-0.5px' }}>DD</span>
-                          </div>
-                          <div>
-                            <div style={{ fontSize: 13, fontWeight: 700, color: '#0d1f3c' }}>DDAIS Group</div>
-                            <div style={{ fontSize: 11, color: '#999' }}>Procurement Division</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Company Address</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poAddress}</div>
-                      </div>
-
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Buyer Name</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poBuyerName}</div>
-                      </div>
-                    </div>
-
-                    <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
-
-                    {/* ── SUPPLIER INFO ── */}
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>SUPPLIER INFORMATION</div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Supplier Name</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poSupplierName}</div>
-                      </div>
-
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Supplier Address</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poSupplierAddress}</div>
-                      </div>
-
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Supplier Contact No.</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poSupplierContact}</div>
-                      </div>
-                    </div>
-
-                    <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
-
-                    {/* ── PO META ── */}
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>PO DETAILS</div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>PO Number</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: '#0052cc' }}>{poNumber}</div>
-                      </div>
-
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Issue Date</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poIssueDate}</div>
-                      </div>
-
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Change No.</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poChangeNo}</div>
-                      </div>
-
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Terms (Category)</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{poTermsCategory}</div>
-                      </div>
-
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', paddingRight: 16 }}>Instructions</div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.7 }}>{poInstructions}</div>
-                      </div>
-                    </div>
-
-                    <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
-
-                    {/* ── LINE ITEMS ── */}
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>LINE ITEMS</div>
-                    </div>
-
-                    <div style={{ overflowX: 'auto', borderRadius: 10, border: '1px solid #e5e5e5', marginBottom: 20 }}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
-                        <thead>
-                          <tr style={{ background: '#f5f5f7', borderBottom: '1px solid #e5e5e5' }}>
-                            {['LN', 'MAT-CODE / COST CODE', 'PR / TASK NO.', 'PR ITEM', 'DESCRIPTION', 'UOM', 'QTY', 'UNIT PRICE', 'AMOUNT', 'DEL. DATE'].map((h, i) => (
-                              <th key={i} style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', borderRight: i < 9 ? '1px solid #e5e5e5' : 'none' }}>{h}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {poLineItems.map((item, idx) => (
-                            <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid #e5e5e5' : 'none' }}>
-                              {['ln', 'matCode', 'prTaskNo', 'prItem', 'description', 'uom', 'quantity', 'unitPrice', 'amount', 'delDate'].map((field, fi) => (
-                                <td key={fi} style={{ padding: '10px 12px', fontSize: 13, color: '#1a1a1a', borderRight: fi < 9 ? '1px solid #e5e5e5' : 'none', verticalAlign: 'top' }}>
-                                  <span style={{ fontSize: 12, lineHeight: 1.5 }}>{item[field]}</span>
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                          <tr style={{ background: '#f5f5f7', borderTop: '2px solid #d0d0d0' }}>
-                            <td colSpan={8} style={{ padding: '10px 12px', fontSize: 12, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid #e5e5e5' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
-                            <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 700, color: '#0052cc', borderRight: '1px solid #e5e5e5' }}>₹45,00,000.00</td>
-                            <td />
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-
-                    <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
-
-                    {/* ── SPECIAL INSTRUCTIONS ── */}
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 10 }}>SPECIAL INSTRUCTIONS TO SUPPLIER</div>
-                    <div style={{ marginBottom: 20 }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poSpecialInstructions}</div>
-                    </div>
-
-                    <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
-
-                    {/* ── TERMS & CONDITIONS ── */}
-                    <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 10 }}>TERMS & CONDITIONS</div>
-                    <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poTermsConditions}</div>
-
-                  </div>
-
-                </div>
-              )}
-
               {/* EMPTY TABS */}
-              {((['invoices'].includes(activeTab)) || (activeTab === 'sow' && !selectedAwardVendor) || (activeTab === 'negot' && !proposals.some(p => p.status === 'Completed'))) && (() => {
+              {((['po', 'invoices'].includes(activeTab)) || (activeTab === 'sow' && !selectedAwardVendor) || (activeTab === 'negot' && !proposals.some(p => p.status === 'Completed'))) && (() => {
                 const cfg = EMPTY_TABS[activeTab]; const Icon = cfg.icon;
                 return (
                   <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, gap: 20 }}>
@@ -4070,575 +3791,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
       )}
 
       {/* Award Success Toast */}
-
       {showAwardSuccessToast && (
-
         <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
-
           <CheckCircle size={20} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
-
           <div style={{ flex: 1 }}>
-
             <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Project Awarded Successfully</div>
-
             <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{selectedAwardVendor} has been notified.</div>
-
           </div>
-
           <button onClick={() => setShowAwardSuccessToast(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
-
-        </div>
-
-      )}
-
-
-
-      {/* Add Clause Modal */}
-
-      {showAddClauseModal && (
-
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowAddClauseModal(false)}>
-
-          <div style={{ background: '#fff', borderRadius: 16, width: 800, height: 600, padding: '24px 0', boxShadow: '0 20px 60px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', marginBottom: 20 }}>
-
-              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Add Clause</div>
-
-              <button onClick={() => setShowAddClauseModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
-
-            </div>
-
-            
-
-            <div style={{ padding: '0 24px', marginBottom: 16, display: 'flex', gap: 12 }}>
-
-              <div style={{ position: 'relative', flex: 1 }}>
-
-                <Search size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)' }} />
-
-                <input type="text" placeholder="Search clauses..." value={clauseSearch} onChange={e => setClauseSearch(e.target.value)} style={{ width: '100%', padding: '10px 14px 10px 40px', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 14, outline: 'none', boxSizing: 'border-box', background: '#fff', color: '#1a1a1a' }} />
-
-              </div>
-
-              <select value={clauseTypeFilter} onChange={e => setClauseTypeFilter(e.target.value)} style={{ padding: '10px 32px 10px 14px', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 13, outline: 'none', background: '#fff', color: '#1a1a1a', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center', cursor: 'pointer' }}>
-                <option value="">Clause Type</option>
-                <option value="Payment Terms">Payment Terms</option>
-                <option value="Liability">Liability</option>
-                <option value="Warranty">Warranty</option>
-                <option value="Indemnity">Indemnity</option>
-                <option value="Termination">Termination</option>
-                <option value="Confidentiality">Confidentiality</option>
-              </select>
-
-              <select value={geoFilter} onChange={e => setGeoFilter(e.target.value)} style={{ padding: '10px 32px 10px 14px', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 13, outline: 'none', background: '#fff', color: '#1a1a1a', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center', cursor: 'pointer' }}>
-                <option value="">Geography</option>
-                <option value="Global">Global</option>
-                <option value="UAE">UAE</option>
-                <option value="KSA">KSA</option>
-              </select>
-
-              <select value={riskFilter} onChange={e => setRiskFilter(e.target.value)} style={{ padding: '10px 32px 10px 14px', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 13, outline: 'none', background: '#fff', color: '#1a1a1a', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center', cursor: 'pointer' }}>
-                <option value="">Risk Level</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </select>
-
-            </div>
-
-            <div style={{ padding: '0 24px', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-
-              <style>{`
-                .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; margin-top: 41px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-              `}</style>
-
-              <div className="custom-scrollbar" style={{ flex: 1, overflow: 'auto', border: '1px solid var(--border-subtle)', borderRadius: 8 }}>
-
-                <table style={{ width: '100%', minWidth: 800, borderCollapse: 'collapse' }}>
-
-                <thead style={{ background: '#f8fafc', position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 1px 0 var(--border-subtle)' }}>
-
-                  <tr>
-
-                    <th style={{ padding: '12px 16px', textAlign: 'left', width: 40, borderBottom: '1px solid var(--border-subtle)' }}>
-
-                      <input type="checkbox" disabled style={{ opacity: 0 }} />
-
-                    </th>
-
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', width: 80, borderBottom: '1px solid var(--border-subtle)' }}>S NO.</th>
-
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE</th>
-
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>TYPE</th>
-
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>GEOGRAPHY</th>
-
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>RISK LEVEL</th>
-
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'right', width: 140, borderBottom: '1px solid var(--border-subtle)' }}>ACTION</th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  {SOW_CLAUSES.filter(c => 
-                    c.clause.toLowerCase().includes(clauseSearch.toLowerCase()) &&
-                    (clauseTypeFilter === '' || c.type === clauseTypeFilter) &&
-                    (geoFilter === '' || c.geo === geoFilter) &&
-                    (riskFilter === '' || c.risk === riskFilter)
-                  ).map((c, i) => {
-
-                    const isSelected = draftSelectedClauses.includes(c.id);
-
-                    return (
-
-                      <tr key={c.id} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
-
-                        <td style={{ padding: '14px 16px' }}>
-
-                          <div onClick={() => {
-                            if (isSelected) setDraftSelectedClauses(p => p.filter(id => id !== c.id));
-                            else setDraftSelectedClauses(p => [...p, c.id]);
-                          }} style={{ width: 18, height: 18, borderRadius: 4, border: `1.5px solid ${isSelected ? '#0052cc' : '#c0c4cc'}`, background: isSelected ? '#0052cc' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                            {isSelected && <Check size={13} color="#fff" strokeWidth={3} />}
-                          </div>
-
-                        </td>
-
-                        <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-secondary)' }}>{i + 1}</td>
-
-                        <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)', fontWeight: 500 }}>{c.clause}</td>
-
-                        <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.type}</td>
-
-                        <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.geo}</td>
-
-                        <td style={{ padding: '14px 16px' }}>
-                          <span style={{ padding: '4px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600, background: c.risk === 'High' ? '#fee2e2' : c.risk === 'Medium' ? '#fef3c7' : '#dcfce7', color: c.risk === 'High' ? '#dc2626' : c.risk === 'Medium' ? '#d97706' : '#15803d' }}>{c.risk}</span>
-                        </td>
-
-                        <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-
-                          <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-
-                            <button onMouseEnter={e => { e.currentTarget.style.color = '#0052cc'; e.currentTarget.style.background = 'rgba(0,82,204,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', padding: 6, borderRadius: 6, display: 'flex', transition: 'all 0.15s ease' }}><Edit2 size={15} /></button>
-
-                            <button onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#ef4444', padding: 6, borderRadius: 6, display: 'flex', transition: 'all 0.15s ease' }}><Trash2 size={15} /></button>
-
-                          </div>
-
-                        </td>
-
-                      </tr>
-
-                    );
-
-                  })}
-
-                </tbody>
-
-              </table>
-
-              </div>
-
-            </div>
-
-
-
-            <div style={{ padding: '20px 24px 0', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 16 }}>
-
-              <button onClick={() => { setShowAddClauseModal(false); setDraftSelectedClauses([]); }} style={{ padding: '10px 20px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
-
-              <button onClick={() => {
-
-                const newClauses = draftSelectedClauses.filter(id => !addedSowClauses.includes(id));
-                setAddedSowClauses(draftSelectedClauses);
-
-                if (newClauses.length > 0) {
-                  let addedHtml = newClauses.map(id => {
-                    const c = SOW_CLAUSES.find(x => x.id === id);
-                    return `<h3>${c.clause}</h3><p>[Insert ${c.clause} details here]</p>`;
-                  }).join('');
-                  setSowHtmlContent(prev => prev + addedHtml);
-                }
-
-                setDraftSelectedClauses([]);
-
-                setShowAddClauseModal(false);
-
-              }} style={{ padding: '10px 24px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>Add</button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
-
-      {showPoPreview && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowPoPreview(false)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: '82vw', maxWidth: 920, height: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
-
-            {/* Modal header */}
-            <div style={{ padding: '16px 24px', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 9, background: 'rgba(0,82,204,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <FileText size={16} color="#0052cc" />
-                </div>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Purchase Order — {poNumber}</div>
-                  <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>{poSupplierName} · Issued {poIssueDate}</div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid #e0e0e0', background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#666', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                  <Download size={13} /> Download
-                </button>
-                <button onClick={() => setShowPoPreview(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 6, borderRadius: 8 }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                  <X size={18} />
-                </button>
-              </div>
-            </div>
-
-            {/* Scrollable document area */}
-            <div style={{ flex: 1, overflowY: 'auto', background: '#f0f0f0', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 0 40px', gap: 20 }}>
-
-              {/* Page 1 */}
-              <div style={{ background: '#fff', width: 700, minHeight: 900, borderRadius: 4, boxShadow: '0 2px 12px rgba(0,0,0,0.12)', padding: '48px 60px', boxSizing: 'border-box', position: 'relative' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #0052cc', paddingBottom: 10, marginBottom: 36 }}>
-                  <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic' }}>DDAIS Group</div>
-                  <div style={{ fontSize: 10, color: '#999' }}>PO {poNumber} &nbsp;|&nbsp; Confidential</div>
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 32 }}>
-                  <div>
-                    <div style={{ fontSize: 26, fontWeight: 800, color: '#0d1f3c', letterSpacing: '-0.5px', marginBottom: 6 }}>PURCHASE ORDER</div>
-                    <div style={{ fontSize: 12, color: '#555', whiteSpace: 'pre-line', lineHeight: 1.7 }}>{poAddress}</div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: 10, color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>PO Number</div>
-                    <div style={{ fontSize: 18, fontWeight: 700, color: '#0052cc', marginBottom: 10 }}>{poNumber}</div>
-                    <div style={{ fontSize: 11, color: '#666' }}>Issue Date: <span style={{ fontWeight: 600, color: '#1a1a1a' }}>{poIssueDate}</span></div>
-                    <div style={{ fontSize: 11, color: '#666', marginTop: 2 }}>Change No.: <span style={{ fontWeight: 600, color: '#1a1a1a' }}>{poChangeNo}</span></div>
-                    <div style={{ fontSize: 11, color: '#666', marginTop: 2 }}>Terms: <span style={{ fontWeight: 600, color: '#1a1a1a' }}>{poTermsCategory}</span></div>
-                  </div>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '1px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', marginBottom: 24 }}>
-                  <div style={{ padding: '16px 20px', borderRight: '1px solid #e0e0e0' }}>
-                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: 8 }}>SUPPLIER</div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}>{poSupplierName}</div>
-                    <div style={{ fontSize: 12, color: '#555', whiteSpace: 'pre-line', lineHeight: 1.6 }}>{poSupplierAddress}</div>
-                    <div style={{ fontSize: 12, color: '#555', marginTop: 4 }}>{poSupplierContact}</div>
-                  </div>
-                  <div style={{ padding: '16px 20px' }}>
-                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#999', marginBottom: 8 }}>BUYER</div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a', marginBottom: 4 }}>{poBuyerName}</div>
-                    <div style={{ fontSize: 12, color: '#555', whiteSpace: 'pre-line', lineHeight: 1.6 }}>{poAddress}</div>
-                  </div>
-                </div>
-
-                {poInstructions && (
-                  <div style={{ background: '#f8f9ff', border: '1px solid #e0e7ff', borderRadius: 6, padding: '12px 16px', marginBottom: 24 }}>
-                    <div style={{ fontSize: 9, fontWeight: 700, color: '#6d6dcc', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 4 }}>INSTRUCTIONS</div>
-                    <div style={{ fontSize: 12, color: '#444', lineHeight: 1.6 }}>{poInstructions}</div>
-                  </div>
-                )}
-
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#1a1a1a', marginBottom: 10 }}>Change Order Description:</div>
-
-                <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc', marginBottom: 24, fontSize: 11, tableLayout: 'fixed' }}>
-                  <colgroup>
-                    <col style={{ width: '4%' }} />
-                    <col style={{ width: '18%' }} />
-                    <col style={{ width: '16%' }} />
-                    <col style={{ width: '32%' }} />
-                    <col style={{ width: '8%' }} />
-                    <col style={{ width: '7%' }} />
-                    <col style={{ width: '8%' }} />
-                    <col style={{ width: '7%' }} />
-                  </colgroup>
-                  <thead>
-                    <tr style={{ background: '#0d1f3c' }}>
-                      {['LN', 'MAT-CODE / COST CODE', 'PR / TASK NO.', 'DESCRIPTION', 'UOM', 'QTY', 'UNIT PRICE', 'AMOUNT'].map((h, i) => (
-                        <th key={i} style={{ padding: '7px 8px', fontSize: 9, fontWeight: 700, color: '#fff', textAlign: 'left', borderRight: i < 7 ? '1px solid rgba(255,255,255,0.15)' : 'none', whiteSpace: 'pre-line', lineHeight: 1.3 }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {poLineItems.map((item, idx) => (
-                      <tr key={idx} style={{ borderBottom: '1px solid #e5e5e5', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
-                        {['ln', 'matCode', 'prTaskNo', 'description', 'uom', 'quantity', 'unitPrice', 'amount'].map((field, fi) => (
-                          <td key={fi} style={{ padding: '7px 8px', fontSize: 11, color: '#1a1a1a', borderRight: fi < 7 ? '1px solid #e5e5e5' : 'none', verticalAlign: 'top', lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis' }}>{item[field]}</td>
-                        ))}
-                      </tr>
-                    ))}
-                    <tr style={{ background: '#f0f4ff', borderTop: '2px solid #0052cc' }}>
-                      <td colSpan={6} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid #ccc' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
-                      <td colSpan={2} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#0052cc' }}>₹45,00,000.00 INR</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-                <div style={{ position: 'absolute', bottom: 32, left: 60, right: 60, display: 'flex', justifyContent: 'center', borderTop: '1.5px solid #0052cc', paddingTop: 8 }}>
-                  <span style={{ fontSize: 10, color: '#999' }}>Page 1 of 2</span>
-                </div>
-              </div>
-
-              {/* Page 2 */}
-              <div style={{ background: '#fff', width: 700, minHeight: 500, borderRadius: 4, boxShadow: '0 2px 12px rgba(0,0,0,0.12)', padding: '48px 60px', boxSizing: 'border-box', position: 'relative' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #0052cc', paddingBottom: 10, marginBottom: 28 }}>
-                  <div style={{ fontSize: 11, color: '#999', fontStyle: 'italic' }}>DDAIS Group</div>
-                  <div style={{ fontSize: 10, color: '#999' }}>PO {poNumber} &nbsp;|&nbsp; Confidential</div>
-                </div>
-
-                <div style={{ marginBottom: 24 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: '#0052cc', marginBottom: 10, borderBottom: '1px solid #e0e7ff', paddingBottom: 6 }}>SPECIAL INSTRUCTIONS TO SUPPLIER</div>
-                  <div style={{ fontSize: 12, color: '#444', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poSpecialInstructions}</div>
-                </div>
-
-                <div>
-                  <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: '#0052cc', marginBottom: 10, borderBottom: '1px solid #e0e7ff', paddingBottom: 6 }}>TERMS & CONDITIONS</div>
-                  <div style={{ fontSize: 12, color: '#444', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poTermsConditions}</div>
-                </div>
-
-                <div style={{ position: 'absolute', bottom: 32, left: 60, right: 60, display: 'flex', justifyContent: 'center', borderTop: '1.5px solid #0052cc', paddingTop: 8 }}>
-                  <span style={{ fontSize: 10, color: '#999' }}>Page 2 of 2</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
         </div>
       )}
-
-      {showPoEditModal && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 500, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowPoEditModal(false)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: 1080, maxHeight: '92vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={e => e.stopPropagation()}>
-
-            <div style={{ padding: '20px 24px', borderBottom: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-              <div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a' }}>Edit Purchase Order</div>
-                <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>{poNumber} · AWS Cloud Migration Consulting</div>
-              </div>
-              <button onClick={() => setShowPoEditModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 6, borderRadius: 8 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><X size={18} /></button>
-            </div>
-
-            <div style={{ overflowY: 'auto', overflowX: 'hidden', padding: '24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 6 }}>BUYER INFORMATION</div>
-
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Company Address</div>
-                <textarea value={poAddress} onChange={e => setPoAddress(e.target.value)} rows={4} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Buyer Name</div>
-                  <input value={poBuyerName} onChange={e => setPoBuyerName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                </div>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Company Logo</div>
-                  <div
-                    onClick={() => poLogoInputRef.current && poLogoInputRef.current.click()}
-                    style={{ border: `2px dashed ${poLogoFile ? '#22c55e' : '#e0e0e0'}`, borderRadius: 8, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', background: poLogoFile ? 'rgba(34,197,94,0.03)' : '#fafafa', transition: 'all 0.15s ease' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = poLogoFile ? '#22c55e' : '#7c7cff'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = poLogoFile ? '#22c55e' : '#e0e0e0'; }}
-                  >
-                    {poLogoFile ? (
-                      <>
-                        <CheckCircle size={16} color="#22c55e" strokeWidth={2} />
-                        <div>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>{poLogoFile.name}</div>
-                          <div style={{ fontSize: 11, color: '#999', marginTop: 1 }}>Click to replace</div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <Upload size={14} color="#7c7cff" />
-                        <span style={{ fontSize: 13, color: '#999' }}>Upload logo (PNG, SVG, JPG)</span>
-                      </>
-                    )}
-                  </div>
-                  <input
-                    ref={poLogoInputRef}
-                    type="file"
-                    accept=".png,.svg,.jpg,.jpeg"
-                    style={{ display: 'none' }}
-                    onChange={e => { if (e.target.files[0]) setPoLogoFile(e.target.files[0]); e.target.value = ''; }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
-              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 6 }}>SUPPLIER INFORMATION</div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Name</div>
-                  <input value={poSupplierName} onChange={e => setPoSupplierName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                </div>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Contact No.</div>
-                  <input value={poSupplierContact} onChange={e => setPoSupplierContact(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Address</div>
-                <textarea value={poSupplierAddress} onChange={e => setPoSupplierAddress(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-              </div>
-
-              <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
-              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 6 }}>PO DETAILS</div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>PO Number</div>
-                  <input value={poNumber} onChange={e => setPoNumber(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                </div>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Issue Date</div>
-                  <input type="date" value={poIssueDate} onChange={e => setPoIssueDate(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                </div>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Change No.</div>
-                  <input value={poChangeNo} onChange={e => setPoChangeNo(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-                </div>
-                <div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Terms (Category)</div>
-                  <div ref={poTermsCatRef} style={{ position: 'relative' }}>
-                    <button onClick={() => setPoTermsCategoryOpen(!poTermsCategoryOpen)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: `1px solid ${poTermsCategoryOpen ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 8, fontSize: 14, cursor: 'pointer', background: '#fff', fontFamily: 'inherit', outline: 'none', color: '#1a1a1a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: poTermsCategoryOpen ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none' }}>
-                      <span>{poTermsCategory}</span>
-                      <ChevronDown size={13} style={{ transform: poTermsCategoryOpen ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.15s ease' }} />
-                    </button>
-                    {poTermsCategoryOpen && (
-                      <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 400, background: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', padding: 6 }}>
-                        {['Real Estate', 'Technology and Consulting', 'Energy & Utilities', 'Healthcare & Pharma'].map(opt => (
-                          <div key={opt} onClick={() => { setPoTermsCategory(opt); setPoTermsCategoryOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, borderRadius: 6, cursor: 'pointer', color: '#1a1a1a' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{opt}</div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Instructions</div>
-                <textarea value={poInstructions} onChange={e => setPoInstructions(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-              </div>
-
-              <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>LINE ITEMS</div>
-                <button
-                  onClick={() => setPoLineItems(prev => [...prev, { ln: String(prev.length + 1), matCode: '', prTaskNo: '', prItem: '', description: '', uom: '', quantity: '', unitPrice: '', amount: '', delDate: '' }])}
-                  style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', border: '1px solid rgba(0,82,204,0.3)', borderRadius: 7, background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#0052cc', fontFamily: 'inherit' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,82,204,0.04)'}
-                  onMouseLeave={e => e.currentTarget.style.background = '#fff'}
-                >+ Add Row</button>
-              </div>
-
-              <div style={{ overflowX: 'auto', borderRadius: 8, border: '1px solid #e8e8e8', marginBottom: 6 }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 820, fontSize: 12 }}>
-                  <thead>
-                    <tr style={{ background: '#f5f5f7', borderBottom: '1px solid #e8e8e8' }}>
-                      {[
-                        { label: 'LN', w: '40px' },
-                        { label: 'MAT-CODE / COST CODE', w: '140px' },
-                        { label: 'PR / TASK NO.', w: '120px' },
-                        { label: 'PR ITEM', w: '70px' },
-                        { label: 'DESCRIPTION', w: 'auto' },
-                        { label: 'UOM', w: '70px' },
-                        { label: 'QTY', w: '60px' },
-                        { label: 'UNIT PRICE', w: '90px' },
-                        { label: 'AMOUNT', w: '90px' },
-                        { label: 'DEL. DATE', w: '90px' },
-                      ].map((col, ci) => (
-                        <th key={ci} style={{ padding: '9px 10px', fontSize: 10, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: '0.4px', textAlign: 'left', whiteSpace: 'nowrap', width: col.w, borderRight: ci < 9 ? '1px solid #e8e8e8' : 'none' }}>
-                          {col.label}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {poLineItems.length === 0 ? (
-                      <tr>
-                        <td colSpan={10} style={{ padding: '20px', textAlign: 'center', fontSize: 13, color: '#999' }}>
-                          No line items. Click "+ Add Row" to add one.
-                        </td>
-                      </tr>
-                    ) : (
-                      poLineItems.map((item, idx) => (
-                        <tr key={idx} style={{ borderBottom: idx < poLineItems.length - 1 ? '1px solid #e8e8e8' : 'none', background: idx % 2 === 0 ? '#fff' : '#fafafa' }}>
-                          {[
-                            { field: 'ln', isTextarea: false, minW: 32 },
-                            { field: 'matCode', isTextarea: false, minW: 110 },
-                            { field: 'prTaskNo', isTextarea: false, minW: 100 },
-                            { field: 'prItem', isTextarea: false, minW: 48 },
-                            { field: 'description', isTextarea: true, minW: 140 },
-                            { field: 'uom', isTextarea: false, minW: 50 },
-                            { field: 'quantity', isTextarea: false, minW: 48 },
-                            { field: 'unitPrice', isTextarea: false, minW: 72 },
-                            { field: 'amount', isTextarea: false, minW: 72 },
-                            { field: 'delDate', isTextarea: false, minW: 72 },
-                          ].map(({ field, isTextarea, minW }, fi) => (
-                            <td key={fi} style={{ padding: '8px 10px', verticalAlign: 'top', borderRight: fi < 9 ? '1px solid #e8e8e8' : 'none' }}>
-                              {isTextarea ? (
-                                <textarea
-                                  value={item[field]}
-                                  onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
-                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', background: '#fff', minHeight: 52, lineHeight: 1.4 }}
-                                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
-                                  onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
-                                />
-                              ) : (
-                                <input
-                                  value={item[field]}
-                                  onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
-                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', background: '#fff', boxSizing: 'border-box' }}
-                                  onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
-                                  onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
-                                />
-                              )}
-                            </td>
-                          ))}
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Special Instructions to Supplier</div>
-                <textarea value={poSpecialInstructions} onChange={e => setPoSpecialInstructions(e.target.value)} rows={5} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-              </div>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Terms & Conditions</div>
-                <textarea value={poTermsConditions} onChange={e => setPoTermsConditions(e.target.value)} rows={7} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
-              </div>
-
-            </div>
-
-            <div style={{ padding: '16px 24px', borderTop: '1px solid #e8e8e8', display: 'flex', justifyContent: 'flex-end', gap: 10, flexShrink: 0 }}>
-              <button onClick={() => setShowPoEditModal(false)} style={{ padding: '9px 20px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
-              <button onClick={() => { setShowPoEditModal(false); setSaveToast({ title: 'Changes saved successfully', subtext: 'Purchase Order details have been updated.' }); setTimeout(() => setSaveToast(null), 3000); }} style={{ padding: '9px 24px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>Save Changes</button>
-            </div>
-
-          </div>
-        </div>
-      )}
-
     </>
-
-
   );
 }

@@ -1518,12 +1518,12 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
 
               <div>
                 <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Company Address</div>
-                <textarea value={poAddress} onChange={e => setPoAddress(e.target.value)} rows={4} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                <textarea value={poAddress} onChange={e => setPoAddress(e.target.value)} rows={4} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Buyer Name</div>
-                  <input value={poBuyerName} onChange={e => setPoBuyerName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                  <input value={poBuyerName} onChange={e => setPoBuyerName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
                 </div>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Company Logo</div>
@@ -1564,16 +1564,16 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Name</div>
-                  <input value={poSupplierName} onChange={e => setPoSupplierName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                  <input value={poSupplierName} onChange={e => setPoSupplierName(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
                 </div>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Contact No.</div>
-                  <input value={poSupplierContact} onChange={e => setPoSupplierContact(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                  <input value={poSupplierContact} onChange={e => setPoSupplierContact(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
                 </div>
               </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Supplier Address</div>
-                <textarea value={poSupplierAddress} onChange={e => setPoSupplierAddress(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                <textarea value={poSupplierAddress} onChange={e => setPoSupplierAddress(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
               </div>
 
               <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
@@ -1582,15 +1582,15 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>PO Number</div>
-                  <input value={poNumber} onChange={e => setPoNumber(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                  <input value={poNumber} onChange={e => setPoNumber(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
                 </div>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Issue Date</div>
-                  <input type="date" value={poIssueDate} onChange={e => setPoIssueDate(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                  <input type="date" value={poIssueDate} onChange={e => setPoIssueDate(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
                 </div>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Change No.</div>
-                  <input value={poChangeNo} onChange={e => setPoChangeNo(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                  <input value={poChangeNo} onChange={e => setPoChangeNo(e.target.value)} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
                 </div>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Terms (Category)</div>
@@ -1611,7 +1611,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
               </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Instructions</div>
-                <textarea value={poInstructions} onChange={e => setPoInstructions(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                <textarea value={poInstructions} onChange={e => setPoInstructions(e.target.value)} rows={3} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
               </div>
 
               <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
@@ -1675,7 +1675,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                                 <textarea
                                   value={item[field]}
                                   onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
-                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 52, lineHeight: 1.4 }}
+                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', background: '#fff', minHeight: 52, lineHeight: 1.4 }}
                                   onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
                                   onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
                                 />
@@ -1683,7 +1683,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                                 <input
                                   value={item[field]}
                                   onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
-                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', background: '#fff', boxSizing: 'border-box' }}
                                   onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
                                   onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
                                 />
@@ -1745,7 +1745,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                                 <textarea
                                   value={item[field]}
                                   onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
-                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 52, lineHeight: 1.4 }}
+                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', background: '#fff', minHeight: 52, lineHeight: 1.4 }}
                                   onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
                                   onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
                                 />
@@ -1753,7 +1753,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                                 <input
                                   value={item[field]}
                                   onChange={e => { const u = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(u); }}
-                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', background: '#fff', boxSizing: 'border-box' }}
                                   onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
                                   onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
                                 />
@@ -1815,7 +1815,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                                 <textarea
                                   value={item[field]}
                                   onChange={e => { const updated = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(updated); }}
-                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', minHeight: 52, lineHeight: 1.4 }}
+                                  style={{ width: '100%', minWidth: minW, padding: '4px 6px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', resize: 'vertical', outline: 'none', background: '#fff', minHeight: 52, lineHeight: 1.4 }}
                                   onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
                                   onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
                                 />
@@ -1823,7 +1823,7 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
                                 <input
                                   value={item[field]}
                                   onChange={e => { const updated = poLineItems.map((it, i) => i === idx ? { ...it, [field]: e.target.value } : it); setPoLineItems(updated); }}
-                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }}
+                                  style={{ width: '100%', minWidth: minW, padding: '5px 7px', border: '1px solid #e8e8e8', borderRadius: 6, fontSize: 12, fontFamily: 'inherit', outline: 'none', background: '#fff', boxSizing: 'border-box' }}
                                   onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 2px rgba(124,124,255,0.1)'; }}
                                   onBlur={e => { e.target.style.borderColor = '#e8e8e8'; e.target.style.boxShadow = 'none'; }}
                                 />
@@ -1840,11 +1840,11 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
               <div style={{ borderTop: '1px solid #f0f0f0', margin: '6px 0' }} />
               <div>
                 <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Special Instructions to Supplier</div>
-                <textarea value={poSpecialInstructions} onChange={e => setPoSpecialInstructions(e.target.value)} rows={5} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                <textarea value={poSpecialInstructions} onChange={e => setPoSpecialInstructions(e.target.value)} rows={5} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
               </div>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', marginBottom: 6 }}>Terms & Conditions</div>
-                <textarea value={poTermsConditions} onChange={e => setPoTermsConditions(e.target.value)} rows={7} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
+                <textarea value={poTermsConditions} onChange={e => setPoTermsConditions(e.target.value)} rows={7} style={{ width: '100%', padding: '9px 12px', boxSizing: 'border-box', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.8, outline: 'none', background: '#fff' }} onFocus={e => { e.target.style.borderColor = '#7c7cff'; e.target.style.boxShadow = '0 0 0 3px rgba(124,124,255,0.1)'; }} onBlur={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.boxShadow = 'none'; }} />
               </div>
 
             </div>
