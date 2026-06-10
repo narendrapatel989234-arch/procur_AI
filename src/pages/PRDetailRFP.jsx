@@ -3175,8 +3175,11 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               {activeTab === 'negot' && proposals.some(p => p.status === 'Completed') && (() => {
                 const negotProposals = proposals.filter(p => p.status === 'Completed');
                 const firstNegotKey = Object.keys(NEGOTIATION_DATA)[0];
-                const activeVendorKey = selectedNegotVendorId || firstNegotKey;
+                // selectedNegotVendorId now holds p.id
+                const activeNegotProp = negotProposals.find(p => p.id === selectedNegotVendorId) || negotProposals[0];
+                const activeVendorKey = activeNegotProp ? activeNegotProp.vendorName : firstNegotKey;
                 const negotData = NEGOTIATION_DATA[activeVendorKey] || NEGOTIATION_DATA[firstNegotKey];
+                const activeDropdownLabel = activeNegotProp ? `${activeNegotProp.vendorName} ${activeNegotProp.version}` : activeVendorKey;
 
                 return (
                   <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: 'transparent' }}>
@@ -3213,7 +3216,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 return (
                                   <tr key={p.id} style={{ borderBottom: idx < negotProposals.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
                                     <td style={{ padding: '14px 16px', fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
-                                      <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>{p.vendorName.replace(' v1', '\nv1')}</div>
+                                      <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>{p.vendorName} {p.version}</div>
                                     </td>
                                     <td style={{ padding: '14px 16px' }}>
                                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -3267,18 +3270,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </div>
                           <div style={{ position: 'relative' }} ref={negotVendorRef}>
                             <button type="button" onClick={() => setNegotVendorOpen(!negotVendorOpen)} style={{ width: 240, padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', background: '#fff', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxSizing: 'border-box', fontWeight: 500 }}>
-                              {activeVendorKey} <ChevronDown size={16} style={{ transform: negotVendorOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} color="#666" />
+                              <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{activeDropdownLabel}</span> <ChevronDown size={16} style={{ transform: negotVendorOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }} color="#666" />
                             </button>
                             {negotVendorOpen && (
-                              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100 }}>
-                                {Object.keys(NEGOTIATION_DATA).map(key => (
-                                  <div key={key} onClick={() => { setSelectedNegotVendorId(key); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                    {key}
-                                  </div>
-                                ))}
-                                {negotProposals.filter(p => !NEGOTIATION_DATA[p.vendorName]).map(p => (
-                                  <div key={p.id} onClick={() => { setSelectedNegotVendorId(p.vendorName); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                    {p.vendorName}
+                              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100, maxHeight: 300, overflowY: 'auto' }}>
+                                {negotProposals.map(p => (
+                                  <div key={p.id} onClick={() => { setSelectedNegotVendorId(p.id); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                    {p.vendorName} {p.version}
                                   </div>
                                 ))}
                               </div>
@@ -3418,7 +3416,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                                 <div>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
-                                  <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
+<div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
                                 </div>
 
                               </div>
@@ -3435,6 +3433,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
               {/* SOW TAB CONTENT */}
               {activeTab === 'sow' && selectedAwardVendor && (() => {
+                const awardedProp = proposals.find(p => p.id === selectedAwardVendor);
+                const awardedName = awardedProp ? `${awardedProp.vendorName} ${awardedProp.version}` : selectedAwardVendor;
                 if (sowStage === 'template_selection') {
                   return (
                     <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: 'transparent' }}>
@@ -3443,7 +3443,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           <div>
                             <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>STATEMENT OF WORK GENERATION</div>
                             <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, lineHeight: 1.5, maxWidth: 800 }}>
-                              The project has been awarded to <strong style={{ color: 'var(--text-primary)' }}>{selectedAwardVendor}</strong>. Please select a template to generate the initial SOW draft. The AI agent has analyzed the RFP, vendor proposal, and context to recommend the best templates.
+                              The project has been awarded to <strong style={{ color: 'var(--text-primary)' }}>{awardedName}</strong>. Please select a template to generate the initial SOW draft. The AI agent has analyzed the RFP, vendor proposal, and context to recommend the best templates.
                             </div>
                           </div>
                         </div>
@@ -4183,12 +4183,12 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, margin: '16px 0' }}>
               {proposals.filter(p => p.status === 'Completed').map(p => (
-                <div key={p.id} onClick={() => setSelectedAwardVendor(p.vendorName)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', border: `1px solid ${selectedAwardVendor === p.vendorName ? '#0052cc' : 'var(--border-subtle)'}`, borderRadius: 10, background: selectedAwardVendor === p.vendorName ? 'rgba(0,82,204,0.04)' : '#fff', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                  <div style={{ width: 16, height: 16, borderRadius: '50%', border: `1.5px solid ${selectedAwardVendor === p.vendorName ? '#0052cc' : '#ccc'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: '#fff' }}>
-                    {selectedAwardVendor === p.vendorName && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#0052cc' }} />}
+                <div key={p.id} onClick={() => setSelectedAwardVendor(p.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', border: `1px solid ${selectedAwardVendor === p.id ? '#0052cc' : 'var(--border-subtle)'}`, borderRadius: 10, background: selectedAwardVendor === p.id ? 'rgba(0,82,204,0.04)' : '#fff', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                  <div style={{ width: 16, height: 16, borderRadius: '50%', border: `1.5px solid ${selectedAwardVendor === p.id ? '#0052cc' : '#ccc'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: '#fff' }}>
+                    {selectedAwardVendor === p.id && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#0052cc' }} />}
                   </div>
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName} {p.version}</div>
                     <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>Tech Score: <span style={{ fontWeight: 600 }}>{p.techScore}</span></div>
                   </div>
                 </div>
@@ -4209,7 +4209,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
       {/* Award Success Toast */}
 
-      {showAwardSuccessToast && (
+      {showAwardSuccessToast && (() => {
+        const awardedProp = proposals.find(p => p.id === selectedAwardVendor);
+        const awardedName = awardedProp ? `${awardedProp.vendorName} ${awardedProp.version}` : selectedAwardVendor;
+        return (
 
         <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
 
@@ -4219,15 +4222,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
             <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Project Awarded Successfully</div>
 
-            <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{selectedAwardVendor} has been notified.</div>
+            <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{awardedName} has been notified.</div>
 
           </div>
 
           <button onClick={() => setShowAwardSuccessToast(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
 
         </div>
-
-      )}
+        );
+      })()}
 
 
 
