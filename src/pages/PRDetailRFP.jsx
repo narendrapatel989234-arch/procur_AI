@@ -67,8 +67,8 @@ const WORKFLOW_GROUPS = [
   {
     id: 'g6', type: 'parallel', label: 'PARALLEL', nodes: [
       { id: 10, status: 'complete', type: 'ai', title: 'Generate RFP', actor: 'AI Agent', time: '10 May · 14:30', icon: Sparkles },
-      { id: 11, status: 'complete', type: 'ai', title: 'Scoring Config', actor: 'AI Agent', time: '10 May · 14:31', icon: Target },
-      { id: 12, status: 'complete', type: 'ai', title: 'Cost Estimation', actor: 'AI Agent', time: '10 May · 14:32', icon: DollarSign },
+      { id: 11, status: 'complete', type: 'ai', title: 'Evaluation Criteria', actor: 'AI Agent', time: '10 May · 14:31', icon: Target },
+      { id: 12, status: 'complete', type: 'ai', title: 'Budget Estimation', actor: 'AI Agent', time: '10 May · 14:32', icon: DollarSign },
     ]
   },
   { id: 'g7', type: 'single', node: { id: 13, status: 'pending_user', type: 'user', title: 'RFP Approval', actor: 'David Kim', time: 'Awaiting action', icon: UserCheck } },
@@ -476,12 +476,15 @@ const VENDORS = [
   { id: 4, name: 'Infosys Cloud Services', location: 'Dubai, UAE', score: 79, rationale: ['Solid approach and methodology', 'Competitive commercial proposal', 'Good technical capabilities'] },
   { id: 5, name: 'Wipro Cloud Practice', location: 'Remote / UAE Ops', score: 76, rationale: ['Flexible engagement model', 'Adequate relevant experience', 'Acceptable technical score'] },
 ];
-const SCORING_CRITERIA = [
-  { label: 'Technical Competency', weight: 30, color: '#7c7cff' },
-  { label: 'Relevant Experience', weight: 25, color: '#0052cc' },
-  { label: 'Team Composition & CVs', weight: 20, color: '#22c55e' },
-  { label: 'Commercial Proposal', weight: 15, color: '#f59e0b' },
-  { label: 'Approach & Methodology', weight: 10, color: '#ef4444' },
+const EVALUATION_CATEGORIES = [
+  'Technical Fit',
+  'Commercial Evaluation',
+  'Vendor Capability',
+  'Delivery Capability',
+  'Team Capability',
+  'Compliance & Requirements',
+  'Risk Assessment',
+  'Support & Operations'
 ];
 const DUMMY_VENDORS = [
   { id: 'dv1', name: 'Acme Corp', location: 'Dubai, UAE', rationale: ['Solid IT consulting background', 'Extensive experience in enterprise projects'] },
@@ -606,14 +609,14 @@ const SOW_INITIAL_HTML = `<h2>1. Scope of Work</h2>
 <p><em>[Standard Confidentiality Clause]</em><br/><em>[Data Protection Clause - UAE Context]</em></p>`;
 
 const VERSION_HISTORY = [
-  { version: 'v1.2', date: '10 May 2026 · 14:32', author: 'AI Agent', note: 'Scoring criteria updated, cost estimation refined', active: true },
+  { version: 'v1.2', date: '10 May 2026 · 14:32', author: 'AI Agent', note: 'Scoring criteria updated, budget estimation refined', active: true },
   { version: 'v1.1', date: '09 May 2026 · 16:10', author: 'AI Agent', note: 'Supplier research findings incorporated', active: false },
   { version: 'v1.0', date: '09 May 2026 · 11:00', author: 'AI Agent', note: 'Initial RFP generated from PR fields', active: false },
 ];
 const AUDIT_ENTRIES = [
-  { type: 'ai', title: 'RFP Generated (v1.2)', desc: 'AI updated RFP with refined scoring config and cost estimation.', actor: 'AI Agent', time: '10 May · 14:32' },
-  { type: 'ai', title: 'Scoring Config Finalised', desc: 'Evaluation criteria weights set: Technical 30%, Experience 25%, etc.', actor: 'AI Agent', time: '10 May · 14:31' },
-  { type: 'ai', title: 'Cost Estimation Complete', desc: 'AI estimated ₹45,00,000 based on T&M rates in UAE market.', actor: 'AI Agent', time: '10 May · 14:30' },
+  { type: 'ai', title: 'RFP Generated (v1.2)', desc: 'AI updated RFP with refined evaluation criteria and budget estimation.', actor: 'AI Agent', time: '10 May · 14:32' },
+  { type: 'ai', title: 'Evaluation Criteria Finalised', desc: 'Evaluation criteria weights set: Technical 30%, Experience 25%, etc.', actor: 'AI Agent', time: '10 May · 14:31' },
+  { type: 'ai', title: 'Budget Estimation Complete', desc: 'AI estimated ₹45,00,000 based on T&M rates in UAE market.', actor: 'AI Agent', time: '10 May · 14:30' },
   { type: 'ai', title: 'Supplier Research Complete', desc: '5 vendors shortlisted from 847 by AWS partner status and UAE presence.', actor: 'AI Agent', time: '09 May · 11:02' },
   { type: 'ai', title: 'RFQ Template Selected', desc: 'Technology Consulting Standard v2.1 selected by AI.', actor: 'AI Agent', time: '09 May · 11:00' },
   { type: 'ai', title: 'Compliance Validation Passed', desc: 'Policy §4.2 check passed. RFP mandatory for complex engagements >₹10L.', actor: 'AI Agent', time: '08 May · 09:17' },
@@ -969,7 +972,7 @@ const REASONING_MAP = {
   7: ['Cost centre ENG-402 validated', 'CapEx/OpEx classification confirmed: OpEx', 'Finance policy check: PASSED'],
   8: ['Vendor compliance status: all 5 vendors active', 'Policy 4.2 check: RFP required for complex', 'Compliance check: PASSED'],
   9: ['Queried vendor database: 847 vendors', 'Applied AWS partner filter + UAE location', '5 vendors shortlisted by confidence score'],
-  10: ['RFP template selected: Technology Consulting Standard v2.1', 'Scoring config generated: 5 criteria', 'Cost estimation complete: ₹45,00,000'],
+  10: ['RFP template selected: Technology Consulting Standard v2.1', 'Evaluation Criteria generated: 5 criteria', 'Budget estimation complete: ₹45,00,000'],
 };
 
 const SOW_CLAUSES = [
@@ -1095,16 +1098,20 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [propSortConfig, setPropSortConfig] = useState({ field: null, direction: 'desc' });
 
   const [selectedNegotVendorId, setSelectedNegotVendorId] = useState(null);
+  const [selectedMatrixProps, setSelectedMatrixProps] = useState([]);
+  const [matrixDropOpen, setMatrixDropOpen] = useState(false);
+  const matrixDropRef = useRef(null);
 
   const [suggestedVendors, setSuggestedVendors] = useState(VENDORS);
   const [showAddVendorModal, setShowAddVendorModal] = useState(false);
   const [showScoringConfigModal, setShowScoringConfigModal] = useState(false);
+  const [openCategoryDropdownIdx, setOpenCategoryDropdownIdx] = useState(null);
   const [scoringConfigData, setScoringConfigData] = useState([
-    { sr: 1, cat: 'Technical Solution', crit: 'Technical Competency', w: 30 },
-    { sr: 2, cat: 'Technical Solution', crit: 'Approach & Methodology', w: 10 },
-    { sr: 3, cat: 'Vendor Assessment', crit: 'Relevant Experience', w: 25 },
-    { sr: 4, cat: 'Vendor Assessment', crit: 'Team Composition & CVs', w: 20 },
-    { sr: 5, cat: 'Compliance & Requirements', crit: 'Commercial Proposal', w: 15 },
+    { sr: 1, cat: 'Technical Fit', crit: 'Technical Competency', w: 30, color: '#7c7cff' },
+    { sr: 2, cat: 'Delivery Capability', crit: 'Approach & Methodology', w: 10, color: '#ef4444' },
+    { sr: 3, cat: 'Vendor Capability', crit: 'Relevant Experience', w: 25, color: '#0052cc' },
+    { sr: 4, cat: 'Team Capability', crit: 'Team Composition & CVs', w: 20, color: '#22c55e' },
+    { sr: 5, cat: 'Commercial Evaluation', crit: 'Commercial Proposal', w: 15, color: '#f59e0b' },
   ]);
   const [showCostConfigModal, setShowCostConfigModal] = useState(false);
   const [costCurrencyOpen, setCostCurrencyOpen] = useState(false);
@@ -1118,10 +1125,19 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     const handleDocClick = (e) => {
       if (costCurrencyRef.current && !costCurrencyRef.current.contains(e.target)) setCostCurrencyOpen(false);
       if (negotVendorRef.current && !negotVendorRef.current.contains(e.target)) setNegotVendorOpen(false);
+      if (matrixDropRef.current && !matrixDropRef.current.contains(e.target)) setMatrixDropOpen(false);
     };
     document.addEventListener('mousedown', handleDocClick);
     return () => document.removeEventListener('mousedown', handleDocClick);
   }, []);
+
+  useEffect(() => {
+    setSelectedMatrixProps(prev => {
+      const existing = prev.filter(id => proposals.some(p => p.id === id));
+      const newIds = proposals.map(p => p.id).filter(id => !prev.includes(id));
+      return [...existing, ...newIds];
+    });
+  }, [proposals]);
 
   const getCurrencySymbol = (cur) => {
     switch (cur) {
@@ -1164,7 +1180,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [vendorToast, setVendorToast] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(null);
   const [previewActiveTab, setPreviewActiveTab] = useState('Summary');
-  const [showReuploadModal, setShowReuploadModal] = useState(null);
+  const [uploadVersionPropId, setUploadVersionPropId] = useState(null);
   const [showSupportingDocModal, setShowSupportingDocModal] = useState(null);
   const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(null);
   const [reupFileDrag, setReupFileDrag] = useState(false);
@@ -1184,6 +1200,64 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     const now = new Date();
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const dateStr = `${String(now.getDate()).padStart(2, '0')}-${months[now.getMonth()]}-${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    if (uploadVersionPropId) {
+      const form = validForms[0];
+      const targetId = Date.now();
+      setProposals(prev => {
+        const originalProp = prev.find(p => p.id === uploadVersionPropId);
+        if (!originalProp) return prev;
+        
+        const currentV = parseInt(originalProp.version.replace('v', '').split('.')[0]);
+        const newVersionProp = {
+          ...originalProp,
+          id: targetId,
+          fileName: form.file.name,
+          version: `v${currentV + 1}.0`,
+          uploadDate: dateStr,
+          status: 'Processing',
+          state: null,
+          techScore: 'Pending',
+          commercial: 'Pending',
+          risks: [],
+          criteriaScores: {}
+        };
+        return [...prev, newVersionProp];
+      });
+      setShowUploadModal(false); setPropFileDrag(null); setSuppFileDrag(null);
+      setUploadVersionPropId(null);
+      setUploadForms([{ id: Date.now(), vendorName: '', file: null, supporting: [] }]);
+      
+      setTimeout(() => {
+        setProposals(prev => prev.map(p => {
+          if (p.id === targetId) {
+            const s1 = Math.floor(Math.random() * 5 + 24);
+            const s2 = Math.floor(Math.random() * 5 + 19);
+            const s3 = Math.floor(Math.random() * 5 + 14);
+            const s4 = Math.floor(Math.random() * 4 + 11);
+            const s5 = Math.floor(Math.random() * 3 + 7);
+            const total = s1 + s2 + s3 + s4 + s5;
+            const commVal = Math.floor(Math.random() * 30 + 110);
+            return {
+              ...p,
+              status: 'Completed',
+              techScore: `${total}/100`,
+              commercial: `$${commVal},000`,
+              criteriaScores: {
+                'Technical Competency': `${s1}/30`,
+                'Relevant Experience': `${s2}/25`,
+                'Team Composition & CVs': `${s3}/20`,
+                'Commercial Proposal': `${s4}/15`,
+                'Approach & Methodology': `${s5}/10`
+              },
+              risks: ['Revised timeline reduces risk', 'Commercials aligned with budget']
+            };
+          }
+          return p;
+        }));
+      }, 3000);
+      return;
+    }
 
     const newProps = validForms.map((form, idx) => ({
       id: Date.now() + idx,
@@ -1235,58 +1309,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     }, 3000);
   };
 
-  const handleReupload = () => {
-    if (!uploadForm.file) return;
-    setProposals(prev => prev.map(p => {
-      if (p.id === showReuploadModal) {
-        const currentV = parseInt(p.version.replace('v', '').split('.')[0]);
-        return {
-          ...p,
-          fileName: uploadForm.file.name,
-          version: `v${currentV + 1}.0`,
-          status: 'Processing',
-          state: null,
-          techScore: 'Pending',
-          commercial: 'Pending',
-          risks: [],
-          criteriaScores: {}
-        };
-      }
-      return p;
-    }));
-    const targetId = showReuploadModal;
-    setShowReuploadModal(null);
-    setUploadForm({ vendorName: '', file: null, supporting: [] });
-    setTimeout(() => {
-      setProposals(prev => prev.map(p => {
-        if (p.id === targetId) {
-          const s1 = Math.floor(Math.random() * 5 + 24);
-          const s2 = Math.floor(Math.random() * 5 + 19);
-          const s3 = Math.floor(Math.random() * 5 + 14);
-          const s4 = Math.floor(Math.random() * 4 + 11);
-          const s5 = Math.floor(Math.random() * 3 + 7);
-          const total = s1 + s2 + s3 + s4 + s5;
-          const commVal = Math.floor(Math.random() * 30 + 110);
-          return {
-            ...p,
-            status: 'Completed',
-            techScore: `${total}/100`,
-            commercial: `$${commVal},000`,
-            criteriaScores: {
-              'Technical Competency': `${s1}/30`,
-              'Relevant Experience': `${s2}/25`,
-              'Team Composition & CVs': `${s3}/20`,
-              'Commercial Proposal': `${s4}/15`,
-              'Approach & Methodology': `${s5}/10`
-            },
-            risks: ['Revised timeline reduces risk', 'Commercials aligned with budget']
-          };
-        }
-        return p;
-      }));
-    }, 3000);
-  };
-
   // Handle special signals from WYSIWYGEditor
   const handleHtmlChange = (val) => {
     if (val === '__EDIT__') { setIsEditing(true); return; }
@@ -1297,13 +1319,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
   const handleSowHtmlChange = (val) => {
     if (val === '__EDIT__') { setIsSowEditing(true); return; }
-    if (val === '__SAVE__') { 
-      setSowSavedHtml(sowHtmlContent); 
-      setIsSowEditing(false); 
+    if (val === '__SAVE__') {
+      setSowSavedHtml(sowHtmlContent);
+      setIsSowEditing(false);
       setHasSavedSow(true);
       setSaveToast({ title: 'SOW Saved Successfully', subtext: 'The statement of work has been updated.' });
       setTimeout(() => setSaveToast(null), 3000);
-      return; 
+      return;
     }
     if (val === '__DISCARD__') { setSowHtmlContent(sowSavedHtml); setIsSowEditing(false); return; }
     setSowHtmlContent(val);
@@ -1368,8 +1390,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
           </div>
         </div>
       )}
-        {/* MODALS */}
-      
+      {/* MODALS */}
+
       {showApproveModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowApproveModal(false)}>
           <div style={{ background: '#fff', borderRadius: 16, width: 500, maxWidth: '90vw', padding: '40px 36px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12 }} onClick={e => e.stopPropagation()}>
@@ -1424,7 +1446,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
           <div style={{ background: '#fff', borderRadius: 16, width: 800, padding: '0 32px 32px', maxHeight: '100%', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 24 }} onClick={e => e.stopPropagation()}>
             <div style={{ position: 'sticky', top: 0, background: '#fff', zIndex: 10, padding: '32px 0 24px', marginBottom: -24, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Edit Score Config</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Edit Evaluation Criteria</div>
                 <div style={{ fontSize: 13, color: '#666', marginTop: 6 }}>This score indicates the minimum requirement for proposals to be considered successful.</div>
               </div>
               <button onClick={() => setShowScoringConfigModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
@@ -1452,16 +1474,39 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
                         <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-primary)', fontWeight: 500 }}>{row.sr}</td>
                         <td style={{ padding: '4px 8px' }}>
-                          <input
-                            className="editable-cell"
-                            value={row.cat}
-                            onChange={e => {
-                              const newData = [...scoringConfigData];
-                              newData[i].cat = e.target.value;
-                              setScoringConfigData(newData);
-                            }}
-                            style={{ width: '100%', padding: '10px 8px', background: 'transparent', fontSize: 13, color: 'var(--text-secondary)', outline: 'none', fontFamily: 'inherit', fontWeight: 500 }}
-                          />
+                          <div style={{ position: 'relative' }}>
+                            <div
+                              onClick={() => setOpenCategoryDropdownIdx(openCategoryDropdownIdx === i ? null : i)}
+                              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', cursor: 'pointer', background: '#fff', border: '1px solid #e2e8f0', borderRadius: 8, outline: 'none', width: '100%' }}
+                            >
+                              <span style={{ fontSize: 13, color: row.cat ? 'var(--text-primary)' : 'var(--text-secondary)', fontWeight: 500, fontFamily: 'inherit' }}>
+                                {row.cat || 'Select Category'}
+                              </span>
+                              <ChevronDown size={14} color="#666" style={{ transform: openCategoryDropdownIdx === i ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', marginLeft: 16 }} />
+                            </div>
+
+                            {openCategoryDropdownIdx === i && (
+                              <>
+                                <div style={{ position: 'fixed', inset: 0, zIndex: 10 }} onClick={() => setOpenCategoryDropdownIdx(null)} />
+                                <div style={{ position: 'absolute', top: '100%', left: 0, minWidth: '100%', marginTop: 4, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 20, maxHeight: 200, overflowY: 'auto' }}>
+                                  {EVALUATION_CATEGORIES.map(cat => (
+                                    <div key={cat} style={{ padding: '8px 12px', fontSize: 13, color: 'var(--text-primary)', cursor: 'pointer', borderBottom: '1px solid var(--border-subtle)', background: row.cat === cat ? 'rgba(0,82,204,0.05)' : 'transparent', fontWeight: row.cat === cat ? 600 : 400 }}
+                                      onClick={() => {
+                                        const newData = [...scoringConfigData];
+                                        newData[i].cat = cat;
+                                        setScoringConfigData(newData);
+                                        setOpenCategoryDropdownIdx(null);
+                                      }}
+                                      onMouseEnter={e => { if (row.cat !== cat) e.currentTarget.style.background = '#f9fafb'; }}
+                                      onMouseLeave={e => { if (row.cat !== cat) e.currentTarget.style.background = 'transparent'; }}
+                                    >
+                                      {cat}
+                                    </div>
+                                  ))}
+                                </div>
+                              </>
+                            )}
+                          </div>
                         </td>
                         <td style={{ padding: '4px 8px' }}>
                           <input
@@ -1509,7 +1554,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               </div>
               <div style={{ marginTop: 12 }}>
                 <button
-                  onClick={() => setScoringConfigData(prev => [...prev, { sr: prev.length + 1, cat: '', crit: '', w: 0, isNew: true }])}
+                  onClick={() => setScoringConfigData(prev => [...prev, { sr: prev.length + 1, cat: '', crit: '', w: 0, color: '#0052cc', isNew: true }])}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: '#0052cc', fontSize: 13, fontWeight: 500, cursor: 'pointer', padding: 0 }}
                 >
                   <Plus size={16} strokeWidth={2.5} /> Add Row
@@ -1522,7 +1567,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               <button
                 onClick={() => {
                   setShowScoringConfigModal(false);
-                  setSaveToast({ title: 'Changes saved successfully', subtext: 'Scoring config has been updated.' });
+                  setSaveToast({ title: 'Changes saved successfully', subtext: 'Evaluation Criteria has been updated.' });
                   setTimeout(() => setSaveToast(null), 3000);
                 }}
                 style={{ padding: '10px 24px', border: 'none', borderRadius: 10, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>
@@ -1538,8 +1583,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
           <div style={{ background: '#fff', borderRadius: 16, width: 850, padding: '32px', maxHeight: '85vh', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 24 }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexShrink: 0 }}>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Edit Cost Estimation</div>
-                <div style={{ fontSize: 13, color: '#666', marginTop: 6, marginBottom: 16 }}>Review and adjust the cost estimation parameters below.</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Edit Budget Estimation</div>
+                <div style={{ fontSize: 13, color: '#666', marginTop: 6, marginBottom: 16 }}>Review and adjust the budget estimation parameters below.</div>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#4a4a4a', marginBottom: 6 }}>Currency</div>
                   <div ref={costCurrencyRef} style={{ position: 'relative' }}>
@@ -1633,7 +1678,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               <button
                 onClick={() => {
                   setShowCostConfigModal(false);
-                  setSaveToast({ title: 'Changes saved successfully', subtext: 'Cost estimation details have been updated.' });
+                  setSaveToast({ title: 'Changes saved successfully', subtext: 'Budget estimation details have been updated.' });
                   setTimeout(() => setSaveToast(null), 3000);
                 }}
                 style={{ padding: '10px 24px', border: 'none', borderRadius: 10, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>
@@ -1715,15 +1760,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
       )}
 
       {showUploadModal && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => { setShowUploadModal(false); setPropFileDrag(null); setSuppFileDrag(null); }}>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => { setShowUploadModal(false); setPropFileDrag(null); setSuppFileDrag(null); setUploadVersionPropId(null); }}>
           <div style={{ background: '#fff', borderRadius: 16, width: 900, maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.18)' }} onClick={e => e.stopPropagation()}>
             {/* Sticky Header */}
             <div style={{ padding: '32px 32px 24px 32px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', flexShrink: 0 }}>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Upload Proposal</div>
-                <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Upload vendor proposal documents for this RFP.</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>{uploadVersionPropId ? 'Upload New Version' : 'Upload Proposal'}</div>
+                <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>{uploadVersionPropId ? 'Upload a new version of the proposal document and its supporting files.' : 'Upload vendor proposal documents for this RFP.'}</div>
               </div>
-              <button onClick={() => { setShowUploadModal(false); setPropFileDrag(null); setSuppFileDrag(null); }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
+              <button onClick={() => { setShowUploadModal(false); setPropFileDrag(null); setSuppFileDrag(null); setUploadVersionPropId(null); }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             </div>
 
             {/* Scrollable Body */}
@@ -1732,7 +1777,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 <div key={form.id} style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: index === uploadForms.length - 1 ? 0 : 32 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ fontSize: 15, fontWeight: 700, color: '#1a1a1a' }}>Vendor {index + 1} Details</div>
-                    {uploadForms.length > 1 && (
+                    {uploadForms.length > 1 && !uploadVersionPropId && (
                       <button
                         onClick={() => setUploadForms(prev => prev.filter(f => f.id !== form.id))}
                         style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#dc2626', display: 'flex', alignItems: 'center', padding: 4 }}
@@ -1744,14 +1789,20 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 24, background: '#fafafa', border: '1px solid var(--border-default)', borderRadius: 12, padding: '24px' }}>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Vendor Name <span style={{ color: '#dc2626' }}>*</span></div>
-                      <EDrop
-                        open={activeVendorDrop === form.id}
-                        onToggle={() => setActiveVendorDrop(activeVendorDrop === form.id ? null : form.id)}
-                        value={form.vendorName}
-                        placeholder="Select a vendor"
-                        options={VENDORS.map(v => v.name)}
-                        onChange={val => setUploadForms(prev => prev.map(f => f.id === form.id ? { ...f, vendorName: val } : f))}
-                      />
+                      {uploadVersionPropId ? (
+                        <div style={{ padding: '10px 14px', borderRadius: 8, background: '#f8fafc', border: '1px solid var(--border-default)', fontSize: 13, color: 'var(--text-secondary)', fontWeight: 500, cursor: 'not-allowed' }}>
+                          {form.vendorName}
+                        </div>
+                      ) : (
+                        <EDrop
+                          open={activeVendorDrop === form.id}
+                          onToggle={() => setActiveVendorDrop(activeVendorDrop === form.id ? null : form.id)}
+                          value={form.vendorName}
+                          placeholder="Select a vendor"
+                          options={VENDORS.map(v => v.name)}
+                          onChange={val => setUploadForms(prev => prev.map(f => f.id === form.id ? { ...f, vendorName: val } : f))}
+                        />
+                      )}
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
@@ -1848,21 +1899,23 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 </div>
               ))}
 
-              <div style={{ marginTop: 24 }}>
-                <button
-                  onClick={() => setUploadForms(prev => [...prev, { id: Date.now(), vendorName: '', file: null, supporting: [] }])}
-                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: '#0052cc', fontSize: 14, fontWeight: 500, cursor: 'pointer', padding: 0 }}
-                  onMouseEnter={e => e.currentTarget.style.color = '#0041a3'}
-                  onMouseLeave={e => e.currentTarget.style.color = '#0052cc'}
-                >
-                  <Plus size={16} strokeWidth={2.5} /> Add A New Vendor
-                </button>
-              </div>
+              {!uploadVersionPropId && (
+                <div style={{ marginTop: 24 }}>
+                  <button
+                    onClick={() => setUploadForms(prev => [...prev, { id: Date.now(), vendorName: '', file: null, supporting: [] }])}
+                    style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', color: '#0052cc', fontSize: 14, fontWeight: 500, cursor: 'pointer', padding: 0 }}
+                    onMouseEnter={e => e.currentTarget.style.color = '#0041a3'}
+                    onMouseLeave={e => e.currentTarget.style.color = '#0052cc'}
+                  >
+                    <Plus size={16} strokeWidth={2.5} /> Add A New Vendor
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Sticky Footer */}
             <div style={{ padding: '20px 32px 32px 32px', display: 'flex', gap: 10, justifyContent: 'flex-end', borderTop: '1px solid var(--border-subtle)', flexShrink: 0 }}>
-              <button onClick={() => { setShowUploadModal(false); setPropFileDrag(null); setSuppFileDrag(null); }} style={{ padding: '10px 24px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
+              <button onClick={() => { setShowUploadModal(false); setPropFileDrag(null); setSuppFileDrag(null); setUploadVersionPropId(null); }} style={{ padding: '10px 24px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
               {(() => {
                 const isValid = uploadForms.length > 0 && uploadForms.every(f => f.vendorName.trim() !== '' && f.file !== null);
                 return (
@@ -1944,7 +1997,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       ['Vendor Name', showPreviewModal.vendorName || 'Zeta Technology'],
                       ['Status', showPreviewModal.status || 'Active'],
                       ['State', showPreviewModal.state || 'Submitted'],
-                      ['Tech. Score', showPreviewModal.techScore],
+                      ['Score', showPreviewModal.techScore],
                       ['Quotation', showPreviewModal.commercial || 'Pending'],
                       ['Risks', showPreviewModal.risk || 'Low']
                     ].map(([label, value], li) => (
@@ -2142,60 +2195,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
         </div>
       )}
 
-      {showReuploadModal && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowReuploadModal(null)}>
-          <div style={{ background: '#fff', borderRadius: 16, width: 480, padding: '32px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 20 }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: '#1a1a1a' }}>Reupload Proposal</div>
-                <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>Replace the existing proposal document.</div>
-              </div>
-              <button onClick={() => setShowReuploadModal(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Proposal Attachment <span style={{ color: '#dc2626' }}>*</span></div>
-                {!uploadForm.file ? (
-                  <div
-                    onDragOver={e => { e.preventDefault(); setReupFileDrag(true); }}
-                    onDragLeave={() => setReupFileDrag(false)}
-                    onDrop={e => { e.preventDefault(); setReupFileDrag(false); const f = e.dataTransfer.files[0]; if (f) setUploadForm(prev => ({ ...prev, file: f })); }}
-                    onClick={() => document.getElementById('reup-file-input').click()}
-                    style={{ border: `2px dashed ${reupFileDrag ? '#7c7cff' : '#e0e0e0'}`, borderRadius: 10, padding: '20px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer', background: reupFileDrag ? 'rgba(124,124,255,0.04)' : '#fafafa', transition: 'all 0.15s ease' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.04)'; }}
-                    onMouseLeave={e => { if (!reupFileDrag) { e.currentTarget.style.borderColor = '#e0e0e0'; e.currentTarget.style.background = '#fafafa'; } }}
-                  >
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Upload size={16} color="#7c7cff" strokeWidth={2} />
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop file here or <span style={{ color: '#7c7cff', fontWeight: 600 }}>browse</span></div>
-                      <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX · Max 25MB</div>
-                    </div>
-                  </div>
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <FileText size={20} color="#dc2626" />
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{uploadForm.file.name}</div>
-                        <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>{(uploadForm.file.size / (1024 * 1024)).toFixed(1)} MB</div>
-                      </div>
-                    </div>
-                    <button onClick={() => setUploadForm(prev => ({ ...prev, file: null }))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#999', padding: 4 }}><X size={14} /></button>
-                  </div>
-                )}
-                <input id="reup-file-input" type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} onChange={e => { if (e.target.files[0]) setUploadForm(prev => ({ ...prev, file: e.target.files[0] })); }} />
-              </div>
-              {/* Removed Supporting Documents section from Reupload Modal */}
-            </div>
-            <div style={{ display: 'flex', gap: 10, marginTop: 10 }}>
-              <button onClick={() => setShowReuploadModal(null)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
-              <button onClick={handleReupload} disabled={!uploadForm.file} style={{ flex: 1, padding: '11px', border: 'none', borderRadius: 10, background: !uploadForm.file ? 'var(--bg-surface-2)' : '#0052cc', fontSize: 13, fontWeight: 600, cursor: !uploadForm.file ? 'not-allowed' : 'pointer', color: !uploadForm.file ? 'var(--text-tertiary)' : '#fff', fontFamily: 'inherit' }}>Reupload</button>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {showSupportingDocModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowSupportingDocModal(null)}>
@@ -2470,7 +2470,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     </div>
 
                     {/* WYSIWYG DOC */}
-                    <WYSIWYGEditor isEditing={isEditing} htmlContent={rfpHtml} setHtmlContent={handleHtmlChange} />
+                    <WYSIWYGEditor isEditing={isEditing} htmlContent={rfpHtml} setHtmlContent={handleHtmlChange} hideEditButton={published} />
 
                     {/* SUGGESTED VENDORS */}
                     <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
@@ -2524,7 +2524,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SCORING CONFIG</div>
+                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>EVALUATION CRITERIA</div>
                             <div style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>100 pts total</div>
                           </div>
                           <button
@@ -2553,40 +2553,34 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           <span style={{ fontSize: 20, fontWeight: 800, color: '#0052cc' }}>60<span style={{ fontSize: 12, fontWeight: 600, marginLeft: 2, color: 'rgba(0,82,204,0.6)' }}>pts</span></span>
                         </div>
 
-                        <div style={{ marginBottom: 16 }}>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12 }}>Core Evaluation</div>
-                          {SCORING_CRITERIA.filter(c => ['Technical Competency', 'Relevant Experience'].includes(c.label)).map(c => (
-                            <div key={c.label} style={{ marginBottom: 14 }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.label}</span>
-                                <span style={{ fontSize: 14, fontWeight: 700, color: c.color }}>{c.weight}%</span>
+                        {Object.entries(
+                          scoringConfigData.reduce((acc, curr) => {
+                            if (!curr.cat) return acc;
+                            if (!acc[curr.cat]) acc[curr.cat] = [];
+                            acc[curr.cat].push(curr);
+                            return acc;
+                          }, {})
+                        ).map(([categoryName, items], index, arr) => (
+                          <div key={categoryName} style={{ marginBottom: index === arr.length - 1 ? 0 : 16 }}>
+                            <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12 }}>{categoryName}</div>
+                            {items.map(c => (
+                              <div key={c.crit} style={{ marginBottom: 14 }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                                  <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.crit}</span>
+                                  <span style={{ fontSize: 14, fontWeight: 700, color: c.color || '#0052cc' }}>{c.w}%</span>
+                                </div>
+                                <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
+                                  <div style={{ height: '100%', width: `${c.w * 3}%`, background: c.color || '#0052cc', borderRadius: 99 }} />
+                                </div>
                               </div>
-                              <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
-                                <div style={{ height: '100%', width: `${c.weight * 3}%`, background: c.color, borderRadius: 99 }} />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 12 }}>Proposal Details</div>
-                          {SCORING_CRITERIA.filter(c => ['Team Composition & CVs', 'Commercial Proposal', 'Approach & Methodology'].includes(c.label)).map(c => (
-                            <div key={c.label} style={{ marginBottom: 14 }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{c.label}</span>
-                                <span style={{ fontSize: 14, fontWeight: 700, color: c.color }}>{c.weight}%</span>
-                              </div>
-                              <div style={{ height: 7, background: 'var(--bg-surface-2)', borderRadius: 99, overflow: 'hidden' }}>
-                                <div style={{ height: '100%', width: `${c.weight * 3}%`, background: c.color, borderRadius: 99 }} />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                            ))}
+                          </div>
+                        ))}
                       </div>
                       <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>COST ESTIMATION</div>
+                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>BUDGET ESTIMATION</div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#7c7cff', fontWeight: 600 }}><Sparkles size={11} /> AI Estimated</div>
                           </div>
                           <button
@@ -2768,7 +2762,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Manage and evaluate vendor proposals for this RFP.</div>
                         </div>
                         {published && (
-                          <button onClick={() => setShowUploadModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}><Upload size={14} /> Upload Proposal</button>
+                          <button onClick={() => { setUploadForms([{ id: Date.now(), vendorName: '', file: null, supporting: [] }]); setUploadVersionPropId(null); setShowUploadModal(true); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}><Upload size={14} /> Upload Proposal</button>
                         )}
                       </div>
 
@@ -2843,14 +2837,14 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
                                   <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Rank</th>
                                   <th onClick={() => handleSort('vendorName')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Vendor Name <SortIcon field="vendorName" /></div></th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Version</th>
                                   <th onClick={() => handleSort('uploadDate')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Upload Date <SortIcon field="uploadDate" /></div></th>
                                   <th onClick={() => handleSort('status')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Status <SortIcon field="status" /></div></th>
                                   <th onClick={() => handleSort('state')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>State <SortIcon field="state" /></div></th>
                                   <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>File Name</th>
-                                  <th onClick={() => handleSort('techScore')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Tech. Score <SortIcon field="techScore" /></div></th>
+                                  <th onClick={() => handleSort('techScore')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Score <SortIcon field="techScore" /></div></th>
                                   <th onClick={() => handleSort('commercial')} style={{ cursor: 'pointer', padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center' }}>Quotation <SortIcon field="commercial" /></div></th>
                                   <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Risks</th>
-                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>Version</th>
                                   <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', textAlign: 'center' }}>Action</th>
                                 </tr>
                               </thead>
@@ -2869,6 +2863,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                         ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
                                       </td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.vendorName}</td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.version}</td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.uploadDate}</td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, whiteSpace: 'nowrap' }}>
                                         {prop.status === 'Processing' ? (
@@ -2896,7 +2891,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                           </span>
                                         ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
                                       </td>
-                                      <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.version}</td>
                                       <td style={{ padding: '14px 16px', textAlign: 'center' }}>
                                         <div style={{ position: 'relative', display: 'inline-flex' }}>
                                           <button
@@ -2920,7 +2914,12 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                             }}>
                                               {[
                                                 { label: 'View Proposal', icon: Eye, action: () => { setShowPreviewModal(prop); setActiveDropdown(null); }, color: 'var(--text-primary)' },
-                                                { label: 'Reupload Proposal', icon: RefreshCw, action: () => { setShowReuploadModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
+                                                { label: 'Upload New Version', icon: RefreshCw, action: () => { 
+                                                  setUploadForms([{ id: Date.now(), vendorName: prop.vendorName, file: null, supporting: [] }]);
+                                                  setUploadVersionPropId(prop.id);
+                                                  setShowUploadModal(true);
+                                                  setActiveDropdown(null); 
+                                                }, color: 'var(--text-primary)' },
                                                 { label: 'Supporting Doc', icon: FileText, action: () => { setShowSupportingDocModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
                                                 { label: 'Delete Proposal', icon: Trash2, action: () => { setShowDeleteConfirmModal(prop.id); setActiveDropdown(null); }, color: 'var(--colors-red-500)', divider: true, danger: true },
                                               ].map((item, ii) => {
@@ -2956,21 +2955,61 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                     {/* COMPARISON SECTION */}
                     <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 20 }}>PROPOSAL COMPARISON MATRIX</div>
-                      {proposals.length === 0 ? (
-                        <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
-                          Upload proposals to compare them in the matrix.
-                        </div>
-                      ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROPOSAL COMPARISON MATRIX</div>
+                        {proposals.length > 0 && (
+                          <div style={{ position: 'relative', width: 240 }} ref={matrixDropRef}>
+                            <button onClick={() => setMatrixDropOpen(!matrixDropOpen)} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 12px', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', cursor: 'pointer', fontFamily: 'inherit' }}>
+                              Compare Proposals ({selectedMatrixProps.length}) <ChevronDown size={14} />
+                            </button>
+                            {matrixDropOpen && (
+                              <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, width: '100%', background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 10, padding: 8, display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 300, overflowY: 'auto' }}>
+                                {proposals.map(p => {
+                                  const isSelected = selectedMatrixProps.includes(p.id);
+                                  return (
+                                    <div key={p.id} onClick={() => setSelectedMatrixProps(prev => isSelected ? prev.filter(id => id !== p.id) : [...prev, p.id])} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px', borderRadius: 6, cursor: 'pointer', background: isSelected ? 'var(--bg-surface-2)' : 'transparent', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = isSelected ? 'var(--bg-surface-2)' : 'transparent'}>
+                                      <div style={{ width: 14, height: 14, borderRadius: 3, border: isSelected ? 'none' : '1px solid var(--border-default)', background: isSelected ? '#0052cc' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {isSelected && <Check size={10} color="#fff" strokeWidth={3} />}
+                                      </div>
+                                      <div style={{ fontSize: 13, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.vendorName} {p.version}</div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      {(() => {
+                        const matrixProposalsToRender = proposals.filter(p => selectedMatrixProps.includes(p.id));
+                        
+                        if (proposals.length === 0) {
+                          return (
+                            <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
+                              Upload proposals to compare them in the matrix.
+                            </div>
+                          );
+                        }
+                        
+                        if (matrixProposalsToRender.length === 0) {
+                          return (
+                            <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
+                              Select proposals from the dropdown to compare them.
+                            </div>
+                          );
+                        }
+
+                        return (
                         <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
                           <div style={{ overflowX: 'auto' }}>
-                            <div style={{ minWidth: 250 + (proposals.length * 250) }}>
+                            <div style={{ minWidth: 250 + (matrixProposalsToRender.length * 250) }}>
                               {/* Header Row */}
-                              <div style={{ display: 'grid', gridTemplateColumns: `250px repeat(${proposals.length}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
+                              <div style={{ display: 'grid', gridTemplateColumns: `250px repeat(${matrixProposalsToRender.length}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
                                 <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 13, display: 'flex', alignItems: 'center' }}>Features</div>
-                                {proposals.map(p => (
+                                {matrixProposalsToRender.map(p => (
                                   <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
                                     <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
+                                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{p.version}</div>
                                   </div>
                                 ))}
                               </div>
@@ -3000,10 +3039,9 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   {
                                     id: 'g2', title: 'Technical Evaluation', icon: Layers,
                                     rows: [
-                                      { label: 'Technical Score', getValue: p => <span style={{ fontWeight: 700, color: '#0052cc' }}>{p.techScore || 'Pending'}</span> },
-                                      { label: 'Evaluation Criteria', isHeader: true },
-                                      ...SCORING_CRITERIA.map(c => ({
-                                        label: c.label, isSub: true, getValue: p => p.criteriaScores?.[c.label] || '-'
+                                      { label: 'Score', getValue: p => <span style={{ fontWeight: 700, color: '#0052cc' }}>{p.techScore || 'Pending'}</span> },
+                                      ...scoringConfigData.map(c => ({
+                                        label: c.crit, getValue: p => p.criteriaScores?.[c.crit] || '-'
                                       }))
                                     ]
                                   },
@@ -3068,7 +3106,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   }
                                 ];
 
-                                return matrixGroups.map((group, gIdx) => {
+                                return matrixGroups.map((group) => {
                                   const isExpanded = matrixExpanded[group.id];
                                   const GroupIcon = group.icon;
                                   return (
@@ -3077,7 +3115,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                       <div
                                         onClick={() => toggleGroup(group.id)}
                                         style={{
-                                          display: 'grid', gridTemplateColumns: `250px repeat(${proposals.length}, 1fr)`,
+                                          display: 'grid', gridTemplateColumns: `250px repeat(${matrixProposalsToRender.length}, 1fr)`,
                                           background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)',
                                           cursor: 'pointer', transition: 'background 0.1s'
                                         }}
@@ -3092,14 +3130,14 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                           {group.title}
                                         </div>
                                         {/* Empty cells for vendors */}
-                                        {proposals.map((p, i) => (
+                                        {matrixProposalsToRender.map((p) => (
                                           <div key={`gh-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid transparent' }} />
                                         ))}
                                       </div>
 
                                       {/* Group Content Rows */}
                                       {isExpanded && group.rows.map((row, rIdx) => (
-                                        <div key={rIdx} style={{ display: 'grid', gridTemplateColumns: `250px repeat(${proposals.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
+                                        <div key={rIdx} style={{ display: 'grid', gridTemplateColumns: `250px repeat(${matrixProposalsToRender.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
                                           <div style={{
                                             padding: '14px 20px', fontSize: row.isHeader ? 12 : 13,
                                             fontWeight: row.isHeader ? 700 : 500,
@@ -3111,7 +3149,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                             {row.isSub && <ChevronRight size={14} color="var(--text-tertiary)" style={{ marginRight: 6 }} />}
                                             {row.label}
                                           </div>
-                                          {proposals.map(p => (
+                                          {matrixProposalsToRender.map(p => (
                                             <div key={`gr-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 13, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
                                               {row.isHeader ? '' : row.getValue(p)}
                                             </div>
@@ -3126,7 +3164,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             </div>
                           </div>
                         </div>
-                      )}
+                        );
+                      })()}
                     </div>
                   </div>
                 );
@@ -4208,7 +4247,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
             </div>
 
-            
+
 
             <div style={{ padding: '0 24px', marginBottom: 16, display: 'flex', gap: 12 }}>
 
@@ -4259,81 +4298,81 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                 <table style={{ width: '100%', minWidth: 800, borderCollapse: 'collapse' }}>
 
-                <thead style={{ background: '#f8fafc', position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 1px 0 var(--border-subtle)' }}>
+                  <thead style={{ background: '#f8fafc', position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 1px 0 var(--border-subtle)' }}>
 
-                  <tr>
+                    <tr>
 
-                    <th style={{ padding: '12px 16px', textAlign: 'left', width: 40, borderBottom: '1px solid var(--border-subtle)' }}>
+                      <th style={{ padding: '12px 16px', textAlign: 'left', width: 40, borderBottom: '1px solid var(--border-subtle)' }}>
 
-                      <input type="checkbox" disabled style={{ opacity: 0 }} />
+                        <input type="checkbox" disabled style={{ opacity: 0 }} />
 
-                    </th>
+                      </th>
 
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE NO.</th>
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE NO.</th>
 
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE DESCRIPTION</th>
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE DESCRIPTION</th>
 
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>TYPE</th>
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>TYPE</th>
 
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>GEOGRAPHY</th>
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>GEOGRAPHY</th>
 
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>RISK LEVEL</th>
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>RISK LEVEL</th>
 
-                  </tr>
+                    </tr>
 
-                </thead>
+                  </thead>
 
-                <tbody>
+                  <tbody>
 
-                  {SOW_CLAUSES.filter(c => 
-                    (c.id.toLowerCase().includes(clauseSearch.toLowerCase()) || c.desc.toLowerCase().includes(clauseSearch.toLowerCase())) &&
-                    (clauseTypeFilter === '' || c.type === clauseTypeFilter) &&
-                    (geoFilter === '' || c.geo === geoFilter) &&
-                    (riskFilter === '' || c.risk === riskFilter)
-                  ).map((c, i) => {
+                    {SOW_CLAUSES.filter(c =>
+                      (c.id.toLowerCase().includes(clauseSearch.toLowerCase()) || c.desc.toLowerCase().includes(clauseSearch.toLowerCase())) &&
+                      (clauseTypeFilter === '' || c.type === clauseTypeFilter) &&
+                      (geoFilter === '' || c.geo === geoFilter) &&
+                      (riskFilter === '' || c.risk === riskFilter)
+                    ).map((c, i) => {
 
-                    const isSelected = draftSelectedClauses.includes(c.id);
+                      const isSelected = draftSelectedClauses.includes(c.id);
 
-                    return (
+                      return (
 
-                      <tr key={c.id} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
+                        <tr key={c.id} style={{ borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
 
-                        <td style={{ padding: '14px 16px' }}>
+                          <td style={{ padding: '14px 16px' }}>
 
-                          <div onClick={() => {
-                            if (isSelected) setDraftSelectedClauses(p => p.filter(id => id !== c.id));
-                            else setDraftSelectedClauses(p => [...p, c.id]);
-                          }} style={{ width: 18, height: 18, borderRadius: 4, border: `1.5px solid ${isSelected ? '#0052cc' : '#c0c4cc'}`, background: isSelected ? '#0052cc' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                            {isSelected && <Check size={13} color="#fff" strokeWidth={3} />}
-                          </div>
+                            <div onClick={() => {
+                              if (isSelected) setDraftSelectedClauses(p => p.filter(id => id !== c.id));
+                              else setDraftSelectedClauses(p => [...p, c.id]);
+                            }} style={{ width: 18, height: 18, borderRadius: 4, border: `1.5px solid ${isSelected ? '#0052cc' : '#c0c4cc'}`, background: isSelected ? '#0052cc' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                              {isSelected && <Check size={13} color="#fff" strokeWidth={3} />}
+                            </div>
 
-                        </td>
+                          </td>
 
-                        <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)', fontWeight: 600 }}>{c.id}</td>
+                          <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)', fontWeight: 600 }}>{c.id}</td>
 
-                        <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>
-                          <div style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.5, minWidth: 200, maxWidth: 350 }}>
-                            {c.desc}
-                          </div>
-                        </td>
+                          <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>
+                            <div style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.5, minWidth: 200, maxWidth: 350 }}>
+                              {c.desc}
+                            </div>
+                          </td>
 
-                        <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.type}</td>
+                          <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.type}</td>
 
-                        <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.geo}</td>
+                          <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.geo}</td>
 
-                        <td style={{ padding: '14px 16px' }}>
-                          <span style={{ padding: '4px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600, background: c.risk === 'High' ? '#fee2e2' : c.risk === 'Medium' ? '#fef3c7' : '#dcfce7', color: c.risk === 'High' ? '#dc2626' : c.risk === 'Medium' ? '#d97706' : '#15803d' }}>{c.risk}</span>
-                        </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <span style={{ padding: '4px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600, background: c.risk === 'High' ? '#fee2e2' : c.risk === 'Medium' ? '#fef3c7' : '#dcfce7', color: c.risk === 'High' ? '#dc2626' : c.risk === 'Medium' ? '#d97706' : '#15803d' }}>{c.risk}</span>
+                          </td>
 
-                      </tr>
+                        </tr>
 
-                    );
+                      );
 
-                  })}
+                    })}
 
-                </tbody>
+                  </tbody>
 
-              </table>
+                </table>
 
               </div>
 
