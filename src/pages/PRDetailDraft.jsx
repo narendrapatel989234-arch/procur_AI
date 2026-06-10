@@ -662,7 +662,7 @@ export default function PRDetailDraft({ onNavigate, userRole, navState }) {
             { id: 'overview', label: 'Overview', locked: false },
             { id: 'po', label: 'Purchase Order', locked: true },
             { id: 'invoices', label: 'Invoices', locked: true },
-            { id: 'activities', label: 'Activities', locked: false },
+            { id: 'activities', label: 'Activities', locked: true },
           ].map(tab => (
             <div key={tab.id} onClick={() => { if (!tab.locked) setActiveTab(tab.id); }} style={{ padding: '13px 16px', fontSize: 13, fontWeight: activeTab === tab.id ? 600 : 500, borderBottom: activeTab === tab.id ? '2px solid #7c7cff' : '2px solid transparent', color: activeTab === tab.id ? '#3d3db8' : tab.locked ? '#999' : '#444', cursor: tab.locked ? 'not-allowed' : 'pointer', transition: 'all 0.15s ease', display: 'flex', alignItems: 'center', gap: 6 }}>
               {tab.label}

@@ -991,6 +991,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [addedSowClauses, setAddedSowClauses] = useState(['c1', 'c2']);
   const [draftSelectedClauses, setDraftSelectedClauses] = useState([]);
   const [hasSavedSow, setHasSavedSow] = useState(false);
+  const [sowAccepted, setSowAccepted] = useState(false);
 
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
   const [chatPaneOpen, setChatPaneOpen] = useState(navState?.openChatPane || false);
@@ -2279,7 +2280,19 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               <div style={{ padding: '0 24px', display: 'flex' }}>
                 {TABS.map(tab => {
                   const isActive = activeTab === tab.id;
-                  return <button key={tab.id} className="tab-btn" onClick={() => setActiveTab(tab.id)} style={{ padding: '13px 16px', fontSize: 13, fontWeight: isActive ? 600 : 500, border: 'none', borderBottom: `2px solid ${isActive ? '#7c7cff' : 'transparent'}`, background: 'transparent', cursor: 'pointer', color: isActive ? '#3d3db8' : 'var(--text-secondary)', fontFamily: 'inherit', transition: 'all 0.15s ease' }}>{tab.label}</button>;
+                  let isLocked = false;
+                  if (tab.id === 'proposals') isLocked = proposals.length === 0;
+                  if (tab.id === 'negot') isLocked = !proposals.some(p => p.status === 'Completed');
+                  if (tab.id === 'sow') isLocked = !selectedAwardVendor;
+                  if (tab.id === 'po') isLocked = !sowAccepted;
+                  if (tab.id === 'invoices') isLocked = true;
+
+                  return (
+                    <button key={tab.id} className="tab-btn" onClick={() => { if (!isLocked) setActiveTab(tab.id); }} style={{ padding: '13px 16px', fontSize: 13, fontWeight: isActive ? 600 : 500, border: 'none', borderBottom: `2px solid ${isActive ? '#7c7cff' : 'transparent'}`, background: 'transparent', cursor: isLocked ? 'not-allowed' : 'pointer', color: isActive ? '#3d3db8' : isLocked ? '#999' : 'var(--text-secondary)', fontFamily: 'inherit', transition: 'all 0.15s ease', display: 'flex', alignItems: 'center', gap: 6 }}>
+                      {tab.label}
+                      {isLocked && <Lock size={12} />}
+                    </button>
+                  );
                 })}
               </div>
             </div>
@@ -3471,7 +3484,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                             <Plus size={13} /> New Version
                           </button>
-                          <button style={btnBlue} onClick={() => setActiveTab('po')}
+                          <button style={btnBlue} onClick={() => { setSowAccepted(true); setActiveTab('po'); }}
                             onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
                             <Check size={13} /> Accept
                           </button>
@@ -3498,7 +3511,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               })()}
 
               {/* PO TAB */}
-              {activeTab === 'po' && (
+              {activeTab === 'po' && sowAccepted && (
                 <div style={{ flex: 1, overflowY: 'auto', background: '#f5f5f7', padding: 24 }}>
 
                   {/* ACTION BAR */}
@@ -3678,7 +3691,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               )}
 
               {/* EMPTY TABS */}
-              {((['invoices'].includes(activeTab)) || (activeTab === 'sow' && !selectedAwardVendor) || (activeTab === 'negot' && !proposals.some(p => p.status === 'Completed'))) && (() => {
+              {((['invoices'].includes(activeTab)) || (activeTab === 'sow' && !selectedAwardVendor) || (activeTab === 'negot' && !proposals.some(p => p.status === 'Completed')) || (activeTab === 'po' && !sowAccepted)) && (() => {
                 const cfg = EMPTY_TABS[activeTab]; const Icon = cfg.icon;
                 return (
                   <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, gap: 20 }}>

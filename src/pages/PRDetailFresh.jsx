@@ -658,13 +658,14 @@ export default function PRDetailFresh({ onNavigate, userRole, navState }) {
         {/* TABS */}
         <div style={{ background: '#fff', borderBottom: '1px solid #e5e5e5', padding: '0 24px', display: 'flex', flexShrink: 0, marginTop: 12 }}>
           {[
-            { id: 'overview', label: 'Overview' },
-            { id: 'po', label: 'Purchase Order' },
-            { id: 'invoices', label: 'Invoices' },
-            { id: 'activities', label: 'Activities' },
+            { id: 'overview', label: 'Overview', locked: false },
+            { id: 'po', label: 'Purchase Order', locked: false },
+            { id: 'invoices', label: 'Invoices', locked: true },
+            { id: 'activities', label: 'Activities', locked: false },
           ].map(tab => (
-            <div key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ padding: '13px 16px', fontSize: 13, fontWeight: activeTab === tab.id ? 600 : 500, borderBottom: activeTab === tab.id ? '2px solid #7c7cff' : '2px solid transparent', color: activeTab === tab.id ? '#3d3db8' : '#999', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+            <div key={tab.id} onClick={() => { if (!tab.locked) setActiveTab(tab.id); }} style={{ padding: '13px 16px', fontSize: 13, fontWeight: activeTab === tab.id ? 600 : 500, borderBottom: activeTab === tab.id ? '2px solid #7c7cff' : '2px solid transparent', color: activeTab === tab.id ? '#3d3db8' : tab.locked ? '#999' : '#444', cursor: tab.locked ? 'not-allowed' : 'pointer', transition: 'all 0.15s ease', display: 'flex', alignItems: 'center', gap: 6 }}>
               {tab.label}
+              {tab.locked && <Lock size={12} />}
             </div>
           ))}
         </div>
