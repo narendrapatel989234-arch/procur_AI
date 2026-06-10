@@ -3460,51 +3460,88 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 } else if (sowStage === 'drafting') {
                   const tmplTitle = SOW_TEMPLATES.find(t => t.id === selectedSowTemplateId)?.title || 'Statement of Work';
                   return (
-                    <div style={{ padding: 24, background: '#fafafa', minHeight: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                      {/* SOW TEMPLATE BANNER */}
-                      <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(135deg,rgba(0,82,204,0.1),rgba(124,124,255,0.15))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <FileText size={17} color="#7c7cff" strokeWidth={2} />
+                    <div style={{ display: 'flex', width: '100%', minHeight: 'calc(100vh - 120px)' }}>
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 24, gap: 16, background: '#fafafa' }}>
+                        {/* SOW TEMPLATE BANNER */}
+                        <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <div style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(135deg,rgba(0,82,204,0.1),rgba(124,124,255,0.15))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <FileText size={17} color="#7c7cff" strokeWidth={2} />
+                            </div>
+                            <div>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{tmplTitle}</div>
+                              <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template · Auto-selected by AI based on category and complexity</div>
+                            </div>
+                            <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: '#15803d', marginLeft: 8 }}>
+                              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> Current: v1.0
+                            </div>
                           </div>
-                          <div>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{tmplTitle}</div>
-                            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template · Auto-selected by AI based on category and complexity</div>
-                          </div>
-                          <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: '#15803d', marginLeft: 8 }}>
-                            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> Current: v1.0
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <button style={btnGhost} onClick={() => setVersionPaneOpen(v => !v)}
+                              onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                              <History size={13} /> Version History
+                            </button>
+                            <button style={btnGhost} onClick={() => { setNewVersionNote(''); setShowNewVersionModal(true); }}
+                              onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                              <Plus size={13} /> New Version
+                            </button>
+                            {!isSowEditing && (
+                              <button style={btnBlue} onClick={() => { setSowAccepted(true); setActiveTab('po'); }}
+                                onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
+                                <Check size={13} /> Accept
+                              </button>
+                            )}
                           </div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <button style={btnGhost} onClick={() => setVersionPaneOpen(v => !v)}
-                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                            <History size={13} /> Version History
-                          </button>
-                          <button style={btnGhost} onClick={() => { setNewVersionNote(''); setShowNewVersionModal(true); }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                            <Plus size={13} /> New Version
-                          </button>
-                          <button style={btnBlue} onClick={() => { setSowAccepted(true); setActiveTab('po'); }}
-                            onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                            <Check size={13} /> Accept
-                          </button>
-                        </div>
+
+                        <WYSIWYGEditor
+                          isEditing={isSowEditing}
+                          htmlContent={sowHtmlContent}
+                          setHtmlContent={handleSowHtmlChange}
+                          docType="Statement of Work"
+                          docTitle={tmplTitle}
+                          docSubtitle="DDAIS Group · Procurement Division · PR-2026-004"
+                          version="V1.0"
+                          onAddClauseClick={() => {
+                            setDraftSelectedClauses([...addedSowClauses]);
+                            setShowAddClauseModal(true);
+                          }}
+                          hideEditButton={hasSavedSow}
+                        />
                       </div>
 
-                      <WYSIWYGEditor
-                        isEditing={isSowEditing}
-                        htmlContent={sowHtmlContent}
-                        setHtmlContent={handleSowHtmlChange}
-                        docType="Statement of Work"
-                        docTitle={tmplTitle}
-                        docSubtitle="DDAIS Group · Procurement Division · PR-2026-004"
-                        version="V1.0"
-                        onAddClauseClick={() => {
-                          setDraftSelectedClauses([...addedSowClauses]);
-                          setShowAddClauseModal(true);
-                        }}
-                        hideEditButton={hasSavedSow}
-                      />
+                      {/* VERSION PANE */}
+                      {versionPaneOpen && (
+                        <div style={{ width: 300, flexShrink: 0, borderLeft: '1px solid var(--border-subtle)', background: '#fff' }}>
+                          <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>Version History</div>
+                            <button onClick={() => setVersionPaneOpen(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)' }}><X size={16} /></button>
+                          </div>
+                          <div style={{ padding: '8px 20px' }}>
+                            {VERSION_HISTORY.map((v, i) => (
+                              <div key={v.version} style={{ padding: '14px 0', borderBottom: i < VERSION_HISTORY.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <div style={{ width: 30, height: 30, borderRadius: 8, background: v.active ? 'linear-gradient(135deg,#0052cc,#7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                      <History size={13} color={v.active ? '#fff' : 'var(--text-tertiary)'} />
+                                    </div>
+                                    <div>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>{v.version}</span>
+                                        {v.active && <span style={{ background: 'rgba(34,197,94,0.08)', color: '#15803d', borderRadius: 20, padding: '1px 8px', fontSize: 9, fontWeight: 700 }}>CURRENT</span>}
+                                      </div>
+                                      <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{v.date}</div>
+                                    </div>
+                                  </div>
+                                  <button style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 8px', borderRadius: 7, border: '1px solid var(--border-default)', background: '#fff', fontSize: 11, cursor: 'pointer', color: 'var(--text-secondary)', fontFamily: 'inherit' }}><Eye size={11} /> View</button>
+                                </div>
+                                <div style={{ fontSize: 12, color: 'var(--text-secondary)', paddingLeft: 38 }}>{v.note}</div>
+                                <div style={{ fontSize: 11, color: 'var(--text-tertiary)', paddingLeft: 38, marginTop: 2 }}>By {v.author}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 }

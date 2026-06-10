@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Search, ChevronDown, MessageSquare, Plus, ArrowRight, MoreHorizontal, Pin, PinOff, Trash2, Edit2, Share2, Download, CheckCircle, AlertTriangle, FileText, X, Link } from 'lucide-react';
+import { Search, ChevronDown, MessageSquare, Plus, ArrowRight, MoreHorizontal, MoreVertical, Pin, PinOff, Trash2, Edit2, Share2, Download, CheckCircle, AlertTriangle, FileText, X, Link } from 'lucide-react';
 import MainLayout from '../layouts/MainLayout';
 
 const CHAT_DATA = [
@@ -445,19 +445,20 @@ export default function ChatHistory({ setCurrentPage, onNavigate, activeNav, use
                   <div style={{ fontSize: 12, color: 'var(--text-tertiary)', width: 80, textAlign: 'right' }}>{item.time}</div>
                 </div>
 
-                <div style={{ position: 'relative' }}>
+                <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
                   <button className="pdots" onClick={(e) => { e.stopPropagation(); setOpenMenuId(openMenuId === item.id ? null : item.id); }} style={{
                     marginLeft: 12, padding: '8px', borderRadius: '50%',
                     background: 'transparent', border: 'none', color: 'var(--text-secondary)',
                     cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
-                    <MoreHorizontal size={18} />
+                    <MoreVertical size={18} />
                   </button>
                   {openMenuId === item.id && (
                     <div style={{
-                      position: 'absolute', right: 0, top: '100%', marginTop: 4,
+                      position: 'absolute', right: '100%', top: 0, marginRight: 4,
                       background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
                       boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, zIndex: 50, minWidth: 140,
+                      display: 'flex', flexDirection: 'column', textAlign: 'left'
                     }}>
                       <div className="pmenu-item" onClick={(e) => togglePin(e, item.id)} style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-primary)', cursor: 'pointer', borderRadius: 6 }}>
                         {item.isPinned ? <PinOff size={14} color="var(--text-secondary)" style={{ flexShrink: 0 }} /> : <Pin size={14} color="var(--text-secondary)" style={{ flexShrink: 0 }} />}
