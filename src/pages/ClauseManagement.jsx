@@ -201,7 +201,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [showEditPane, setShowEditPane] = useState(false);
   const [showCreatePane, setShowCreatePane] = useState(false);
-  
+
   const [isViewOnly, setIsViewOnly] = useState(false);
   const [clauseToView, setClauseToView] = useState(null);
 
@@ -345,7 +345,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
       <style dangerouslySetInnerHTML={{ __html: css }} />
 
       <div style={{ padding: 24, background: 'var(--bg-default)', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        
+
         {/* FILTER BAR */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
@@ -573,31 +573,31 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                 <X size={16} />
               </button>
             </div>
-            
+
             <div style={{ flex: 1, overflowY: 'auto', padding: '32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause No. <span style={{color: '#ef4444'}}>*</span></label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause No. <span style={{ color: '#ef4444' }}>*</span></label>
                 <input type="text" placeholder="e.g. CLS-109" value={newClauseNo} onChange={e => setNewClauseNo(e.target.value)} style={{ width: '100%', padding: '12px 14px', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', color: 'var(--text-primary)', transition: 'border-color 0.15s ease' }} onFocus={e => e.currentTarget.style.borderColor = '#7c7cff'} onBlur={e => e.currentTarget.style.borderColor = 'var(--border-default)'} />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause type <span style={{color: '#ef4444'}}>*</span></label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause type <span style={{ color: '#ef4444' }}>*</span></label>
                 <CustomSelect label="Select clause type" options={FILTER_OPTIONS['Clause type']} value={newClauseType} onChange={setNewClauseType} />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Geography <span style={{color: '#ef4444'}}>*</span></label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Geography <span style={{ color: '#ef4444' }}>*</span></label>
                 <CustomSelect label="Select geography" options={FILTER_OPTIONS['Geography']} value={newClauseGeo} onChange={setNewClauseGeo} />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Risk level <span style={{color: '#ef4444'}}>*</span></label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Risk level <span style={{ color: '#ef4444' }}>*</span></label>
                 <CustomSelect label="Select risk level" options={FILTER_OPTIONS['Risk level']} value={newClauseRisk} onChange={setNewClauseRisk} />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause description <span style={{color: '#ef4444'}}>*</span></label>
-                <textarea placeholder="Enter description..." value={newClauseDesc} onChange={e => setNewClauseDesc(e.target.value)} style={{ width: '100%', padding: '14px', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', resize: 'none', minHeight: 120, fontFamily: 'inherit', color: 'var(--text-primary)', transition: 'border-color 0.15s ease' }} onFocus={e => e.currentTarget.style.borderColor = '#7c7cff'} onBlur={e => e.currentTarget.style.borderColor = 'var(--border-default)'} />
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause description <span style={{ color: '#ef4444' }}>*</span></label>
+                <textarea placeholder="Enter description..." value={newClauseDesc} onChange={e => setNewClauseDesc(e.target.value)} style={{ width: '100%', padding: '14px', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', resize: 'none', minHeight: 200, fontFamily: 'inherit', color: 'var(--text-primary)', transition: 'border-color 0.15s ease' }} onFocus={e => e.currentTarget.style.borderColor = '#7c7cff'} onBlur={e => e.currentTarget.style.borderColor = 'var(--border-default)'} />
               </div>
             </div>
 
@@ -616,7 +616,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                   };
                   setClauses([newClause, ...clauses]);
                   setShowCreatePane(false);
-                  
+
                   setToasterMsg('Clause created successfully');
                   setShowToaster(true);
                   setTimeout(() => setShowToaster(false), 3000);
@@ -645,12 +645,12 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
             </div>
             <div style={{ flex: 1, overflowY: 'auto', padding: '32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause No. {(!isViewOnly) && <span style={{color: '#ef4444'}}>*</span>}</label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause No. {(!isViewOnly) && <span style={{ color: '#ef4444' }}>*</span>}</label>
                 <input type="text" value={editClauseNo} disabled={isViewOnly} onChange={e => setEditClauseNo(e.target.value)} style={{ width: '100%', padding: '12px 14px', background: isViewOnly ? 'var(--bg-surface-1)' : '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', color: 'var(--text-primary)', transition: 'border-color 0.15s ease' }} onFocus={e => !isViewOnly && (e.currentTarget.style.borderColor = '#7c7cff')} onBlur={e => e.currentTarget.style.borderColor = 'var(--border-default)'} />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause type {(!isViewOnly) && <span style={{color: '#ef4444'}}>*</span>}</label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause type {(!isViewOnly) && <span style={{ color: '#ef4444' }}>*</span>}</label>
                 {isViewOnly ? (
                   <input type="text" value={editClauseType} disabled style={{ width: '100%', padding: '12px 14px', background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', color: 'var(--text-primary)' }} />
                 ) : (
@@ -659,7 +659,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Geography {(!isViewOnly) && <span style={{color: '#ef4444'}}>*</span>}</label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Geography {(!isViewOnly) && <span style={{ color: '#ef4444' }}>*</span>}</label>
                 {isViewOnly ? (
                   <input type="text" value={editClauseGeo} disabled style={{ width: '100%', padding: '12px 14px', background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', color: 'var(--text-primary)' }} />
                 ) : (
@@ -668,7 +668,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Risk level {(!isViewOnly) && <span style={{color: '#ef4444'}}>*</span>}</label>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Risk level {(!isViewOnly) && <span style={{ color: '#ef4444' }}>*</span>}</label>
                 {isViewOnly ? (
                   <input type="text" value={editClauseRisk} disabled style={{ width: '100%', padding: '12px 14px', background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', color: 'var(--text-primary)' }} />
                 ) : (
@@ -677,8 +677,8 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause description {(!isViewOnly) && <span style={{color: '#ef4444'}}>*</span>}</label>
-                <textarea value={editClauseDesc} disabled={isViewOnly} onChange={e => setEditClauseDesc(e.target.value)} style={{ width: '100%', padding: '14px', background: isViewOnly ? 'var(--bg-surface-1)' : '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', resize: 'none', minHeight: 120, fontFamily: 'inherit', color: 'var(--text-primary)', transition: 'border-color 0.15s ease' }} onFocus={e => !isViewOnly && (e.currentTarget.style.borderColor = '#7c7cff')} onBlur={e => e.currentTarget.style.borderColor = 'var(--border-default)'} />
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause description {(!isViewOnly) && <span style={{ color: '#ef4444' }}>*</span>}</label>
+                <textarea value={editClauseDesc} disabled={isViewOnly} onChange={e => setEditClauseDesc(e.target.value)} style={{ width: '100%', padding: '14px', background: isViewOnly ? 'var(--bg-surface-1)' : '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', resize: 'none', minHeight: 200, fontFamily: 'inherit', color: 'var(--text-primary)', transition: 'border-color 0.15s ease' }} onFocus={e => !isViewOnly && (e.currentTarget.style.borderColor = '#7c7cff')} onBlur={e => e.currentTarget.style.borderColor = 'var(--border-default)'} />
               </div>
             </div>
 

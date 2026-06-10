@@ -973,13 +973,13 @@ const REASONING_MAP = {
 };
 
 const SOW_CLAUSES = [
-  { id: 'c1', clause: 'Intellectual Property Rights', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
-  { id: 'c2', clause: 'Confidentiality and Non-Disclosure', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
-  { id: 'c3', clause: 'Payment Terms & Milestones', type: 'Payment Terms', geo: 'UAE', risk: 'Low' },
-  { id: 'c4', clause: 'Termination and Transition', type: 'Termination', geo: 'Global', risk: 'High' },
-  { id: 'c5', clause: 'Liability and Indemnification', type: 'Liability', geo: 'Global', risk: 'High' },
-  { id: 'c6', clause: 'Dispute Resolution Mechanism', type: 'Indemnity', geo: 'UAE', risk: 'Medium' },
-  { id: 'c7', clause: 'Service Level Agreement (SLA)', type: 'Warranty', geo: 'Global', risk: 'Low' },
+  { id: 'CLS-101', desc: 'Defines the ownership rights of any intellectual property developed during the course of the engagement, ensuring all IP is transferred to the buyer upon completion.', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
+  { id: 'CLS-102', desc: 'Obligates both parties to protect sensitive business information and trade secrets from unauthorized disclosure.', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
+  { id: 'CLS-103', desc: 'Outlines the payment schedule and specific milestones that must be met before payments are released.', type: 'Payment Terms', geo: 'UAE', risk: 'Low' },
+  { id: 'CLS-104', desc: 'Details the conditions under which the contract can be terminated and the procedures for transitioning services.', type: 'Termination', geo: 'Global', risk: 'High' },
+  { id: 'CLS-105', desc: 'Specifies the limits of liability for both parties and details indemnification obligations for third-party claims.', type: 'Liability', geo: 'Global', risk: 'High' },
+  { id: 'CLS-106', desc: 'Establishes the process for resolving disputes, including escalation procedures and potential arbitration or mediation.', type: 'Indemnity', geo: 'UAE', risk: 'Medium' },
+  { id: 'CLS-107', desc: 'Defines the required performance levels, service availability, and penalties for failing to meet the SLA.', type: 'Warranty', geo: 'Global', risk: 'Low' },
 ];
 
 export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState }) {
@@ -988,12 +988,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [clauseTypeFilter, setClauseTypeFilter] = useState('');
   const [geoFilter, setGeoFilter] = useState('');
   const [riskFilter, setRiskFilter] = useState('');
-  const [addedSowClauses, setAddedSowClauses] = useState(['c1', 'c2']);
+  const [addedSowClauses, setAddedSowClauses] = useState(['CLS-101', 'CLS-102']);
   const [draftSelectedClauses, setDraftSelectedClauses] = useState([]);
   const [hasSavedSow, setHasSavedSow] = useState(false);
   const [sowAccepted, setSowAccepted] = useState(false);
 
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
+  const [showAttachmentPreview, setShowAttachmentPreview] = useState(false);
   const [chatPaneOpen, setChatPaneOpen] = useState(navState?.openChatPane || false);
   const [chatMenuOpen, setChatMenuOpen] = useState(false);
   const [chatMenuPinned, setChatMenuPinned] = useState(false);
@@ -1042,6 +1043,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [showPoEditModal, setShowPoEditModal] = useState(false);
   const [showPoPreview, setShowPoPreview] = useState(false);
   const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showApproveToast, setShowApproveToast] = useState(false);
+  const [poApproved, setPoApproved] = useState(false);
 
   useEffect(() => {
     if (!chatMenuOpen) return;
@@ -1363,6 +1366,39 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               </button>
             </div>
           </div>
+        </div>
+      )}
+        {/* MODALS */}
+      
+      {showApproveModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowApproveModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 500, maxWidth: '90vw', padding: '40px 36px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12 }} onClick={e => e.stopPropagation()}>
+            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,82,204,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0052cc', marginBottom: 6 }}>
+              <CheckCircle size={24} strokeWidth={2} />
+            </div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a' }}>Approve Purchase Order?</div>
+            <div style={{ fontSize: 13, color: '#666', lineHeight: 1.6, marginBottom: 8 }}>Approving this PO will issue it to the supplier and mark it as active in the system. Make sure all details have been reviewed before proceeding.</div>
+            <div style={{ display: 'flex', gap: 10, width: '100%' }}>
+              <button onClick={() => setShowApproveModal(false)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
+              <button
+                onClick={() => { setShowApproveModal(false); setPoApproved(true); setShowApproveToast(true); setTimeout(() => setShowApproveToast(false), 4000); }}
+                style={{ flex: 1, padding: '11px', border: 'none', borderRadius: 10, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}
+                onMouseEnter={e => e.currentTarget.style.background = '#0041a3'}
+                onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}
+              >Approve PO</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showApproveToast && (
+        <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
+          <CheckCircle size={20} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: '#166534', marginBottom: 2 }}>PO Approved</div>
+            <div style={{ fontSize: 13, color: '#15803d' }}>The purchase order has been successfully approved.</div>
+          </div>
+          <button onClick={() => setShowApproveToast(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#166534', display: 'flex', padding: 4 }}><X size={16} /></button>
         </div>
       )}
 
@@ -2281,7 +2317,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 {TABS.map(tab => {
                   const isActive = activeTab === tab.id;
                   let isLocked = false;
-                  if (tab.id === 'proposals') isLocked = proposals.length === 0;
+                  if (tab.id === 'proposals') isLocked = !published;
                   if (tab.id === 'negot') isLocked = !proposals.some(p => p.status === 'Completed');
                   if (tab.id === 'sow') isLocked = !selectedAwardVendor;
                   if (tab.id === 'po') isLocked = !sowAccepted;
@@ -2353,9 +2389,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
                       <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 12 }}>Attachments</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, background: 'var(--bg-surface-1)', cursor: 'pointer' }}>
+                        <div onClick={() => setShowAttachmentPreview(true)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: '1px solid var(--border-default)', borderRadius: 8, background: 'var(--bg-surface-1)', cursor: 'pointer' }} onMouseEnter={e => e.currentTarget.style.borderColor = '#7c7cff'} onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border-default)'}>
                           <FileText size={16} color="#0052cc" />
                           <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</span>
+                          <Eye size={14} color="var(--text-tertiary)" style={{ marginLeft: 8 }} />
                         </div>
                       </div>
                     </div>
@@ -3486,10 +3523,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               <Plus size={13} /> New Version
                             </button>
                             {!isSowEditing && (
-                              <button style={btnBlue} onClick={() => { setSowAccepted(true); setActiveTab('po'); }}
-                                onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                                <Check size={13} /> Accept
-                              </button>
+                              sowAccepted ? (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', fontSize: 12, fontWeight: 600, color: '#15803d' }}>
+                                  <CheckCircle size={13} /> Accepted
+                                </div>
+                              ) : (
+                                <button style={btnBlue} onClick={() => { setSowAccepted(true); setActiveTab('po'); }}
+                                  onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
+                                  <Check size={13} /> Accept
+                                </button>
+                              )
                             )}
                           </div>
                         </div>
@@ -3582,9 +3625,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         <Pencil size={13} strokeWidth={2} /> Edit
                       </button>
                       {userRole === 'manager' && (
-                        <button onClick={() => setShowApproveModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 20px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#003fa3'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,82,204,0.35)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#0052cc'; e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.25)'; }}>
-                          <CheckCircle size={14} /> Approve PO
-                        </button>
+                        poApproved ? (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', fontSize: 12, fontWeight: 600, color: '#15803d' }}>
+                            <CheckCircle size={13} /> Approved
+                          </div>
+                        ) : (
+                          <button onClick={() => setShowApproveModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 20px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 3px 12px rgba(0,82,204,0.25)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = '#003fa3'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,82,204,0.35)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#0052cc'; e.currentTarget.style.boxShadow = '0 3px 12px rgba(0,82,204,0.25)'; }}>
+                            <CheckCircle size={14} /> Approve PO
+                          </button>
+                        )
                       )}
                     </div>
                   </div>
@@ -4220,17 +4269,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                     </th>
 
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', width: 80, borderBottom: '1px solid var(--border-subtle)' }}>S NO.</th>
+                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE NO.</th>
 
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE</th>
+                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE DESCRIPTION</th>
 
                     <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>TYPE</th>
 
                     <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>GEOGRAPHY</th>
 
                     <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>RISK LEVEL</th>
-
-                    <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'right', width: 140, borderBottom: '1px solid var(--border-subtle)' }}>ACTION</th>
 
                   </tr>
 
@@ -4239,7 +4286,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 <tbody>
 
                   {SOW_CLAUSES.filter(c => 
-                    c.clause.toLowerCase().includes(clauseSearch.toLowerCase()) &&
+                    (c.id.toLowerCase().includes(clauseSearch.toLowerCase()) || c.desc.toLowerCase().includes(clauseSearch.toLowerCase())) &&
                     (clauseTypeFilter === '' || c.type === clauseTypeFilter) &&
                     (geoFilter === '' || c.geo === geoFilter) &&
                     (riskFilter === '' || c.risk === riskFilter)
@@ -4262,9 +4309,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                         </td>
 
-                        <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-secondary)' }}>{i + 1}</td>
+                        <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)', fontWeight: 600 }}>{c.id}</td>
 
-                        <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)', fontWeight: 500 }}>{c.clause}</td>
+                        <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>
+                          <div style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.5, minWidth: 200, maxWidth: 350 }}>
+                            {c.desc}
+                          </div>
+                        </td>
 
                         <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.type}</td>
 
@@ -4272,18 +4323,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                         <td style={{ padding: '14px 16px' }}>
                           <span style={{ padding: '4px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600, background: c.risk === 'High' ? '#fee2e2' : c.risk === 'Medium' ? '#fef3c7' : '#dcfce7', color: c.risk === 'High' ? '#dc2626' : c.risk === 'Medium' ? '#d97706' : '#15803d' }}>{c.risk}</span>
-                        </td>
-
-                        <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-
-                          <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-
-                            <button onMouseEnter={e => { e.currentTarget.style.color = '#0052cc'; e.currentTarget.style.background = 'rgba(0,82,204,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', padding: 6, borderRadius: 6, display: 'flex', transition: 'all 0.15s ease' }}><Edit2 size={15} /></button>
-
-                            <button onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#ef4444', padding: 6, borderRadius: 6, display: 'flex', transition: 'all 0.15s ease' }}><Trash2 size={15} /></button>
-
-                          </div>
-
                         </td>
 
                       </tr>
@@ -4683,6 +4722,43 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               <button onClick={() => { setShowPoEditModal(false); setSaveToast({ title: 'Changes saved successfully', subtext: 'Purchase Order details have been updated.' }); setTimeout(() => setSaveToast(null), 3000); }} style={{ padding: '9px 24px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit' }}>Save Changes</button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {showAttachmentPreview && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowAttachmentPreview(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: '82vw', maxWidth: 920, height: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 80px rgba(0,0,0,0.25)' }} onClick={e => e.stopPropagation()}>
+            <div style={{ padding: '16px 24px', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 9, background: 'rgba(0,82,204,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <FileText size={16} color="#0052cc" />
+                </div>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Attachment Preview</div>
+                  <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>Q3_Procurement_Requirements.pdf</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid #e0e0e0', background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: '#666', fontFamily: 'inherit' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                  <Download size={13} /> Download
+                </button>
+                <button onClick={() => setShowAttachmentPreview(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 6, borderRadius: 8 }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+            <div style={{ flex: 1, overflowY: 'auto', background: '#f0f0f0', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 0 40px', gap: 20 }}>
+              <div style={{ background: '#fff', width: 700, minHeight: 900, borderRadius: 4, boxShadow: '0 2px 12px rgba(0,0,0,0.12)', padding: '48px 60px', boxSizing: 'border-box', position: 'relative' }}>
+                <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 20, color: '#0d1f3c' }}>Q3 Procurement Requirements</div>
+                <div style={{ fontSize: 14, color: '#555', lineHeight: 1.6, marginBottom: 16 }}>
+                  This document outlines the core requirements and specifications for the upcoming Q3 procurement cycle.
+                </div>
+                <div style={{ fontSize: 14, color: '#555', lineHeight: 1.6, marginBottom: 16 }}>
+                  Scope of work includes cloud migration, enterprise architecture updates, and long-term support metrics.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
