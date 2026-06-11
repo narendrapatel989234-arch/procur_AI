@@ -69,7 +69,7 @@ export default function TemplateDetail({ onNavigate, activeNav, navState }) {
   );
 
   return (
-    <MainLayout activeNav={activeNav} onNavigate={onNavigate} titleComponent={breadcrumb}>
+    <MainLayout activeNav={activeNav} onNavigate={onNavigate} titleComponent={breadcrumb} searchPlaceholder={null}>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
 
         {/* EXPANDED RICH TEXT RIBBON */}
