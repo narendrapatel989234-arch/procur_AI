@@ -1207,7 +1207,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
       setProposals(prev => {
         const originalProp = prev.find(p => p.id === uploadVersionPropId);
         if (!originalProp) return prev;
-        
+
         const currentV = parseInt(originalProp.version.replace('v', '').split('.')[0]);
         const newVersionProp = {
           ...originalProp,
@@ -1227,7 +1227,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
       setShowUploadModal(false); setPropFileDrag(null); setSuppFileDrag(null);
       setUploadVersionPropId(null);
       setUploadForms([{ id: Date.now(), vendorName: '', file: null, supporting: [] }]);
-      
+
       setTimeout(() => {
         setProposals(prev => prev.map(p => {
           if (p.id === targetId) {
@@ -2008,17 +2008,17 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     ))}
                   </div>
 
-                  {/* PROPOSAL COMPARISON MATRIX */}
+                  {/* EVALUATION SCORE */}
                   <div style={{ marginBottom: 32 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>PROPOSAL COMPARISON MATRIX</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)', marginBottom: 16 }}>EVALUATION SCORE</div>
                     <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
                       <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 800 }}>
                           <thead>
                             <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)' }}>
                               <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Sr No.</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Criteria</th>
                               <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Category</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Criteria</th>
                               <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textAlign: 'center', whiteSpace: 'nowrap' }}>Weightage</th>
                               <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textAlign: 'center', whiteSpace: 'nowrap' }}>Score</th>
                               <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap' }}>Justification</th>
@@ -2036,8 +2036,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             ].map((row, i) => (
                               <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.id}</td>
-                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.crit}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.cat}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{row.crit}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', textAlign: 'center', whiteSpace: 'nowrap' }}>{row.w}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', textAlign: 'center', whiteSpace: 'nowrap' }}>{row.s}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', minWidth: 250 }}>{row.j}</td>
@@ -2443,7 +2443,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template · Auto-selected by AI based on category and complexity</div>
                         </div>
                         <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: '#15803d', marginLeft: 8 }}>
-                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> Current: v1.2
+                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> {published ? 'Published Version 1.0' : 'Current: v1.2'}
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -2451,21 +2451,23 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                           <History size={13} /> Version History
                         </button>
-                        <button style={btnGhost} onClick={() => { setNewVersionNote(''); setShowNewVersionModal(true); }}
-                          onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                          <Plus size={13} /> New Version
-                        </button>
+                        {!published && (
+                          <button style={btnGhost} onClick={() => { setNewVersionNote(''); setShowNewVersionModal(true); }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                            <Plus size={13} /> New Version
+                          </button>
+                        )}
                         {!published && !isEditing && (
                           <button style={btnBlue} onClick={() => setShowPublishConfirm(true)}
                             onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
                             <Send size={13} /> Publish
                           </button>
                         )}
-                        {published && (
+                        {/* {published && (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', fontSize: 12, fontWeight: 600, color: '#15803d' }}>
                             <CheckCircle size={13} /> Published
                           </div>
-                        )}
+                        )} */}
                       </div>
                     </div>
 
@@ -2479,21 +2481,23 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>SUGGESTED VENDORS</div>
                           <div style={{ background: 'rgba(124,124,255,0.08)', color: '#7c7cff', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 700 }}>{suggestedVendors.length} Vendors</div>
                         </div>
-                        <button
-                          onClick={() => setShowAddVendorModal(true)}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: 6,
-                            padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
-                            borderRadius: 7, background: '#fff', color: '#0052cc',
-                            fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                            transition: 'all 0.15s ease', fontFamily: 'inherit'
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}
-                        >
-                          <Plus size={12} strokeWidth={2.5} />
-                          Add Vendor
-                        </button>
+                        {!published && (
+                          <button
+                            onClick={() => setShowAddVendorModal(true)}
+                            style={{
+                              display: 'flex', alignItems: 'center', gap: 6,
+                              padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
+                              borderRadius: 7, background: '#fff', color: '#0052cc',
+                              fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                              transition: 'all 0.15s ease', fontFamily: 'inherit'
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}
+                          >
+                            <Plus size={12} strokeWidth={2.5} />
+                            Add Vendor
+                          </button>
+                        )}
                       </div>
                       <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
                         {suggestedVendors.map((v, i) => (
@@ -2527,20 +2531,22 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>EVALUATION CRITERIA</div>
                             <div style={{ fontSize: 12, color: '#999', fontWeight: 500 }}>100 pts total</div>
                           </div>
-                          <button
-                            onClick={() => setShowScoringConfigModal(true)}
-                            style={{
-                              display: 'flex', alignItems: 'center', gap: 6,
-                              padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
-                              borderRadius: 7, background: '#fff', color: '#0052cc',
-                              fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                              transition: 'all 0.15s ease', fontFamily: 'inherit'
-                            }}
-                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}>
-                            <Pencil size={12} strokeWidth={2} />
-                            Edit
-                          </button>
+                          {!published && (
+                            <button
+                              onClick={() => setShowScoringConfigModal(true)}
+                              style={{
+                                display: 'flex', alignItems: 'center', gap: 6,
+                                padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
+                                borderRadius: 7, background: '#fff', color: '#0052cc',
+                                fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                                transition: 'all 0.15s ease', fontFamily: 'inherit'
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}>
+                              <Pencil size={12} strokeWidth={2} />
+                              Edit
+                            </button>
+                          )}
                         </div>
 
                         <div style={{ background: 'linear-gradient(135deg, rgba(0,82,204,0.04), rgba(0,82,204,0.01))', border: '1px solid rgba(0,82,204,0.15)', borderRadius: 10, padding: '14px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -2583,20 +2589,22 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>BUDGET ESTIMATION</div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#7c7cff', fontWeight: 600 }}><Sparkles size={11} /> AI Estimated</div>
                           </div>
-                          <button
-                            onClick={() => setShowCostConfigModal(true)}
-                            style={{
-                              display: 'flex', alignItems: 'center', gap: 6,
-                              padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
-                              borderRadius: 7, background: '#fff', color: '#0052cc',
-                              fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                              transition: 'all 0.15s ease', fontFamily: 'inherit'
-                            }}
-                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}>
-                            <Pencil size={12} strokeWidth={2} />
-                            Edit
-                          </button>
+                          {!published && (
+                            <button
+                              onClick={() => setShowCostConfigModal(true)}
+                              style={{
+                                display: 'flex', alignItems: 'center', gap: 6,
+                                padding: '6px 14px', border: '1px solid rgba(0,82,204,0.3)',
+                                borderRadius: 7, background: '#fff', color: '#0052cc',
+                                fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                                transition: 'all 0.15s ease', fontFamily: 'inherit'
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,82,204,0.04)'; e.currentTarget.style.borderColor = '#0052cc'; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = 'rgba(0,82,204,0.3)'; }}>
+                              <Pencil size={12} strokeWidth={2} />
+                              Edit
+                            </button>
+                          )}
                         </div>
                         <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
                           <div style={{ display: 'grid', gridTemplateColumns: '3fr 4fr 3fr', padding: '10px 14px', background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
@@ -2909,17 +2917,19 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                             <div style={{
                                               position: 'absolute', right: '100%', top: 0, marginRight: 8,
                                               background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
-                                              boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, zIndex: 50, minWidth: 160,
+                                              boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, zIndex: 50, minWidth: 190,
                                               display: 'flex', flexDirection: 'column', textAlign: 'left'
                                             }}>
                                               {[
                                                 { label: 'View Proposal', icon: Eye, action: () => { setShowPreviewModal(prop); setActiveDropdown(null); }, color: 'var(--text-primary)' },
-                                                { label: 'Upload New Version', icon: RefreshCw, action: () => { 
-                                                  setUploadForms([{ id: Date.now(), vendorName: prop.vendorName, file: null, supporting: [] }]);
-                                                  setUploadVersionPropId(prop.id);
-                                                  setShowUploadModal(true);
-                                                  setActiveDropdown(null); 
-                                                }, color: 'var(--text-primary)' },
+                                                {
+                                                  label: 'Upload New Version', icon: RefreshCw, action: () => {
+                                                    setUploadForms([{ id: Date.now(), vendorName: prop.vendorName, file: null, supporting: [] }]);
+                                                    setUploadVersionPropId(prop.id);
+                                                    setShowUploadModal(true);
+                                                    setActiveDropdown(null);
+                                                  }, color: 'var(--text-primary)'
+                                                },
                                                 { label: 'Supporting Doc', icon: FileText, action: () => { setShowSupportingDocModal(prop.id); setActiveDropdown(null); }, color: 'var(--text-primary)' },
                                                 { label: 'Delete Proposal', icon: Trash2, action: () => { setShowDeleteConfirmModal(prop.id); setActiveDropdown(null); }, color: 'var(--colors-red-500)', divider: true, danger: true },
                                               ].map((item, ii) => {
@@ -2982,7 +2992,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                       </div>
                       {(() => {
                         const matrixProposalsToRender = proposals.filter(p => selectedMatrixProps.includes(p.id));
-                        
+
                         if (proposals.length === 0) {
                           return (
                             <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
@@ -2990,7 +3000,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             </div>
                           );
                         }
-                        
+
                         if (matrixProposalsToRender.length === 0) {
                           return (
                             <div style={{ background: '#fff', border: '1px dashed var(--border-default)', borderRadius: 12, padding: '40px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
@@ -3000,197 +3010,197 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         }
 
                         return (
-                        <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
-                          <div style={{ overflowX: 'auto' }}>
-                            <div style={{ minWidth: 250 + (matrixProposalsToRender.length * 250) }}>
-                              {/* Header Row */}
-                              <div style={{ display: 'grid', gridTemplateColumns: `250px repeat(${matrixProposalsToRender.length}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
-                                <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 13, display: 'flex', alignItems: 'center' }}>Features</div>
-                                {matrixProposalsToRender.map(p => (
-                                  <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
-                                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
-                                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{p.version}</div>
-                                  </div>
-                                ))}
-                              </div>
+                          <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                            <div style={{ overflowX: 'auto' }}>
+                              <div style={{ minWidth: 250 + (matrixProposalsToRender.length * 250) }}>
+                                {/* Header Row */}
+                                <div style={{ display: 'grid', gridTemplateColumns: `250px repeat(${matrixProposalsToRender.length}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
+                                  <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 13, display: 'flex', alignItems: 'center' }}>Features</div>
+                                  {matrixProposalsToRender.map(p => (
+                                    <div key={`h-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
+                                      <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p.vendorName}</div>
+                                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{p.version}</div>
+                                    </div>
+                                  ))}
+                                </div>
 
-                              {/* Matrix Groups */}
-                              {(() => {
-                                const toggleGroup = (g) => setMatrixExpanded(prev => ({ ...prev, [g]: !prev[g] }));
-                                const getVendorNegotData = (vName) => {
-                                  const k = Object.keys(NEGOTIATION_DATA).find(key => key.toLowerCase().includes(vName.toLowerCase().split(' ')[0]));
-                                  return k ? NEGOTIATION_DATA[k] : null;
-                                };
-                                const rankedProposals = [...proposals].sort((a, b) => parseInt(b.techScore || 0) - parseInt(a.techScore || 0));
-                                const getRank = (pid) => {
-                                  const r = rankedProposals.findIndex(p => p.id === pid) + 1;
-                                  return r > 0 ? `#${r}` : '-';
-                                };
+                                {/* Matrix Groups */}
+                                {(() => {
+                                  const toggleGroup = (g) => setMatrixExpanded(prev => ({ ...prev, [g]: !prev[g] }));
+                                  const getVendorNegotData = (vName) => {
+                                    const k = Object.keys(NEGOTIATION_DATA).find(key => key.toLowerCase().includes(vName.toLowerCase().split(' ')[0]));
+                                    return k ? NEGOTIATION_DATA[k] : null;
+                                  };
+                                  const rankedProposals = [...proposals].sort((a, b) => parseInt(b.techScore || 0) - parseInt(a.techScore || 0));
+                                  const getRank = (pid) => {
+                                    const r = rankedProposals.findIndex(p => p.id === pid) + 1;
+                                    return r > 0 ? `#${r}` : '-';
+                                  };
 
-                                const matrixGroups = [
-                                  {
-                                    id: 'g1', title: 'Vendor Overview', icon: Building,
-                                    rows: [
-                                      { label: 'Company Name', getValue: p => <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName}</span> },
-                                      { label: 'Vendor Status', getValue: p => p.state === 'pass' ? <span style={{ color: '#15803d', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>PASS</span> : (p.state === 'fail' ? <span style={{ color: '#b91c1c', background: 'rgba(239,68,68,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>FAIL</span> : 'Pending') },
-                                      { label: 'Vendor Rank', getValue: p => <span style={{ fontWeight: 600 }}>{getRank(p.id)}</span> },
-                                      { label: 'Years in Business', getValue: p => '10+ Years' },
-                                      { label: 'Geographic Presence', getValue: p => 'UAE, KSA, Qatar' },
-                                      { label: 'Industry Expertise', getValue: p => 'High' }
-                                    ]
-                                  },
-                                  {
-                                    id: 'g2', title: 'Scoring Configuration', icon: Target,
-                                    rows: [
-                                      { label: 'Overall Evaluation Score', getValue: p => <span style={{ fontWeight: 700, color: '#0052cc' }}>{p.techScore || 'Pending'}</span> },
-                                      { label: 'Evaluation Criteria Breakdown', isHeader: true, getValue: p => '' },
-                                      ...scoringConfigData.map(c => ({
-                                        label: c.crit, getValue: p => p.criteriaScores?.[c.crit] || '-'
-                                      }))
-                                    ]
-                                  },
-                                  {
-                                    id: 'g3', title: 'Commercial Evaluation', icon: Banknote,
-                                    rows: [
-                                      { label: 'Quotation', getValue: p => <span style={{ fontWeight: 700, color: '#15803d' }}>{p.commercial || 'Pending'}</span> },
-                                      { label: 'TCO (Total Cost of Ownership)', getValue: p => p.commercial ? '+ 15% (Estimated)' : '-' },
-                                      { label: 'Commercial Rank based on TCO', getValue: p => getRank(p.id) }
-                                    ]
-                                  },
-                                  {
-                                    id: 'g4', title: 'Requirements Coverage', icon: CheckCircle,
-                                    rows: [
-                                      { label: 'Functional Requirements Coverage (%)', getValue: p => '95%' },
-                                      { label: 'Non-Functional Requirements Coverage (%)', getValue: p => '90%' },
-                                      { label: 'RFP Compliance (%)', getValue: p => '98%' }
-                                    ]
-                                  },
-                                  {
-                                    id: 'g5', title: 'Team & Delivery', icon: Users,
-                                    rows: [
-                                      { label: 'Team Size', getValue: p => '12 Members' },
-                                      { label: 'Team Composition', getValue: p => '3 Architects, 5 Engineers' },
-                                      { label: 'Key Personnel', getValue: p => 'Senior Cloud Architects' },
-                                      { label: 'Relevant Project Experience', getValue: p => '5+ Enterprise Projects' },
-                                      { label: 'Delivery Timeline', getValue: p => '6 Months' }
-                                    ]
-                                  },
-                                  {
-                                    id: 'g6', title: 'Technical Fit', icon: Layers,
-                                    rows: [
-                                      { label: 'Solution Architecture', getValue: p => 'AWS Well-Architected' },
-                                      { label: 'Technology Stack', getValue: p => 'AWS Native, Kubernetes' },
-                                      { label: 'Scalability', getValue: p => 'Auto-scaling enabled' },
-                                      { label: 'Innovation / Unique Features', getValue: p => 'AI-driven Optimization' }
-                                    ]
-                                  },
-                                  {
-                                    id: 'g7', title: 'Risk & Due Diligence', icon: ShieldCheck,
-                                    rows: [
-                                      {
-                                        label: 'Risk Profile', getValue: p => {
-                                          const risks = p.risks || [];
-                                          if (risks.length === 0) return 'Pending';
-                                          return (
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                                              {risks.map((r, i) => <div key={i} style={{ fontSize: 12, color: '#b91c1c', lineHeight: 1.3 }}>• {r}</div>)}
-                                            </div>
-                                          );
+                                  const matrixGroups = [
+                                    {
+                                      id: 'g1', title: 'Vendor Overview', icon: Building,
+                                      rows: [
+                                        { label: 'Company Name', getValue: p => <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName}</span> },
+                                        { label: 'Vendor Status', getValue: p => p.state === 'pass' ? <span style={{ color: '#15803d', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>PASS</span> : (p.state === 'fail' ? <span style={{ color: '#b91c1c', background: 'rgba(239,68,68,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>FAIL</span> : 'Pending') },
+                                        { label: 'Vendor Rank', getValue: p => <span style={{ fontWeight: 600 }}>{getRank(p.id)}</span> },
+                                        { label: 'Years in Business', getValue: p => '10+ Years' },
+                                        { label: 'Geographic Presence', getValue: p => 'UAE, KSA, Qatar' },
+                                        { label: 'Industry Expertise', getValue: p => 'High' }
+                                      ]
+                                    },
+                                    {
+                                      id: 'g2', title: 'Scoring Configuration', icon: Target,
+                                      rows: [
+                                        { label: 'Overall Evaluation Score', getValue: p => <span style={{ fontWeight: 700, color: '#0052cc' }}>{p.techScore || 'Pending'}</span> },
+                                        { label: 'Evaluation Criteria Breakdown', isHeader: true, getValue: p => '' },
+                                        ...scoringConfigData.map(c => ({
+                                          label: c.crit, getValue: p => p.criteriaScores?.[c.crit] || '-'
+                                        }))
+                                      ]
+                                    },
+                                    {
+                                      id: 'g3', title: 'Commercial Evaluation', icon: Banknote,
+                                      rows: [
+                                        { label: 'Quotation', getValue: p => <span style={{ fontWeight: 700, color: '#15803d' }}>{p.commercial || 'Pending'}</span> },
+                                        { label: 'TCO (Total Cost of Ownership)', getValue: p => p.commercial ? '+ 15% (Estimated)' : '-' },
+                                        { label: 'Commercial Rank based on TCO', getValue: p => getRank(p.id) }
+                                      ]
+                                    },
+                                    {
+                                      id: 'g4', title: 'Requirements Coverage', icon: CheckCircle,
+                                      rows: [
+                                        { label: 'Functional Requirements Coverage (%)', getValue: p => '95%' },
+                                        { label: 'Non-Functional Requirements Coverage (%)', getValue: p => '90%' },
+                                        { label: 'RFP Compliance (%)', getValue: p => '98%' }
+                                      ]
+                                    },
+                                    {
+                                      id: 'g5', title: 'Team & Delivery', icon: Users,
+                                      rows: [
+                                        { label: 'Team Size', getValue: p => '12 Members' },
+                                        { label: 'Team Composition', getValue: p => '3 Architects, 5 Engineers' },
+                                        { label: 'Key Personnel', getValue: p => 'Senior Cloud Architects' },
+                                        { label: 'Relevant Project Experience', getValue: p => '5+ Enterprise Projects' },
+                                        { label: 'Delivery Timeline', getValue: p => '6 Months' }
+                                      ]
+                                    },
+                                    {
+                                      id: 'g6', title: 'Technical Fit', icon: Layers,
+                                      rows: [
+                                        { label: 'Solution Architecture', getValue: p => 'AWS Well-Architected' },
+                                        { label: 'Technology Stack', getValue: p => 'AWS Native, Kubernetes' },
+                                        { label: 'Scalability', getValue: p => 'Auto-scaling enabled' },
+                                        { label: 'Innovation / Unique Features', getValue: p => 'AI-driven Optimization' }
+                                      ]
+                                    },
+                                    {
+                                      id: 'g7', title: 'Risk & Due Diligence', icon: ShieldCheck,
+                                      rows: [
+                                        {
+                                          label: 'Risk Profile', getValue: p => {
+                                            const risks = p.risks || [];
+                                            if (risks.length === 0) return 'Pending';
+                                            return (
+                                              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                                {risks.map((r, i) => <div key={i} style={{ fontSize: 12, color: '#b91c1c', lineHeight: 1.3 }}>• {r}</div>)}
+                                              </div>
+                                            );
+                                          }
+                                        },
+                                        { label: 'High', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.high ?? '-' },
+                                        { label: 'Medium', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.medium ?? '-' },
+                                        { label: 'Low', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.low ?? '-' }
+                                      ]
+                                    },
+                                    {
+                                      id: 'g8', title: 'Support & Post-Go-Live', icon: HelpCircle,
+                                      rows: [
+                                        { label: 'Warranty Period', getValue: p => '90 Days' },
+                                        { label: 'Training Offered', getValue: p => '2 Weeks On-site' },
+                                        { label: 'Maintenance Cost (AMC)', getValue: p => '18% of License Cost' },
+                                        { label: 'Customer Support Channels', getValue: p => '24/7 Portal, Phone' }
+                                      ]
+                                    },
+                                    {
+                                      id: 'g9', title: 'AI Insights & Recommendation', icon: Sparkles,
+                                      rows: [
+                                        { label: 'Proposal Strengths', getValue: p => getVendorNegotData(p.vendorName)?.technicalGaps?.find(g => g.type === 'strength')?.desc || 'Strong Architecture' },
+                                        { label: 'Proposal Weaknesses', getValue: p => getVendorNegotData(p.vendorName)?.technicalGaps?.find(g => g.type === 'gap')?.desc || 'Higher TCO' },
+                                        { label: 'Unique Differentiators', getValue: p => 'Proprietary Migration Tools' },
+                                        { label: 'Innovation Highlights', getValue: p => 'Zero-downtime Cutover' },
+                                        { label: 'Hidden Costs Identified', getValue: p => 'Travel & Expenses uncapped' },
+                                        { label: 'Contractual Concerns', getValue: p => 'Net 30 Payment Terms' },
+                                        { label: 'Additional Value-Added Services', getValue: p => 'Free Security Audit' },
+                                        { label: 'AI Recommendation', getValue: p => getVendorNegotData(p.vendorName)?.strategyBrief?.batna ? 'Recommended with Negotiations' : 'Review Alternatives' },
+                                        {
+                                          label: 'Executive Summary', getValue: p => {
+                                            const b = getVendorNegotData(p.vendorName)?.stats?.batna;
+                                            return b ? <div style={{ fontSize: 12, lineHeight: 1.4 }}>{b}</div> : '-';
+                                          }
                                         }
-                                      },
-                                      { label: 'High', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.high ?? '-' },
-                                      { label: 'Medium', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.medium ?? '-' },
-                                      { label: 'Low', getValue: p => getVendorNegotData(p.vendorName)?.stats?.risks?.low ?? '-' }
-                                    ]
-                                  },
-                                  {
-                                    id: 'g8', title: 'Support & Post-Go-Live', icon: HelpCircle,
-                                    rows: [
-                                      { label: 'Warranty Period', getValue: p => '90 Days' },
-                                      { label: 'Training Offered', getValue: p => '2 Weeks On-site' },
-                                      { label: 'Maintenance Cost (AMC)', getValue: p => '18% of License Cost' },
-                                      { label: 'Customer Support Channels', getValue: p => '24/7 Portal, Phone' }
-                                    ]
-                                  },
-                                  {
-                                    id: 'g9', title: 'AI Insights & Recommendation', icon: Sparkles,
-                                    rows: [
-                                      { label: 'Proposal Strengths', getValue: p => getVendorNegotData(p.vendorName)?.technicalGaps?.find(g => g.type === 'strength')?.desc || 'Strong Architecture' },
-                                      { label: 'Proposal Weaknesses', getValue: p => getVendorNegotData(p.vendorName)?.technicalGaps?.find(g => g.type === 'gap')?.desc || 'Higher TCO' },
-                                      { label: 'Unique Differentiators', getValue: p => 'Proprietary Migration Tools' },
-                                      { label: 'Innovation Highlights', getValue: p => 'Zero-downtime Cutover' },
-                                      { label: 'Hidden Costs Identified', getValue: p => 'Travel & Expenses uncapped' },
-                                      { label: 'Contractual Concerns', getValue: p => 'Net 30 Payment Terms' },
-                                      { label: 'Additional Value-Added Services', getValue: p => 'Free Security Audit' },
-                                      { label: 'AI Recommendation', getValue: p => getVendorNegotData(p.vendorName)?.strategyBrief?.batna ? 'Recommended with Negotiations' : 'Review Alternatives' },
-                                      {
-                                        label: 'Executive Summary', getValue: p => {
-                                          const b = getVendorNegotData(p.vendorName)?.stats?.batna;
-                                          return b ? <div style={{ fontSize: 12, lineHeight: 1.4 }}>{b}</div> : '-';
-                                        }
-                                      }
-                                    ]
-                                  }
-                                ];
+                                      ]
+                                    }
+                                  ];
 
-                                return matrixGroups.map((group) => {
-                                  const isExpanded = matrixExpanded[group.id];
-                                  const GroupIcon = group.icon;
-                                  return (
-                                    <React.Fragment key={group.id}>
-                                      {/* Group Header Row */}
-                                      <div
-                                        onClick={() => toggleGroup(group.id)}
-                                        style={{
-                                          display: 'grid', gridTemplateColumns: `250px repeat(${matrixProposalsToRender.length}, 1fr)`,
-                                          background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)',
-                                          cursor: 'pointer', transition: 'background 0.1s'
-                                        }}
-                                        onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
-                                        onMouseLeave={e => e.currentTarget.style.background = '#f8fafc'}
-                                      >
-                                        <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
-                                          <ChevronRight size={18} color="var(--text-tertiary)" style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', flexShrink: 0 }} />
-                                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: 6, background: 'rgba(0,82,204,0.08)' }}>
-                                            <GroupIcon size={14} color="#0052cc" />
-                                          </div>
-                                          {group.title}
-                                        </div>
-                                        {/* Empty cells for vendors */}
-                                        {matrixProposalsToRender.map((p) => (
-                                          <div key={`gh-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid transparent' }} />
-                                        ))}
-                                      </div>
-
-                                      {/* Group Content Rows */}
-                                      {isExpanded && group.rows.map((row, rIdx) => (
-                                        <div key={rIdx} style={{ display: 'grid', gridTemplateColumns: `250px repeat(${matrixProposalsToRender.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
-                                          <div style={{
-                                            padding: '14px 20px', fontSize: row.isHeader ? 12 : 13,
-                                            fontWeight: row.isHeader ? 700 : 500,
-                                            color: row.isHeader ? 'var(--text-tertiary)' : 'var(--text-secondary)',
-                                            textTransform: row.isHeader ? 'uppercase' : 'none',
-                                            paddingLeft: row.isSub ? 40 : 20,
-                                            display: 'flex', alignItems: 'center'
-                                          }}>
-                                            {row.isSub && <ChevronRight size={14} color="var(--text-tertiary)" style={{ marginRight: 6 }} />}
-                                            {row.label}
-                                          </div>
-                                          {matrixProposalsToRender.map(p => (
-                                            <div key={`gr-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 13, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
-                                              {row.isHeader ? '' : row.getValue(p)}
+                                  return matrixGroups.map((group) => {
+                                    const isExpanded = matrixExpanded[group.id];
+                                    const GroupIcon = group.icon;
+                                    return (
+                                      <React.Fragment key={group.id}>
+                                        {/* Group Header Row */}
+                                        <div
+                                          onClick={() => toggleGroup(group.id)}
+                                          style={{
+                                            display: 'grid', gridTemplateColumns: `250px repeat(${matrixProposalsToRender.length}, 1fr)`,
+                                            background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)',
+                                            cursor: 'pointer', transition: 'background 0.1s'
+                                          }}
+                                          onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
+                                          onMouseLeave={e => e.currentTarget.style.background = '#f8fafc'}
+                                        >
+                                          <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+                                            <ChevronRight size={18} color="var(--text-tertiary)" style={{ transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', flexShrink: 0 }} />
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: 6, background: 'rgba(0,82,204,0.08)' }}>
+                                              <GroupIcon size={14} color="#0052cc" />
                                             </div>
+                                            {group.title}
+                                          </div>
+                                          {/* Empty cells for vendors */}
+                                          {matrixProposalsToRender.map((p) => (
+                                            <div key={`gh-${p.id}`} style={{ padding: '16px 20px', borderLeft: '1px solid transparent' }} />
                                           ))}
                                         </div>
-                                      ))}
-                                    </React.Fragment>
-                                  );
-                                });
-                              })()}
 
+                                        {/* Group Content Rows */}
+                                        {isExpanded && group.rows.map((row, rIdx) => (
+                                          <div key={rIdx} style={{ display: 'grid', gridTemplateColumns: `250px repeat(${matrixProposalsToRender.length}, 1fr)`, borderBottom: '1px solid var(--border-subtle)', background: '#fff' }}>
+                                            <div style={{
+                                              padding: '14px 20px', fontSize: row.isHeader ? 12 : 13,
+                                              fontWeight: row.isHeader ? 700 : 500,
+                                              color: row.isHeader ? 'var(--text-tertiary)' : 'var(--text-secondary)',
+                                              textTransform: row.isHeader ? 'uppercase' : 'none',
+                                              paddingLeft: row.isSub ? 40 : 20,
+                                              display: 'flex', alignItems: 'center'
+                                            }}>
+                                              {row.isSub && <ChevronRight size={14} color="var(--text-tertiary)" style={{ marginRight: 6 }} />}
+                                              {row.label}
+                                            </div>
+                                            {matrixProposalsToRender.map(p => (
+                                              <div key={`gr-${p.id}`} style={{ padding: '14px 20px', borderLeft: '1px solid var(--border-subtle)', fontSize: 13, color: '#1a1a1a', display: 'flex', alignItems: 'center' }}>
+                                                {row.isHeader ? '' : row.getValue(p)}
+                                              </div>
+                                            ))}
+                                          </div>
+                                        ))}
+                                      </React.Fragment>
+                                    );
+                                  });
+                                })()}
+
+                              </div>
                             </div>
                           </div>
-                        </div>
                         );
                       })()}
                     </div>
@@ -3443,7 +3453,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                                 <div>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
-<div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
+                                  <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
                                 </div>
 
                               </div>
@@ -4241,21 +4251,21 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
         const awardedName = awardedProp ? `${awardedProp.vendorName} ${awardedProp.version}` : selectedAwardVendor;
         return (
 
-        <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
+          <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
 
-          <CheckCircle size={20} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
+            <CheckCircle size={20} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
 
-          <div style={{ flex: 1 }}>
+            <div style={{ flex: 1 }}>
 
-            <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Project Awarded Successfully</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#15803d' }}>Project Awarded Successfully</div>
 
-            <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{awardedName} has been notified.</div>
+              <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{awardedName} has been notified.</div>
+
+            </div>
+
+            <button onClick={() => setShowAwardSuccessToast(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
 
           </div>
-
-          <button onClick={() => setShowAwardSuccessToast(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
-
-        </div>
         );
       })()}
 
