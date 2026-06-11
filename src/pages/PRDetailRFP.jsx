@@ -3029,17 +3029,21 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                                 const matrixGroups = [
                                   {
-                                    id: 'g1', title: 'Vendor Overview', icon: Briefcase,
+                                    id: 'g1', title: 'Vendor Overview', icon: Building,
                                     rows: [
-                                      // { label: 'Vendor Name', getValue: p => <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName}</span> },
-                                      { label: 'State', getValue: p => p.state === 'pass' ? <span style={{ color: '#15803d', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>PASS</span> : (p.state === 'fail' ? <span style={{ color: '#b91c1c', background: 'rgba(239,68,68,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>FAIL</span> : 'Pending') },
-                                      { label: 'Rank', getValue: p => <span style={{ fontWeight: 600 }}>{getRank(p.id)}</span> }
+                                      { label: 'Company Name', getValue: p => <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName}</span> },
+                                      { label: 'Vendor Status', getValue: p => p.state === 'pass' ? <span style={{ color: '#15803d', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>PASS</span> : (p.state === 'fail' ? <span style={{ color: '#b91c1c', background: 'rgba(239,68,68,0.1)', padding: '2px 8px', borderRadius: 12, fontSize: 11, fontWeight: 700 }}>FAIL</span> : 'Pending') },
+                                      { label: 'Vendor Rank', getValue: p => <span style={{ fontWeight: 600 }}>{getRank(p.id)}</span> },
+                                      { label: 'Years in Business', getValue: p => '10+ Years' },
+                                      { label: 'Geographic Presence', getValue: p => 'UAE, KSA, Qatar' },
+                                      { label: 'Industry Expertise', getValue: p => 'High' }
                                     ]
                                   },
                                   {
-                                    id: 'g2', title: 'Technical Evaluation', icon: Layers,
+                                    id: 'g2', title: 'Scoring Configuration', icon: Target,
                                     rows: [
-                                      { label: 'Score', getValue: p => <span style={{ fontWeight: 700, color: '#0052cc' }}>{p.techScore || 'Pending'}</span> },
+                                      { label: 'Overall Evaluation Score', getValue: p => <span style={{ fontWeight: 700, color: '#0052cc' }}>{p.techScore || 'Pending'}</span> },
+                                      { label: 'Evaluation Criteria Breakdown', isHeader: true, getValue: p => '' },
                                       ...scoringConfigData.map(c => ({
                                         label: c.crit, getValue: p => p.criteriaScores?.[c.crit] || '-'
                                       }))
@@ -3049,11 +3053,39 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                     id: 'g3', title: 'Commercial Evaluation', icon: Banknote,
                                     rows: [
                                       { label: 'Quotation', getValue: p => <span style={{ fontWeight: 700, color: '#15803d' }}>{p.commercial || 'Pending'}</span> },
-                                      { label: 'Commercials', getValue: p => getVendorNegotData(p.vendorName)?.stats?.commercial?.detail || '-' }
+                                      { label: 'TCO (Total Cost of Ownership)', getValue: p => p.commercial ? '+ 15% (Estimated)' : '-' },
+                                      { label: 'Commercial Rank based on TCO', getValue: p => getRank(p.id) }
                                     ]
                                   },
                                   {
-                                    id: 'g4', title: 'Risk & Due Diligence', icon: ShieldCheck,
+                                    id: 'g4', title: 'Requirements Coverage', icon: CheckCircle,
+                                    rows: [
+                                      { label: 'Functional Requirements Coverage (%)', getValue: p => '95%' },
+                                      { label: 'Non-Functional Requirements Coverage (%)', getValue: p => '90%' },
+                                      { label: 'RFP Compliance (%)', getValue: p => '98%' }
+                                    ]
+                                  },
+                                  {
+                                    id: 'g5', title: 'Team & Delivery', icon: Users,
+                                    rows: [
+                                      { label: 'Team Size', getValue: p => '12 Members' },
+                                      { label: 'Team Composition', getValue: p => '3 Architects, 5 Engineers' },
+                                      { label: 'Key Personnel', getValue: p => 'Senior Cloud Architects' },
+                                      { label: 'Relevant Project Experience', getValue: p => '5+ Enterprise Projects' },
+                                      { label: 'Delivery Timeline', getValue: p => '6 Months' }
+                                    ]
+                                  },
+                                  {
+                                    id: 'g6', title: 'Technical Fit', icon: Layers,
+                                    rows: [
+                                      { label: 'Solution Architecture', getValue: p => 'AWS Well-Architected' },
+                                      { label: 'Technology Stack', getValue: p => 'AWS Native, Kubernetes' },
+                                      { label: 'Scalability', getValue: p => 'Auto-scaling enabled' },
+                                      { label: 'Innovation / Unique Features', getValue: p => 'AI-driven Optimization' }
+                                    ]
+                                  },
+                                  {
+                                    id: 'g7', title: 'Risk & Due Diligence', icon: ShieldCheck,
                                     rows: [
                                       {
                                         label: 'Risk Profile', getValue: p => {
@@ -3072,32 +3104,27 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                     ]
                                   },
                                   {
-                                    id: 'g5', title: 'Market Intelligence & Sentiment', icon: PieChart,
+                                    id: 'g8', title: 'Support & Post-Go-Live', icon: HelpCircle,
                                     rows: [
-                                      {
-                                        label: 'Sentiment Score', getValue: p => {
-                                          const s = getVendorNegotData(p.vendorName)?.stats?.sentiment;
-                                          return s ? `${s.score}/10 (${s.rating})` : '-';
-                                        }
-                                      }
+                                      { label: 'Warranty Period', getValue: p => '90 Days' },
+                                      { label: 'Training Offered', getValue: p => '2 Weeks On-site' },
+                                      { label: 'Maintenance Cost (AMC)', getValue: p => '18% of License Cost' },
+                                      { label: 'Customer Support Channels', getValue: p => '24/7 Portal, Phone' }
                                     ]
                                   },
                                   {
-                                    id: 'g6', title: 'Clarifications & Discussions', icon: MessageSquare,
+                                    id: 'g9', title: 'AI Insights & Recommendation', icon: Sparkles,
                                     rows: [
+                                      { label: 'Proposal Strengths', getValue: p => getVendorNegotData(p.vendorName)?.technicalGaps?.find(g => g.type === 'strength')?.desc || 'Strong Architecture' },
+                                      { label: 'Proposal Weaknesses', getValue: p => getVendorNegotData(p.vendorName)?.technicalGaps?.find(g => g.type === 'gap')?.desc || 'Higher TCO' },
+                                      { label: 'Unique Differentiators', getValue: p => 'Proprietary Migration Tools' },
+                                      { label: 'Innovation Highlights', getValue: p => 'Zero-downtime Cutover' },
+                                      { label: 'Hidden Costs Identified', getValue: p => 'Travel & Expenses uncapped' },
+                                      { label: 'Contractual Concerns', getValue: p => 'Net 30 Payment Terms' },
+                                      { label: 'Additional Value-Added Services', getValue: p => 'Free Security Audit' },
+                                      { label: 'AI Recommendation', getValue: p => getVendorNegotData(p.vendorName)?.strategyBrief?.batna ? 'Recommended with Negotiations' : 'Review Alternatives' },
                                       {
-                                        label: 'Open Questions', getValue: p => {
-                                          const q = getVendorNegotData(p.vendorName)?.clarificationQuestions;
-                                          return q ? `${q.length} Questions` : '-';
-                                        }
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    id: 'g7', title: 'Executive Summary', icon: BookOpen,
-                                    rows: [
-                                      {
-                                        label: 'Summary', getValue: p => {
+                                        label: 'Executive Summary', getValue: p => {
                                           const b = getVendorNegotData(p.vendorName)?.stats?.batna;
                                           return b ? <div style={{ fontSize: 12, lineHeight: 1.4 }}>{b}</div> : '-';
                                         }
