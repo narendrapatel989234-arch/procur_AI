@@ -2101,7 +2101,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               )}
 
               {previewActiveTab === 'TCO Normalization' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 24, height: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                   <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                     {(() => {
                       const mockTcoData = [
