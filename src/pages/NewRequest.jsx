@@ -617,6 +617,53 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
   const uCurrencyRef = useRef(null); const uSourcingRef = useRef(null);
   const uVendorRef = useRef(null); const uDeliveryRef = useRef(null);
 
+  /* ── Multi-file upload for Form Mode ── */
+  const [procFiles, setProcFiles] = useState([]);
+  const procFileRef = useRef(null);
+
+  const handleProcFileSelect = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    const available = 5 - procFiles.length;
+    if (available <= 0) return;
+    const toAdd = files.slice(0, available).map((f, i) => ({
+      id: Date.now() + i,
+      name: f.name,
+      size: (f.size / 1024 / 1024).toFixed(1) + ' MB',
+      status: 'uploading'
+    }));
+
+    setProcFiles(prev => [...prev, ...toAdd]);
+
+    toAdd.forEach((file, idx) => {
+      setTimeout(() => {
+        setProcFiles(prev => prev.map(f => f.id === file.id ? { ...f, status: 'scanning' } : f));
+        setTimeout(() => {
+          setProcFiles(prev => prev.map(f => f.id === file.id ? { ...f, status: 'complete', fieldsExtracted: Math.floor(Math.random() * 5) + 3 } : f));
+
+          // Populate fields
+          if (idx === 0) {
+            setFReqTitle('MacBook Pro Units — Q3 Engineering Batch');
+            setFBizUnit('Engineering');
+            setFQuantity('25');
+            setAiFilledFields(prevSet => new Set([...prevSet, 'fReqTitle', 'fBizUnit', 'fQuantity']));
+          } else if (idx === 1) {
+            setFProcCategory('Technology and Consulting');
+            setFSubcategory('Staff Augmentation & Professional Services');
+            setFCapexOpex('OpEx');
+            setAiFilledFields(prevSet => new Set([...prevSet, 'fProcCategory', 'fSubcategory', 'fCapexOpex']));
+          } else if (idx === 2) {
+            setFReqDesc('Procurement of 25 MacBook Pro 14-inch M3 units for the incoming engineering batch joining Q3 2026. Includes standard accessories — Magic Mouse, USB-C hub, and protective cases.');
+            setFBudget('4500000');
+            setAiFilledFields(prevSet => new Set([...prevSet, 'fReqDesc', 'fBudget']));
+          }
+
+        }, 2000);
+      }, 1500);
+    });
+    e.target.value = '';
+  };
+
   /* ── scroll chat to bottom ── */
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -1027,1670 +1074,1738 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
       )}
 
       <div style={{ display: 'flex', flexDirection: 'row', height: '100%', overflow: 'hidden' }}>
-        
+
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           {/* ═══ TOP BAR ═══ */}
           <div style={{
             height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', flexShrink: 0, position: 'relative',
           }}>
-        {/* Left */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
-          <div onClick={handleBack} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--text-tertiary)' }}>
-            <ArrowLeft size={16} strokeWidth={2} />
-          </div>
-          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
-            {activeMode === 'chat' && hasMessages ? chatTitle : 'New Request'}
-          </span>
-        </div>
-
-        {/* Centre — mode toggle */}
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', background: 'rgba(0,0,0,0.02)', borderRadius: 10, padding: 4, gap: 2 }}>
-          {['chat', 'form'].map((m) => (
-            <button
-              key={m}
-              onClick={() => setActiveMode(m)}
-              className="pai-modetab"
-              style={{
-                padding: '7px 20px', borderRadius: 8, fontSize: 13, cursor: 'pointer', border: 'none',
-                fontFamily: 'inherit',
-                fontWeight: activeMode === m ? 600 : 500,
-                background: activeMode === m ? '#fff' : 'transparent',
-                color: activeMode === m ? 'var(--colors-blue-500)' : 'var(--text-tertiary)',
-                boxShadow: activeMode === m ? '0 1px 4px rgba(0,0,0,0.1)' : 'none',
-              }}
-            >
-              {m.charAt(0).toUpperCase() + m.slice(1)}
-            </button>
-          ))}
-        </div>
-
-        {/* Right */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, justifyContent: 'flex-end' }}>
-          <div ref={menuRef} style={{ position: 'relative' }}>
-            <button
-              onClick={() => setMenuOpen(o => !o)}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                width: 34, height: 34, borderRadius: 8,
-                border: 'none',
-                background: menuOpen ? 'var(--bg-surface-1)' : '#fff',
-                cursor: 'pointer', color: 'var(--text-tertiary)',
-                transition: 'all 0.15s ease',
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-surface-1)'}
-              onMouseLeave={(e) => { if (!menuOpen) e.currentTarget.style.background = '#fff'; }}
-            >
-              <MoreHorizontal size={16} />
-            </button>
-
-            {menuOpen && (
-              <div style={{
-                position: 'absolute', top: 'calc(100% + 6px)', right: 0,
-                background: '#fff', border: '1px solid var(--border-default)',
-                borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                padding: 6, zIndex: 200, minWidth: 180,
-              }}>
-                {[
-                  { icon: isPinned ? PinOff : Pin, label: isPinned ? 'Unpin' : 'Pin', action: () => { setIsPinned(p => !p); setMenuOpen(false); setToastMessage(isPinned ? 'Request unpinned' : 'Request pinned to top'); setShowToast(true); clearTimeout(toastTimerRef.current); toastTimerRef.current = setTimeout(() => setShowToast(false), 3000); } },
-                  { icon: Edit2, label: 'Rename', action: () => { setMenuOpen(false); setRenameValue('MacBook Pro Upgrade Request'); setShowRenameModal(true); } },
-                  { icon: Share2, label: 'Share', action: () => { setMenuOpen(false); setShowShareModal(true); setLinkCopied(false); } },
-                  { icon: Download, label: 'Download', action: handleDownload },
-                ].map(({ icon: Icon, label, action }) => (
-                  <div
-                    key={label}
-                    onClick={action}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: 10,
-                      padding: '8px 12px', borderRadius: 7, cursor: 'pointer',
-                      fontSize: 13, color: 'var(--text-primary)',
-                      transition: 'background 0.12s ease',
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-surface-2)'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                  >
-                    <Icon size={14} color="var(--text-secondary)" />
-                    {label}
-                  </div>
-                ))}
-                <div
-                  onClick={() => { setMenuOpen(false); setShowDeleteModal(true); }}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '8px 12px', borderRadius: 7, cursor: 'pointer',
-                    fontSize: 13, color: '#ef4444',
-                    transition: 'background 0.12s ease',
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.06)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                >
-                  <Trash2 size={14} color="#ef4444" />
-                  Delete
-                </div>
+            {/* Left */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
+              <div onClick={handleBack} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: 'var(--text-tertiary)' }}>
+                <ArrowLeft size={16} strokeWidth={2} />
               </div>
-            )}
+              <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
+                {activeMode === 'chat' && hasMessages ? chatTitle : 'New Request'}
+              </span>
+            </div>
+
+            {/* Centre — mode toggle */}
+            <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', display: 'inline-flex', background: 'rgba(0,0,0,0.02)', borderRadius: 10, padding: 4, gap: 2 }}>
+              {['chat', 'form'].map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setActiveMode(m)}
+                  className="pai-modetab"
+                  style={{
+                    padding: '7px 20px', borderRadius: 8, fontSize: 13, cursor: 'pointer', border: 'none',
+                    fontFamily: 'inherit',
+                    fontWeight: activeMode === m ? 600 : 500,
+                    background: activeMode === m ? '#fff' : 'transparent',
+                    color: activeMode === m ? 'var(--colors-blue-500)' : 'var(--text-tertiary)',
+                    boxShadow: activeMode === m ? '0 1px 4px rgba(0,0,0,0.1)' : 'none',
+                  }}
+                >
+                  {m.charAt(0).toUpperCase() + m.slice(1)}
+                </button>
+              ))}
+            </div>
+
+            {/* Right */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1, justifyContent: 'flex-end' }}>
+              <div ref={menuRef} style={{ position: 'relative' }}>
+                <button
+                  onClick={() => setMenuOpen(o => !o)}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    width: 34, height: 34, borderRadius: 8,
+                    border: 'none',
+                    background: menuOpen ? 'var(--bg-surface-1)' : '#fff',
+                    cursor: 'pointer', color: 'var(--text-tertiary)',
+                    transition: 'all 0.15s ease',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-surface-1)'}
+                  onMouseLeave={(e) => { if (!menuOpen) e.currentTarget.style.background = '#fff'; }}
+                >
+                  <MoreHorizontal size={16} />
+                </button>
+
+                {menuOpen && (
+                  <div style={{
+                    position: 'absolute', top: 'calc(100% + 6px)', right: 0,
+                    background: '#fff', border: '1px solid var(--border-default)',
+                    borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                    padding: 6, zIndex: 200, minWidth: 180,
+                  }}>
+                    {[
+                      { icon: isPinned ? PinOff : Pin, label: isPinned ? 'Unpin' : 'Pin', action: () => { setIsPinned(p => !p); setMenuOpen(false); setToastMessage(isPinned ? 'Request unpinned' : 'Request pinned to top'); setShowToast(true); clearTimeout(toastTimerRef.current); toastTimerRef.current = setTimeout(() => setShowToast(false), 3000); } },
+                      { icon: Edit2, label: 'Rename', action: () => { setMenuOpen(false); setRenameValue('MacBook Pro Upgrade Request'); setShowRenameModal(true); } },
+                      { icon: Share2, label: 'Share', action: () => { setMenuOpen(false); setShowShareModal(true); setLinkCopied(false); } },
+                      { icon: Download, label: 'Download', action: handleDownload },
+                    ].map(({ icon: Icon, label, action }) => (
+                      <div
+                        key={label}
+                        onClick={action}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 10,
+                          padding: '8px 12px', borderRadius: 7, cursor: 'pointer',
+                          fontSize: 13, color: 'var(--text-primary)',
+                          transition: 'background 0.12s ease',
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <Icon size={14} color="var(--text-secondary)" />
+                        {label}
+                      </div>
+                    ))}
+                    <div
+                      onClick={() => { setMenuOpen(false); setShowDeleteModal(true); }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        padding: '8px 12px', borderRadius: 7, cursor: 'pointer',
+                        fontSize: 13, color: '#ef4444',
+                        transition: 'background 0.12s ease',
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(239,68,68,0.06)'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <Trash2 size={14} color="#ef4444" />
+                      Delete
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* ═══ MODE: CHAT ═══ */}
-      {activeMode === 'chat' && (
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg-default)' }}>
+          {/* ═══ MODE: CHAT ═══ */}
+          {activeMode === 'chat' && (
+            <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg-default)' }}>
 
-            {/* Messages / empty state */}
-            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: hasMessages ? '24px' : '40px 24px 24px', gap: hasMessages ? 16 : 0 }}>
-              <div style={{ width: '100%', maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: hasMessages ? 'stretch' : 'stretch', gap: hasMessages ? 16 : 0, flex: hasMessages ? undefined : 1 }}>
+              {/* Messages / empty state */}
+              <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: hasMessages ? '24px' : '40px 24px 24px', gap: hasMessages ? 16 : 0 }}>
+                <div style={{ width: '100%', maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: hasMessages ? 'stretch' : 'stretch', gap: hasMessages ? 16 : 0, flex: hasMessages ? undefined : 1 }}>
 
-                {!hasMessages ? (
-                  /* ── Empty state ── */
-                  <>
-                    {/* Greeting block */}
-                    <div style={{ marginBottom: 36, textAlign: 'left' }}>
-                      <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>Hi {userRole === 'manager' ? 'Sarah' : 'David'} 👋</div>
-                      <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginTop: 6 }}>
-                        Your AI assistant for procurement requests.
-                      </div>
-                    </div>
-
-                    {/* Guidance pointers block */}
-                    <div style={{ width: '100%', marginBottom: 32 }}>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 14, textAlign: 'left' }}>
-                        To build your request, I'll need a few details —
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                        {[
-                          'What to procure — item, quantity, specs and purpose',
-                          'Budget & timeline — estimated cost, deadline, CapEx or OpEx',
-                          'Team & location — cost centre, business unit, delivery location',
-                          'Category & vendor — procurement type, subcategory, preferred supplier',
-                        ].map((t, i) => (
-                          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                            <span style={{ fontSize: 14, color: 'var(--text-tertiary)', flexShrink: 0, lineHeight: 1.5 }}>·</span>
-                            <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{t}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Starter prompts block */}
-                    <div style={{ width: '100%', marginBottom: 32 }}>
-                      <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-tertiary)', marginBottom: 10, textAlign: 'left' }}>
-                        Choose how to get started —
-                      </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: '1fr', gap: 12, width: '100%', margin: '0 auto', paddingBottom: 28 }}>
-
-                        {/* CARD 1 - Narrative */}
-                        <div
-                          onClick={() => {
-                            setSelectedPrompt(0);
-                            handlePromptClick('I need to procure [item/service] for [team/purpose].\nWe need [quantity] with a budget of ₹[amount],\ndelivered at [location] by [date].\nCost centre is [department].\n[Vendor preference or open to sourcing.]');
-                          }}
-                          onMouseEnter={() => setHoveredCard(0)}
-                          onMouseLeave={() => setHoveredCard(null)}
-                          style={{
-                            position: 'relative', overflow: 'hidden', borderRadius: 14, padding: 20, cursor: 'pointer', transition: 'all 0.2s ease', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 210, height: '100%', boxSizing: 'border-box',
-                            background: hoveredCard === 0 ? 'linear-gradient(145deg, rgba(0,82,204,0.03) 0%, rgba(124,124,255,0.08) 100%)' : 'linear-gradient(145deg, #ffffff 0%, rgba(124,124,255,0.04) 100%)',
-                            border: hoveredCard === 0 ? '1px solid #7c7cff' : '1px solid rgba(124,124,255,0.2)',
-                            boxShadow: hoveredCard === 0 ? '0 0 0 1px rgba(124,124,255,0.4), 0 8px 24px rgba(124,124,255,0.15)' : 'none',
-                            transform: hoveredCard === 0 ? 'translateY(-3px)' : 'none'
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <div style={{ width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'linear-gradient(135deg, rgba(0,82,204,0.1), rgba(124,124,255,0.18))' }}>
-                              <MessageSquare size={17} color="#7c7cff" />
-                            </div>
-                            <div style={{ fontSize: 14, fontWeight: 700, color: '#3d3db8' }}>Describe naturally</div>
-                          </div>
-                          <div style={{ flex: 1, fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.6, fontFamily: 'JetBrains Mono, monospace', display: '-webkit-box', WebkitLineClamp: 6, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginTop: 4 }}>
-                            I need to procure [item/service] for [team/purpose]. We need [quantity], budget ₹[amount], by [date]. Cost centre: [dept].
-                          </div>
-                        </div>
-
-                        {/* CARD 2 - From Document */}
-                        <div
-                          onClick={() => {
-                            setSelectedPrompt(1);
-                            setInputValue('I have attached a document / image that has most of the procurement details.\n\nPlease capture what you can from it and let me know if anything is unclear or missing.');
-                            setTimeout(() => {
-                              textareaRef.current?.focus();
-                              fileInputRef.current?.click();
-                            }, 0);
-                          }}
-                          onMouseEnter={() => setHoveredCard(1)}
-                          onMouseLeave={() => setHoveredCard(null)}
-                          style={{
-                            position: 'relative', overflow: 'hidden', borderRadius: 14, padding: 20, cursor: 'pointer', transition: 'all 0.2s ease', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 210, height: '100%', boxSizing: 'border-box',
-                            background: hoveredCard === 1 ? 'linear-gradient(145deg, rgba(0,82,204,0.03) 0%, rgba(124,124,255,0.08) 100%)' : 'linear-gradient(145deg, #ffffff 0%, rgba(124,124,255,0.04) 100%)',
-                            border: hoveredCard === 1 ? '1px solid #7c7cff' : '1px solid rgba(124,124,255,0.2)',
-                            boxShadow: hoveredCard === 1 ? '0 0 0 1px rgba(124,124,255,0.4), 0 8px 24px rgba(124,124,255,0.15)' : 'none',
-                            transform: hoveredCard === 1 ? 'translateY(-3px)' : 'none'
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <div style={{ width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'linear-gradient(135deg, rgba(0,82,204,0.1), rgba(124,124,255,0.18))' }}>
-                              <Paperclip size={17} color="#7c7cff" />
-                            </div>
-                            <div style={{ fontSize: 14, fontWeight: 700, color: '#3d3db8' }}>Share a file or image</div>
-                          </div>
-                          <div style={{ flex: 1, fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.6, fontFamily: 'JetBrains Mono, monospace', display: '-webkit-box', WebkitLineClamp: 6, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginTop: 4 }}>
-                            I have attached a document with procurement details. Please extract what you can and ask if anything is unclear.
-                          </div>
-                        </div>
-
-                        {/* CARD 3 - Fill in Fields */}
-                        <div
-                          onClick={() => {
-                            setSelectedPrompt(2);
-                            handlePromptClick('Here are the details I have ready:\n\nTitle:\nCategory:\nQuantity:\nBudget (₹):\nRequired By:\nCost Centre:\nDelivery Location:\nVendor Preference:\nNotes:\n\nLet me know what else you need.');
-                          }}
-                          onMouseEnter={() => setHoveredCard(2)}
-                          onMouseLeave={() => setHoveredCard(null)}
-                          style={{
-                            position: 'relative', overflow: 'hidden', borderRadius: 14, padding: 20, cursor: 'pointer', transition: 'all 0.2s ease', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 210, height: '100%', boxSizing: 'border-box',
-                            background: hoveredCard === 2 ? 'linear-gradient(145deg, rgba(0,82,204,0.03) 0%, rgba(124,124,255,0.08) 100%)' : 'linear-gradient(145deg, #ffffff 0%, rgba(124,124,255,0.04) 100%)',
-                            border: hoveredCard === 2 ? '1px solid #7c7cff' : '1px solid rgba(124,124,255,0.2)',
-                            boxShadow: hoveredCard === 2 ? '0 0 0 1px rgba(124,124,255,0.4), 0 8px 24px rgba(124,124,255,0.15)' : 'none',
-                            transform: hoveredCard === 2 ? 'translateY(-3px)' : 'none'
-                          }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <div style={{ width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'linear-gradient(135deg, rgba(0,82,204,0.1), rgba(124,124,255,0.18))' }}>
-                              <FileText size={17} color="#7c7cff" />
-                            </div>
-                            <div style={{ fontSize: 14, fontWeight: 700, color: '#3d3db8' }}>Fill in the fields</div>
-                          </div>
-                          <div style={{ flex: 1, fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.6, fontFamily: 'JetBrains Mono, monospace', display: '-webkit-box', WebkitLineClamp: 6, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginTop: 4 }}>
-                            Here are the details I have ready: Title: Category: Quantity: Budget (₹): Required By: Cost Centre: Delivery Location:
-                          </div>
+                  {!hasMessages ? (
+                    /* ── Empty state ── */
+                    <>
+                      {/* Greeting block */}
+                      <div style={{ marginBottom: 36, textAlign: 'left' }}>
+                        <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)' }}>Hi {userRole === 'manager' ? 'Sarah' : 'David'} 👋</div>
+                        <div style={{ fontSize: 14, color: 'var(--text-tertiary)', marginTop: 6 }}>
+                          Your AI assistant for procurement requests.
                         </div>
                       </div>
-                    </div>
-                  </>
-                ) : (
-                  /* ── Messages ── */
-                  <>
-                    {messages.map((msg, i) => {
-                      const isLiked = likedMsgs.has(i);
-                      const isDisliked = dislikedMsgs.has(i);
 
-                      if (msg.role === 'status') {
-                        return (
-                          <div key={i} style={{ alignSelf: 'flex-start', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 12, width: '72%' }}>
-                            <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                              <Sparkles size={13} color="#fff" strokeWidth={2} />
+                      {/* Guidance pointers block */}
+                      <div style={{ width: '100%', marginBottom: 32 }}>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 14, textAlign: 'left' }}>
+                          To build your request, I'll need a few details —
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                          {[
+                            'What to procure — item, quantity, specs and purpose',
+                            'Budget & timeline — estimated cost, deadline, CapEx or OpEx',
+                            'Team & location — cost centre, business unit, delivery location',
+                            'Category & vendor — procurement type, subcategory, preferred supplier',
+                          ].map((t, i) => (
+                            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                              <span style={{ fontSize: 14, color: 'var(--text-tertiary)', flexShrink: 0, lineHeight: 1.5 }}>·</span>
+                              <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{t}</div>
                             </div>
-                            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(124,124,255,0.04)', border: '1px solid rgba(124,124,255,0.15)', borderRadius: 10, padding: '10px 16px' }}>
-                              <div style={{ flex: 1 }}>
-                                {reasoningComplete ? (
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
-                                    {/*<CheckCircle size={14} color="#22c55e" />*/}
-                                    Completed
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Starter prompts block */}
+                      <div style={{ width: '100%', marginBottom: 32 }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--text-tertiary)', marginBottom: 10, textAlign: 'left' }}>
+                          Choose how to get started —
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridTemplateRows: '1fr', gap: 12, width: '100%', margin: '0 auto', paddingBottom: 28 }}>
+
+                          {/* CARD 1 - Narrative */}
+                          <div
+                            onClick={() => {
+                              setSelectedPrompt(0);
+                              handlePromptClick('I need to procure [item/service] for [team/purpose].\nWe need [quantity] with a budget of ₹[amount],\ndelivered at [location] by [date].\nCost centre is [department].\n[Vendor preference or open to sourcing.]');
+                            }}
+                            onMouseEnter={() => setHoveredCard(0)}
+                            onMouseLeave={() => setHoveredCard(null)}
+                            style={{
+                              position: 'relative', overflow: 'hidden', borderRadius: 14, padding: 20, cursor: 'pointer', transition: 'all 0.2s ease', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 210, height: '100%', boxSizing: 'border-box',
+                              background: hoveredCard === 0 ? 'linear-gradient(145deg, rgba(0,82,204,0.03) 0%, rgba(124,124,255,0.08) 100%)' : 'linear-gradient(145deg, #ffffff 0%, rgba(124,124,255,0.04) 100%)',
+                              border: hoveredCard === 0 ? '1px solid #7c7cff' : '1px solid rgba(124,124,255,0.2)',
+                              boxShadow: hoveredCard === 0 ? '0 0 0 1px rgba(124,124,255,0.4), 0 8px 24px rgba(124,124,255,0.15)' : 'none',
+                              transform: hoveredCard === 0 ? 'translateY(-3px)' : 'none'
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <div style={{ width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'linear-gradient(135deg, rgba(0,82,204,0.1), rgba(124,124,255,0.18))' }}>
+                                <MessageSquare size={17} color="#7c7cff" />
+                              </div>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: '#3d3db8' }}>Describe naturally</div>
+                            </div>
+                            <div style={{ flex: 1, fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.6, fontFamily: 'JetBrains Mono, monospace', display: '-webkit-box', WebkitLineClamp: 6, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginTop: 4 }}>
+                              I need to procure [item/service] for [team/purpose]. We need [quantity], budget ₹[amount], by [date]. Cost centre: [dept].
+                            </div>
+                          </div>
+
+                          {/* CARD 2 - From Document */}
+                          <div
+                            onClick={() => {
+                              setSelectedPrompt(1);
+                              setInputValue('I have attached a document / image that has most of the procurement details.\n\nPlease capture what you can from it and let me know if anything is unclear or missing.');
+                              setTimeout(() => {
+                                textareaRef.current?.focus();
+                                fileInputRef.current?.click();
+                              }, 0);
+                            }}
+                            onMouseEnter={() => setHoveredCard(1)}
+                            onMouseLeave={() => setHoveredCard(null)}
+                            style={{
+                              position: 'relative', overflow: 'hidden', borderRadius: 14, padding: 20, cursor: 'pointer', transition: 'all 0.2s ease', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 210, height: '100%', boxSizing: 'border-box',
+                              background: hoveredCard === 1 ? 'linear-gradient(145deg, rgba(0,82,204,0.03) 0%, rgba(124,124,255,0.08) 100%)' : 'linear-gradient(145deg, #ffffff 0%, rgba(124,124,255,0.04) 100%)',
+                              border: hoveredCard === 1 ? '1px solid #7c7cff' : '1px solid rgba(124,124,255,0.2)',
+                              boxShadow: hoveredCard === 1 ? '0 0 0 1px rgba(124,124,255,0.4), 0 8px 24px rgba(124,124,255,0.15)' : 'none',
+                              transform: hoveredCard === 1 ? 'translateY(-3px)' : 'none'
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <div style={{ width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'linear-gradient(135deg, rgba(0,82,204,0.1), rgba(124,124,255,0.18))' }}>
+                                <Paperclip size={17} color="#7c7cff" />
+                              </div>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: '#3d3db8' }}>Share a file or image</div>
+                            </div>
+                            <div style={{ flex: 1, fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.6, fontFamily: 'JetBrains Mono, monospace', display: '-webkit-box', WebkitLineClamp: 6, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginTop: 4 }}>
+                              I have attached a document with procurement details. Please extract what you can and ask if anything is unclear.
+                            </div>
+                          </div>
+
+                          {/* CARD 3 - Fill in Fields */}
+                          <div
+                            onClick={() => {
+                              setSelectedPrompt(2);
+                              handlePromptClick('Here are the details I have ready:\n\nTitle:\nCategory:\nQuantity:\nBudget (₹):\nRequired By:\nCost Centre:\nDelivery Location:\nVendor Preference:\nNotes:\n\nLet me know what else you need.');
+                            }}
+                            onMouseEnter={() => setHoveredCard(2)}
+                            onMouseLeave={() => setHoveredCard(null)}
+                            style={{
+                              position: 'relative', overflow: 'hidden', borderRadius: 14, padding: 20, cursor: 'pointer', transition: 'all 0.2s ease', display: 'flex', flexDirection: 'column', gap: 16, minHeight: 210, height: '100%', boxSizing: 'border-box',
+                              background: hoveredCard === 2 ? 'linear-gradient(145deg, rgba(0,82,204,0.03) 0%, rgba(124,124,255,0.08) 100%)' : 'linear-gradient(145deg, #ffffff 0%, rgba(124,124,255,0.04) 100%)',
+                              border: hoveredCard === 2 ? '1px solid #7c7cff' : '1px solid rgba(124,124,255,0.2)',
+                              boxShadow: hoveredCard === 2 ? '0 0 0 1px rgba(124,124,255,0.4), 0 8px 24px rgba(124,124,255,0.15)' : 'none',
+                              transform: hoveredCard === 2 ? 'translateY(-3px)' : 'none'
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                              <div style={{ width: 40, height: 40, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: 'linear-gradient(135deg, rgba(0,82,204,0.1), rgba(124,124,255,0.18))' }}>
+                                <FileText size={17} color="#7c7cff" />
+                              </div>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: '#3d3db8' }}>Fill in the fields</div>
+                            </div>
+                            <div style={{ flex: 1, fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.6, fontFamily: 'JetBrains Mono, monospace', display: '-webkit-box', WebkitLineClamp: 6, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginTop: 4 }}>
+                              Here are the details I have ready: Title: Category: Quantity: Budget (₹): Required By: Cost Centre: Delivery Location:
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    /* ── Messages ── */
+                    <>
+                      {messages.map((msg, i) => {
+                        const isLiked = likedMsgs.has(i);
+                        const isDisliked = dislikedMsgs.has(i);
+
+                        if (msg.role === 'status') {
+                          return (
+                            <div key={i} style={{ alignSelf: 'flex-start', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 12, width: '72%' }}>
+                              <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <Sparkles size={13} color="#fff" strokeWidth={2} />
+                              </div>
+                              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(124,124,255,0.04)', border: '1px solid rgba(124,124,255,0.15)', borderRadius: 10, padding: '10px 16px' }}>
+                                <div style={{ flex: 1 }}>
+                                  {reasoningComplete ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
+                                      {/*<CheckCircle size={14} color="#22c55e" />*/}
+                                      Completed
+                                    </div>
+                                  ) : (
+                                    <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', animation: 'textShimmer 1.2s ease-in-out infinite', display: 'inline-block' }}>
+                                      {[...reasoningSteps].reverse().find(s => s.status === 'active')?.title || 'Analysing your request...'}
+                                    </div>
+                                  )}
+                                </div>
+                                <button onClick={() => setShowReasoningPanel(p => !p)} style={{ fontSize: 12, fontWeight: 500, color: '#7c7cff', background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>
+                                  {showReasoningPanel ? 'Hide Steps' : 'Show Steps'}
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        return msg.role === 'user' ? (
+                          editingMsgIndex === i ? (
+                            <div key={i} style={{ alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, maxWidth: '72%', width: '100%' }}>
+                              <textarea
+                                value={editingText}
+                                onChange={(e) => setEditingText(e.target.value)}
+                                autoFocus
+                                style={{
+                                  width: '100%', minHeight: 60, padding: '10px 14px',
+                                  border: '1.5px solid #7c7cff', borderRadius: 12,
+                                  background: '#fff', fontSize: 14, color: 'var(--text-primary)',
+                                  fontFamily: 'inherit', resize: 'none', outline: 'none',
+                                  boxShadow: '0 0 0 3px rgba(124,124,255,0.1)',
+                                }}
+                              />
+                              <div style={{ display: 'flex', gap: 8 }}>
+                                <button
+                                  onClick={() => setEditingMsgIndex(null)}
+                                  style={{ padding: '6px 14px', border: '1px solid var(--border-default)', borderRadius: 7, background: '#fff', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-secondary)' }}
+                                >
+                                  <Save size={15} strokeWidth={2} /> Save Draft
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setMessages(prev => prev.map((m, idx) => idx === i ? { ...m, text: editingText, content: editingText } : m));
+                                    setEditingMsgIndex(null);
+                                  }}
+                                  style={{ padding: '6px 14px', border: 'none', borderRadius: 7, background: '#0052cc', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
+                                >Save</button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '72%' }} onMouseEnter={() => setHoveredUserMsg(i)} onMouseLeave={() => setHoveredUserMsg(null)}>
+                              <div style={{
+                                alignSelf: 'flex-end', maxWidth: '100%', background: 'rgba(0,82,204,0.05)',
+                                border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px',
+                                padding: '12px 16px', fontSize: 14, color: 'var(--text-primary)',
+                                lineHeight: 1.5, whiteSpace: 'pre-wrap'
+                              }}>
+                                {msg.attachments && msg.attachments.length > 0 && (
+                                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                                    {msg.attachments.map((file, fi) => (
+                                      <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
+                                        <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
+                                        <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
+                                        <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
+                                      </div>
+                                    ))}
                                   </div>
-                                ) : (
-                                  <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', animation: 'textShimmer 1.2s ease-in-out infinite', display: 'inline-block' }}>
-                                    {[...reasoningSteps].reverse().find(s => s.status === 'active')?.title || 'Analysing your request...'}
+                                )}
+                                {msg.files && msg.files.length > 0 && (
+                                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
+                                    {msg.files.map((file, fi) => (
+                                      <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
+                                        <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
+                                        <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
+                                        <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                                {msg.text}
+                              </div>
+                              {/* Always reserve space for action row to prevent jank */}
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end', height: 26, visibility: hoveredUserMsg === i ? 'visible' : 'hidden', opacity: hoveredUserMsg === i ? 1 : 0, transition: 'opacity 0.15s ease' }}>
+                                <button onClick={() => {
+                                  setCopiedMsgs(prev => new Set(prev).add(i));
+                                  const timer = setTimeout(() => setCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
+                                  tooltipTimers.current.add(timer);
+                                }} style={{ position: 'relative', overflow: 'visible', width: 26, height: 26, borderRadius: 6, border: 'none', background: copiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: copiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                                  {copiedMsgs.has(i) ? <CheckCircle size={13} /> : <Copy size={13} />}
+                                  {copiedMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Copied!</div>}
+                                </button>
+                                <button
+                                  onClick={() => { setEditingMsgIndex(i); setEditingText(msg.text); }}
+                                  style={{ width: 26, height: 26, borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
+                                  <Edit2 size={13} />
+                                </button>
+                              </div>
+                            </div>
+                          )
+                        ) : (
+                          <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '72%', display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 40 }}>
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                              <div style={{ background: 'transparent', border: 'none', padding: '2px 0 0 0', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, maxWidth: '100%' }}>
+                                {msg.text}
+                                {msg.type === 'summary' && (
+                                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: 0, marginTop: 12, overflow: 'hidden', maxWidth: 520, maxHeight: 420, display: 'flex', flexDirection: 'column' }}>
+                                    <div style={{ background: 'linear-gradient(135deg, rgba(0,82,204,0.04), rgba(124,124,255,0.06))', padding: '14px 18px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                        <FileText size={16} color="#0052cc" />
+                                        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>PR Draft Summary</div>
+                                      </div>
+                                    </div>
+                                    <div style={{ overflowY: 'auto', maxHeight: 300, padding: '14px 18px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px' }}>
+                                      {/* Row 1 */}
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Title</div>
+                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>AWS Cloud Migration Consulting Services</div>
+                                      </div>
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Request ID</div>
+                                        <div style={{ fontSize: 12, fontStyle: 'italic', color: 'var(--text-tertiary)', marginTop: 3 }}>Auto-generated on submission</div>
+                                      </div>
+                                      {/* Row 2 */}
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Category</div>
+                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Technology and Consulting</div>
+                                      </div>
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Subcategory</div>
+                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Cloud & Infrastructure Services</div>
+                                      </div>
+                                      {/* Row 3 */}
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Spend Category</div>
+                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Indirect Spend</div>
+                                      </div>
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>CapEx / OpEx</div>
+                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>OpEx</div>
+                                      </div>
+                                      {/* Row 4 */}
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Cost Centre</div>
+                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Engineering</div>
+                                      </div>
+                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Project Name</div>
+                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Infrastructure Modernisation 2026</div>
+                                      </div>
+
+                                      {/* Divider for next 4 rows */}
+                                      <div style={{ gridColumn: 'span 2', borderTop: '1px solid var(--border-subtle)', paddingTop: 10, marginTop: 4, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px' }}>
+                                        {/* Row 5 */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Priority</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>
+                                            <span style={{ background: 'rgba(245,158,11,0.08)', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600, color: '#b45309' }}>Urgent</span>
+                                          </div>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Required By</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>15 July 2026</div>
+                                        </div>
+                                        {/* Row 6 */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Request Date</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>29 May 2026</div>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Requestor</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>David Kim</div>
+                                        </div>
+                                        {/* Row 7 */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Quantity</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>1</div>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Unit of Measure</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Resources</div>
+                                        </div>
+                                        {/* Row 8 */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Budget</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>₹45,00,000</div>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Estimated Unit Value</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>₹45,00,000</div>
+                                        </div>
+                                      </div>
+
+                                      {/* Divider for next 4 rows */}
+                                      <div style={{ gridColumn: 'span 2', borderTop: '1px solid var(--border-subtle)', paddingTop: 10, marginTop: 4, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px' }}>
+                                        {/* Row 9 */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Location</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Dubai</div>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Suggested Vendor</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Open to sourcing</div>
+                                        </div>
+                                        {/* Row 10 */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Vendor Justification</div>
+                                          <div style={{ fontSize: 13, fontWeight: 400, color: 'var(--text-tertiary)', marginTop: 3 }}>—</div>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Contract Reference</div>
+                                          <div style={{ fontSize: 13, fontWeight: 400, color: 'var(--text-tertiary)', marginTop: 3 }}>—</div>
+                                        </div>
+                                        {/* Row 11 */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3, gridColumn: 'span 2' }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Requirement Description</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3, lineHeight: 1.4 }}>Consulting services for migrating on-premise infrastructure to AWS. Assessment, architecture design, migration execution, and post-migration support. Expected team: 3 senior architects, 6 months.</div>
+                                        </div>
+                                        {/* Row 12 */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Pricing Model</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Time & Materials</div>
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                                          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Timeline</div>
+                                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3, lineHeight: 1.4 }}>Phase 1: Assessment (Month 1-2), Phase 2: Migration (Month 3-5), Phase 3: Support (Month 6)</div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div style={{ padding: '14px 18px', borderTop: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                                      <button onClick={() => { setShowSuccessModal(true); triggerConfetti(); }} style={{ background: 'linear-gradient(135deg, #0052cc, #7c7cff)', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, boxShadow: '0 4px 12px rgba(0,82,204,0.12)' }}>
+                                        Raise PR
+                                        <ArrowRight size={14} />
+                                      </button>
+                                      <button style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 10, padding: '10px 16px', fontSize: 13, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                        <Edit2 size={14} />
+                                        Refine Details
+                                      </button>
+                                    </div>
                                   </div>
                                 )}
                               </div>
-                              <button onClick={() => setShowReasoningPanel(p => !p)} style={{ fontSize: 12, fontWeight: 500, color: '#7c7cff', background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}>
-                                {showReasoningPanel ? 'Hide Steps' : 'Show Steps'}
-                              </button>
                             </div>
-                          </div>
-                        );
-                      }
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 0 }}>
+                              <span style={{ fontSize: 11, color: 'var(--text-tertiary)', marginRight: 8 }}>10:04 AM</span>
 
-                      return msg.role === 'user' ? (
-                        editingMsgIndex === i ? (
-                          <div key={i} style={{ alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, maxWidth: '72%', width: '100%' }}>
-                            <textarea
-                              value={editingText}
-                              onChange={(e) => setEditingText(e.target.value)}
-                              autoFocus
-                              style={{
-                                width: '100%', minHeight: 60, padding: '10px 14px',
-                                border: '1.5px solid #7c7cff', borderRadius: 12,
-                                background: '#fff', fontSize: 14, color: 'var(--text-primary)',
-                                fontFamily: 'inherit', resize: 'none', outline: 'none',
-                                boxShadow: '0 0 0 3px rgba(124,124,255,0.1)',
-                              }}
-                            />
-                            <div style={{ display: 'flex', gap: 8 }}>
-                              <button
-                                onClick={() => setEditingMsgIndex(null)}
-                                style={{ padding: '6px 14px', border: '1px solid var(--border-default)', borderRadius: 7, background: '#fff', fontSize: 12, cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-secondary)' }}
-                              >
-                                <Save size={15} strokeWidth={2} /> Save Draft
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setMessages(prev => prev.map((m, idx) => idx === i ? { ...m, text: editingText, content: editingText } : m));
-                                  setEditingMsgIndex(null);
-                                }}
-                                style={{ padding: '6px 14px', border: 'none', borderRadius: 7, background: '#0052cc', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
-                              >Save</button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div key={i} style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '72%' }} onMouseEnter={() => setHoveredUserMsg(i)} onMouseLeave={() => setHoveredUserMsg(null)}>
-                            <div style={{
-                              alignSelf: 'flex-end', maxWidth: '100%', background: 'rgba(0,82,204,0.05)',
-                              border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px',
-                              padding: '12px 16px', fontSize: 14, color: 'var(--text-primary)',
-                              lineHeight: 1.5, whiteSpace: 'pre-wrap'
-                            }}>
-                              {msg.attachments && msg.attachments.length > 0 && (
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
-                                  {msg.attachments.map((file, fi) => (
-                                    <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
-                                      <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
-                                      <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
-                                      <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                              {msg.files && msg.files.length > 0 && (
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 }}>
-                                  {msg.files.map((file, fi) => (
-                                    <div key={fi} style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
-                                      <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
-                                      <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
-                                      <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                              {msg.text}
-                            </div>
-                            {/* Always reserve space for action row to prevent jank */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'flex-end', height: 26, visibility: hoveredUserMsg === i ? 'visible' : 'hidden', opacity: hoveredUserMsg === i ? 1 : 0, transition: 'opacity 0.15s ease' }}>
+                              {/* Copy Button */}
                               <button onClick={() => {
                                 setCopiedMsgs(prev => new Set(prev).add(i));
                                 const timer = setTimeout(() => setCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
                                 tooltipTimers.current.add(timer);
-                              }} style={{ position: 'relative', overflow: 'visible', width: 26, height: 26, borderRadius: 6, border: 'none', background: copiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: copiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
-                                {copiedMsgs.has(i) ? <CheckCircle size={13} /> : <Copy size={13} />}
+                              }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: copiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: copiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                                {copiedMsgs.has(i) ? <CheckCircle size={14} /> : <Copy size={14} />}
                                 {copiedMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Copied!</div>}
                               </button>
-                              <button
-                                onClick={() => { setEditingMsgIndex(i); setEditingText(msg.text); }}
-                                style={{ width: 26, height: 26, borderRadius: 6, border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
-                                <Edit2 size={13} />
+
+                              {/* ThumbsUp Button */}
+                              <button onClick={() => {
+                                setLikedMsgs(prev => {
+                                  const n = new Set(prev);
+                                  if (n.has(i)) n.delete(i);
+                                  else {
+                                    n.add(i);
+                                    setDislikedMsgs(d => { const nd = new Set(d); nd.delete(i); return nd; });
+                                    setLikedTooltipVisible(t => new Set(t).add(i));
+                                    const timer = setTimeout(() => setLikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
+                                    tooltipTimers.current.add(timer);
+                                  }
+                                  return n;
+                                });
+                              }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: isLiked ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isLiked ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!isLiked) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!isLiked) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                                <ThumbsUp size={14} />
+                                {likedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Liked</div>}
+                              </button>
+
+                              {/* ThumbsDown Button */}
+                              <button onClick={() => {
+                                setDislikedMsgs(prev => {
+                                  const n = new Set(prev);
+                                  if (n.has(i)) n.delete(i);
+                                  else {
+                                    n.add(i);
+                                    setLikedMsgs(l => { const nl = new Set(l); nl.delete(i); return nl; });
+                                    setDislikedTooltipVisible(t => new Set(t).add(i));
+                                    const timer = setTimeout(() => setDislikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
+                                    tooltipTimers.current.add(timer);
+                                  }
+                                  return n;
+                                });
+                              }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: isDisliked ? 'rgba(239,68,68,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isDisliked ? '#ef4444' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!isDisliked) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!isDisliked) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                                <ThumbsDown size={14} />
+                                {dislikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Disliked</div>}
+                              </button>
+
+                              {/* Regenerate Button */}
+                              <button onClick={() => {
+                                setRegeneratingMsgs(prev => new Set([...prev, i]));
+                                setTimeout(() => {
+                                  setRegeneratingMsgs(prev => { const next = new Set(prev); next.delete(i); return next; });
+                                }, 1500);
+                              }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: regeneratingMsgs.has(i) ? 'rgba(124,124,255,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: regeneratingMsgs.has(i) ? '#7c7cff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!regeneratingMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!regeneratingMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
+                                <RotateCcw size={14} style={{ animation: regeneratingMsgs.has(i) ? 'spinOnce 0.6s linear infinite' : 'none' }} />
+                                {regeneratingMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Regenerating...</div>}
                               </button>
                             </div>
                           </div>
-                        )
-                      ) : (
-                        <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '72%', display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 40 }}>
-                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                            <div style={{ background: 'transparent', border: 'none', padding: '2px 0 0 0', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, maxWidth: '100%' }}>
-                              {msg.text}
-                              {msg.type === 'summary' && (
-                                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: 0, marginTop: 12, overflow: 'hidden', maxWidth: 520, maxHeight: 420, display: 'flex', flexDirection: 'column' }}>
-                                  <div style={{ background: 'linear-gradient(135deg, rgba(0,82,204,0.04), rgba(124,124,255,0.06))', padding: '14px 18px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                      <FileText size={16} color="#0052cc" />
-                                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>PR Draft Summary</div>
-                                    </div>
-                                  </div>
-                                  <div style={{ overflowY: 'auto', maxHeight: 300, padding: '14px 18px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px' }}>
-                                    {/* Row 1 */}
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Title</div>
-                                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>AWS Cloud Migration Consulting Services</div>
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Request ID</div>
-                                      <div style={{ fontSize: 12, fontStyle: 'italic', color: 'var(--text-tertiary)', marginTop: 3 }}>Auto-generated on submission</div>
-                                    </div>
-                                    {/* Row 2 */}
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Category</div>
-                                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Technology and Consulting</div>
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Subcategory</div>
-                                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Cloud & Infrastructure Services</div>
-                                    </div>
-                                    {/* Row 3 */}
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Spend Category</div>
-                                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Indirect Spend</div>
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>CapEx / OpEx</div>
-                                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>OpEx</div>
-                                    </div>
-                                    {/* Row 4 */}
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Cost Centre</div>
-                                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Engineering</div>
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Project Name</div>
-                                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Infrastructure Modernisation 2026</div>
-                                    </div>
+                        );
+                      })}
 
-                                    {/* Divider for next 4 rows */}
-                                    <div style={{ gridColumn: 'span 2', borderTop: '1px solid var(--border-subtle)', paddingTop: 10, marginTop: 4, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px' }}>
-                                      {/* Row 5 */}
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Priority</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>
-                                          <span style={{ background: 'rgba(245,158,11,0.08)', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600, color: '#b45309' }}>Urgent</span>
-                                        </div>
-                                      </div>
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Required By</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>15 July 2026</div>
-                                      </div>
-                                      {/* Row 6 */}
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Request Date</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>29 May 2026</div>
-                                      </div>
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Requestor</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>David Kim</div>
-                                      </div>
-                                      {/* Row 7 */}
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Quantity</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>1</div>
-                                      </div>
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Unit of Measure</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Resources</div>
-                                      </div>
-                                      {/* Row 8 */}
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Budget</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>₹45,00,000</div>
-                                      </div>
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Estimated Unit Value</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>₹45,00,000</div>
-                                      </div>
-                                    </div>
-
-                                    {/* Divider for next 4 rows */}
-                                    <div style={{ gridColumn: 'span 2', borderTop: '1px solid var(--border-subtle)', paddingTop: 10, marginTop: 4, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 20px' }}>
-                                      {/* Row 9 */}
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Location</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Dubai</div>
-                                      </div>
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Suggested Vendor</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Open to sourcing</div>
-                                      </div>
-                                      {/* Row 10 */}
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Vendor Justification</div>
-                                        <div style={{ fontSize: 13, fontWeight: 400, color: 'var(--text-tertiary)', marginTop: 3 }}>—</div>
-                                      </div>
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Contract Reference</div>
-                                        <div style={{ fontSize: 13, fontWeight: 400, color: 'var(--text-tertiary)', marginTop: 3 }}>—</div>
-                                      </div>
-                                      {/* Row 11 */}
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3, gridColumn: 'span 2' }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Requirement Description</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3, lineHeight: 1.4 }}>Consulting services for migrating on-premise infrastructure to AWS. Assessment, architecture design, migration execution, and post-migration support. Expected team: 3 senior architects, 6 months.</div>
-                                      </div>
-                                      {/* Row 12 */}
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Pricing Model</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3 }}>Time & Materials</div>
-                                      </div>
-                                      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                                        <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.4, color: 'var(--text-tertiary)' }}>Timeline</div>
-                                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 3, lineHeight: 1.4 }}>Phase 1: Assessment (Month 1-2), Phase 2: Migration (Month 3-5), Phase 3: Support (Month 6)</div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div style={{ padding: '14px 18px', borderTop: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
-                                    <button onClick={() => { setShowSuccessModal(true); triggerConfetti(); }} style={{ background: 'linear-gradient(135deg, #0052cc, #7c7cff)', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, boxShadow: '0 4px 12px rgba(0,82,204,0.12)' }}>
-                                      Raise PR
-                                      <ArrowRight size={14} />
-                                    </button>
-                                    <button style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 10, padding: '10px 16px', fontSize: 13, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                                      <Edit2 size={14} />
-                                      Refine Details
-                                    </button>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 0 }}>
-                            <span style={{ fontSize: 11, color: 'var(--text-tertiary)', marginRight: 8 }}>10:04 AM</span>
-
-                            {/* Copy Button */}
-                            <button onClick={() => {
-                              setCopiedMsgs(prev => new Set(prev).add(i));
-                              const timer = setTimeout(() => setCopiedMsgs(prev => { const n = new Set(prev); n.delete(i); return n; }), 2000);
-                              tooltipTimers.current.add(timer);
-                            }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: copiedMsgs.has(i) ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: copiedMsgs.has(i) ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!copiedMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
-                              {copiedMsgs.has(i) ? <CheckCircle size={14} /> : <Copy size={14} />}
-                              {copiedMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Copied!</div>}
-                            </button>
-
-                            {/* ThumbsUp Button */}
-                            <button onClick={() => {
-                              setLikedMsgs(prev => {
-                                const n = new Set(prev);
-                                if (n.has(i)) n.delete(i);
-                                else {
-                                  n.add(i);
-                                  setDislikedMsgs(d => { const nd = new Set(d); nd.delete(i); return nd; });
-                                  setLikedTooltipVisible(t => new Set(t).add(i));
-                                  const timer = setTimeout(() => setLikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
-                                  tooltipTimers.current.add(timer);
-                                }
-                                return n;
-                              });
-                            }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: isLiked ? 'rgba(34,197,94,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isLiked ? '#22c55e' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!isLiked) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!isLiked) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
-                              <ThumbsUp size={14} />
-                              {likedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Liked</div>}
-                            </button>
-
-                            {/* ThumbsDown Button */}
-                            <button onClick={() => {
-                              setDislikedMsgs(prev => {
-                                const n = new Set(prev);
-                                if (n.has(i)) n.delete(i);
-                                else {
-                                  n.add(i);
-                                  setLikedMsgs(l => { const nl = new Set(l); nl.delete(i); return nl; });
-                                  setDislikedTooltipVisible(t => new Set(t).add(i));
-                                  const timer = setTimeout(() => setDislikedTooltipVisible(t => { const nt = new Set(t); nt.delete(i); return nt; }), 1500);
-                                  tooltipTimers.current.add(timer);
-                                }
-                                return n;
-                              });
-                            }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: isDisliked ? 'rgba(239,68,68,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isDisliked ? '#ef4444' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!isDisliked) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!isDisliked) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
-                              <ThumbsDown size={14} />
-                              {dislikedTooltipVisible.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Disliked</div>}
-                            </button>
-
-                            {/* Regenerate Button */}
-                            <button onClick={() => {
-                              setRegeneratingMsgs(prev => new Set([...prev, i]));
-                              setTimeout(() => {
-                                setRegeneratingMsgs(prev => { const next = new Set(prev); next.delete(i); return next; });
-                              }, 1500);
-                            }} style={{ position: 'relative', overflow: 'visible', width: 28, height: 28, borderRadius: 7, border: 'none', background: regeneratingMsgs.has(i) ? 'rgba(124,124,255,0.08)' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: regeneratingMsgs.has(i) ? '#7c7cff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { if (!regeneratingMsgs.has(i)) { e.currentTarget.style.background = 'var(--bg-surface-2)'; e.currentTarget.style.color = 'var(--text-primary)'; } }} onMouseLeave={e => { if (!regeneratingMsgs.has(i)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; } }}>
-                              <RotateCcw size={14} style={{ animation: regeneratingMsgs.has(i) ? 'spinOnce 0.6s linear infinite' : 'none' }} />
-                              {regeneratingMsgs.has(i) && <div style={{ position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%', transform: 'translateX(-50%)', background: 'rgba(26,26,26,0.9)', color: 'white', fontSize: 10, fontWeight: 500, borderRadius: 5, padding: '4px 8px', whiteSpace: 'nowrap', pointerEvents: 'none', zIndex: 100 }}>Regenerating...</div>}
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                    <div ref={messagesEndRef} />
-                  </>
-                )}
+                      <div ref={messagesEndRef} />
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* ── Chat input bar ── */}
-            <div style={{ flexShrink: 0, padding: '16px 24px 20px', background: '#fff', boxShadow: 'none', borderTop: 'none' }}>
-              <div style={{ width: '100%', maxWidth: 760, margin: '0 auto' }}>
-                <div style={{
-                  background: '#fff',
-                  border: `1.5px solid ${inputFocused ? '#7c7cff' : 'var(--border-default)'}`,
-                  borderRadius: 14, padding: '12px 14px',
-                  display: 'flex', flexDirection: 'column', gap: 8,
-                  boxShadow: inputFocused ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.06)' : '0 2px 8px rgba(14,15,37,0.06)',
-                  transition: 'border-color .15s ease, box-shadow .15s ease',
-                }}>
-                  {isRecording ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '4px 0' }}>
-                      <button disabled style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, border: 'none', background: 'transparent', color: 'var(--text-tertiary)', cursor: 'not-allowed', flexShrink: 0, opacity: 0.4 }}>
-                        <Paperclip size={18} strokeWidth={2} />
-                      </button>
-                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4, overflow: 'hidden', height: 24, padding: '0 12px' }}>
-                        {[...Array(150)].map((_, i) => (
-                          <div key={i} style={{
-                            width: 3,
-                            height: [6, 10, 14, 18, 12, 8, 22, 16, 8, 12, 20, 14, 10, 14, 8][i % 15],
-                            background: 'var(--text-tertiary)',
-                            borderRadius: 2,
-                            animation: `paiVoiceBar ${0.5 + (i % 4)*0.15}s ease-in-out infinite alternate`,
-                            flexShrink: 0
-                          }} />
-                        ))}
-                        <style>{`
+              {/* ── Chat input bar ── */}
+              <div style={{ flexShrink: 0, padding: '16px 24px 20px', background: '#fff', boxShadow: 'none', borderTop: 'none' }}>
+                <div style={{ width: '100%', maxWidth: 760, margin: '0 auto' }}>
+                  <div style={{
+                    background: '#fff',
+                    border: `1.5px solid ${inputFocused ? '#7c7cff' : 'var(--border-default)'}`,
+                    borderRadius: 14, padding: '12px 14px',
+                    display: 'flex', flexDirection: 'column', gap: 8,
+                    boxShadow: inputFocused ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.06)' : '0 2px 8px rgba(14,15,37,0.06)',
+                    transition: 'border-color .15s ease, box-shadow .15s ease',
+                  }}>
+                    {isRecording ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '4px 0' }}>
+                        <button disabled style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 4, border: 'none', background: 'transparent', color: 'var(--text-tertiary)', cursor: 'not-allowed', flexShrink: 0, opacity: 0.4 }}>
+                          <Paperclip size={18} strokeWidth={2} />
+                        </button>
+                        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4, overflow: 'hidden', height: 24, padding: '0 12px' }}>
+                          {[...Array(150)].map((_, i) => (
+                            <div key={i} style={{
+                              width: 3,
+                              height: [6, 10, 14, 18, 12, 8, 22, 16, 8, 12, 20, 14, 10, 14, 8][i % 15],
+                              background: 'var(--text-tertiary)',
+                              borderRadius: 2,
+                              animation: `paiVoiceBar ${0.5 + (i % 4) * 0.15}s ease-in-out infinite alternate`,
+                              flexShrink: 0
+                            }} />
+                          ))}
+                          <style>{`
                           @keyframes paiVoiceBar {
                             0% { transform: scaleY(0.3); opacity: 0.3; }
                             100% { transform: scaleY(1); opacity: 0.8; }
                           }
                         `}</style>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                        <button 
-                          onClick={() => setIsRecording(false)} 
-                          onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
-                          onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
-                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
-                          <X size={20} strokeWidth={2} />
-                        </button>
-                        <button 
-                          onClick={() => {
-                            setIsRecording(false);
-                            setInputValue("I need to procure laptops for new engineering hires joining next month");
-                          }} 
-                          onMouseEnter={e => { e.currentTarget.style.color = '#22c55e'; e.currentTarget.style.background = 'rgba(34,197,94,0.08)'; }}
-                          onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
-                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
-                          <Check size={20} strokeWidth={2} />
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      {/* Attachment pill row */}
-                  {attachedFiles.length > 0 && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, paddingBottom: 8, borderBottom: '1px solid var(--border-subtle)', marginBottom: 4 }}>
-                      {attachedFiles.map((file, i) => (
-                        <div key={i} style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
-                          <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
-                          <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
-                          <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
-                          <div
-                            onClick={() => setAttachedFiles(prev => prev.filter((_, idx) => idx !== i))}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.color = '#ef4444';
-                              e.currentTarget.style.background = 'rgba(239,68,68,0.08)';
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                          <button
+                            onClick={() => setIsRecording(false)}
+                            onMouseEnter={e => { e.currentTarget.style.color = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
+                            style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
+                            <X size={20} strokeWidth={2} />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setIsRecording(false);
+                              setInputValue("I need to procure laptops for new engineering hires joining next month");
                             }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.color = 'var(--text-tertiary)';
-                              e.currentTarget.style.background = 'transparent';
-                            }}
-                            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', marginLeft: 2, padding: 2, borderRadius: 4, flexShrink: 0, color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
-                          >
-                            <X size={12} strokeWidth={2} />
-                          </div>
+                            onMouseEnter={e => { e.currentTarget.style.color = '#22c55e'; e.currentTarget.style.background = 'rgba(34,197,94,0.08)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}
+                            style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s ease' }}>
+                            <Check size={20} strokeWidth={2} />
+                          </button>
                         </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Textarea */}
-                  <textarea
-                    ref={textareaRef}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onFocus={() => setInputFocused(true)}
-                    onBlur={() => setInputFocused(false)}
-                    onKeyDown={handleKeyDown}
-                    onInput={(e) => {
-                      if (textareaRef.current) {
-                        textareaRef.current.style.height = 'auto';
-                        textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 154) + 'px';
-                      }
-                    }}
-                    placeholder={activeMode === 'chat' ? 'Describe your procurement need or choose a starter prompt' : 'Describe your procurement need or choose a template above...'}
-                    rows={1}
-                    style={{
-                      width: '100%', border: 'none', outline: 'none', background: 'transparent',
-                      fontSize: 14, color: 'var(--text-primary)', resize: 'none',
-                      minHeight: 24, maxHeight: 154, overflowY: 'auto',
-                      fontFamily: 'Inter, sans-serif', lineHeight: 1.5,
-                    }}
-                  />
-
-                  {/* Bottom action row */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
-                    {/* Left side — Attach button */}
-                    <div style={{ position: 'relative' }}>
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        className="pai-attach-icon-btn"
-                        style={{
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          padding: 4, border: 'none', background: 'transparent', borderRadius: 6,
-                          cursor: 'pointer', color: 'var(--text-tertiary)', transition: 'all 0.15s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = '#7c7cff';
-                          e.currentTarget.style.background = 'rgba(124,124,255,0.08)';
-                          setShowUploadTooltip(true);
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = 'var(--text-tertiary)';
-                          e.currentTarget.style.background = 'transparent';
-                          setShowUploadTooltip(false);
-                        }}
-                      >
-                        <Paperclip size={18} strokeWidth={2} />
-                      </button>
-                      {showUploadTooltip && (
-                        <div style={{
-                          position: 'absolute',
-                          bottom: 'calc(100% + 8px)',
-                          left: '0%',
-                          background: '#fff',
-                          border: '1px solid var(--border-default)',
-                          borderRadius: 8,
-                          padding: '10px 14px',
-                          fontSize: 12,
-                          color: 'var(--text-primary)',
-                          whiteSpace: 'nowrap',
-                          boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
-                          zIndex: 100,
-                          pointerEvents: 'none'
-                        }}>
-                          Upload one PDF, DOCX, or PPT file (up to 25 MB)
-                        </div>
-                      )}
-                      <input type="file" multiple accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileSelect} />
-                    </div>
-
-                    {/* Right side — Count + Send */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{ fontSize: 11, color: charCount > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{charCount} / 20000</span>
-                      <button onClick={() => setIsRecording(true)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
-                        <Mic size={18} strokeWidth={2} />
-                      </button>
-
-                      <button
-                        onClick={sendMessage}
-                        disabled={!inputValue.trim()}
-                        style={{
-                          width: 34, height: 34, borderRadius: '50%', border: 'none',
-                          background: inputValue.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-3)',
-                          boxShadow: inputValue.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none',
-                          cursor: inputValue.trim() ? 'pointer' : 'not-allowed',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          flexShrink: 0, transition: 'all .15s ease',
-                        }}
-                      >
-                        <Send size={15} color={inputValue.trim() ? '#fff' : 'var(--text-tertiary)'} strokeWidth={2} />
-                      </button>
-                    </div>
-                  </div>
-                  </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-      )}
-
-      {/* ═══ MODE: FORM ═══ */}
-      {activeMode === 'form' && uploadPhase === 'empty' && (() => {
-        const subcatOptions = fProcCategory ? (SUBCATEGORY_MAP[fProcCategory] || []) : [];
-        const spendCategory = SPEND_CATEGORY_MAP[fProcCategory] || '';
-        const isAnyFieldFilled = Boolean(fReqTitle || fBizUnit || fRequiredByDate || fPriority || fProcCategory || fSubcategory || fProjectName || fCapexOpex || fJustification || fReqDesc || fQuantity || fUnitValue || fUom || fBudget || fCostBreakdown || fSuggestedVendor || fVendorJustification || fContractRef || fDeliveryLoc || fTimeline || uploadedFiles.length > 0);
-        const specificNote = <div style={{ display: 'block', fontSize: 11, color: 'var(--text-tertiary)', fontStyle: 'italic', marginTop: 4 }}>Applicable for specific categories</div>;
-        return (
-          <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px', background: 'var(--bg-default)' }}>
-            <div style={{ maxWidth: 680, margin: '0 auto', width: '100%', marginBottom: 40 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Upload Procurement Document</div>
-              <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, marginBottom: 24 }}>Upload a requirements document, SOW, or specifications file. Our AI will extract all procurement fields automatically.</div>
-
-              <div
-                onClick={handleUploadClick}
-                className="pai-upload-zone"
-                onMouseEnter={() => setUUploadHover(true)}
-                onMouseLeave={() => setUUploadHover(false)}
-                style={{
-                  background: uUploadHover ? 'rgba(124,124,255,0.015)' : '#fff',
-                  border: `2px dashed ${uUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
-                  borderRadius: 16, padding: '64px 32px',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
-                  cursor: 'pointer', transition: 'all 0.2s ease',
-                }}
-              >
-                <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(0,82,204,0.07), rgba(124,124,255,0.1))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Upload size={30} color="#7c7cff" strokeWidth={2} />
-                </div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginTop: 8 }}>Drop your document here</div>
-                <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>or click to browse files</div>
-                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>Supports PDF, DOCX and PPT · Max 25MB</div>
-              </div>
-            </div>
-
-            {/* OR Divider */}
-            <div style={{ maxWidth: 680, margin: '0 auto 40px auto', display: 'flex', alignItems: 'center', gap: 16 }}>
-              <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: 0.5 }}>OR</div>
-              <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
-            </div>
-
-            <div style={{ maxWidth: 680, margin: '0 auto' }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Create Procurement Request</div>
-              <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, marginBottom: 24 }}>Fill in the details to generate a new requisition</div>
-
-              <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, padding: 28, boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
-
-                {/* ── SECTION 1: GENERAL INFO ── */}
-                <SectionLabel
-                  showWand
-                  wandDisabled={!isAnyFieldFilled}
-                  isWanding={wandingSection === 'General Info'}
-                  onWandClick={handleWandClick}
-                >General Info</SectionLabel>
-
-                {/* Requisition ID — read only */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL>Requisition ID</FL>
-                  <div style={{
-                    padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)',
-                    borderRadius: 8, fontSize: 12, color: 'var(--text-tertiary)', fontStyle: 'italic', fontWeight: 400,
-                  }}>Will be auto-generated on submission</div>
-                </div>
-
-                {/* Request Title */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL required>Request Title</FL>
-                  <FInput value={fReqTitle} onChange={(e) => setFReqTitle(e.target.value)} placeholder="Short title in 2-3 words" />
-                  {aiFilledFields.has('fReqTitle') && <AiFilledTag />}
-                </div>
-
-                {/* Row: Cost Centre + Requestor Name */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                  <div>
-                    <FL required>Cost Centre</FL>
-                    <FDrop refEl={fBizUnitRef} open={fBizUnitOpen} onToggle={() => setFBizUnitOpen(!fBizUnitOpen)}
-                      value={fBizUnit} placeholder="Select"
-                      options={BIZ_UNITS} onChange={(v) => setFBizUnit(v)} />
-                    {aiFilledFields.has('fBizUnit') && <AiFilledTag />}
-                  </div>
-                  <div>
-                    <FL required>Requestor Name</FL>
-                    <FInput value={fRequestorName} onChange={(e) => setFRequestorName(e.target.value)} placeholder="Auto-filled from your profile" prefilled />
-                  </div>
-                </div>
-
-                {/* Row: Request Date + Required By Date */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                  <div>
-                    <FL required>Request Date</FL>
-                    <FInput type="date" value={fRequestDate} onChange={(e) => setFRequestDate(e.target.value)} />
-                  </div>
-                  <div>
-                    <FL required>Required By Date</FL>
-                    <FInput type="date" value={fRequiredByDate} onChange={(e) => setFRequiredByDate(e.target.value)}
-                      style={{ color: fRequiredByDate ? 'var(--text-primary)' : 'var(--text-tertiary)' }} />
-                    {aiFilledFields.has('fRequiredByDate') && <AiFilledTag />}
-                  </div>
-                </div>
-
-                {/* Priority */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL required>Priority</FL>
-                  <FDrop refEl={fPriorityRef} open={fPriorityOpen} onToggle={() => setFPriorityOpen(!fPriorityOpen)}
-                    value={fPriority} placeholder="Select priority"
-                    options={PRIORITIES} onChange={(v) => setFPriority(v)}
-                    renderOption={(val, isSelected) => val ? (
-                      <span style={{ display: 'flex', alignItems: 'center' }}>
-                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: PRIORITY_DOT[val] || '#ccc', marginRight: 8, flexShrink: 0 }} />
-                        {isSelected ? val : val}
-                      </span>
-                    ) : (isSelected ? 'Select priority' : val)}
-                  />
-                  {aiFilledFields.has('fPriority') && <AiFilledTag />}
-                </div>
-
-                <Divider />
-
-                {/* ── SECTION 2: CATEGORY INFO ── */}
-                <SectionLabel>Category Info</SectionLabel>
-
-                {/* Procurement Category */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL required>Procurement Category</FL>
-                  <FDrop refEl={fProcCatRef} open={fProcCategoryOpen} onToggle={() => setFProcCategoryOpen(!fProcCategoryOpen)}
-                    value={fProcCategory} placeholder="Select"
-                    options={PROC_CATEGORIES} onChange={(v) => { setFProcCategory(v); setFSubcategory(''); }} />
-                  {aiFilledFields.has('fProcCategory') && <AiFilledTag />}
-                </div>
-
-                {/* Spend Category — auto-derived */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL required>Spend Category</FL>
-                  <div style={{
-                    padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)',
-                    borderRadius: 8, fontSize: 14, color: 'var(--text-secondary)',
-                  }}>{spendCategory || '—'}</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 4 }}>Auto-selected based on category</div>
-                </div>
-
-                {/* Subcategory */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL required>Subcategory</FL>
-                  <FDrop refEl={fSubcatRef} open={fSubcategoryOpen} onToggle={() => { if (fProcCategory) setFSubcategoryOpen(!fSubcategoryOpen); }}
-                    value={fSubcategory} placeholder={fProcCategory ? 'Select subcategory' : 'Select procurement category first'}
-                    options={subcatOptions} onChange={(v) => setFSubcategory(v)}
-                    disabled={!fProcCategory} />
-                  {aiFilledFields.has('fSubcategory') && <AiFilledTag />}
-                </div>
-
-                {/* Row: Project Name + CapEx/OpEx */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                  <div>
-                    <FL>Project Name</FL>
-                    <FInput value={fProjectName} onChange={(e) => setFProjectName(e.target.value)} placeholder="Linked project name (if applicable)" />
-                    {aiFilledFields.has('fProjectName') && <AiFilledTag />}
-                  </div>
-                  <div>
-                    <FL required>CapEx / OpEx</FL>
-                    <FDrop refEl={fCapexRef} open={fCapexOpexOpen} onToggle={() => setFCapexOpexOpen(!fCapexOpexOpen)}
-                      value={fCapexOpex} placeholder="Select expense type"
-                      options={CAPEX_OPEX_OPTS} onChange={(v) => setFCapexOpex(v)} />
-                    {aiFilledFields.has('fCapexOpex') && <AiFilledTag />}
-                  </div>
-                </div>
-
-                {/* Justification */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL>Justification</FL>
-                  <FTextarea value={fJustification} onChange={(e) => setFJustification(e.target.value)} placeholder="Provide justification for CapEx/OpEx selection if needed" minHeight={100} />
-                  {aiFilledFields.has('fJustification') && <AiFilledTag />}
-                </div>
-
-                <Divider />
-
-                {/* ── SECTION 3: SCOPE DETAILS ── */}
-                <SectionLabel>Scope Details</SectionLabel>
-
-                <div style={{ marginBottom: 16 }}>
-                  <FL required>Requirement Description</FL>
-                  <FTextarea value={fReqDesc} onChange={(e) => setFReqDesc(e.target.value)}
-                    placeholder="Describe the full requirement scope"
-                    minHeight={120} />
-                  {aiFilledFields.has('fReqDesc') && <AiFilledTag />}
-                </div>
-
-                {/* Attachments */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL>Attachments</FL>
-                  {uploadedFiles.length > 0 && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
-                      {uploadedFiles.map((file, i) => (
-                        <div key={i} style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div style={{ width: 32, height: 32, background: 'rgba(0,82,204,0.07)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <FileText size={16} color="#0052cc" strokeWidth={2} />
-                          </div>
-                          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-                            <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
-                              {file.name}
-                            </div>
-                            <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
-                              {file.size}
-                            </div>
-                          </div>
-                          <div
-                            onClick={() => setUploadedFiles(prev => prev.filter((_, idx) => idx !== i))}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.color = '#ef4444';
-                              e.currentTarget.style.background = 'rgba(239,68,68,0.08)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = 'transparent';
-                            }}
-                            style={{ cursor: 'pointer', padding: 6, borderRadius: 6, flexShrink: 0, color: '#ef4444', transition: 'all 0.15s ease' }}
-                          >
-                            <Trash2 size={14} strokeWidth={2} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {uploadedFiles.length === 0 && (
-                    <div
-                      onClick={() => formFileInputRef.current?.click()}
-                      onMouseEnter={() => setFFormUploadHover(true)}
-                      onMouseLeave={() => setFFormUploadHover(false)}
-                      style={{
-                        border: `2px dashed ${fFormUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
-                        borderRadius: 10, padding: 20, display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', gap: 8, cursor: 'pointer',
-                        background: 'var(--bg-surface-1)', transition: 'border-color .15s ease',
-                      }}
-                    >
-                      <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Upload size={18} color="#7c7cff" strokeWidth={2} />
                       </div>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Drop files or click to upload</div>
-                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>PDF, DOCX and PPT · Max 25MB</div>
-                    </div>
-                  )}
-                  <input type="file" accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={formFileInputRef} onChange={handleFormFileSelect} />
-                </div>
-
-                <Divider />
-
-                {/* ── SECTION 4: COMMERCIALS ── */}
-                <SectionLabel>Commercials</SectionLabel>
-
-                {/* Row: Quantity + Estimated Unit Value */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                  <div>
-                    <FL required>Quantity</FL>
-                    <FInput type="number" value={fQuantity} onChange={(e) => setFQuantity(e.target.value)} placeholder="Enter" />
-                    {aiFilledFields.has('fQuantity') && <AiFilledTag />}
-                    {specificNote}
-                  </div>
-                  <div>
-                    <FL>Estimated Unit Value</FL>
-                    <FInput value={fUnitValue} onChange={(e) => setFUnitValue(e.target.value)} placeholder="e.g. ₹45,000 per unit" />
-                    {aiFilledFields.has('fUnitValue') && <AiFilledTag />}
-                    {specificNote}
-                  </div>
-                </div>
-
-                {/* Unit of Measure */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL required>Unit of Measure</FL>
-                  <FDrop refEl={fUomRef} open={fUomOpen} onToggle={() => setFUomOpen(!fUomOpen)}
-                    value={fUom} placeholder="Select Unit"
-                    options={UOM_OPTS} onChange={(v) => setFUom(v)} />
-                  {aiFilledFields.has('fUom') && <AiFilledTag />}
-                  {specificNote}
-                </div>
-
-                {/* Estimated Budget */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL required>Estimated Budget</FL>
-                  <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8 }}>
-                    <div ref={fCurrencyRef} style={{ position: 'relative' }}>
-                      <button type="button" onClick={() => setFCurrencyOpen(!fCurrencyOpen)} style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', borderRadius: '8px 0 0 8px', fontSize: 14, color: 'var(--text-tertiary)', border: 'none', borderRight: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: 'inherit', outline: 'none' }}>
-                        {fCurrency} <ChevronDown size={14} style={{ transform: fCurrencyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                      </button>
-                      {fCurrencyOpen && (
-                        <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 100, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, minWidth: 80, marginTop: 4 }}>
-                          {CURRENCIES.map(c => (
-                            <div key={c} onClick={() => { setFCurrency(c); setFCurrencyOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, cursor: 'pointer', borderRadius: 4, color: 'var(--text-primary)' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{c}</div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <input type="text" value={fBudget} onChange={(e) => setFBudget(e.target.value)} placeholder="0.00"
-                      style={{ flex: 1, padding: '9px 12px', border: 'none', borderRadius: '0 8px 8px 0', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }}
-                    />
-                  </div>
-                  {aiFilledFields.has('fBudget') && <AiFilledTag />}
-                </div>
-
-                {/* Cost Breakdown */}
-                <div style={{ marginBottom: 16 }}>
-                  <FL>Pricing Model</FL>
-                  <FTextarea value={fCostBreakdown} onChange={(e) => setFCostBreakdown(e.target.value)}
-                    placeholder="Describe pricing model — Fixed / T&M / Milestone" />
-                  {aiFilledFields.has('fCostBreakdown') && <AiFilledTag />}
-                </div>
-
-                <Divider />
-
-                {/* ── SECTION 5: VENDOR INFO ── */}
-                <SectionLabel>Vendor Info</SectionLabel>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                  <div>
-                    <FL>Sourcing Method</FL>
-                    <FDrop refEl={fSourcingRef} open={fSourcingMethodOpen} onToggle={() => setFSourcingMethodOpen(!fSourcingMethodOpen)}
-                      value={fSourcingMethod} placeholder="Select"
-                      options={SOURCING_METHODS} onChange={(v) => setFSourcingMethod(v)} />
-                    {aiFilledFields.has('fSourcingMethod') && <AiFilledTag />}
-                  </div>
-                  <div>
-                    <FL>Suggested Vendor</FL>
-                    <FDrop refEl={fVendorRef} open={fVendorOpen} onToggle={() => setFVendorOpen(!fVendorOpen)}
-                      value={fSuggestedVendor} placeholder="Select"
-                      options={VENDOR_OPTS} onChange={(v) => setFSuggestedVendor(v)} />
-                    {aiFilledFields.has('fSuggestedVendor') && <AiFilledTag />}
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: 16 }}>
-                  <FL>Contract Reference</FL>
-                  <FInput value={fContractRef} onChange={(e) => setFContractRef(e.target.value)} placeholder="Existing Contract Number" />
-                  {aiFilledFields.has('fContractRef') && <AiFilledTag />}
-                </div>
-
-                <div style={{ marginBottom: 16 }}>
-                  <FL>Vendor Justification</FL>
-                  <FTextarea value={fVendorJustification} onChange={(e) => setFVendorJustification(e.target.value)}
-                    placeholder="Reason for preferring this vendor" minHeight={80} />
-                  {aiFilledFields.has('fVendorJustification') && <AiFilledTag />}
-                </div>
-
-                <Divider />
-
-                {/* ── SECTION 6: EXECUTION DETAILS ── */}
-                <SectionLabel>Execution Details</SectionLabel>
-
-                <div style={{ marginBottom: 16 }}>
-                  <FL required>Delivery Location</FL>
-                  <FDrop refEl={fDeliveryRef} open={fDeliveryOpen} onToggle={() => setFDeliveryOpen(!fDeliveryOpen)}
-                    value={fDeliveryLoc} placeholder="Select"
-                    options={DELIVERY_LOCS} onChange={(v) => setFDeliveryLoc(v)} />
-                  {aiFilledFields.has('fDeliveryLoc') && <AiFilledTag />}
-                  {specificNote}
-                </div>
-
-                <div style={{ marginBottom: 16 }}>
-                  <FL>Timeline</FL>
-                  <FTextarea value={fTimeline} onChange={(e) => setFTimeline(e.target.value)} placeholder="Describe delivery timeline and milestones" minHeight={100} />
-                  {aiFilledFields.has('fTimeline') && <AiFilledTag />}
-                </div>
-                {/* ── Submit row ── */}
-                <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-                  <button
-                    onClick={handleBack}
-                    style={{
-                      background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
-                      padding: '9px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)',
-                      cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'inherit',
-                    }}
-                  >
-                    <Save size={15} strokeWidth={2} /> Save Draft
-                  </button>
-                  <button
-                    onClick={handleFormSubmit}
-                    style={{
-                      background: '#0052cc', color: '#fff',
-                      border: 'none', borderRadius: 8, padding: '9px 24px', fontSize: 13, fontWeight: 600,
-                      cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
-                      boxShadow: '0 4px 12px rgba(0,82,204,0.12)', fontFamily: 'inherit',
-                    }}
-                  >
-                    <Send size={15} strokeWidth={2} />
-                    Submit
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* ═══ MODE: FORM (UPLOAD PHASES) ═══ */}
-      {activeMode === 'form' && uploadPhase !== 'empty' && (() => {
-        function UDrop({ refEl, open, onToggle, value, placeholder, options, onChange, renderOption, disabled }) {
-          return (
-            <div ref={refEl} style={{ position: 'relative' }}>
-              <button
-                onClick={!disabled ? onToggle : undefined}
-                style={{
-                  width: '100%', padding: '9px 12px', boxSizing: 'border-box',
-                  border: `1px solid ${open ? '#7c7cff' : 'var(--border-default)'}`,
-                  borderRadius: 8, fontSize: 14, cursor: disabled ? 'not-allowed' : 'pointer',
-                  background: '#fff', fontFamily: 'inherit', outline: 'none',
-                  color: value ? 'var(--text-primary)' : 'var(--text-tertiary)',
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  boxShadow: open ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
-                  opacity: disabled ? 0.5 : 1,
-                  transition: 'all .15s ease',
-                }}
-              >
-                <span style={{ display: 'flex', alignItems: 'center' }}>
-                  {renderOption ? renderOption(value, true) : (value || placeholder)}
-                </span>
-                <ChevronDown size={14} strokeWidth={2} style={{ flexShrink: 0, transition: 'transform .15s ease', transform: open ? 'rotate(180deg)' : 'rotate(0)' }} />
-              </button>
-              {open && (
-                <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 300, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', padding: 6 }}>
-                  {options.map((opt) => (
-                    <div key={opt} onClick={() => { onChange(opt); onToggle(); }}
-                      style={{ padding: '8px 12px', fontSize: 13, borderRadius: 6, cursor: 'pointer', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', transition: 'background .12s ease' }}
-                      onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-surface-2)'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
-                    >
-                      {renderOption ? renderOption(opt, false) : opt}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          );
-        }
-        function UInput({ value, onChange, placeholder, type = 'text', readOnly, prefilled }) {
-          const [fc, setFc] = useState(false);
-          return (
-            <input type={type} value={value} onChange={onChange} placeholder={placeholder} readOnly={readOnly}
-              onFocus={() => setFc(true)} onBlur={() => setFc(false)}
-              style={{
-                width: '100%', padding: '9px 12px', boxSizing: 'border-box',
-                border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
-                borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
-                fontFamily: 'inherit',
-                background: prefilled ? 'rgba(0,0,0,0.02)' : '#fff',
-                boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
-                transition: 'border-color .15s ease, box-shadow .15s ease',
-              }}
-            />
-          );
-        }
-        function UTextarea({ value, onChange, placeholder, minHeight = 100 }) {
-          const [fc, setFc] = useState(false);
-          return (
-            <textarea value={value} onChange={onChange} placeholder={placeholder}
-              onFocus={() => setFc(true)} onBlur={() => setFc(false)}
-              style={{
-                background: '#fff',
-                width: '100%', padding: '9px 12px', boxSizing: 'border-box',
-                border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
-                borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
-                fontFamily: 'inherit', minHeight, resize: 'vertical', lineHeight: 1.5,
-                boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
-                transition: 'border-color .15s ease, box-shadow .15s ease',
-              }}
-            />
-          );
-        }
-        function UL({ children, required }) {
-          return <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginBottom: 6 }}>{children}{required && <span style={{ color: '#ef4444' }}> *</span>}</label>;
-        }
-
-        const isExtracted = (fieldName) => ['Request Title', 'Cost Centre', 'Requestor Name', 'Request Date', 'Required By Date', 'Priority', 'Procurement Category', 'Subcategory', 'Requirement Description', 'Quantity', 'Estimated Budget', 'Suggested Vendor', 'Delivery Location', 'Project Name'].includes(fieldName);
-
-        const renderExtracted = (fieldName) => isExtracted(fieldName) && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#15803d', fontStyle: 'italic', marginTop: 4 }}>
-            <CheckCircle size={11} color="#15803d" strokeWidth={2.5} />
-            Extracted by AI
-          </div>
-        );
-
-        const specificNote = <div style={{ display: 'block', fontSize: 11, color: 'var(--text-tertiary)', fontStyle: 'italic', marginTop: 4 }}>Applicable for specific categories</div>;
-        const subcatOptions = uProcCategory ? (SUBCATEGORY_MAP[uProcCategory] || []) : [];
-        const spendCategory = SPEND_CATEGORY_MAP[uProcCategory] || '';
-
-        return (
-          <div style={{ flex: 1, overflowY: 'auto', padding: uploadPhase === 'empty' || uploadPhase === 'complete' ? '32px 24px' : 40, background: 'var(--bg-default)', display: uploadPhase === 'empty' || uploadPhase === 'complete' ? 'block' : 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-
-            {uploadPhase === 'empty' && (
-              <div style={{ maxWidth: 720, margin: '0 auto', width: '100%' }}>
-                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Upload Procurement Document</div>
-                <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, marginBottom: 24 }}>Upload a requirements document, SOW, or specifications file. Our AI will extract all procurement fields automatically.</div>
-
-                <div
-                  onClick={handleUploadClick}
-                  className="pai-upload-zone"
-                  onMouseEnter={() => setUUploadHover(true)}
-                  onMouseLeave={() => setUUploadHover(false)}
-                  style={{
-                    background: uUploadHover ? 'rgba(124,124,255,0.015)' : '#fff',
-                    border: `2px dashed ${uUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
-                    borderRadius: 16, padding: '64px 32px',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
-                    cursor: 'pointer', transition: 'all 0.2s ease',
-                  }}
-                >
-                  <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(0,82,204,0.07), rgba(124,124,255,0.1))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Upload size={30} color="#7c7cff" strokeWidth={2} />
-                  </div>
-                  <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginTop: 8 }}>Drop your document here</div>
-                  <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>or click to browse files</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>Supports PDF, DOCX and PPT · Max 25MB</div>
-                </div>
-              </div>
-            )}
-
-            {uploadPhase === 'uploading' && (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 20, width: '100%' }}>
-                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16, maxWidth: 420, width: '100%', boxShadow: '0 2px 8px rgba(14,15,37,0.06)' }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <FileText size={22} color="#0052cc" strokeWidth={2} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>2.4 MB · PDF</div>
-                  </div>
-                </div>
-                <div style={{ maxWidth: 420, width: '100%' }}>
-                  <div style={{ height: 4, background: 'rgba(0,0,0,0.02)', borderRadius: 99, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', background: 'linear-gradient(90deg, #0052cc, #7c7cff)', borderRadius: 99, animation: 'uploadProgress 1.4s ease-out forwards' }} />
-                  </div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 4 }}>Uploading document...</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Please wait while we upload your file</div>
-                </div>
-              </div>
-            )}
-
-            {uploadPhase === 'scanning' && (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 20, width: '100%' }}>
-                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16, maxWidth: 420, width: '100%', boxShadow: '0 2px 8px rgba(14,15,37,0.06)' }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <FileText size={22} color="#0052cc" strokeWidth={2} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>2.4 MB · PDF</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4, maxWidth: 420, width: '100%' }}>
-                      <div style={{ flex: 1, height: 4, background: 'rgba(0,0,0,0.02)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
-                        <div style={{ position: 'absolute', height: '100%', width: '40%', background: 'linear-gradient(90deg, transparent, #7c7cff, transparent)', borderRadius: 99, animation: 'shimmer 1.2s linear infinite' }} />
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(124,124,255,0.08)', border: '1px solid rgba(124,124,255,0.2)', borderRadius: 20, padding: '4px 12px', fontSize: 11, fontWeight: 600, color: '#7c7cff' }}>
-                        <Cpu size={12} strokeWidth={2} />
-                        AI Extracting
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Scanning document...</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', textAlign: 'center', maxWidth: 320 }}>AI is reading and extracting procurement fields from your document</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 320, width: '100%', marginTop: 8 }}>
-                    {['Reading document structure', 'Identifying procurement fields', 'Extracting dates and values', 'Mapping to PR template'].map((item, idx) => (
-                      <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: 'var(--text-secondary)', opacity: 0, animation: `fadeInUp 0.4s ${[0.3, 0.8, 1.3, 1.7][idx]}s forwards ease-out` }}>
-                        <CheckCircle size={14} color="#22c55e" strokeWidth={2} />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {uploadPhase === 'complete' && (
-              <div style={{ maxWidth: 720, margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-                {/* Uploaded file card */}
-                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 1px 3px rgba(14,15,37,0.04)' }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <FileText size={22} color="#0052cc" strokeWidth={2} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>2.4 MB · PDF</div>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(34,197,94,0.08)', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600, color: '#15803d', marginTop: 4 }}>
-                      <FileCheck size={11} strokeWidth={2.5} />
-                      AI extraction complete — 14 fields populated
-                    </div>
-                  </div>
-                  <div
-                    className="pai-trash"
-                    onClick={() => setUploadPhase('empty')}
-                    style={{ padding: 8, borderRadius: 8, cursor: 'pointer', color: '#ef4444', transition: 'all .12s ease' }}
-                  >
-                    <Trash2 size={16} strokeWidth={2} color="#ef4444" />
-                  </div>
-                </div>
-
-                {/* Extracted fields card */}
-                <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, padding: 28, boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Review Extracted Fields</div>
-                    <div style={{ background: 'rgba(124,124,255,0.08)', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 600, color: '#7c7cff' }}>14 / 21 fields extracted</div>
-                  </div>
-                  <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 24, lineHeight: 1.5 }}>Fields highlighted with a green indicator were populated by AI. Review all fields and fill in any missing information before submitting.</div>
-
-                  {/* ── SECTION 1: GENERAL INFO ── */}
-                  <SectionLabel>General Info</SectionLabel>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL>Requisition ID</UL>
-                    <div style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 12, color: 'var(--text-tertiary)', fontStyle: 'italic', fontWeight: 400 }}>Will be auto-generated on submission</div>
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL required>Request Title</UL>
-                    <UInput value={uReqTitle} onChange={(e) => setUReqTitle(e.target.value)} placeholder="Short description of what you are requesting" />
-                    {renderExtracted('Request Title')}
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                    <div>
-                      <UL required>Cost Centre</UL>
-                      <UDrop refEl={uBizUnitRef} open={uBizUnitOpen} onToggle={() => setUBizUnitOpen(!uBizUnitOpen)} value={uBizUnit} placeholder="Select business unit" options={BIZ_UNITS} onChange={(v) => setUBizUnit(v)} />
-                      {renderExtracted('Cost Centre')}
-                    </div>
-                    <div>
-                      <UL required>Requestor Name</UL>
-                      <UInput value={uRequestorName} onChange={(e) => setURequestorName(e.target.value)} placeholder="Auto-filled from your profile" prefilled />
-                      {renderExtracted('Requestor Name')}
-                    </div>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                    <div>
-                      <UL required>Request Date</UL>
-                      <UInput type="date" value={uRequestDate} onChange={(e) => setURequestDate(e.target.value)} />
-                      {renderExtracted('Request Date')}
-                    </div>
-                    <div>
-                      <UL required>Required By Date</UL>
-                      <UInput type="date" value={uRequiredByDate} onChange={(e) => setURequiredByDate(e.target.value)} style={{ color: uRequiredByDate ? 'var(--text-primary)' : 'var(--text-tertiary)' }} />
-                      {renderExtracted('Required By Date')}
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL required>Priority</UL>
-                    <UDrop refEl={uPriorityRef} open={uPriorityOpen} onToggle={() => setUPriorityOpen(!uPriorityOpen)} value={uPriority} placeholder="Select priority" options={PRIORITIES} onChange={(v) => setUPriority(v)} renderOption={(val) => val ? (<span style={{ display: 'flex', alignItems: 'center' }}><span style={{ width: 8, height: 8, borderRadius: '50%', background: PRIORITY_DOT[val] || '#ccc', marginRight: 8, flexShrink: 0 }} />{val}</span>) : val} />
-                    {renderExtracted('Priority')}
-                  </div>
-                  <Divider />
-
-                  {/* ── SECTION 2: CATEGORY INFO ── */}
-                  <SectionLabel>Category Info</SectionLabel>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL required>Procurement Category</UL>
-                    <UDrop refEl={uProcCatRef} open={uProcCategoryOpen} onToggle={() => setUProcCategoryOpen(!uProcCategoryOpen)} value={uProcCategory} placeholder="Select procurement category" options={PROC_CATEGORIES} onChange={(v) => { setUProcCategory(v); setUSubcategory(''); }} />
-                    {renderExtracted('Procurement Category')}
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL required>Spend Category</UL>
-                    <div style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 14, color: 'var(--text-secondary)' }}>{spendCategory || '—'}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 4 }}>Auto-selected based on category</div>
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL required>Subcategory</UL>
-                    <UDrop refEl={uSubcatRef} open={uSubcategoryOpen} onToggle={() => { if (uProcCategory) setUSubcategoryOpen(!uSubcategoryOpen); }} value={uSubcategory} placeholder={uProcCategory ? 'Select subcategory' : 'Select procurement category first'} options={subcatOptions} onChange={(v) => setUSubcategory(v)} disabled={!uProcCategory} />
-                    {renderExtracted('Subcategory')}
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                    <div>
-                      <UL>Project Name</UL>
-                      <UInput value={uProjectName} onChange={(e) => setUProjectName(e.target.value)} placeholder="Linked project name (if applicable)" />
-                      {renderExtracted('Project Name')}
-                    </div>
-                    <div>
-                      <UL required>CapEx / OpEx</UL>
-                      <UDrop refEl={uCapexRef} open={uCapexOpexOpen} onToggle={() => setUCapexOpexOpen(!uCapexOpexOpen)} value={uCapexOpex} placeholder="Select expense type" options={CAPEX_OPEX_OPTS} onChange={(v) => setUCapexOpex(v)} />
-                      {renderExtracted('CapEx / OpEx')}
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL>Justification</UL>
-                    <UTextarea value={uJustification} onChange={(e) => setUJustification(e.target.value)} placeholder="Provide justification for CapEx/OpEx selection if needed" minHeight={100} />
-                    {renderExtracted('Justification')}
-                  </div>
-                  <Divider />
-
-                  {/* ── SECTION 3: SCOPE DETAILS ── */}
-                  <SectionLabel>Scope Details</SectionLabel>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL required>Requirement Description</UL>
-                    <UTextarea value={uReqDesc} onChange={(e) => setUReqDesc(e.target.value)} placeholder="Describe the full scope..." minHeight={100} />
-                    {renderExtracted('Requirement Description')}
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL>Attachments</UL>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
-                      {uploadFormFiles.map((file, i) => (
-                        <div key={i} style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div style={{ width: 32, height: 32, background: 'rgba(0,82,204,0.07)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <FileText size={16} color="#0052cc" strokeWidth={2} />
-                          </div>
-                          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
-                            <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{file.name}</div>
-                            <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{file.size}</div>
-                          </div>
-                          <div
-                            onClick={() => setUploadFormFiles(prev => prev.filter((_, idx) => idx !== i))}
-                            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
-                            style={{ cursor: 'pointer', padding: 6, borderRadius: 6, flexShrink: 0, color: '#ef4444', transition: 'all 0.15s ease' }}
-                          >
-                            <Trash2 size={14} strokeWidth={2} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    {uploadFormFiles.length === 0 && (
-                      <div
-                        onClick={() => uploadFormFileInputRef.current?.click()}
-                        onMouseEnter={() => setUFormUploadHover(true)}
-                        onMouseLeave={() => setUFormUploadHover(false)}
-                        style={{
-                          border: `2px dashed ${uFormUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
-                          borderRadius: 10, padding: 20, display: 'flex', flexDirection: 'column',
-                          alignItems: 'center', gap: 8, cursor: 'pointer',
-                          background: 'var(--bg-surface-1)', transition: 'border-color .15s ease',
-                        }}
-                      >
-                        <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <Upload size={18} color="#7c7cff" strokeWidth={2} />
-                        </div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Drop files or click to upload</div>
-                        <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>PDF, DOCX and PPT · Max 25MB</div>
-                      </div>
-                    )}
-                    <input type="file" accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={uploadFormFileInputRef} onChange={handleUploadFormFileSelect} />
-                    <div style={{ display: 'block', fontSize: 11, color: 'var(--text-tertiary)', fontStyle: 'italic', marginTop: 6 }}>Additional supporting documents. The extracted document above is already attached.</div>
-                  </div>
-                  <Divider />
-
-                  {/* ── SECTION 4: COMMERCIALS ── */}
-                  <SectionLabel>Commercials</SectionLabel>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                    <div>
-                      <UL required>Quantity</UL>
-                      <UInput type="number" value={uQuantity} onChange={(e) => setUQuantity(e.target.value)} placeholder="Enter quantity required" />
-                      {specificNote}
-                      {renderExtracted('Quantity')}
-                    </div>
-                    <div>
-                      <UL>Estimated Unit Value</UL>
-                      <UInput value={uUnitValue} onChange={(e) => setUUnitValue(e.target.value)} placeholder="e.g. ₹45,000 per unit" />
-                      {specificNote}
-                      {renderExtracted('Estimated Unit Value')}
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL required>Unit of Measure</UL>
-                    <UDrop refEl={uUomRef} open={uUomOpen} onToggle={() => setUUomOpen(!uUomOpen)} value={uUom} placeholder="Select unit" options={UOM_OPTS} onChange={(v) => setUUom(v)} />
-                    {specificNote}
-                    {renderExtracted('Unit of Measure')}
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL required>Estimated Budget</UL>
-                    <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8 }}>
-                      <div ref={uCurrencyRef} style={{ position: 'relative' }}>
-                        <button type="button" onClick={() => setUCurrencyOpen(!uCurrencyOpen)} style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', borderRadius: '8px 0 0 8px', fontSize: 14, color: 'var(--text-tertiary)', border: 'none', borderRight: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: 'inherit', outline: 'none' }}>
-                          {uCurrency} <ChevronDown size={14} style={{ transform: uCurrencyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                        </button>
-                        {uCurrencyOpen && (
-                          <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 100, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, minWidth: 80, marginTop: 4 }}>
-                            {CURRENCIES.map(c => (
-                              <div key={c} onClick={() => { setUCurrency(c); setUCurrencyOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, cursor: 'pointer', borderRadius: 4, color: 'var(--text-primary)' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{c}</div>
+                    ) : (
+                      <>
+                        {/* Attachment pill row */}
+                        {attachedFiles.length > 0 && (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, paddingBottom: 8, borderBottom: '1px solid var(--border-subtle)', marginBottom: 4 }}>
+                            {attachedFiles.map((file, i) => (
+                              <div key={i} style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 7, maxWidth: 180 }}>
+                                <FileText size={13} color="#0052cc" strokeWidth={2} style={{ flexShrink: 0 }} />
+                                <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100 }}>{file.name}</span>
+                                <span style={{ fontSize: 11, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{file.size}</span>
+                                <div
+                                  onClick={() => setAttachedFiles(prev => prev.filter((_, idx) => idx !== i))}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = '#ef4444';
+                                    e.currentTarget.style.background = 'rgba(239,68,68,0.08)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = 'var(--text-tertiary)';
+                                    e.currentTarget.style.background = 'transparent';
+                                  }}
+                                  style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', marginLeft: 2, padding: 2, borderRadius: 4, flexShrink: 0, color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                                >
+                                  <X size={12} strokeWidth={2} />
+                                </div>
+                              </div>
                             ))}
                           </div>
                         )}
-                      </div>
-                      <input type="text" value={uBudget} onChange={(e) => setUBudget(e.target.value)} placeholder="0.00" style={{ flex: 1, padding: '9px 12px', border: 'none', borderRadius: '0 8px 8px 0', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }} />
-                    </div>
-                    {renderExtracted('Estimated Budget')}
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL>Pricing Model</UL>
-                    <UTextarea value={uCostBreakdown} onChange={(e) => setUCostBreakdown(e.target.value)} placeholder="Describe pricing model..." minHeight={100} />
-                    {renderExtracted('Pricing Model')}
-                  </div>
-                  <Divider />
 
-                  {/* ── SECTION 5: VENDOR INFO ── */}
-                  <SectionLabel>Vendor Info</SectionLabel>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                    <div>
-                      <UL>Sourcing Method</UL>
-                      <UDrop refEl={uSourcingRef} open={uSourcingMethodOpen} onToggle={() => setUSourcingMethodOpen(!uSourcingMethodOpen)} value={uSourcingMethod} placeholder="Select method" options={SOURCING_METHODS} onChange={(v) => setUSourcingMethod(v)} />
-                      {renderExtracted('Sourcing Method')}
-                    </div>
-                    <div>
-                      <UL>Suggested Vendor</UL>
-                      <UDrop refEl={uVendorRef} open={uVendorOpen} onToggle={() => setUVendorOpen(!uVendorOpen)} value={uSuggestedVendor} placeholder="Select preferred vendor" options={VENDOR_OPTS} onChange={(v) => setUSuggestedVendor(v)} />
-                      {renderExtracted('Suggested Vendor')}
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL>Contract Reference</UL>
-                    <UInput value={uContractRef} onChange={(e) => setUContractRef(e.target.value)} placeholder="Existing contract or renewal reference number" />
-                    {renderExtracted('Contract Reference')}
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL>Vendor Justification</UL>
-                    <UTextarea value={uVendorJustification} onChange={(e) => setUVendorJustification(e.target.value)} placeholder="Reason for preferring this vendor" minHeight={80} />
-                    {renderExtracted('Vendor Justification')}
-                  </div>
-                  <Divider />
+                        {/* Textarea */}
+                        <textarea
+                          ref={textareaRef}
+                          value={inputValue}
+                          onChange={(e) => setInputValue(e.target.value)}
+                          onFocus={() => setInputFocused(true)}
+                          onBlur={() => setInputFocused(false)}
+                          onKeyDown={handleKeyDown}
+                          onInput={(e) => {
+                            if (textareaRef.current) {
+                              textareaRef.current.style.height = 'auto';
+                              textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 154) + 'px';
+                            }
+                          }}
+                          placeholder={activeMode === 'chat' ? 'Describe your procurement need or choose a starter prompt' : 'Describe your procurement need or choose a template above...'}
+                          rows={1}
+                          style={{
+                            width: '100%', border: 'none', outline: 'none', background: 'transparent',
+                            fontSize: 14, color: 'var(--text-primary)', resize: 'none',
+                            minHeight: 24, maxHeight: 154, overflowY: 'auto',
+                            fontFamily: 'Inter, sans-serif', lineHeight: 1.5,
+                          }}
+                        />
 
-                  {/* ── SECTION 6: EXECUTION DETAILS ── */}
-                  <SectionLabel>Execution Details</SectionLabel>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL required>Delivery Location</UL>
-                    <UDrop refEl={uDeliveryRef} open={uDeliveryOpen} onToggle={() => setUDeliveryOpen(!uDeliveryOpen)} value={uDeliveryLoc} placeholder="Select delivery location" options={DELIVERY_LOCS} onChange={(v) => setUDeliveryLoc(v)} />
-                    {specificNote}
-                    {renderExtracted('Delivery Location')}
-                  </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <UL>Timeline</UL>
-                    <UTextarea value={uTimeline} onChange={(e) => setUTimeline(e.target.value)} placeholder="Describe phased delivery plan and key milestones" minHeight={100} />
-                    {specificNote}
-                    {renderExtracted('Timeline')}
-                  </div>
+                        {/* Bottom action row */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+                          {/* Left side — Attach button */}
+                          <div style={{ position: 'relative' }}>
+                            <button
+                              onClick={() => fileInputRef.current?.click()}
+                              className="pai-attach-icon-btn"
+                              style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                padding: 4, border: 'none', background: 'transparent', borderRadius: 6,
+                                cursor: 'pointer', color: 'var(--text-tertiary)', transition: 'all 0.15s ease',
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = '#7c7cff';
+                                e.currentTarget.style.background = 'rgba(124,124,255,0.08)';
+                                setShowUploadTooltip(true);
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = 'var(--text-tertiary)';
+                                e.currentTarget.style.background = 'transparent';
+                                setShowUploadTooltip(false);
+                              }}
+                            >
+                              <Paperclip size={18} strokeWidth={2} />
+                            </button>
+                            {showUploadTooltip && (
+                              <div style={{
+                                position: 'absolute',
+                                bottom: 'calc(100% + 8px)',
+                                left: '0%',
+                                background: '#fff',
+                                border: '1px solid var(--border-default)',
+                                borderRadius: 8,
+                                padding: '10px 14px',
+                                fontSize: 12,
+                                color: 'var(--text-primary)',
+                                whiteSpace: 'nowrap',
+                                boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                                zIndex: 100,
+                                pointerEvents: 'none'
+                              }}>
+                                Upload upto 5 PDF,DOCX or PPT files ( up to 25MB)
+                              </div>
+                            )}
+                            <input type="file" multiple accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileSelect} />
+                          </div>
 
-                  {/* ── Submit row ── */}
-                  <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-                    <button
-                      onClick={() => onNavigate('Dashboard')}
-                      style={{
-                        background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
-                        padding: '9px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)',
-                        cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'inherit',
-                      }}
-                    >
-                      <Save size={15} strokeWidth={2} /> Save Draft
-                    </button>
-                    <button
-                      onClick={handleUploadSubmit}
-                      style={{
-                        background: '#0052cc', color: '#fff',
-                        border: 'none', borderRadius: 8, padding: '9px 24px', fontSize: 13, fontWeight: 600,
-                        cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
-                        boxShadow: '0 4px 12px rgba(0,82,204,0.12)', fontFamily: 'inherit',
-                      }}
-                    >
-                      <Send size={15} strokeWidth={2} />
-                      Submit
-                    </button>
+                          {/* Right side — Count + Send */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <span style={{ fontSize: 11, color: charCount > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{charCount} / 20000</span>
+                            <button onClick={() => setIsRecording(true)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                              <Mic size={18} strokeWidth={2} />
+                            </button>
+
+                            <button
+                              onClick={sendMessage}
+                              disabled={!inputValue.trim()}
+                              style={{
+                                width: 34, height: 34, borderRadius: '50%', border: 'none',
+                                background: inputValue.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-3)',
+                                boxShadow: inputValue.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none',
+                                cursor: inputValue.trim() ? 'pointer' : 'not-allowed',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                flexShrink: 0, transition: 'all .15s ease',
+                              }}
+                            >
+                              <Send size={15} color={inputValue.trim() ? '#fff' : 'var(--text-tertiary)'} strokeWidth={2} />
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
-            )}
-          </div>
-        );
-      })()}
-      {/* ═══ SUCCESS MODAL ═══ */}
-      {showSuccessModal && (
-        <div style={SUCCESS_MODAL_STYLE.backdrop}>
-          <div style={SUCCESS_MODAL_STYLE.card}>
-            {/* Icon */}
-            <div style={{
-              width: 64, height: 64, borderRadius: '50%',
-              background: 'linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.15))',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <CheckCircle size={32} color="#22c55e" strokeWidth={2} />
             </div>
+          )}
 
-            {/* Title */}
-            <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Request Submitted!</div>
+          {/* ═══ MODE: FORM ═══ */}
+          {activeMode === 'form' && uploadPhase === 'empty' && (() => {
+            const subcatOptions = fProcCategory ? (SUBCATEGORY_MAP[fProcCategory] || []) : [];
+            const spendCategory = SPEND_CATEGORY_MAP[fProcCategory] || '';
+            const isAnyFieldFilled = Boolean(fReqTitle || fBizUnit || fRequiredByDate || fPriority || fProcCategory || fSubcategory || fProjectName || fCapexOpex || fJustification || fReqDesc || fQuantity || fUnitValue || fUom || fBudget || fCostBreakdown || fSuggestedVendor || fVendorJustification || fContractRef || fDeliveryLoc || fTimeline || uploadedFiles.length > 0);
+            const specificNote = <div style={{ display: 'block', fontSize: 11, color: 'var(--text-tertiary)', fontStyle: 'italic', marginTop: 4 }}>Applicable for specific categories</div>;
+            return (
+              <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px', background: 'var(--bg-default)' }}>
+                <div style={{ maxWidth: 680, margin: '0 auto', width: '100%', marginBottom: 40 }}>
+                  <div style={{ marginBottom: 16 }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Upload Procurement Document</div>
+                    <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, lineHeight: 1.5 }}>Upload a requirements document, SOW, or specifications file. Our AI will extract all procurement fields automatically.</div>
+                  </div>
 
-            {/* PR ID */}
-            <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
-              Your PR ID is{' '}
-              <span style={{ fontWeight: 700, color: 'var(--colors-blue-500)' }}>PR-2026-011</span>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
+                    <div style={{ fontSize: 13, fontWeight: 400, color: '#999' }}>
+                      {procFiles.length}/5 added
+                    </div>
+                  </div>
+
+                  {procFiles.length < 5 && (
+                    <div
+                      onClick={() => procFiles.length < 5 && procFileRef.current?.click()}
+                      onMouseEnter={() => setUUploadHover(true)}
+                      onMouseLeave={() => setUUploadHover(false)}
+                      style={{
+                        position: 'relative',
+                        background: uUploadHover ? 'rgba(124,124,255,0.015)' : '#fff',
+                        border: `2px dashed ${uUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
+                        borderRadius: 16, padding: '32px 24px',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+                        cursor: 'pointer', transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(0,82,204,0.07), rgba(124,124,255,0.1))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Upload size={24} color="#7c7cff" strokeWidth={2} />
+                      </div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginTop: 4 }}>Drop your document here</div>
+                      <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>or click to browse files</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>Supports PDF, DOCX and PPT · Max 25MB</div>
+                    </div>
+                  )}
+                  <input type="file" multiple accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={procFileRef} onChange={handleProcFileSelect} />
+
+                  {procFiles.length > 0 && (
+                    <div style={{ marginTop: 20 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>Uploaded Documents</div>
+                        {procFiles.some(f => f.status === 'complete') && (
+                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(34,197,94,0.08)', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600, color: '#15803d' }}>
+                            <FileCheck size={11} strokeWidth={2.5} />
+                            Fields have been extracted from {procFiles.filter(f => f.status === 'complete').length} {procFiles.filter(f => f.status === 'complete').length === 1 ? 'file' : 'files'} uploaded
+                          </div>
+                        )}
+                      </div>
+                      <div className="custom-scrollbar" style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 214, overflowY: 'auto', paddingRight: 4 }}>
+                        {procFiles.map(file => (
+                          <div key={file.id} style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 1px 3px rgba(14,15,37,0.02)' }}>
+                            <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <FileText size={20} color="#0052cc" strokeWidth={2} />
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{file.name}</div>
+                              <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{file.size} · PDF</div>
+                            </div>
+                            <div style={{ width: 140, display: 'flex', justifyContent: 'flex-end' }}>
+                              {file.status === 'uploading' && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%' }}>
+                                  <div style={{ flex: 1, height: 4, background: 'rgba(0,0,0,0.04)', borderRadius: 99, overflow: 'hidden' }}>
+                                    <div style={{ height: '100%', background: '#7c7cff', borderRadius: 99, width: '60%', animation: 'shimmer 1.5s infinite' }} />
+                                  </div>
+                                  <span style={{ fontSize: 11, fontWeight: 600, color: '#7c7cff' }}>Uploading...</span>
+                                </div>
+                              )}
+                              {file.status === 'scanning' && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(124,124,255,0.08)', borderRadius: 20, padding: '4px 10px', fontSize: 11, fontWeight: 600, color: '#7c7cff' }}>
+                                  <Cpu size={12} strokeWidth={2} />
+                                  Extracting info...
+                                </div>
+                              )}
+                              {file.status === 'complete' && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 600, color: '#15803d' }}>
+                                  <CheckCircle size={13} strokeWidth={2.5} />
+                                  {file.fieldsExtracted} fields extracted
+                                </div>
+                              )}
+                            </div>
+                            <div
+                              onClick={() => setProcFiles(prev => prev.filter(f => f.id !== file.id))}
+                              style={{ padding: 6, borderRadius: 6, cursor: 'pointer', color: '#ef4444', transition: 'background 0.15s ease' }}
+                              onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'}
+                              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                            >
+                              <Trash2 size={15} strokeWidth={2} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* OR Divider */}
+                <div style={{ maxWidth: 680, margin: '0 auto 40px auto', display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: 0.5 }}>OR</div>
+                  <div style={{ flex: 1, height: 1, background: 'var(--border-subtle)' }} />
+                </div>
+
+                <div style={{ maxWidth: 680, margin: '0 auto' }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Create Procurement Request</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, marginBottom: 24 }}>Fill in the details to generate a new requisition</div>
+
+                  <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, padding: 28, boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
+
+                    {/* ── SECTION 1: GENERAL INFO ── */}
+                    <SectionLabel
+                      showWand
+                      wandDisabled={!isAnyFieldFilled}
+                      isWanding={wandingSection === 'General Info'}
+                      onWandClick={handleWandClick}
+                    >General Info</SectionLabel>
+
+                    {/* Requisition ID — read only */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL>Requisition ID</FL>
+                      <div style={{
+                        padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)',
+                        borderRadius: 8, fontSize: 12, color: 'var(--text-tertiary)', fontStyle: 'italic', fontWeight: 400,
+                      }}>Will be auto-generated on submission</div>
+                    </div>
+
+                    {/* Request Title */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL required>Request Title</FL>
+                      <FInput value={fReqTitle} onChange={(e) => setFReqTitle(e.target.value)} placeholder="Short title in 2-3 words" />
+                      {aiFilledFields.has('fReqTitle') && <AiFilledTag />}
+                    </div>
+
+                    {/* Row: Cost Centre + Requestor Name */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                      <div>
+                        <FL required>Cost Centre</FL>
+                        <FDrop refEl={fBizUnitRef} open={fBizUnitOpen} onToggle={() => setFBizUnitOpen(!fBizUnitOpen)}
+                          value={fBizUnit} placeholder="Select"
+                          options={BIZ_UNITS} onChange={(v) => setFBizUnit(v)} />
+                        {aiFilledFields.has('fBizUnit') && <AiFilledTag />}
+                      </div>
+                      <div>
+                        <FL required>Requestor Name</FL>
+                        <FInput value={fRequestorName} onChange={(e) => setFRequestorName(e.target.value)} placeholder="Auto-filled from your profile" prefilled />
+                      </div>
+                    </div>
+
+                    {/* Row: Request Date + Required By Date */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                      <div>
+                        <FL required>Request Date</FL>
+                        <FInput type="date" value={fRequestDate} onChange={(e) => setFRequestDate(e.target.value)} />
+                      </div>
+                      <div>
+                        <FL required>Required By Date</FL>
+                        <FInput type="date" value={fRequiredByDate} onChange={(e) => setFRequiredByDate(e.target.value)}
+                          style={{ color: fRequiredByDate ? 'var(--text-primary)' : 'var(--text-tertiary)' }} />
+                        {aiFilledFields.has('fRequiredByDate') && <AiFilledTag />}
+                      </div>
+                    </div>
+
+                    {/* Priority */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL required>Priority</FL>
+                      <FDrop refEl={fPriorityRef} open={fPriorityOpen} onToggle={() => setFPriorityOpen(!fPriorityOpen)}
+                        value={fPriority} placeholder="Select priority"
+                        options={PRIORITIES} onChange={(v) => setFPriority(v)}
+                        renderOption={(val, isSelected) => val ? (
+                          <span style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ width: 8, height: 8, borderRadius: '50%', background: PRIORITY_DOT[val] || '#ccc', marginRight: 8, flexShrink: 0 }} />
+                            {isSelected ? val : val}
+                          </span>
+                        ) : (isSelected ? 'Select priority' : val)}
+                      />
+                      {aiFilledFields.has('fPriority') && <AiFilledTag />}
+                    </div>
+
+                    <Divider />
+
+                    {/* ── SECTION 2: CATEGORY INFO ── */}
+                    <SectionLabel>Category Info</SectionLabel>
+
+                    {/* Procurement Category */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL required>Procurement Category</FL>
+                      <FDrop refEl={fProcCatRef} open={fProcCategoryOpen} onToggle={() => setFProcCategoryOpen(!fProcCategoryOpen)}
+                        value={fProcCategory} placeholder="Select"
+                        options={PROC_CATEGORIES} onChange={(v) => { setFProcCategory(v); setFSubcategory(''); }} />
+                      {aiFilledFields.has('fProcCategory') && <AiFilledTag />}
+                    </div>
+
+                    {/* Spend Category — auto-derived */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL required>Spend Category</FL>
+                      <div style={{
+                        padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)',
+                        borderRadius: 8, fontSize: 14, color: 'var(--text-secondary)',
+                      }}>{spendCategory || '—'}</div>
+                      <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 4 }}>Auto-selected based on category</div>
+                    </div>
+
+                    {/* Subcategory */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL required>Subcategory</FL>
+                      <FDrop refEl={fSubcatRef} open={fSubcategoryOpen} onToggle={() => { if (fProcCategory) setFSubcategoryOpen(!fSubcategoryOpen); }}
+                        value={fSubcategory} placeholder={fProcCategory ? 'Select subcategory' : 'Select procurement category first'}
+                        options={subcatOptions} onChange={(v) => setFSubcategory(v)}
+                        disabled={!fProcCategory} />
+                      {aiFilledFields.has('fSubcategory') && <AiFilledTag />}
+                    </div>
+
+                    {/* Row: Project Name + CapEx/OpEx */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                      <div>
+                        <FL>Project Name</FL>
+                        <FInput value={fProjectName} onChange={(e) => setFProjectName(e.target.value)} placeholder="Linked project name (if applicable)" />
+                        {aiFilledFields.has('fProjectName') && <AiFilledTag />}
+                      </div>
+                      <div>
+                        <FL required>CapEx / OpEx</FL>
+                        <FDrop refEl={fCapexRef} open={fCapexOpexOpen} onToggle={() => setFCapexOpexOpen(!fCapexOpexOpen)}
+                          value={fCapexOpex} placeholder="Select expense type"
+                          options={CAPEX_OPEX_OPTS} onChange={(v) => setFCapexOpex(v)} />
+                        {aiFilledFields.has('fCapexOpex') && <AiFilledTag />}
+                      </div>
+                    </div>
+
+                    {/* Justification */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL>Justification</FL>
+                      <FTextarea value={fJustification} onChange={(e) => setFJustification(e.target.value)} placeholder="Provide justification for CapEx/OpEx selection if needed" minHeight={100} />
+                      {aiFilledFields.has('fJustification') && <AiFilledTag />}
+                    </div>
+
+                    <Divider />
+
+                    {/* ── SECTION 3: SCOPE DETAILS ── */}
+                    <SectionLabel>Scope Details</SectionLabel>
+
+                    <div style={{ marginBottom: 16 }}>
+                      <FL required>Requirement Description</FL>
+                      <FTextarea value={fReqDesc} onChange={(e) => setFReqDesc(e.target.value)}
+                        placeholder="Describe the full requirement scope"
+                        minHeight={120} />
+                      {aiFilledFields.has('fReqDesc') && <AiFilledTag />}
+                    </div>
+
+                    {/* Attachments */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL>Attachments</FL>
+                      {uploadedFiles.length > 0 && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
+                          {uploadedFiles.map((file, i) => (
+                            <div key={i} style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                              <div style={{ width: 32, height: 32, background: 'rgba(0,82,204,0.07)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <FileText size={16} color="#0052cc" strokeWidth={2} />
+                              </div>
+                              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+                                <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                                  {file.name}
+                                </div>
+                                <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+                                  {file.size}
+                                </div>
+                              </div>
+                              <div
+                                onClick={() => setUploadedFiles(prev => prev.filter((_, idx) => idx !== i))}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.color = '#ef4444';
+                                  e.currentTarget.style.background = 'rgba(239,68,68,0.08)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = 'transparent';
+                                }}
+                                style={{ cursor: 'pointer', padding: 6, borderRadius: 6, flexShrink: 0, color: '#ef4444', transition: 'all 0.15s ease' }}
+                              >
+                                <Trash2 size={14} strokeWidth={2} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {uploadedFiles.length === 0 && (
+                        <div
+                          onClick={() => formFileInputRef.current?.click()}
+                          onMouseEnter={() => setFFormUploadHover(true)}
+                          onMouseLeave={() => setFFormUploadHover(false)}
+                          style={{
+                            border: `2px dashed ${fFormUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
+                            borderRadius: 10, padding: 20, display: 'flex', flexDirection: 'column',
+                            alignItems: 'center', gap: 8, cursor: 'pointer',
+                            background: 'var(--bg-surface-1)', transition: 'border-color .15s ease',
+                          }}
+                        >
+                          <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Upload size={18} color="#7c7cff" strokeWidth={2} />
+                          </div>
+                          <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Drop files or click to upload</div>
+                          <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>PDF, DOCX and PPT · Max 25MB</div>
+                        </div>
+                      )}
+                      <input type="file" accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={formFileInputRef} onChange={handleFormFileSelect} />
+                    </div>
+
+                    <Divider />
+
+                    {/* ── SECTION 4: COMMERCIALS ── */}
+                    <SectionLabel>Commercials</SectionLabel>
+
+                    {/* Row: Quantity + Estimated Unit Value */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                      <div>
+                        <FL required>Quantity</FL>
+                        <FInput type="number" value={fQuantity} onChange={(e) => setFQuantity(e.target.value)} placeholder="Enter" />
+                        {aiFilledFields.has('fQuantity') && <AiFilledTag />}
+                        {specificNote}
+                      </div>
+                      <div>
+                        <FL>Estimated Unit Value</FL>
+                        <FInput value={fUnitValue} onChange={(e) => setFUnitValue(e.target.value)} placeholder="e.g. ₹45,000 per unit" />
+                        {aiFilledFields.has('fUnitValue') && <AiFilledTag />}
+                        {specificNote}
+                      </div>
+                    </div>
+
+                    {/* Unit of Measure */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL required>Unit of Measure</FL>
+                      <FDrop refEl={fUomRef} open={fUomOpen} onToggle={() => setFUomOpen(!fUomOpen)}
+                        value={fUom} placeholder="Select Unit"
+                        options={UOM_OPTS} onChange={(v) => setFUom(v)} />
+                      {aiFilledFields.has('fUom') && <AiFilledTag />}
+                      {specificNote}
+                    </div>
+
+                    {/* Estimated Budget */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL required>Estimated Budget</FL>
+                      <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8 }}>
+                        <div ref={fCurrencyRef} style={{ position: 'relative' }}>
+                          <button type="button" onClick={() => setFCurrencyOpen(!fCurrencyOpen)} style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', borderRadius: '8px 0 0 8px', fontSize: 14, color: 'var(--text-tertiary)', border: 'none', borderRight: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: 'inherit', outline: 'none' }}>
+                            {fCurrency} <ChevronDown size={14} style={{ transform: fCurrencyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                          </button>
+                          {fCurrencyOpen && (
+                            <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 100, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, minWidth: 80, marginTop: 4 }}>
+                              {CURRENCIES.map(c => (
+                                <div key={c} onClick={() => { setFCurrency(c); setFCurrencyOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, cursor: 'pointer', borderRadius: 4, color: 'var(--text-primary)' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{c}</div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <input type="text" value={fBudget} onChange={(e) => setFBudget(e.target.value)} placeholder="0.00"
+                          style={{ flex: 1, padding: '9px 12px', border: 'none', borderRadius: '0 8px 8px 0', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }}
+                        />
+                      </div>
+                      {aiFilledFields.has('fBudget') && <AiFilledTag />}
+                    </div>
+
+                    {/* Cost Breakdown */}
+                    <div style={{ marginBottom: 16 }}>
+                      <FL>Pricing Model</FL>
+                      <FTextarea value={fCostBreakdown} onChange={(e) => setFCostBreakdown(e.target.value)}
+                        placeholder="Describe pricing model — Fixed / T&M / Milestone" />
+                      {aiFilledFields.has('fCostBreakdown') && <AiFilledTag />}
+                    </div>
+
+                    <Divider />
+
+                    {/* ── SECTION 5: VENDOR INFO ── */}
+                    <SectionLabel>Vendor Info</SectionLabel>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                      <div>
+                        <FL>Sourcing Method</FL>
+                        <FDrop refEl={fSourcingRef} open={fSourcingMethodOpen} onToggle={() => setFSourcingMethodOpen(!fSourcingMethodOpen)}
+                          value={fSourcingMethod} placeholder="Select"
+                          options={SOURCING_METHODS} onChange={(v) => setFSourcingMethod(v)} />
+                        {aiFilledFields.has('fSourcingMethod') && <AiFilledTag />}
+                      </div>
+                      <div>
+                        <FL>Suggested Vendor</FL>
+                        <FDrop refEl={fVendorRef} open={fVendorOpen} onToggle={() => setFVendorOpen(!fVendorOpen)}
+                          value={fSuggestedVendor} placeholder="Select"
+                          options={VENDOR_OPTS} onChange={(v) => setFSuggestedVendor(v)} />
+                        {aiFilledFields.has('fSuggestedVendor') && <AiFilledTag />}
+                      </div>
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                      <FL>Contract Reference</FL>
+                      <FInput value={fContractRef} onChange={(e) => setFContractRef(e.target.value)} placeholder="Existing Contract Number" />
+                      {aiFilledFields.has('fContractRef') && <AiFilledTag />}
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                      <FL>Vendor Justification</FL>
+                      <FTextarea value={fVendorJustification} onChange={(e) => setFVendorJustification(e.target.value)}
+                        placeholder="Reason for preferring this vendor" minHeight={80} />
+                      {aiFilledFields.has('fVendorJustification') && <AiFilledTag />}
+                    </div>
+
+                    <Divider />
+
+                    {/* ── SECTION 6: EXECUTION DETAILS ── */}
+                    <SectionLabel>Execution Details</SectionLabel>
+
+                    <div style={{ marginBottom: 16 }}>
+                      <FL required>Delivery Location</FL>
+                      <FDrop refEl={fDeliveryRef} open={fDeliveryOpen} onToggle={() => setFDeliveryOpen(!fDeliveryOpen)}
+                        value={fDeliveryLoc} placeholder="Select"
+                        options={DELIVERY_LOCS} onChange={(v) => setFDeliveryLoc(v)} />
+                      {aiFilledFields.has('fDeliveryLoc') && <AiFilledTag />}
+                      {specificNote}
+                    </div>
+
+                    <div style={{ marginBottom: 16 }}>
+                      <FL>Timeline</FL>
+                      <FTextarea value={fTimeline} onChange={(e) => setFTimeline(e.target.value)} placeholder="Describe delivery timeline and milestones" minHeight={100} />
+                      {aiFilledFields.has('fTimeline') && <AiFilledTag />}
+                    </div>
+                    {/* ── Submit row ── */}
+                    <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                      <button
+                        onClick={handleBack}
+                        style={{
+                          background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
+                          padding: '9px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)',
+                          cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'inherit',
+                        }}
+                      >
+                        <Save size={15} strokeWidth={2} /> Save Draft
+                      </button>
+                      <button
+                        onClick={handleFormSubmit}
+                        style={{
+                          background: '#0052cc', color: '#fff',
+                          border: 'none', borderRadius: 8, padding: '9px 24px', fontSize: 13, fontWeight: 600,
+                          cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
+                          boxShadow: '0 4px 12px rgba(0,82,204,0.12)', fontFamily: 'inherit',
+                        }}
+                      >
+                        <Send size={15} strokeWidth={2} />
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* ═══ MODE: FORM (UPLOAD PHASES) ═══ */}
+          {activeMode === 'form' && uploadPhase !== 'empty' && (() => {
+            function UDrop({ refEl, open, onToggle, value, placeholder, options, onChange, renderOption, disabled }) {
+              return (
+                <div ref={refEl} style={{ position: 'relative' }}>
+                  <button
+                    onClick={!disabled ? onToggle : undefined}
+                    style={{
+                      width: '100%', padding: '9px 12px', boxSizing: 'border-box',
+                      border: `1px solid ${open ? '#7c7cff' : 'var(--border-default)'}`,
+                      borderRadius: 8, fontSize: 14, cursor: disabled ? 'not-allowed' : 'pointer',
+                      background: '#fff', fontFamily: 'inherit', outline: 'none',
+                      color: value ? 'var(--text-primary)' : 'var(--text-tertiary)',
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      boxShadow: open ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
+                      opacity: disabled ? 0.5 : 1,
+                      transition: 'all .15s ease',
+                    }}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      {renderOption ? renderOption(value, true) : (value || placeholder)}
+                    </span>
+                    <ChevronDown size={14} strokeWidth={2} style={{ flexShrink: 0, transition: 'transform .15s ease', transform: open ? 'rotate(180deg)' : 'rotate(0)' }} />
+                  </button>
+                  {open && (
+                    <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, zIndex: 300, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.08)', padding: 6 }}>
+                      {options.map((opt) => (
+                        <div key={opt} onClick={() => { onChange(opt); onToggle(); }}
+                          style={{ padding: '8px 12px', fontSize: 13, borderRadius: 6, cursor: 'pointer', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', transition: 'background .12s ease' }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-surface-2)'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+                        >
+                          {renderOption ? renderOption(opt, false) : opt}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            function UInput({ value, onChange, placeholder, type = 'text', readOnly, prefilled }) {
+              const [fc, setFc] = useState(false);
+              return (
+                <input type={type} value={value} onChange={onChange} placeholder={placeholder} readOnly={readOnly}
+                  onFocus={() => setFc(true)} onBlur={() => setFc(false)}
+                  style={{
+                    width: '100%', padding: '9px 12px', boxSizing: 'border-box',
+                    border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
+                    borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
+                    fontFamily: 'inherit',
+                    background: prefilled ? 'rgba(0,0,0,0.02)' : '#fff',
+                    boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
+                    transition: 'border-color .15s ease, box-shadow .15s ease',
+                  }}
+                />
+              );
+            }
+            function UTextarea({ value, onChange, placeholder, minHeight = 100 }) {
+              const [fc, setFc] = useState(false);
+              return (
+                <textarea value={value} onChange={onChange} placeholder={placeholder}
+                  onFocus={() => setFc(true)} onBlur={() => setFc(false)}
+                  style={{
+                    background: '#fff',
+                    width: '100%', padding: '9px 12px', boxSizing: 'border-box',
+                    border: `1px solid ${fc ? '#7c7cff' : 'var(--border-default)'}`,
+                    borderRadius: 8, fontSize: 14, color: 'var(--text-primary)', outline: 'none',
+                    fontFamily: 'inherit', minHeight, resize: 'vertical', lineHeight: 1.5,
+                    boxShadow: fc ? '0 0 0 3px rgba(124,124,255,0.1)' : 'none',
+                    transition: 'border-color .15s ease, box-shadow .15s ease',
+                  }}
+                />
+              );
+            }
+            function UL({ children, required }) {
+              return <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginBottom: 6 }}>{children}{required && <span style={{ color: '#ef4444' }}> *</span>}</label>;
+            }
+
+            const isExtracted = (fieldName) => ['Request Title', 'Cost Centre', 'Requestor Name', 'Request Date', 'Required By Date', 'Priority', 'Procurement Category', 'Subcategory', 'Requirement Description', 'Quantity', 'Estimated Budget', 'Suggested Vendor', 'Delivery Location', 'Project Name'].includes(fieldName);
+
+            const renderExtracted = (fieldName) => isExtracted(fieldName) && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#15803d', fontStyle: 'italic', marginTop: 4 }}>
+                <CheckCircle size={11} color="#15803d" strokeWidth={2.5} />
+                Extracted by AI
+              </div>
+            );
+
+            const specificNote = <div style={{ display: 'block', fontSize: 11, color: 'var(--text-tertiary)', fontStyle: 'italic', marginTop: 4 }}>Applicable for specific categories</div>;
+            const subcatOptions = uProcCategory ? (SUBCATEGORY_MAP[uProcCategory] || []) : [];
+            const spendCategory = SPEND_CATEGORY_MAP[uProcCategory] || '';
+
+            return (
+              <div style={{ flex: 1, overflowY: 'auto', padding: uploadPhase === 'empty' || uploadPhase === 'complete' ? '32px 24px' : 40, background: 'var(--bg-default)', display: uploadPhase === 'empty' || uploadPhase === 'complete' ? 'block' : 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+
+                {uploadPhase === 'empty' && (
+                  <div style={{ maxWidth: 720, margin: '0 auto', width: '100%' }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>Upload Procurement Document</div>
+                    <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4, marginBottom: 24 }}>Upload a requirements document, SOW, or specifications file. Our AI will extract all procurement fields automatically.</div>
+
+                    <div
+                      onClick={handleUploadClick}
+                      className="pai-upload-zone"
+                      onMouseEnter={() => setUUploadHover(true)}
+                      onMouseLeave={() => setUUploadHover(false)}
+                      style={{
+                        background: uUploadHover ? 'rgba(124,124,255,0.015)' : '#fff',
+                        border: `2px dashed ${uUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
+                        borderRadius: 16, padding: '64px 32px',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
+                        cursor: 'pointer', transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(0,82,204,0.07), rgba(124,124,255,0.1))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Upload size={30} color="#7c7cff" strokeWidth={2} />
+                      </div>
+                      <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-primary)', marginTop: 8 }}>Drop your document here</div>
+                      <div style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>or click to browse files</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>Supports PDF, DOCX and PPT · Max 25MB</div>
+                    </div>
+                  </div>
+                )}
+
+                {uploadPhase === 'uploading' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 20, width: '100%' }}>
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16, maxWidth: 420, width: '100%', boxShadow: '0 2px 8px rgba(14,15,37,0.06)' }}>
+                      <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <FileText size={22} color="#0052cc" strokeWidth={2} />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</div>
+                        <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>2.4 MB · PDF</div>
+                      </div>
+                    </div>
+                    <div style={{ maxWidth: 420, width: '100%' }}>
+                      <div style={{ height: 4, background: 'rgba(0,0,0,0.02)', borderRadius: 99, overflow: 'hidden' }}>
+                        <div style={{ height: '100%', background: 'linear-gradient(90deg, #0052cc, #7c7cff)', borderRadius: 99, animation: 'uploadProgress 1.4s ease-out forwards' }} />
+                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', marginTop: 4 }}>Uploading document...</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>Please wait while we upload your file</div>
+                    </div>
+                  </div>
+                )}
+
+                {uploadPhase === 'scanning' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, gap: 20, width: '100%' }}>
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16, maxWidth: 420, width: '100%', boxShadow: '0 2px 8px rgba(14,15,37,0.06)' }}>
+                      <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <FileText size={22} color="#0052cc" strokeWidth={2} />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</div>
+                        <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>2.4 MB · PDF</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4, maxWidth: 420, width: '100%' }}>
+                          <div style={{ flex: 1, height: 4, background: 'rgba(0,0,0,0.02)', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
+                            <div style={{ position: 'absolute', height: '100%', width: '40%', background: 'linear-gradient(90deg, transparent, #7c7cff, transparent)', borderRadius: 99, animation: 'shimmer 1.2s linear infinite' }} />
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(124,124,255,0.08)', border: '1px solid rgba(124,124,255,0.2)', borderRadius: 20, padding: '4px 12px', fontSize: 11, fontWeight: 600, color: '#7c7cff' }}>
+                            <Cpu size={12} strokeWidth={2} />
+                            AI Extracting
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Scanning document...</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)', textAlign: 'center', maxWidth: 320 }}>AI is reading and extracting procurement fields from your document</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 320, width: '100%', marginTop: 8 }}>
+                        {['Reading document structure', 'Identifying procurement fields', 'Extracting dates and values', 'Mapping to PR template'].map((item, idx) => (
+                          <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: 'var(--text-secondary)', opacity: 0, animation: `fadeInUp 0.4s ${[0.3, 0.8, 1.3, 1.7][idx]}s forwards ease-out` }}>
+                            <CheckCircle size={14} color="#22c55e" strokeWidth={2} />
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {uploadPhase === 'complete' && (
+                  <div style={{ maxWidth: 720, margin: '0 auto', width: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+                    {/* Uploaded file card */}
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 1px 3px rgba(14,15,37,0.04)' }}>
+                      <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <FileText size={22} color="#0052cc" strokeWidth={2} />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Q3_Procurement_Requirements.pdf</div>
+                        <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>2.4 MB · PDF</div>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(34,197,94,0.08)', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 600, color: '#15803d', marginTop: 4 }}>
+                          <FileCheck size={11} strokeWidth={2.5} />
+                          AI extraction complete — 14 fields populated
+                        </div>
+                      </div>
+                      <div
+                        className="pai-trash"
+                        onClick={() => setUploadPhase('empty')}
+                        style={{ padding: 8, borderRadius: 8, cursor: 'pointer', color: '#ef4444', transition: 'all .12s ease' }}
+                      >
+                        <Trash2 size={16} strokeWidth={2} color="#ef4444" />
+                      </div>
+                    </div>
+
+                    {/* Extracted fields card */}
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, padding: 28, boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                        <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>Review Extracted Fields</div>
+                        <div style={{ background: 'rgba(124,124,255,0.08)', borderRadius: 20, padding: '3px 10px', fontSize: 11, fontWeight: 600, color: '#7c7cff' }}>14 / 21 fields extracted</div>
+                      </div>
+                      <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 24, lineHeight: 1.5 }}>Fields highlighted with a green indicator were populated by AI. Review all fields and fill in any missing information before submitting.</div>
+
+                      {/* ── SECTION 1: GENERAL INFO ── */}
+                      <SectionLabel>General Info</SectionLabel>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL>Requisition ID</UL>
+                        <div style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 12, color: 'var(--text-tertiary)', fontStyle: 'italic', fontWeight: 400 }}>Will be auto-generated on submission</div>
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL required>Request Title</UL>
+                        <UInput value={uReqTitle} onChange={(e) => setUReqTitle(e.target.value)} placeholder="Short description of what you are requesting" />
+                        {renderExtracted('Request Title')}
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                        <div>
+                          <UL required>Cost Centre</UL>
+                          <UDrop refEl={uBizUnitRef} open={uBizUnitOpen} onToggle={() => setUBizUnitOpen(!uBizUnitOpen)} value={uBizUnit} placeholder="Select business unit" options={BIZ_UNITS} onChange={(v) => setUBizUnit(v)} />
+                          {renderExtracted('Cost Centre')}
+                        </div>
+                        <div>
+                          <UL required>Requestor Name</UL>
+                          <UInput value={uRequestorName} onChange={(e) => setURequestorName(e.target.value)} placeholder="Auto-filled from your profile" prefilled />
+                          {renderExtracted('Requestor Name')}
+                        </div>
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                        <div>
+                          <UL required>Request Date</UL>
+                          <UInput type="date" value={uRequestDate} onChange={(e) => setURequestDate(e.target.value)} />
+                          {renderExtracted('Request Date')}
+                        </div>
+                        <div>
+                          <UL required>Required By Date</UL>
+                          <UInput type="date" value={uRequiredByDate} onChange={(e) => setURequiredByDate(e.target.value)} style={{ color: uRequiredByDate ? 'var(--text-primary)' : 'var(--text-tertiary)' }} />
+                          {renderExtracted('Required By Date')}
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL required>Priority</UL>
+                        <UDrop refEl={uPriorityRef} open={uPriorityOpen} onToggle={() => setUPriorityOpen(!uPriorityOpen)} value={uPriority} placeholder="Select priority" options={PRIORITIES} onChange={(v) => setUPriority(v)} renderOption={(val) => val ? (<span style={{ display: 'flex', alignItems: 'center' }}><span style={{ width: 8, height: 8, borderRadius: '50%', background: PRIORITY_DOT[val] || '#ccc', marginRight: 8, flexShrink: 0 }} />{val}</span>) : val} />
+                        {renderExtracted('Priority')}
+                      </div>
+                      <Divider />
+
+                      {/* ── SECTION 2: CATEGORY INFO ── */}
+                      <SectionLabel>Category Info</SectionLabel>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL required>Procurement Category</UL>
+                        <UDrop refEl={uProcCatRef} open={uProcCategoryOpen} onToggle={() => setUProcCategoryOpen(!uProcCategoryOpen)} value={uProcCategory} placeholder="Select procurement category" options={PROC_CATEGORIES} onChange={(v) => { setUProcCategory(v); setUSubcategory(''); }} />
+                        {renderExtracted('Procurement Category')}
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL required>Spend Category</UL>
+                        <div style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 14, color: 'var(--text-secondary)' }}>{spendCategory || '—'}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 4 }}>Auto-selected based on category</div>
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL required>Subcategory</UL>
+                        <UDrop refEl={uSubcatRef} open={uSubcategoryOpen} onToggle={() => { if (uProcCategory) setUSubcategoryOpen(!uSubcategoryOpen); }} value={uSubcategory} placeholder={uProcCategory ? 'Select subcategory' : 'Select procurement category first'} options={subcatOptions} onChange={(v) => setUSubcategory(v)} disabled={!uProcCategory} />
+                        {renderExtracted('Subcategory')}
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                        <div>
+                          <UL>Project Name</UL>
+                          <UInput value={uProjectName} onChange={(e) => setUProjectName(e.target.value)} placeholder="Linked project name (if applicable)" />
+                          {renderExtracted('Project Name')}
+                        </div>
+                        <div>
+                          <UL required>CapEx / OpEx</UL>
+                          <UDrop refEl={uCapexRef} open={uCapexOpexOpen} onToggle={() => setUCapexOpexOpen(!uCapexOpexOpen)} value={uCapexOpex} placeholder="Select expense type" options={CAPEX_OPEX_OPTS} onChange={(v) => setUCapexOpex(v)} />
+                          {renderExtracted('CapEx / OpEx')}
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL>Justification</UL>
+                        <UTextarea value={uJustification} onChange={(e) => setUJustification(e.target.value)} placeholder="Provide justification for CapEx/OpEx selection if needed" minHeight={100} />
+                        {renderExtracted('Justification')}
+                      </div>
+                      <Divider />
+
+                      {/* ── SECTION 3: SCOPE DETAILS ── */}
+                      <SectionLabel>Scope Details</SectionLabel>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL required>Requirement Description</UL>
+                        <UTextarea value={uReqDesc} onChange={(e) => setUReqDesc(e.target.value)} placeholder="Describe the full scope..." minHeight={100} />
+                        {renderExtracted('Requirement Description')}
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL>Attachments</UL>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 12 }}>
+                          {uploadFormFiles.map((file, i) => (
+                            <div key={i} style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                              <div style={{ width: 32, height: 32, background: 'rgba(0,82,204,0.07)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                <FileText size={16} color="#0052cc" strokeWidth={2} />
+                              </div>
+                              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
+                                <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{file.name}</div>
+                                <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{file.size}</div>
+                              </div>
+                              <div
+                                onClick={() => setUploadFormFiles(prev => prev.filter((_, idx) => idx !== i))}
+                                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+                                style={{ cursor: 'pointer', padding: 6, borderRadius: 6, flexShrink: 0, color: '#ef4444', transition: 'all 0.15s ease' }}
+                              >
+                                <Trash2 size={14} strokeWidth={2} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        {uploadFormFiles.length === 0 && (
+                          <div
+                            onClick={() => uploadFormFileInputRef.current?.click()}
+                            onMouseEnter={() => setUFormUploadHover(true)}
+                            onMouseLeave={() => setUFormUploadHover(false)}
+                            style={{
+                              border: `2px dashed ${uFormUploadHover ? '#7c7cff' : 'var(--border-default)'}`,
+                              borderRadius: 10, padding: 20, display: 'flex', flexDirection: 'column',
+                              alignItems: 'center', gap: 8, cursor: 'pointer',
+                              background: 'var(--bg-surface-1)', transition: 'border-color .15s ease',
+                            }}
+                          >
+                            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(124,124,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <Upload size={18} color="#7c7cff" strokeWidth={2} />
+                            </div>
+                            <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>Drop files or click to upload</div>
+                            <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>PDF, DOCX and PPT · Max 25MB</div>
+                          </div>
+                        )}
+                        <input type="file" accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={uploadFormFileInputRef} onChange={handleUploadFormFileSelect} />
+                        <div style={{ display: 'block', fontSize: 11, color: 'var(--text-tertiary)', fontStyle: 'italic', marginTop: 6 }}>Additional supporting documents. The extracted document above is already attached.</div>
+                      </div>
+                      <Divider />
+
+                      {/* ── SECTION 4: COMMERCIALS ── */}
+                      <SectionLabel>Commercials</SectionLabel>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                        <div>
+                          <UL required>Quantity</UL>
+                          <UInput type="number" value={uQuantity} onChange={(e) => setUQuantity(e.target.value)} placeholder="Enter quantity required" />
+                          {specificNote}
+                          {renderExtracted('Quantity')}
+                        </div>
+                        <div>
+                          <UL>Estimated Unit Value</UL>
+                          <UInput value={uUnitValue} onChange={(e) => setUUnitValue(e.target.value)} placeholder="e.g. ₹45,000 per unit" />
+                          {specificNote}
+                          {renderExtracted('Estimated Unit Value')}
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL required>Unit of Measure</UL>
+                        <UDrop refEl={uUomRef} open={uUomOpen} onToggle={() => setUUomOpen(!uUomOpen)} value={uUom} placeholder="Select unit" options={UOM_OPTS} onChange={(v) => setUUom(v)} />
+                        {specificNote}
+                        {renderExtracted('Unit of Measure')}
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL required>Estimated Budget</UL>
+                        <div style={{ display: 'flex', border: '1px solid var(--border-default)', borderRadius: 8 }}>
+                          <div ref={uCurrencyRef} style={{ position: 'relative' }}>
+                            <button type="button" onClick={() => setUCurrencyOpen(!uCurrencyOpen)} style={{ padding: '9px 12px', background: 'rgba(0,0,0,0.02)', borderRadius: '8px 0 0 8px', fontSize: 14, color: 'var(--text-tertiary)', border: 'none', borderRight: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', fontFamily: 'inherit', outline: 'none' }}>
+                              {uCurrency} <ChevronDown size={14} style={{ transform: uCurrencyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                            </button>
+                            {uCurrencyOpen && (
+                              <div style={{ position: 'absolute', top: '100%', left: 0, zIndex: 100, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: 4, minWidth: 80, marginTop: 4 }}>
+                                {CURRENCIES.map(c => (
+                                  <div key={c} onClick={() => { setUCurrency(c); setUCurrencyOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, cursor: 'pointer', borderRadius: 4, color: 'var(--text-primary)' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>{c}</div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <input type="text" value={uBudget} onChange={(e) => setUBudget(e.target.value)} placeholder="0.00" style={{ flex: 1, padding: '9px 12px', border: 'none', borderRadius: '0 8px 8px 0', outline: 'none', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit', background: '#fff' }} />
+                        </div>
+                        {renderExtracted('Estimated Budget')}
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL>Pricing Model</UL>
+                        <UTextarea value={uCostBreakdown} onChange={(e) => setUCostBreakdown(e.target.value)} placeholder="Describe pricing model..." minHeight={100} />
+                        {renderExtracted('Pricing Model')}
+                      </div>
+                      <Divider />
+
+                      {/* ── SECTION 5: VENDOR INFO ── */}
+                      <SectionLabel>Vendor Info</SectionLabel>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                        <div>
+                          <UL>Sourcing Method</UL>
+                          <UDrop refEl={uSourcingRef} open={uSourcingMethodOpen} onToggle={() => setUSourcingMethodOpen(!uSourcingMethodOpen)} value={uSourcingMethod} placeholder="Select method" options={SOURCING_METHODS} onChange={(v) => setUSourcingMethod(v)} />
+                          {renderExtracted('Sourcing Method')}
+                        </div>
+                        <div>
+                          <UL>Suggested Vendor</UL>
+                          <UDrop refEl={uVendorRef} open={uVendorOpen} onToggle={() => setUVendorOpen(!uVendorOpen)} value={uSuggestedVendor} placeholder="Select preferred vendor" options={VENDOR_OPTS} onChange={(v) => setUSuggestedVendor(v)} />
+                          {renderExtracted('Suggested Vendor')}
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL>Contract Reference</UL>
+                        <UInput value={uContractRef} onChange={(e) => setUContractRef(e.target.value)} placeholder="Existing contract or renewal reference number" />
+                        {renderExtracted('Contract Reference')}
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL>Vendor Justification</UL>
+                        <UTextarea value={uVendorJustification} onChange={(e) => setUVendorJustification(e.target.value)} placeholder="Reason for preferring this vendor" minHeight={80} />
+                        {renderExtracted('Vendor Justification')}
+                      </div>
+                      <Divider />
+
+                      {/* ── SECTION 6: EXECUTION DETAILS ── */}
+                      <SectionLabel>Execution Details</SectionLabel>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL required>Delivery Location</UL>
+                        <UDrop refEl={uDeliveryRef} open={uDeliveryOpen} onToggle={() => setUDeliveryOpen(!uDeliveryOpen)} value={uDeliveryLoc} placeholder="Select delivery location" options={DELIVERY_LOCS} onChange={(v) => setUDeliveryLoc(v)} />
+                        {specificNote}
+                        {renderExtracted('Delivery Location')}
+                      </div>
+                      <div style={{ marginBottom: 16 }}>
+                        <UL>Timeline</UL>
+                        <UTextarea value={uTimeline} onChange={(e) => setUTimeline(e.target.value)} placeholder="Describe phased delivery plan and key milestones" minHeight={100} />
+                        {specificNote}
+                        {renderExtracted('Timeline')}
+                      </div>
+
+                      {/* ── Submit row ── */}
+                      <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                        <button
+                          onClick={() => onNavigate('Dashboard')}
+                          style={{
+                            background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8,
+                            padding: '9px 20px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)',
+                            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'inherit',
+                          }}
+                        >
+                          <Save size={15} strokeWidth={2} /> Save Draft
+                        </button>
+                        <button
+                          onClick={handleUploadSubmit}
+                          style={{
+                            background: '#0052cc', color: '#fff',
+                            border: 'none', borderRadius: 8, padding: '9px 24px', fontSize: 13, fontWeight: 600,
+                            cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 8,
+                            boxShadow: '0 4px 12px rgba(0,82,204,0.12)', fontFamily: 'inherit',
+                          }}
+                        >
+                          <Send size={15} strokeWidth={2} />
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+          {/* ═══ SUCCESS MODAL ═══ */}
+          {showSuccessModal && (
+            <div style={SUCCESS_MODAL_STYLE.backdrop}>
+              <div style={SUCCESS_MODAL_STYLE.card}>
+                {/* Icon */}
+                <div style={{
+                  width: 64, height: 64, borderRadius: '50%',
+                  background: 'linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.15))',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <CheckCircle size={32} color="#22c55e" strokeWidth={2} />
+                </div>
+
+                {/* Title */}
+                <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Request Submitted!</div>
+
+                {/* PR ID */}
+                <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
+                  Your PR ID is{' '}
+                  <span style={{ fontWeight: 700, color: 'var(--colors-blue-500)' }}>PR-2026-011</span>
+                </div>
+
+                {/* Description */}
+                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, marginTop: 4 }}>
+                  Your procurement request has been submitted successfully. The AI is now classifying your request and initiating the approval workflow.
+                </div>
+
+                {/* CTAs */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 8 }}>
+                  <button
+                    onClick={() => { setShowSuccessModal(false); onNavigate('PR Detail Fresh'); }}
+                    style={{
+                      background: 'linear-gradient(135deg, #0052cc, #7c7cff)', color: '#fff',
+                      border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 600,
+                      cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      gap: 8, boxShadow: '0 4px 12px rgba(0,82,204,0.2)', fontFamily: 'inherit',
+                    }}
+                  >
+                    Go to PR Details
+                    <ArrowRight size={16} strokeWidth={2.5} />
+                  </button>
+                  <button
+                    onClick={() => { setShowSuccessModal(false); onNavigate('Dashboard'); }}
+                    style={{
+                      background: '#fff', border: '1px solid var(--border-default)', borderRadius: 10,
+                      padding: '12px 24px', fontSize: 14, fontWeight: 500, color: 'var(--text-primary)',
+                      cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      gap: 8, fontFamily: 'inherit',
+                    }}
+                  >
+                    <LayoutDashboard size={16} color="var(--text-secondary)" strokeWidth={2} />
+                    Go to Dashboard
+                  </button>
+                </div>
+              </div>
             </div>
-
-            {/* Description */}
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, marginTop: 4 }}>
-              Your procurement request has been submitted successfully. The AI is now classifying your request and initiating the approval workflow.
-            </div>
-
-            {/* CTAs */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 8 }}>
-              <button
-                onClick={() => { setShowSuccessModal(false); onNavigate('PR Detail Fresh'); }}
-                style={{
-                  background: 'linear-gradient(135deg, #0052cc, #7c7cff)', color: '#fff',
-                  border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 600,
-                  cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  gap: 8, boxShadow: '0 4px 12px rgba(0,82,204,0.2)', fontFamily: 'inherit',
-                }}
-              >
-                Go to PR Details
-                <ArrowRight size={16} strokeWidth={2.5} />
-              </button>
-              <button
-                onClick={() => { setShowSuccessModal(false); onNavigate('Dashboard'); }}
-                style={{
-                  background: '#fff', border: '1px solid var(--border-default)', borderRadius: 10,
-                  padding: '12px 24px', fontSize: 14, fontWeight: 500, color: 'var(--text-primary)',
-                  cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  gap: 8, fontFamily: 'inherit',
-                }}
-              >
-                <LayoutDashboard size={16} color="var(--text-secondary)" strokeWidth={2} />
-                Go to Dashboard
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          )}
 
         </div>
 

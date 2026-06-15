@@ -19,6 +19,10 @@ import {
 const STATUS_CONFIG = {
   'Pending RFP Approval': { bg: '#fff7ed', color: '#b45309', border: 'rgba(180,83,9,0.2)' },
   'RFP Published': { bg: '#ede9fe', color: '#6d28d9', border: 'rgba(109,40,217,0.2)' },
+  'Vendor Finalized': { bg: '#dcfce7', color: '#166534', border: 'rgba(22,101,52,0.2)' },
+  'SoW Draft': { bg: '#fffbeb', color: '#b45309', border: 'rgba(251,191,36,0.4)' },
+  'SoW Accepted': { bg: '#eff6ff', color: '#1d4ed8', border: 'rgba(37,99,235,0.2)' },
+  'SoW Active': { bg: '#ecfdf5', color: '#047857', border: 'rgba(16,185,129,0.2)' },
   'In Sourcing': { bg: '#fdf4ff', color: '#a21caf', border: 'rgba(162,28,175,0.2)' },
 };
 
@@ -995,6 +999,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [draftSelectedClauses, setDraftSelectedClauses] = useState([]);
   const [hasSavedSow, setHasSavedSow] = useState(false);
   const [sowAccepted, setSowAccepted] = useState(false);
+  const [showCancelSowToast, setShowCancelSowToast] = useState(false);
+  const [sowSigned, setSowSigned] = useState(false);
+  const [sowSignedFile, setSowSignedFile] = useState(null);
+  const signedSowFileRef = useRef(null);
 
   const [showEditModal, setShowEditModal] = useState(navState?.openEditPopup || false);
   const [showAttachmentPreview, setShowAttachmentPreview] = useState(false);
@@ -1190,7 +1198,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [suppFileDrag, setSuppFileDrag] = useState(null);
   const [matrixExpanded, setMatrixExpanded] = useState({ g1: true, g2: true, g3: true, g4: true, g5: true, g6: true, g7: true });
 
-  const prStatus = published ? 'RFP Published' : 'Pending RFP Approval';
+  const prStatus = sowSigned ? 'SoW Active' : sowAccepted ? 'SoW Accepted' : sowStage === 'drafting' ? 'SoW Draft' : selectedAwardVendor ? 'Vendor Finalized' : published ? 'RFP Published' : 'Pending RFP Approval';
   const statusCfg = STATUS_CONFIG[prStatus];
   const handlePublish = () => { setShowPublishConfirm(false); setPublished(true); setActiveTab('proposals'); };
 
@@ -1344,6 +1352,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             <div style={{ fontSize: 12, color: '#166534', marginTop: 2 }}>{saveToast.subtext}</div>
           </div>
           <button onClick={() => setSaveToast(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'rgba(21,128,61,0.5)', display: 'flex' }}><X size={16} /></button>
+        </div>
+      )}
+      {showCancelSowToast && (
+        <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#fef2f2', border: '1px solid rgba(239,68,68,0.25)', borderLeft: '4px solid #ef4444', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
+          <AlertCircle size={20} color="#ef4444" strokeWidth={2} style={{ flexShrink: 0 }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#b91c1c' }}>Statement of Work Cancelled</div>
+            <div style={{ fontSize: 12, color: '#991b1b', marginTop: 2 }}>Redirecting to dashboard...</div>
+          </div>
         </div>
       )}
       {showEditModal && <EditModal onClose={() => setShowEditModal(false)} onSave={() => { setShowEditModal(false); setSaveToast({ title: 'Changes saved successfully', subtext: 'Requisition details have been updated.' }); setTimeout(() => setSaveToast(null), 3000); }} />}
@@ -2065,29 +2082,33 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           <thead>
                             <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--border-subtle)' }}>
                               <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '5%' }}>Sr No.</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '13%' }}>Category</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '13%' }}>Criteria</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '39%' }}>Risk Description</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '12%' }}>Category</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '12%' }}>Criteria</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '20%' }}>Risk Description</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '10%' }}>Likelihood</th>
                               <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '10%' }}>Impact</th>
-                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '20%' }}>Justification</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '9%' }}>Severity</th>
+                              <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', whiteSpace: 'nowrap', width: '22%' }}>Justification</th>
                             </tr>
                           </thead>
                           <tbody>
                             {[
-                              { id: 1, cat: 'Technical Solution', crit: 'Technical Solution', desc: 'Risk of prolonged system downtime due to poor architecture design', impact: 'Catastrophic', j: 'Vendor has committed to 99.99% SLA and provided architecture reviews' },
-                              { id: 2, cat: 'Technical Solution', crit: 'Technical Solution', desc: 'Potential data breaches arising from weak security controls', impact: 'Major', j: 'Comprehensive SOC2 Type 2 report provided, mitigating major concerns' },
-                              { id: 3, cat: 'Technical Solution', crit: 'Technical Solution', desc: 'Limited scalability that may hinder future business growth', impact: 'Moderate', j: 'Current architecture supports 5x expected load' },
-                              { id: 4, cat: 'Compliance & Requirements', crit: 'Compliance & Requirements', desc: 'Failure to comply with GDPR and industry-specific regulations', impact: 'Moderate', j: 'DPAs and compliance clauses to be heavily enforced in contract' },
-                              { id: 5, cat: 'Compliance & Requirements', crit: 'Compliance & Requirements', desc: 'Incomplete or missing legal documentation impacting contracts', impact: 'Minor', j: 'Legal team has reviewed and cleared most redlines' },
-                              { id: 6, cat: 'Vendor Assessment', crit: 'Vendor Assessment', desc: 'Financial instability that could disrupt long-term project delivery', impact: 'Minor', j: 'D&B report shows stable financials over last 3 years' },
-                              { id: 7, cat: 'Vendor Assessment', crit: 'Vendor Assessment', desc: 'Insufficient domain expertise leading to poor project outcomes', impact: 'Insignificant', j: 'Prior implementations shown as references' },
+                              { id: 1, cat: 'Technical Solution', crit: 'Technical Solution', desc: 'Risk of prolonged system downtime due to poor architecture design', likelihood: 'Likely', impact: 'Catastrophic', severity: 'High', j: 'Vendor has committed to 99.99% SLA and provided architecture reviews' },
+                              { id: 2, cat: 'Technical Solution', crit: 'Technical Solution', desc: 'Potential data breaches arising from weak security controls', likelihood: 'Almost certain', impact: 'Major', severity: 'High', j: 'Comprehensive SOC2 Type 2 report provided, mitigating major concerns' },
+                              { id: 3, cat: 'Technical Solution', crit: 'Technical Solution', desc: 'Limited scalability that may hinder future business growth', likelihood: 'Possible', impact: 'Moderate', severity: 'Medium', j: 'Current architecture supports 5x expected load' },
+                              { id: 4, cat: 'Compliance & Requirements', crit: 'Compliance & Requirements', desc: 'Failure to comply with GDPR and industry-specific regulations', likelihood: 'Almost certain', impact: 'Moderate', severity: 'Medium', j: 'DPAs and compliance clauses to be heavily enforced in contract' },
+                              { id: 5, cat: 'Compliance & Requirements', crit: 'Compliance & Requirements', desc: 'Incomplete or missing legal documentation impacting contracts', likelihood: 'Possible', impact: 'Minor', severity: 'Medium', j: 'Legal team has reviewed and cleared most redlines' },
+                              { id: 6, cat: 'Vendor Assessment', crit: 'Vendor Assessment', desc: 'Financial instability that could disrupt long-term project delivery', likelihood: 'Unlikely', impact: 'Minor', severity: 'Low', j: 'D&B report shows stable financials over last 3 years' },
+                              { id: 7, cat: 'Vendor Assessment', crit: 'Vendor Assessment', desc: 'Insufficient domain expertise leading to poor project outcomes', likelihood: 'Rare', impact: 'Insignificant', severity: 'Low', j: 'Prior implementations shown as references' },
                             ].map((row, i, arr) => (
                               <tr key={i} style={{ borderBottom: i < arr.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.id}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.cat}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.crit}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.desc}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.likelihood}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.impact}</td>
+                                <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.severity}</td>
                                 <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{row.j}</td>
                               </tr>
                             ))}
@@ -2320,7 +2341,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   if (tab.id === 'proposals') isLocked = !published;
                   if (tab.id === 'negot') isLocked = !proposals.some(p => p.status === 'Completed');
                   if (tab.id === 'sow') isLocked = !selectedAwardVendor;
-                  if (tab.id === 'po') isLocked = !sowAccepted;
+                  if (tab.id === 'po') isLocked = !sowSigned;
                   if (tab.id === 'invoices') isLocked = true;
 
                   return (
@@ -3563,9 +3584,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           }} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 24px', border: 'none', borderRadius: 8, background: '#0052cc', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', boxShadow: '0 4px 14px rgba(0,82,204,0.25)', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.background = '#0041a3'; e.currentTarget.style.transform = 'translateY(-1px)'; }} onMouseLeave={e => { e.currentTarget.style.background = '#0052cc'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                             <Check size={18} strokeWidth={2.5} /> Accept & Generate SOW
                           </button>
-                          <button style={{ padding: '11px 24px', border: '1px solid #d1d5db', borderRadius: 8, background: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#4b5563', fontFamily: 'inherit', transition: 'all 0.2s' }} onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                            Cancel
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -3604,7 +3622,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   <CheckCircle size={13} /> Accepted
                                 </div>
                               ) : (
-                                <button style={btnBlue} onClick={() => { setSowAccepted(true); setActiveTab('po'); }}
+                                <button style={btnBlue} onClick={() => { setSowAccepted(true); }}
                                   onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
                                   <Check size={13} /> Accept
                                 </button>
@@ -3612,6 +3630,52 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             )}
                           </div>
                         </div>
+
+                        {/* UPLOAD SIGNED DOCUMENT (Shown after Accept is clicked, placed above the editor) */}
+                        {sowStage === 'drafting' && sowAccepted && (
+                          <div style={{ padding: 24, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
+                            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>Upload Signed SoW Document</div>
+                            <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16 }}>Please upload the final signed Statement of Work to proceed to Purchase Order generation.</div>
+                            {!sowSigned ? (
+                              <div 
+                                onClick={() => signedSowFileRef.current?.click()}
+                                style={{ padding: '32px 24px', border: '2px dashed var(--border-default)', borderRadius: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', background: '#fafafa', transition: 'all 0.2s' }}
+                                onMouseEnter={e => { e.currentTarget.style.borderColor = '#0052cc'; e.currentTarget.style.background = '#f0f4ff'; }}
+                                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border-default)'; e.currentTarget.style.background = '#fafafa'; }}
+                              >
+                                <input type="file" ref={signedSowFileRef} style={{ display: 'none' }} accept=".pdf,.doc,.docx" onChange={(e) => {
+                                  if (e.target.files && e.target.files[0]) {
+                                    setSowSignedFile(e.target.files[0]);
+                                    setSowSigned(true);
+                                  }
+                                }} />
+                                <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#e0e7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+                                  <Upload size={24} color="#4f46e5" strokeWidth={2} />
+                                </div>
+                                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Click to upload signed document</div>
+                                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>PDF, DOCX up to 20MB</div>
+                              </div>
+                            ) : (
+                              <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 14, boxShadow: '0 1px 3px rgba(14,15,37,0.02)' }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(0,82,204,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                  <FileText size={20} color="#0052cc" strokeWidth={2} />
+                                </div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sowSignedFile?.name || 'Signed_SOW.pdf'}</div>
+                                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{sowSignedFile?.size ? `${(sowSignedFile.size / 1024).toFixed(1)} KB` : '1.2 MB'} · PDF</div>
+                                </div>
+                                <div style={{ width: 140, display: 'flex', justifyContent: 'flex-end' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 600, color: '#15803d' }}>
+                                    <CheckCircle size={13} strokeWidth={2.5} /> Uploaded
+                                  </div>
+                                </div>
+                                <div onClick={() => { setSowSignedFile(null); setSowSigned(false); }} style={{ padding: 6, borderRadius: 6, cursor: 'pointer', color: '#ef4444', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.08)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                  <Trash2 size={15} strokeWidth={2} />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
 
                         <WYSIWYGEditor
                           isEditing={isSowEditing}
@@ -3625,8 +3689,17 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             setDraftSelectedClauses([...addedSowClauses]);
                             setShowAddClauseModal(true);
                           }}
-                          hideEditButton={hasSavedSow}
+                          hideEditButton={sowAccepted}
                         />
+
+                        {/* CANCEL SOW */}
+                        {sowStage === 'drafting' && (
+                          <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                            <button disabled={sowAccepted} onClick={() => { setShowCancelSowToast(true); setTimeout(() => onNavigate('Dashboard'), 1500); }} style={{ padding: '10px 20px', border: '1px solid #ef4444', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 600, cursor: sowAccepted ? 'not-allowed' : 'pointer', color: '#ef4444', opacity: sowAccepted ? 0.5 : 1, transition: 'all 0.2s' }} onMouseEnter={e => { if(!sowAccepted) e.currentTarget.style.background = '#fef2f2' }} onMouseLeave={e => { if(!sowAccepted) e.currentTarget.style.background = '#fff' }}>
+                              Cancel SoW
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       {/* VERSION PANE */}
@@ -4236,6 +4309,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               <button onClick={() => setShowAwardModal(false)} style={{ padding: '10px 20px', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
               <button disabled={!selectedAwardVendor} onClick={() => {
                 setShowAwardModal(false);
+                setActiveTab('sow');
                 setShowAwardSuccessToast(true);
                 setTimeout(() => setShowAwardSuccessToast(false), 3000);
               }} style={{ padding: '10px 24px', border: 'none', borderRadius: 8, background: selectedAwardVendor ? '#0052cc' : '#ccc', fontSize: 13, fontWeight: 600, cursor: selectedAwardVendor ? 'pointer' : 'not-allowed', color: '#fff', fontFamily: 'inherit' }}>Submit</button>
