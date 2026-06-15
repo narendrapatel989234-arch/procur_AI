@@ -1,199 +1,299 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MainLayout from '../layouts/MainLayout.jsx';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import TaskItem from '@tiptap/extension-task-item';
+import TaskList from '@tiptap/extension-task-list';
 import {
-  ChevronRight, ChevronDown, Undo, Redo, Bold, Italic, Underline,
-  AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered,
-  Outdent, Indent, Link, Image, Printer, Highlighter, Baseline, Eraser,
-  Save, ArrowUp, ArrowDown, Trash2, Plus, Wand2
+  ChevronRight, ChevronDown, Undo, Redo, Bold, Italic, Strikethrough, Underline as UnderlineIcon, Eraser,
+  AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, Minus, LineChart,
+  Save, Plus, CheckSquare
 } from 'lucide-react';
 
-export default function TemplateDetail({ onNavigate, activeNav, navState }) {
-  const [sections, setSections] = useState([
-    { id: 1, title: '1. Introduction & Background', content: 'DDAIS Group invites qualified vendors to submit proposals for {{Project_Title}}. The objective of this engagement is to procure services as outlined in the sections below.' },
-    { id: 2, title: '2. Scope of Work', content: 'The selected vendor will be required to deliver the following services over a period of {{Engagement_Duration}}:\n\n• Assessment and strategy design\n• Implementation and execution\n• Post-deployment support and training' },
-    { id: 3, title: '3. Commercial Terms', content: 'Pricing must be submitted in {{Currency}}. Payment terms are Net 30 days against approved milestones.' }
-  ]);
-  const [activeSection, setActiveSection] = useState(0);
-  const [showFieldMenu, setShowFieldMenu] = useState(false);
+export default function TemplateDetail({ onNavigate, activeNav }) {
+  const [zoom, setZoom] = useState(100);
+  const [showHeadingMenu, setShowHeadingMenu] = useState(false);
+  const [showListMenu, setShowListMenu] = useState(false);
+  
+  const [activeState, setActiveState] = useState({
+    bold: false,
+    italic: false,
+    strike: false,
+    underline: false,
+    h1: false,
+    h2: false,
+    h3: false,
+    h4: false,
+    bulletList: false,
+    orderedList: false,
+    taskList: false,
+    align: 'left',
+    canUndo: false,
+    canRedo: false
+  });
 
-  const moveUp = (index) => {
-    if (index === 0) return;
-    const newSecs = [...sections];
-    [newSecs[index - 1], newSecs[index]] = [newSecs[index], newSecs[index - 1]];
-    setSections(newSecs);
-    setActiveSection(index - 1);
-  };
+  const initialContent = `
+    <h2>1. Introduction & Background</h2>
+    <p>DDAIS Group invites qualified vendors to submit proposals for <strong>{{Project_Title}}</strong>. The objective of this engagement is to procure services as outlined in the sections below.</p>
+    <h2>2. Scope of Work</h2>
+    <p>The selected vendor will be required to deliver the following services over a period of <strong>{{Engagement_Duration}}</strong>:</p>
+    <ul>
+      <li>Assessment and strategy design</li>
+      <li>Implementation and execution</li>
+      <li>Post-deployment support and training</li>
+    </ul>
+    <h2>3. Commercial Terms</h2>
+    <p>Pricing must be submitted in <strong>{{Currency}}</strong>. Payment terms are Net 30 days against approved milestones.</p>
+  `;
 
-  const moveDown = (index) => {
-    if (index === sections.length - 1) return;
-    const newSecs = [...sections];
-    [newSecs[index + 1], newSecs[index]] = [newSecs[index], newSecs[index + 1]];
-    setSections(newSecs);
-    setActiveSection(index + 1);
-  };
-
-  const removeSection = (index) => {
-    setSections(sections.filter((_, i) => i !== index));
-  };
-
-  const addSection = () => {
-    setSections([...sections, { id: Date.now(), title: 'New Section', content: '' }]);
-    setActiveSection(sections.length);
-  };
-
-  const insertField = (fieldName) => {
-    const newSecs = [...sections];
-    if (newSecs[activeSection]) {
-      newSecs[activeSection].content += (newSecs[activeSection].content ? ' ' : '') + `{{${fieldName}}}`;
-      setSections(newSecs);
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      TaskList,
+      TaskItem.configure({ nested: true }),
+    ],
+    content: initialContent,
+    onTransaction({ editor }) {
+      setActiveState({
+        bold: editor.isActive('bold'),
+        italic: editor.isActive('italic'),
+        strike: editor.isActive('strike'),
+        underline: editor.isActive('underline'),
+        h1: editor.isActive('heading', { level: 1 }),
+        h2: editor.isActive('heading', { level: 2 }),
+        h3: editor.isActive('heading', { level: 3 }),
+        h4: editor.isActive('heading', { level: 4 }),
+        bulletList: editor.isActive('bulletList'),
+        orderedList: editor.isActive('orderedList'),
+        taskList: editor.isActive('taskList'),
+        align: editor.isActive({ textAlign: 'center' }) ? 'center' :
+               editor.isActive({ textAlign: 'right' }) ? 'right' :
+               editor.isActive({ textAlign: 'justify' }) ? 'justify' : 'left',
+        canUndo: editor.can().undo(),
+        canRedo: editor.can().redo(),
+      });
     }
-    setShowFieldMenu(false);
-  };
+  });
+
+  // Handle clicking outside to close menus
+  const headingMenuRef = useRef(null);
+  const listMenuRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (headingMenuRef.current && !headingMenuRef.current.contains(event.target)) {
+        setShowHeadingMenu(false);
+      }
+      if (listMenuRef.current && !listMenuRef.current.contains(event.target)) {
+        setShowListMenu(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const breadcrumb = (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <span onClick={() => onNavigate('Templates')} style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-tertiary)', cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--text-tertiary)'}>
-        Templates
-      </span>
-      <ChevronRight size={14} color="var(--text-tertiary)" />
-      <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
-        IT Hardware Procurement Standard
-      </span>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span onClick={() => onNavigate('Templates')} style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-tertiary)', cursor: 'pointer' }}>
+          Templates
+        </span>
+        <ChevronRight size={14} color="var(--text-tertiary)" />
+        <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
+          IT Hardware Procurement Standard
+        </span>
+      </div>
+      <button style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0052cc', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+        <Save size={14} /> Save Template
+      </button>
     </div>
   );
 
-  const IconButton = ({ Icon }) => (
-    <button style={{ background: 'transparent', border: 'none', padding: 6, borderRadius: 4, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#444', transition: 'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = '#f0f0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-      <Icon size={16} strokeWidth={2.2} />
-    </button>
-  );
+  const getActiveHeadingLabel = () => {
+    if (activeState.h1) return 'H1';
+    if (activeState.h2) return 'H2';
+    if (activeState.h3) return 'H3';
+    if (activeState.h4) return 'H4';
+    return 'H';
+  };
+
+  const getActiveListIcon = () => {
+    if (activeState.orderedList) return <ListOrdered size={18} />;
+    if (activeState.taskList) return <CheckSquare size={18} />;
+    return <List size={18} />;
+  };
+
+  const isHeadingActive = activeState.h1 || activeState.h2 || activeState.h3 || activeState.h4;
+  const isListActive = activeState.bulletList || activeState.orderedList || activeState.taskList;
 
   return (
     <MainLayout activeNav={activeNav} onNavigate={onNavigate} titleComponent={breadcrumb} searchPlaceholder={null}>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
 
-        {/* EXPANDED RICH TEXT RIBBON */}
-        <div style={{ background: '#fff', borderBottom: '1px solid var(--border-subtle)', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, boxShadow: '0 2px 10px rgba(0,0,0,0.02)', zIndex: 10 }}>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+        {/* TOOLBAR RIBBON */}
+        <div style={{ background: '#fff', borderBottom: '1px solid var(--border-subtle)', padding: '8px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, zIndex: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
 
             {/* Undo / Redo */}
-            <div style={{ display: 'flex', gap: 2, paddingRight: 12, borderRight: '1px solid #eee' }}>
-              <IconButton Icon={Undo} />
-              <IconButton Icon={Redo} />
-            </div>
+            <button onClick={() => editor?.chain().focus().undo().run()} disabled={!activeState.canUndo} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: activeState.canUndo ? '#444' : '#ccc' }}><Undo size={16} /></button>
+            <button onClick={() => editor?.chain().focus().redo().run()} disabled={!activeState.canRedo} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: activeState.canRedo ? '#444' : '#ccc' }}><Redo size={16} /></button>
+            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
 
-            {/* Text Style */}
-            <div style={{ display: 'flex', gap: 2, paddingRight: 12, borderRight: '1px solid #eee' }}>
-              <button style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: 'none', cursor: 'pointer', fontSize: 13, color: '#444', padding: '6px 8px', borderRadius: 4 }} onMouseEnter={e => e.currentTarget.style.background = '#f0f0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                Normal text <ChevronDown size={14} />
+            {/* Zoom Controls */}
+            <button onClick={() => setZoom(z => Math.max(50, z - 10))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: '#444' }}><Minus size={16} /></button>
+            <span style={{ fontSize: 13, color: '#444', width: 44, textAlign: 'center', fontWeight: 500 }}>{zoom}%</span>
+            <button onClick={() => setZoom(z => Math.min(200, z + 10))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: '#444' }}><Plus size={16} /></button>
+            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
+
+            {/* Heading Dropdown */}
+            <div ref={headingMenuRef} style={{ position: 'relative' }}>
+              <button onClick={() => setShowHeadingMenu(!showHeadingMenu)} style={{ display: 'flex', alignItems: 'center', gap: 4, background: isHeadingActive ? '#f1f5f9' : 'transparent', border: 'none', borderRadius: 16, padding: '4px 10px', fontSize: 14, fontWeight: 700, color: isHeadingActive ? '#4f46e5' : '#444', cursor: 'pointer', transition: 'all 0.15s' }}>
+                {getActiveHeadingLabel()} <ChevronDown size={14} color="#666" />
               </button>
-            </div>
-
-            {/* Formatting */}
-            <div style={{ display: 'flex', gap: 2, paddingRight: 12, borderRight: '1px solid #eee' }}>
-              <IconButton Icon={Bold} />
-              <IconButton Icon={Italic} />
-              <IconButton Icon={Underline} />
-            </div>
-
-            {/* Alignment */}
-            <div style={{ display: 'flex', gap: 2, paddingRight: 12, borderRight: '1px solid #eee' }}>
-              <IconButton Icon={AlignLeft} />
-              <IconButton Icon={AlignCenter} />
-              <IconButton Icon={AlignRight} />
-              <IconButton Icon={AlignJustify} />
-            </div>
-
-            {/* Lists & Indents */}
-            <div style={{ display: 'flex', gap: 2, paddingRight: 12, borderRight: '1px solid #eee' }}>
-              <IconButton Icon={List} />
-              <IconButton Icon={ListOrdered} />
-              <IconButton Icon={Outdent} />
-              <IconButton Icon={Indent} />
-            </div>
-
-            {/* Insert & Colors */}
-            <div style={{ display: 'flex', gap: 2, paddingRight: 12, borderRight: '1px solid #eee' }}>
-              <IconButton Icon={Link} />
-              <IconButton Icon={Image} />
-              <IconButton Icon={Baseline} />
-              <IconButton Icon={Highlighter} />
-              <IconButton Icon={Eraser} />
-            </div>
-
-            {/* Insert Field Dropdown */}
-            <div style={{ position: 'relative' }}>
-              {showFieldMenu && <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setShowFieldMenu(false)} />}
-
-              <button onClick={() => setShowFieldMenu(!showFieldMenu)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', background: '#f0f4ff', border: '1px solid #d6e2ff', borderRadius: 6, fontSize: 13, fontWeight: 600, color: '#0052cc', cursor: 'pointer', transition: 'all 0.15s', zIndex: 100, position: 'relative' }} onMouseEnter={e => e.currentTarget.style.background = '#e0e7ff'} onMouseLeave={e => e.currentTarget.style.background = '#f0f4ff'}>
-                <Plus size={14} /> Insert Field <ChevronDown size={14} />
-              </button>
-
-              {showFieldMenu && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 6, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 220, zIndex: 100, padding: '8px 0', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', padding: '6px 16px', textTransform: 'uppercase', letterSpacing: 0.5 }}>Variables</div>
-                  {['Vendor_Name', 'Project_Title', 'Contract_Value', 'Start_Date', 'End_Date'].map(f => (
-                    <button key={f} onClick={() => insertField(f)} style={{ padding: '8px 16px', background: 'transparent', border: 'none', textAlign: 'left', fontSize: 13, color: '#1a1a1a', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                      <span style={{ background: '#e0e7ff', color: '#0052cc', padding: '2px 6px', borderRadius: 4, fontSize: 11, fontWeight: 700 }}>{`{ }`}</span>
-                      {f.replace('_', ' ')}
+              {showHeadingMenu && (
+                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 6, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 160, zIndex: 100, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
+                  {[1, 2, 3, 4].map(level => (
+                    <button 
+                      key={level}
+                      onClick={() => {
+                        editor?.chain().focus().toggleHeading({ level }).run();
+                        setShowHeadingMenu(false);
+                      }} 
+                      style={{ padding: '8px 16px', background: activeState[`h${level}`] ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState[`h${level}`] ? '#4f46e5' : '#334155' }} 
+                      onMouseEnter={e => { if(!activeState[`h${level}`]) e.currentTarget.style.background = '#f1f5f9' }} 
+                      onMouseLeave={e => { if(!activeState[`h${level}`]) e.currentTarget.style.background = 'transparent' }}
+                    >
+                      <span style={{ fontWeight: 700, width: 20 }}>H{level}</span> 
+                      <span style={{ fontSize: 13 }}>Heading {level}</span>
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-          </div>
+            {/* List Dropdown */}
+            <div ref={listMenuRef} style={{ position: 'relative' }}>
+              <button onClick={() => setShowListMenu(!showListMenu)} style={{ display: 'flex', alignItems: 'center', gap: 4, background: isListActive ? '#f1f5f9' : 'transparent', border: 'none', borderRadius: 6, padding: '4px 8px', color: isListActive ? '#4f46e5' : '#444', cursor: 'pointer', transition: 'all 0.15s' }}>
+                {getActiveListIcon()} <ChevronDown size={14} color="#666" />
+              </button>
+              {showListMenu && (
+                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 6, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 160, zIndex: 100, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
+                  <button 
+                    onClick={() => { editor?.chain().focus().toggleBulletList().run(); setShowListMenu(false); }} 
+                    style={{ padding: '8px 16px', background: activeState.bulletList ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState.bulletList ? '#4f46e5' : '#334155', fontSize: 13 }}
+                    onMouseEnter={e => { if(!activeState.bulletList) e.currentTarget.style.background = '#f1f5f9' }} 
+                    onMouseLeave={e => { if(!activeState.bulletList) e.currentTarget.style.background = 'transparent' }}
+                  >
+                    <List size={16} /> Bullet List
+                  </button>
+                  <button 
+                    onClick={() => { editor?.chain().focus().toggleOrderedList().run(); setShowListMenu(false); }} 
+                    style={{ padding: '8px 16px', background: activeState.orderedList ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState.orderedList ? '#4f46e5' : '#334155', fontSize: 13 }}
+                    onMouseEnter={e => { if(!activeState.orderedList) e.currentTarget.style.background = '#f1f5f9' }} 
+                    onMouseLeave={e => { if(!activeState.orderedList) e.currentTarget.style.background = 'transparent' }}
+                  >
+                    <ListOrdered size={16} /> Ordered List
+                  </button>
+                  <button 
+                    onClick={() => { editor?.chain().focus().toggleTaskList().run(); setShowListMenu(false); }} 
+                    style={{ padding: '8px 16px', background: activeState.taskList ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState.taskList ? '#4f46e5' : '#334155', fontSize: 13 }}
+                    onMouseEnter={e => { if(!activeState.taskList) e.currentTarget.style.background = '#f1f5f9' }} 
+                    onMouseLeave={e => { if(!activeState.taskList) e.currentTarget.style.background = 'transparent' }}
+                  >
+                    <CheckSquare size={16} /> Task List
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
 
-          <button style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0052cc', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s', flexShrink: 0 }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-            <Save size={14} /> Save Template
-          </button>
+            {/* Formatting Tools */}
+            <button onClick={() => editor?.chain().focus().toggleBold().run()} style={{ background: activeState.bold ? '#e0e7ff' : 'transparent', color: activeState.bold ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Bold size={16} /></button>
+            <button onClick={() => editor?.chain().focus().toggleItalic().run()} style={{ background: activeState.italic ? '#e0e7ff' : 'transparent', color: activeState.italic ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Italic size={16} /></button>
+            <button onClick={() => editor?.chain().focus().toggleStrike().run()} style={{ background: activeState.strike ? '#e0e7ff' : 'transparent', color: activeState.strike ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Strikethrough size={16} /></button>
+            <button onClick={() => editor?.chain().focus().toggleUnderline().run()} style={{ background: activeState.underline ? '#e0e7ff' : 'transparent', color: activeState.underline ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><UnderlineIcon size={16} /></button>
+            <button onClick={() => editor?.chain().focus().unsetAllMarks().run()} style={{ background: 'transparent', color: '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Eraser size={16} /></button>
+            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
+
+            {/* Alignment Icons */}
+            <button onClick={() => editor?.chain().focus().setTextAlign('left').run()} style={{ background: activeState.align === 'left' ? '#e0e7ff' : 'transparent', color: activeState.align === 'left' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignLeft size={16} /></button>
+            <button onClick={() => editor?.chain().focus().setTextAlign('center').run()} style={{ background: activeState.align === 'center' ? '#e0e7ff' : 'transparent', color: activeState.align === 'center' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignCenter size={16} /></button>
+            <button onClick={() => editor?.chain().focus().setTextAlign('right').run()} style={{ background: activeState.align === 'right' ? '#e0e7ff' : 'transparent', color: activeState.align === 'right' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignRight size={16} /></button>
+            <button onClick={() => editor?.chain().focus().setTextAlign('justify').run()} style={{ background: activeState.align === 'justify' ? '#e0e7ff' : 'transparent', color: activeState.align === 'justify' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignJustify size={16} /></button>
+            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
+
+            {/* Chart placeholder */}
+            <button style={{ background: 'transparent', color: '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer' }}><LineChart size={16} /></button>
+          </div>
         </div>
 
-        {/* EDITOR CANVAS (GREY BACKGROUND) */}
+        {/* EDITOR CANVAS */}
         <div style={{ flex: 1, background: '#f3f4f6', overflowY: 'auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-
-          {/* THE PAPER (WHITE, A4 STYLE) */}
-          <div style={{ background: '#fff', width: '100%', maxWidth: 850, minHeight: 1000, borderRadius: 8, boxShadow: '0 4px 24px rgba(0,0,0,0.06)', padding: '60px 70px', display: 'flex', flexDirection: 'column', gap: 28 }}>
+          <div style={{ 
+            background: '#fff', 
+            width: '100%', 
+            maxWidth: 850, 
+            minHeight: 1000, 
+            borderRadius: 8, 
+            boxShadow: '0 4px 24px rgba(0,0,0,0.06)', 
+            padding: '60px 70px', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            transform: `scale(${zoom / 100})`,
+            transformOrigin: 'top center',
+            transition: 'transform 0.2s ease-out'
+          }}>
 
             {/* DOCUMENT HEADER */}
-            <div style={{ borderBottom: '2px solid #0052cc', paddingBottom: 16, marginBottom: 12 }}>
+            <div style={{ borderBottom: '2px solid #0052cc', paddingBottom: 16, marginBottom: 24 }}>
               <input type="text" defaultValue="Standard RFP Template - Technology" style={{ fontSize: 24, fontWeight: 700, color: '#1a1a1a', border: 'none', outline: 'none', width: '100%', background: 'transparent', fontFamily: 'inherit' }} />
               <div style={{ fontSize: 13, color: '#666', marginTop: 8 }}>Template ID: TMP-2026-04 • Last modified by David Kim</div>
             </div>
 
-            {/* SECTIONS */}
-            {sections.map((sec, index) => (
-              <div key={sec.id} onClick={() => setActiveSection(index)} style={{ position: 'relative', border: `1px solid ${activeSection === index ? '#cbd5e1' : 'transparent'}`, borderRadius: 12, padding: '16px 20px', marginLeft: -20, marginRight: -20, transition: 'all 0.2s ease', background: activeSection === index ? '#f8fafc' : 'transparent' }}
-                onMouseEnter={e => {
-                  if (activeSection !== index) e.currentTarget.style.background = '#fafafa';
-                  e.currentTarget.querySelector('.controls').style.opacity = 1;
-                }}
-                onMouseLeave={e => {
-                  if (activeSection !== index) e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.querySelector('.controls').style.opacity = activeSection === index ? 1 : 0;
-                }}>
+            {/* UNIFIED TIPTAP EDITOR */}
+            <div className="unified-tiptap" style={{ fontSize: 15, color: '#334155', lineHeight: 1.7, fontFamily: 'inherit' }}>
+              <EditorContent editor={editor} />
+            </div>
 
-                {/* FLOATING CONTROLS */}
-                <div className="controls" style={{ position: 'absolute', right: 20, top: 16, display: 'flex', gap: 6, opacity: activeSection === index ? 1 : 0, transition: 'opacity 0.2s' }}>
-                  <button onClick={(e) => { e.stopPropagation(); moveUp(index); }} style={{ padding: 6, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 6, cursor: 'pointer', display: 'flex', color: '#64748b' }} onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><ArrowUp size={14} /></button>
-                  <button onClick={(e) => { e.stopPropagation(); moveDown(index); }} style={{ padding: 6, background: '#fff', border: '1px solid #e2e8f0', borderRadius: 6, cursor: 'pointer', display: 'flex', color: '#64748b' }} onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><ArrowDown size={14} /></button>
-                  <button onClick={(e) => { e.stopPropagation(); removeSection(index); }} style={{ padding: 6, background: '#fff', border: '1px solid #fee2e2', borderRadius: 6, cursor: 'pointer', display: 'flex', color: '#ef4444' }} onMouseEnter={e => e.currentTarget.style.background = '#fef2f2'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}><Trash2 size={14} /></button>
-                </div>
-
-                <input type="text" value={sec.title} onChange={e => { const n = [...sections]; n[index].title = e.target.value; setSections(n); }} style={{ fontSize: 16, fontWeight: 700, color: '#1e293b', border: 'none', outline: 'none', width: '85%', background: 'transparent', marginBottom: 12, fontFamily: 'inherit' }} />
-
-                <textarea value={sec.content} onChange={e => { const n = [...sections]; n[index].content = e.target.value; setSections(n); }} style={{ width: '100%', minHeight: 80, fontSize: 14, color: '#334155', lineHeight: 1.7, border: 'none', outline: 'none', resize: 'vertical', background: 'transparent', fontFamily: 'inherit' }} />
-              </div>
-            ))}
-
-            {/* ADD SECTION BUTTON */}
-            <button onClick={addSection} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '16px', background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: 12, color: '#64748b', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', marginTop: 8 }} onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.borderColor = '#94a3b8'; e.currentTarget.style.color = '#475569'; }} onMouseLeave={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.color = '#64748b'; }}>
-              <Plus size={16} /> Add New Section
-            </button>
           </div>
         </div>
       </div>
+      
+      <style dangerouslySetInnerHTML={{__html: `
+        .unified-tiptap .ProseMirror {
+          outline: none;
+          min-height: 800px;
+        }
+        .unified-tiptap h1 { font-size: 2em; margin-top: 1em; margin-bottom: 0.5em; font-weight: 700; color: #1e293b; }
+        .unified-tiptap h2 { font-size: 1.5em; margin-top: 1em; margin-bottom: 0.5em; font-weight: 700; color: #1e293b; }
+        .unified-tiptap h3 { font-size: 1.17em; margin-top: 1em; margin-bottom: 0.5em; font-weight: 700; color: #1e293b; }
+        .unified-tiptap h4 { font-size: 1em; margin-top: 1em; margin-bottom: 0.5em; font-weight: 700; color: #1e293b; }
+        .unified-tiptap ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
+        .unified-tiptap ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 1em; }
+        .unified-tiptap p { margin-bottom: 1em; }
+        .unified-tiptap ul[data-type="taskList"] {
+          list-style: none;
+          padding: 0;
+        }
+        .unified-tiptap ul[data-type="taskList"] li {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 4px;
+        }
+        .unified-tiptap ul[data-type="taskList"] li > label {
+          margin-right: 8px;
+          user-select: none;
+          margin-top: 2px;
+        }
+        .unified-tiptap ul[data-type="taskList"] li > label input[type="checkbox"] {
+          cursor: pointer;
+        }
+      `}} />
     </MainLayout>
   );
 }
