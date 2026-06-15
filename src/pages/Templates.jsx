@@ -320,6 +320,9 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
     .pmenu-item { transition: background 0.1s ease; }
     .pmenu-item:hover { background: var(--bg-surface-2) !important; }
     .pmenu-danger:hover { background: var(--status-error-bg) !important; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #eeeeee; border-radius: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #666666; border-radius: 4px; }
   `;
 
   const anyFilterActive = activeFilters.Category.length > 0 || activeFilters.Status.length > 0 || activeFilters.Owner.length > 0 || tableSearch.length > 0;
@@ -380,7 +383,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
       searchPlaceholder={null}
     >
       <style dangerouslySetInnerHTML={{ __html: css }} />
-      <div style={{ padding: 24, background: 'var(--bg-default)', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="custom-scroll" style={{ padding: 24, background: 'var(--bg-default)', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
 
         {/* TOP BAR & FILTERS */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 16 }}>
@@ -610,7 +613,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
               <button onClick={() => setShowUploadModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex', padding: 4 }}><X size={18} /></button>
             </div>
 
-            <div style={{ padding: '24px 32px 32px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="custom-scroll" style={{ padding: '24px 32px 32px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Template Name <span style={{ color: '#dc2626' }}>*</span></div>
                 <input

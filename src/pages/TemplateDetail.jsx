@@ -9,14 +9,16 @@ import TaskList from '@tiptap/extension-task-list';
 import {
   ChevronRight, ChevronDown, Undo, Redo, Bold, Italic, Strikethrough, Underline as UnderlineIcon, Eraser,
   AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, Minus, LineChart,
-  Save, Plus, CheckSquare
+  Save, Plus, CheckSquare, Pencil, CheckCircle, X
 } from 'lucide-react';
 
 export default function TemplateDetail({ onNavigate, activeNav }) {
+  const [mode, setMode] = useState('view');
+  const [toast, setToast] = useState(null);
   const [zoom, setZoom] = useState(100);
   const [showHeadingMenu, setShowHeadingMenu] = useState(false);
   const [showListMenu, setShowListMenu] = useState(false);
-  
+
   const [activeState, setActiveState] = useState({
     bold: false,
     italic: false,
@@ -71,13 +73,19 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
         orderedList: editor.isActive('orderedList'),
         taskList: editor.isActive('taskList'),
         align: editor.isActive({ textAlign: 'center' }) ? 'center' :
-               editor.isActive({ textAlign: 'right' }) ? 'right' :
-               editor.isActive({ textAlign: 'justify' }) ? 'justify' : 'left',
+          editor.isActive({ textAlign: 'right' }) ? 'right' :
+            editor.isActive({ textAlign: 'justify' }) ? 'justify' : 'left',
         canUndo: editor.can().undo(),
         canRedo: editor.can().redo(),
       });
     }
   });
+
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(mode === 'edit');
+    }
+  }, [editor, mode]);
 
   // Handle clicking outside to close menus
   const headingMenuRef = useRef(null);
@@ -96,6 +104,12 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const handleSave = () => {
+    setMode('view');
+    setToast({ message: 'Saved changes to the document' });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   const breadcrumb = (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -107,9 +121,15 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
           IT Hardware Procurement Standard
         </span>
       </div>
-      <button style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0052cc', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-        <Save size={14} /> Save Template
-      </button>
+      {mode === 'edit' ? (
+        <button onClick={handleSave} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0052cc', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+          <Save size={14} /> Save
+        </button>
+      ) : (
+        <button onClick={() => setMode('edit')} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#0052cc', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+          <Pencil size={14} /> Edit
+        </button>
+      )}
     </div>
   );
 
@@ -132,118 +152,127 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
 
   return (
     <MainLayout activeNav={activeNav} onNavigate={onNavigate} titleComponent={breadcrumb} searchPlaceholder={null}>
+      {toast && (
+        <div style={{ position: 'fixed', top: 60, left: '50%', transform: 'translateX(-50%)', background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', padding: '12px 16px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 12px 32px rgba(0,0,0,0.08)', zIndex: 1000, animation: 'toastIn 0.2s ease forwards' }}>
+          <CheckCircle size={22} color="#22c55e" strokeWidth={2} />
+          <div style={{ fontSize: 14, fontWeight: 600, color: '#15803d', flex: 1 }}>{toast.message}</div>
+          <button onClick={() => setToast(null)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex' }}><X size={16} color="#15803d" opacity={0.5} /></button>
+        </div>
+      )}
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
 
         {/* TOOLBAR RIBBON */}
-        <div style={{ background: '#fff', borderBottom: '1px solid var(--border-subtle)', padding: '8px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, zIndex: 10 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+        {mode === 'edit' && (
+          <div style={{ background: '#fff', borderBottom: '1px solid var(--border-subtle)', padding: '8px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, zIndex: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
 
-            {/* Undo / Redo */}
-            <button onClick={() => editor?.chain().focus().undo().run()} disabled={!activeState.canUndo} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: activeState.canUndo ? '#444' : '#ccc' }}><Undo size={16} /></button>
-            <button onClick={() => editor?.chain().focus().redo().run()} disabled={!activeState.canRedo} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: activeState.canRedo ? '#444' : '#ccc' }}><Redo size={16} /></button>
-            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
+              {/* Undo / Redo */}
+              <button onClick={() => editor?.chain().focus().undo().run()} disabled={!activeState.canUndo} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: activeState.canUndo ? '#444' : '#ccc' }}><Undo size={16} /></button>
+              <button onClick={() => editor?.chain().focus().redo().run()} disabled={!activeState.canRedo} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: activeState.canRedo ? '#444' : '#ccc' }}><Redo size={16} /></button>
+              <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
 
-            {/* Zoom Controls */}
-            <button onClick={() => setZoom(z => Math.max(50, z - 10))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: '#444' }}><Minus size={16} /></button>
-            <span style={{ fontSize: 13, color: '#444', width: 44, textAlign: 'center', fontWeight: 500 }}>{zoom}%</span>
-            <button onClick={() => setZoom(z => Math.min(200, z + 10))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: '#444' }}><Plus size={16} /></button>
-            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
+              {/* Zoom Controls */}
+              <button onClick={() => setZoom(z => Math.max(50, z - 10))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: '#444' }}><Minus size={16} /></button>
+              <span style={{ fontSize: 13, color: '#444', width: 44, textAlign: 'center', fontWeight: 500 }}>{zoom}%</span>
+              <button onClick={() => setZoom(z => Math.min(200, z + 10))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, color: '#444' }}><Plus size={16} /></button>
+              <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
 
-            {/* Heading Dropdown */}
-            <div ref={headingMenuRef} style={{ position: 'relative' }}>
-              <button onClick={() => setShowHeadingMenu(!showHeadingMenu)} style={{ display: 'flex', alignItems: 'center', gap: 4, background: isHeadingActive ? '#f1f5f9' : 'transparent', border: 'none', borderRadius: 16, padding: '4px 10px', fontSize: 14, fontWeight: 700, color: isHeadingActive ? '#4f46e5' : '#444', cursor: 'pointer', transition: 'all 0.15s' }}>
-                {getActiveHeadingLabel()} <ChevronDown size={14} color="#666" />
-              </button>
-              {showHeadingMenu && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 6, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 160, zIndex: 100, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
-                  {[1, 2, 3, 4].map(level => (
-                    <button 
-                      key={level}
-                      onClick={() => {
-                        editor?.chain().focus().toggleHeading({ level }).run();
-                        setShowHeadingMenu(false);
-                      }} 
-                      style={{ padding: '8px 16px', background: activeState[`h${level}`] ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState[`h${level}`] ? '#4f46e5' : '#334155' }} 
-                      onMouseEnter={e => { if(!activeState[`h${level}`]) e.currentTarget.style.background = '#f1f5f9' }} 
-                      onMouseLeave={e => { if(!activeState[`h${level}`]) e.currentTarget.style.background = 'transparent' }}
+              {/* Heading Dropdown */}
+              <div ref={headingMenuRef} style={{ position: 'relative' }}>
+                <button onClick={() => setShowHeadingMenu(!showHeadingMenu)} style={{ display: 'flex', alignItems: 'center', gap: 4, background: isHeadingActive ? '#f1f5f9' : 'transparent', border: 'none', borderRadius: 16, padding: '4px 10px', fontSize: 14, fontWeight: 700, color: isHeadingActive ? '#4f46e5' : '#444', cursor: 'pointer', transition: 'all 0.15s' }}>
+                  {getActiveHeadingLabel()} <ChevronDown size={14} color="#666" />
+                </button>
+                {showHeadingMenu && (
+                  <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 6, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 160, zIndex: 100, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
+                    {[1, 2, 3, 4].map(level => (
+                      <button
+                        key={level}
+                        onClick={() => {
+                          editor?.chain().focus().toggleHeading({ level }).run();
+                          setShowHeadingMenu(false);
+                        }}
+                        style={{ padding: '8px 16px', background: activeState[`h${level}`] ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState[`h${level}`] ? '#4f46e5' : '#334155' }}
+                        onMouseEnter={e => { if (!activeState[`h${level}`]) e.currentTarget.style.background = '#f1f5f9' }}
+                        onMouseLeave={e => { if (!activeState[`h${level}`]) e.currentTarget.style.background = 'transparent' }}
+                      >
+                        <span style={{ fontWeight: 700, width: 20 }}>H{level}</span>
+                        <span style={{ fontSize: 13 }}>Heading {level}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* List Dropdown */}
+              <div ref={listMenuRef} style={{ position: 'relative' }}>
+                <button onClick={() => setShowListMenu(!showListMenu)} style={{ display: 'flex', alignItems: 'center', gap: 4, background: isListActive ? '#f1f5f9' : 'transparent', border: 'none', borderRadius: 6, padding: '4px 8px', color: isListActive ? '#4f46e5' : '#444', cursor: 'pointer', transition: 'all 0.15s' }}>
+                  {getActiveListIcon()} <ChevronDown size={14} color="#666" />
+                </button>
+                {showListMenu && (
+                  <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 6, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 160, zIndex: 100, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
+                    <button
+                      onClick={() => { editor?.chain().focus().toggleBulletList().run(); setShowListMenu(false); }}
+                      style={{ padding: '8px 16px', background: activeState.bulletList ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState.bulletList ? '#4f46e5' : '#334155', fontSize: 13 }}
+                      onMouseEnter={e => { if (!activeState.bulletList) e.currentTarget.style.background = '#f1f5f9' }}
+                      onMouseLeave={e => { if (!activeState.bulletList) e.currentTarget.style.background = 'transparent' }}
                     >
-                      <span style={{ fontWeight: 700, width: 20 }}>H{level}</span> 
-                      <span style={{ fontSize: 13 }}>Heading {level}</span>
+                      <List size={16} /> Bullet List
                     </button>
-                  ))}
-                </div>
-              )}
+                    <button
+                      onClick={() => { editor?.chain().focus().toggleOrderedList().run(); setShowListMenu(false); }}
+                      style={{ padding: '8px 16px', background: activeState.orderedList ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState.orderedList ? '#4f46e5' : '#334155', fontSize: 13 }}
+                      onMouseEnter={e => { if (!activeState.orderedList) e.currentTarget.style.background = '#f1f5f9' }}
+                      onMouseLeave={e => { if (!activeState.orderedList) e.currentTarget.style.background = 'transparent' }}
+                    >
+                      <ListOrdered size={16} /> Ordered List
+                    </button>
+                    <button
+                      onClick={() => { editor?.chain().focus().toggleTaskList().run(); setShowListMenu(false); }}
+                      style={{ padding: '8px 16px', background: activeState.taskList ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState.taskList ? '#4f46e5' : '#334155', fontSize: 13 }}
+                      onMouseEnter={e => { if (!activeState.taskList) e.currentTarget.style.background = '#f1f5f9' }}
+                      onMouseLeave={e => { if (!activeState.taskList) e.currentTarget.style.background = 'transparent' }}
+                    >
+                      <CheckSquare size={16} /> Task List
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
+
+              {/* Formatting Tools */}
+              <button onClick={() => editor?.chain().focus().toggleBold().run()} style={{ background: activeState.bold ? '#e0e7ff' : 'transparent', color: activeState.bold ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Bold size={16} /></button>
+              <button onClick={() => editor?.chain().focus().toggleItalic().run()} style={{ background: activeState.italic ? '#e0e7ff' : 'transparent', color: activeState.italic ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Italic size={16} /></button>
+              <button onClick={() => editor?.chain().focus().toggleStrike().run()} style={{ background: activeState.strike ? '#e0e7ff' : 'transparent', color: activeState.strike ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Strikethrough size={16} /></button>
+              <button onClick={() => editor?.chain().focus().toggleUnderline().run()} style={{ background: activeState.underline ? '#e0e7ff' : 'transparent', color: activeState.underline ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><UnderlineIcon size={16} /></button>
+              <button onClick={() => editor?.chain().focus().unsetAllMarks().run()} style={{ background: 'transparent', color: '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Eraser size={16} /></button>
+              <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
+
+              {/* Alignment Icons */}
+              <button onClick={() => editor?.chain().focus().setTextAlign('left').run()} style={{ background: activeState.align === 'left' ? '#e0e7ff' : 'transparent', color: activeState.align === 'left' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignLeft size={16} /></button>
+              <button onClick={() => editor?.chain().focus().setTextAlign('center').run()} style={{ background: activeState.align === 'center' ? '#e0e7ff' : 'transparent', color: activeState.align === 'center' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignCenter size={16} /></button>
+              <button onClick={() => editor?.chain().focus().setTextAlign('right').run()} style={{ background: activeState.align === 'right' ? '#e0e7ff' : 'transparent', color: activeState.align === 'right' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignRight size={16} /></button>
+              <button onClick={() => editor?.chain().focus().setTextAlign('justify').run()} style={{ background: activeState.align === 'justify' ? '#e0e7ff' : 'transparent', color: activeState.align === 'justify' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignJustify size={16} /></button>
+              <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
+
+              {/* Chart placeholder */}
+              <button style={{ background: 'transparent', color: '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer' }}><LineChart size={16} /></button>
             </div>
-
-            {/* List Dropdown */}
-            <div ref={listMenuRef} style={{ position: 'relative' }}>
-              <button onClick={() => setShowListMenu(!showListMenu)} style={{ display: 'flex', alignItems: 'center', gap: 4, background: isListActive ? '#f1f5f9' : 'transparent', border: 'none', borderRadius: 6, padding: '4px 8px', color: isListActive ? '#4f46e5' : '#444', cursor: 'pointer', transition: 'all 0.15s' }}>
-                {getActiveListIcon()} <ChevronDown size={14} color="#666" />
-              </button>
-              {showListMenu && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 6, background: '#fff', border: '1px solid #e5e5e5', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 160, zIndex: 100, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
-                  <button 
-                    onClick={() => { editor?.chain().focus().toggleBulletList().run(); setShowListMenu(false); }} 
-                    style={{ padding: '8px 16px', background: activeState.bulletList ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState.bulletList ? '#4f46e5' : '#334155', fontSize: 13 }}
-                    onMouseEnter={e => { if(!activeState.bulletList) e.currentTarget.style.background = '#f1f5f9' }} 
-                    onMouseLeave={e => { if(!activeState.bulletList) e.currentTarget.style.background = 'transparent' }}
-                  >
-                    <List size={16} /> Bullet List
-                  </button>
-                  <button 
-                    onClick={() => { editor?.chain().focus().toggleOrderedList().run(); setShowListMenu(false); }} 
-                    style={{ padding: '8px 16px', background: activeState.orderedList ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState.orderedList ? '#4f46e5' : '#334155', fontSize: 13 }}
-                    onMouseEnter={e => { if(!activeState.orderedList) e.currentTarget.style.background = '#f1f5f9' }} 
-                    onMouseLeave={e => { if(!activeState.orderedList) e.currentTarget.style.background = 'transparent' }}
-                  >
-                    <ListOrdered size={16} /> Ordered List
-                  </button>
-                  <button 
-                    onClick={() => { editor?.chain().focus().toggleTaskList().run(); setShowListMenu(false); }} 
-                    style={{ padding: '8px 16px', background: activeState.taskList ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, color: activeState.taskList ? '#4f46e5' : '#334155', fontSize: 13 }}
-                    onMouseEnter={e => { if(!activeState.taskList) e.currentTarget.style.background = '#f1f5f9' }} 
-                    onMouseLeave={e => { if(!activeState.taskList) e.currentTarget.style.background = 'transparent' }}
-                  >
-                    <CheckSquare size={16} /> Task List
-                  </button>
-                </div>
-              )}
-            </div>
-            
-            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
-
-            {/* Formatting Tools */}
-            <button onClick={() => editor?.chain().focus().toggleBold().run()} style={{ background: activeState.bold ? '#e0e7ff' : 'transparent', color: activeState.bold ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Bold size={16} /></button>
-            <button onClick={() => editor?.chain().focus().toggleItalic().run()} style={{ background: activeState.italic ? '#e0e7ff' : 'transparent', color: activeState.italic ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Italic size={16} /></button>
-            <button onClick={() => editor?.chain().focus().toggleStrike().run()} style={{ background: activeState.strike ? '#e0e7ff' : 'transparent', color: activeState.strike ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Strikethrough size={16} /></button>
-            <button onClick={() => editor?.chain().focus().toggleUnderline().run()} style={{ background: activeState.underline ? '#e0e7ff' : 'transparent', color: activeState.underline ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><UnderlineIcon size={16} /></button>
-            <button onClick={() => editor?.chain().focus().unsetAllMarks().run()} style={{ background: 'transparent', color: '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><Eraser size={16} /></button>
-            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
-
-            {/* Alignment Icons */}
-            <button onClick={() => editor?.chain().focus().setTextAlign('left').run()} style={{ background: activeState.align === 'left' ? '#e0e7ff' : 'transparent', color: activeState.align === 'left' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignLeft size={16} /></button>
-            <button onClick={() => editor?.chain().focus().setTextAlign('center').run()} style={{ background: activeState.align === 'center' ? '#e0e7ff' : 'transparent', color: activeState.align === 'center' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignCenter size={16} /></button>
-            <button onClick={() => editor?.chain().focus().setTextAlign('right').run()} style={{ background: activeState.align === 'right' ? '#e0e7ff' : 'transparent', color: activeState.align === 'right' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignRight size={16} /></button>
-            <button onClick={() => editor?.chain().focus().setTextAlign('justify').run()} style={{ background: activeState.align === 'justify' ? '#e0e7ff' : 'transparent', color: activeState.align === 'justify' ? '#4f46e5' : '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer', transition: 'all 0.15s' }}><AlignJustify size={16} /></button>
-            <div style={{ width: 1, height: 16, background: '#e5e7eb', margin: '0 4px' }} />
-
-            {/* Chart placeholder */}
-            <button style={{ background: 'transparent', color: '#444', border: 'none', borderRadius: 4, padding: '4px 8px', cursor: 'pointer' }}><LineChart size={16} /></button>
           </div>
-        </div>
+        )}
 
         {/* EDITOR CANVAS */}
-        <div style={{ flex: 1, background: '#f3f4f6', overflowY: 'auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ 
-            background: '#fff', 
-            width: '100%', 
-            maxWidth: 850, 
-            minHeight: 1000, 
-            borderRadius: 8, 
-            boxShadow: '0 4px 24px rgba(0,0,0,0.06)', 
-            padding: '60px 70px', 
-            display: 'flex', 
-            flexDirection: 'column', 
+        <div className="custom-scroll" style={{ flex: 1, background: '#f3f4f6', overflowY: 'auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{
+            background: '#fff',
+            width: '100%',
+            maxWidth: 850,
+            minHeight: 1000,
+            borderRadius: 8,
+            boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+            padding: '60px 70px',
+            display: 'flex',
+            flexDirection: 'column',
             transform: `scale(${zoom / 100})`,
             transformOrigin: 'top center',
             transition: 'transform 0.2s ease-out'
@@ -251,7 +280,7 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
 
             {/* DOCUMENT HEADER */}
             <div style={{ borderBottom: '2px solid #0052cc', paddingBottom: 16, marginBottom: 24 }}>
-              <input type="text" defaultValue="Standard RFP Template - Technology" style={{ fontSize: 24, fontWeight: 700, color: '#1a1a1a', border: 'none', outline: 'none', width: '100%', background: 'transparent', fontFamily: 'inherit' }} />
+              <input type="text" defaultValue="Standard RFP Template - Technology" readOnly={mode === 'view'} style={{ fontSize: 24, fontWeight: 700, color: '#1a1a1a', border: 'none', outline: 'none', width: '100%', background: 'transparent', fontFamily: 'inherit' }} />
               <div style={{ fontSize: 13, color: '#666', marginTop: 8 }}>Template ID: TMP-2026-04 • Last modified by David Kim</div>
             </div>
 
@@ -263,8 +292,14 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
           </div>
         </div>
       </div>
-      
-      <style dangerouslySetInnerHTML={{__html: `
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-12px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         .unified-tiptap .ProseMirror {
           outline: none;
           min-height: 800px;
