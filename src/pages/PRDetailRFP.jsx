@@ -13,7 +13,8 @@ import {
   List, ListOrdered, Indent, Outdent, Link, Image, Printer,
   Undo2, Redo2, Code, RemoveFormatting, Pencil, Save, ChevronDown,
   Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2,
-  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers, Briefcase, Globe, MessageSquare, TrendingUp, AlertCircle, HelpCircle, Lock, Search, ArrowUpDown, Filter, ShieldCheck, PieChart, FileText as FileTextIcon
+  Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers, Briefcase, Globe, MessageSquare, TrendingUp, AlertCircle, HelpCircle, Lock, Search, ArrowUpDown, Filter, ShieldCheck, PieChart, FileText as FileTextIcon,
+  Edit3, Compass, Clock, Monitor, Grid, MessageCircle, XCircle, UploadCloud
 } from 'lucide-react';
 
 const STATUS_CONFIG = {
@@ -46,83 +47,89 @@ const EMPTY_TABS = {
 };
 
 const WORKFLOW_GROUPS = [
-  { id: 'g0', type: 'single', node: { id: 0, status: 'complete', type: 'user', title: 'PR Submitted', actor: 'David Kim', time: '08 May · 09:12', icon: User } },
-  { id: 'g1', type: 'single', node: { id: 1, status: 'complete', type: 'ai', title: 'AI Extraction & Folder Creation', actor: 'AI Agent', time: '08 May · 09:14', icon: Sparkles } },
-  {
-    id: 'g2', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 2, status: 'complete', type: 'ai', title: 'Routine / Complex', actor: 'AI Agent', time: '08 May · 09:15', icon: GitBranch },
-      { id: 3, status: 'complete', type: 'ai', title: 'CapEx / OpEx', actor: 'AI Agent', time: '08 May · 09:15', icon: Banknote },
-      { id: 4, status: 'complete', type: 'ai', title: 'Direct / Indirect', actor: 'AI Agent', time: '08 May · 09:15', icon: Scale },
-    ]
-  },
-  { id: 'g3', type: 'single', node: { id: 5, status: 'complete', type: 'ai', title: 'Routing Decision', actor: 'AI Agent', time: '08 May · 09:16', icon: GitBranch } },
-  {
-    id: 'g4', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 6, status: 'complete', type: 'ai', title: 'Budget Check', actor: 'AI Agent', time: '08 May · 09:17', icon: Banknote },
-      { id: 7, status: 'complete', type: 'ai', title: 'Compliance Validation', actor: 'AI Agent', time: '08 May · 09:17', icon: Shield },
-    ]
-  },
-  {
-    id: 'g5', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 8, status: 'complete', type: 'ai', title: 'RFQ Template Select', actor: 'AI Agent', time: '09 May · 11:00', icon: FileText },
-      { id: 9, status: 'complete', type: 'ai', title: 'Supplier Research', actor: 'AI Agent', time: '09 May · 11:02', icon: Users },
-    ]
-  },
-  {
-    id: 'g6', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 10, status: 'complete', type: 'ai', title: 'Generate RFP', actor: 'AI Agent', time: '10 May · 14:30', icon: Sparkles },
-      { id: 11, status: 'complete', type: 'ai', title: 'Evaluation Criteria', actor: 'AI Agent', time: '10 May · 14:31', icon: Target },
-      { id: 12, status: 'complete', type: 'ai', title: 'Budget Estimation', actor: 'AI Agent', time: '10 May · 14:32', icon: DollarSign },
-    ]
-  },
-  { id: 'g7', type: 'single', node: { id: 13, status: 'pending_user', type: 'user', title: 'RFP Approval', actor: 'David Kim', time: 'Awaiting action', icon: UserCheck } },
-  {
-    id: 'g8', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 14, status: 'waiting', type: 'ai', title: 'RFP Publish', actor: 'AI Agent', time: null, icon: Send },
-      { id: 15, status: 'waiting', type: 'ai', title: 'Suggest Vendors', actor: 'AI Agent', time: null, icon: Users },
-    ]
-  },
-  { id: 'g9', type: 'single', node: { id: 16, status: 'waiting', type: 'user', title: 'Proposal Upload & Bid Evaluation', actor: 'Procurement', time: null, icon: Upload } },
-  { id: 'g10', type: 'single', node: { id: 17, status: 'waiting', type: 'ai', title: 'Negotiation', actor: 'AI Agent', time: null, icon: BarChart2 } },
-  { id: 'g11', type: 'single', node: { id: 18, status: 'waiting', type: 'user', title: 'PR Award', actor: 'Procurement', time: null, icon: Award } },
-  { id: 'g12', type: 'single', node: { id: 19, status: 'waiting', type: 'ai', title: 'SoW', actor: 'AI Agent', time: null, icon: FileCheck } },
-  { id: 'g13', type: 'single', node: { id: 20, status: 'waiting', type: 'ai', title: 'PO Generation', actor: 'AI Agent', time: null, icon: PackageCheck } },
-  { id: 'g14', type: 'single', node: { id: 21, status: 'waiting', type: 'user', title: 'Manager Approval', actor: 'Sarah Chen', time: null, icon: UserCheck } },
-  { id: 'g15', type: 'single', node: { id: 22, status: 'waiting', type: 'ai', title: 'PO Issued', actor: 'System', time: null, icon: Zap } },
+  { id: 'g1', type: 'single', node: { id: 1, status: 'complete', type: 'ai', title: 'Requisition Review SLA 3 Days', actor: 'AI Agent', time: '08 May · 09:12', icon: FileCheck } },
+  { id: 'g2', type: 'single', node: { id: 2, status: 'complete', type: 'ai', title: 'Auto Classification / Categorization / Policy Checks and Risk Analysis', actor: 'AI Agent', time: '08 May · 09:14', icon: Shield } },
+  { id: 'g3', type: 'single', node: { id: 3, status: 'complete', type: 'user', title: 'Valid PR?', actor: 'Procurement', time: '08 May · 09:15', icon: GitBranch } },
+  { id: 'g4', type: 'single', node: { id: 4, status: 'complete', type: 'user', title: 'Modify PR', actor: 'Requester', time: '08 May · 09:16', icon: Edit3 } },
+  { id: 'g5', type: 'single', node: { id: 5, status: 'complete', type: 'ai', title: 'Budget Check', actor: 'AI Agent', time: '08 May · 09:17', icon: Banknote } },
+  { id: 'g6', type: 'single', node: { id: 6, status: 'complete', type: 'user', title: 'Manage Budget Variation', actor: 'Finance', time: '08 May · 10:00', icon: AlertTriangle } },
+  { id: 'g7', type: 'single', node: { id: 7, status: 'complete', type: 'ai', title: 'Vendor Match', actor: 'AI Agent', time: '08 May · 10:05', icon: Users } },
+  { id: 'g8', type: 'single', node: { id: 8, status: 'complete', type: 'ai', title: 'Clarification / Requirements Gathering', actor: 'AI Agent', time: '08 May · 10:30', icon: HelpCircle } },
+  { id: 'g9', type: 'single', node: { id: 9, status: 'complete', type: 'ai', title: 'Supplier Research', actor: 'AI Agent', time: '09 May · 11:00', icon: Search } },
+  { id: 'g10', type: 'single', node: { id: 10, status: 'complete', type: 'ai', title: 'Generate RFP', actor: 'AI Agent', time: '10 May · 14:30', icon: Sparkles } },
+  { id: 'g11', type: 'parallel', label: 'PARALLEL', nodes: [
+      { id: 11, status: 'complete', type: 'ai', title: 'Define Evaluation Criteria', actor: 'AI Agent', time: '10 May · 14:31', icon: Target },
+      { id: 12, status: 'complete', type: 'ai', title: 'Sourcing Strategy', actor: 'AI Agent', time: '10 May · 14:32', icon: Compass },
+  ]},
+  { id: 'g12', type: 'single', node: { id: 13, status: 'pending', type: 'user', title: 'Strategy?', actor: 'David Kim', time: 'Awaiting action', icon: GitBranch } },
+  { id: 'g13', type: 'parallel', label: 'PARALLEL', nodes: [
+      { id: 14, status: 'waiting', type: 'user', title: 'Direct Award / single vendor proposal', actor: 'Procurement', time: null, icon: UserCheck },
+      { id: 15, status: 'waiting', type: 'ai', title: 'Publish RFP to Vendor Portal', actor: 'AI Agent', time: null, icon: Send },
+  ]},
+  { id: 'g14', type: 'parallel', label: 'PARALLEL', nodes: [
+      { id: 16, status: 'waiting', type: 'ai', title: 'Waiting for Proposals submission', actor: 'AI Agent', time: null, icon: Clock },
+      { id: 17, status: 'waiting', type: 'ai', title: 'Pre-bid Clarification', actor: 'AI Agent', time: null, icon: MessageSquare },
+  ]},
+  { id: 'g15', type: 'single', node: { id: 18, status: 'waiting', type: 'ai', title: 'Receive & Score / Analyze proposal', actor: 'AI Agent', time: null, icon: BarChart2 } },
+  { id: 'g16', type: 'single', node: { id: 19, status: 'waiting', type: 'ai', title: 'Risk Assessment', actor: 'AI Agent', time: null, icon: Shield } },
+  { id: 'g17', type: 'single', node: { id: 20, status: 'waiting', type: 'ai', title: 'Vendor Presentation', actor: 'AI Agent', time: null, icon: Monitor } },
+  { id: 'g18', type: 'single', node: { id: 21, status: 'waiting', type: 'ai', title: 'Proposal Comparative Matrix', actor: 'AI Agent', time: null, icon: Grid } },
+  { id: 'g19', type: 'single', node: { id: 22, status: 'waiting', type: 'ai', title: 'Negotiation', actor: 'AI Agent', time: null, icon: MessageCircle } },
+  { id: 'g20', type: 'single', node: { id: 23, status: 'waiting', type: 'user', title: 'Award Project', actor: 'Procurement', time: null, icon: Award } },
+  { id: 'g21', type: 'single', node: { id: 24, status: 'waiting', type: 'ai', title: 'SOW Template recommendation', actor: 'AI Agent', time: null, icon: FileText } },
+  { id: 'g22', type: 'single', node: { id: 25, status: 'waiting', type: 'user', title: 'Draft SoW Accepted?', actor: 'David Kim', time: null, icon: FileCheck } },
+  { id: 'g23', type: 'parallel', label: 'PARALLEL', nodes: [
+      { id: 26, status: 'waiting', type: 'user', title: 'Modify SoW / Negotiate', actor: 'David Kim', time: null, icon: Edit3 },
+      { id: 27, status: 'waiting', type: 'ai', title: 'SOW Cancelled', actor: 'AI Agent', time: null, icon: XCircle },
+  ]},
+  { id: 'g24', type: 'single', node: { id: 28, status: 'waiting', type: 'ai', title: 'SoW Accepted', actor: 'AI Agent', time: null, icon: CheckCircle } },
+  { id: 'g25', type: 'parallel', label: 'PARALLEL', nodes: [
+      { id: 29, status: 'waiting', type: 'user', title: 'Upload Signed SoW by Vendor', actor: 'Vendor', time: null, icon: Upload },
+      { id: 30, status: 'waiting', type: 'ai', title: 'Upload countersigned / Internal SoW', actor: 'AI Agent', time: null, icon: UploadCloud },
+  ]},
+  { id: 'g26', type: 'single', node: { id: 31, status: 'waiting', type: 'ai', title: 'PO Generation', actor: 'AI Agent', time: null, icon: PackageCheck } },
 ];
 
-function NodeCard({ node, compact = false, onNodeClick }) {
-  const isClickable = node.type === 'ai' && node.status === 'complete';
+function NodeCard({ node, compact = false, onNodeClick, hasReasoning }) {
+  const isClickable = node.status === 'complete' || node.status === 'current';
   const { status, type, title, actor, time, icon: Icon } = node;
   const w = compact ? 140 : 160;
-  let bg = '#f4f4f7', border = '1px dashed #d5d5dd', borderTop = '3px solid #d5d5dd';
-  let iconBg = 'rgba(180,180,200,0.15)', iconColor = '#bbb';
-  let badgeBg = '#ebebf0', badgeColor = '#999', badgeText = 'QUEUED';
-  let titleColor = '#bbb', opacity = 0.7, shadow = 'none';
-  if (status === 'complete') {
-    opacity = 1; shadow = '0 1px 4px rgba(14,15,37,0.06)'; titleColor = '#1a1a1a'; bg = '#fff';
-    if (type === 'ai') { border = '1px solid rgba(124,124,255,0.2)'; borderTop = '3px solid #7c7cff'; iconBg = 'linear-gradient(135deg,#0052cc,#7c7cff)'; iconColor = '#fff'; }
-    else { border = '1px solid rgba(0,82,204,0.2)'; borderTop = '3px solid #0052cc'; iconBg = '#0052cc'; iconColor = '#fff'; }
-    badgeBg = 'rgba(34,197,94,0.08)'; badgeColor = '#15803d'; badgeText = 'DONE';
-  } else if (status === 'pending_user') {
-    opacity = 1; bg = '#fffbf0'; titleColor = '#1a1a1a';
-    border = '1.5px solid #f59e0b'; borderTop = '3px solid #f59e0b'; shadow = '0 2px 16px rgba(245,158,11,0.18)';
-    iconBg = 'linear-gradient(135deg,#f59e0b,#d97706)'; iconColor = '#fff';
-    badgeBg = 'rgba(245,158,11,0.12)'; badgeColor = '#b45309'; badgeText = 'AWAITING';
+  
+  let bg = '#fff', border = '1px dashed #d1d5db', borderTop = '3px dashed #d1d5db';
+  let iconBg = '#f3f4f6', iconColor = '#9ca3af';
+  let badgeBg = '#f3f4f6', badgeColor = '#9ca3af', badgeText = 'UPCOMING';
+  let titleColor = '#9ca3af', opacity = 0.8, shadow = 'none';
+
+  if (status === 'complete' || status === 'current') {
+    opacity = 1; shadow = '0 1px 4px rgba(14,15,37,0.06)'; titleColor = '#1a1a1a';
+    if (type === 'ai') {
+      border = '1px solid rgba(124,124,255,0.2)'; borderTop = '3px solid #7c7cff'; iconBg = 'linear-gradient(135deg,#0052cc,#7c7cff)'; iconColor = '#fff';
+      badgeBg = 'rgba(34,197,94,0.08)'; badgeColor = '#15803d'; badgeText = 'DONE';
+    } else {
+      border = '1px solid rgba(34,197,94,0.2)'; borderTop = '3px solid #22c55e'; iconBg = 'linear-gradient(135deg,#22c55e,#16a34a)'; iconColor = '#fff';
+      badgeBg = 'rgba(34,197,94,0.08)'; badgeColor = '#15803d'; badgeText = 'DONE';
+    }
+    if (status === 'current') badgeText = 'IN PROGRESS';
+  } else if (status === 'pending') {
+    opacity = 1; bg = '#f9fafb'; titleColor = '#1a1a1a';
+    border = '1px solid #e5e7eb'; borderTop = '3px solid #9ca3af'; shadow = '0 1px 3px rgba(0,0,0,0.04)';
+    iconBg = '#e5e7eb'; iconColor = '#4b5563';
+    badgeBg = '#f3f4f6'; badgeColor = '#4b5563'; badgeText = 'PENDING';
   }
+
   return (
-    <div style={{ width: w, minHeight: compact ? 130 : 152, borderRadius: 12, padding: compact ? '12px 10px 10px' : '13px 12px 11px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0, background: bg, border, borderTop, boxShadow: shadow, opacity, cursor: isClickable ? 'pointer' : 'default', transition: 'all 0.2s ease' }} onClick={() => isClickable && onNodeClick && onNodeClick(node)}>
+    <div style={{ width: w, minHeight: compact ? 130 : 152, borderRadius: 12, padding: compact ? '12px 10px 10px' : '13px 12px 11px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0, background: bg, border, borderTop, boxShadow: shadow, opacity, cursor: (isClickable && hasReasoning) ? 'pointer' : 'default', transition: 'all 0.2s ease' }} onClick={() => isClickable && hasReasoning && onNodeClick && onNodeClick(node)}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ width: compact ? 28 : 32, height: compact ? 28 : 32, borderRadius: 9, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Icon size={compact ? 13 : 15} color={iconColor} strokeWidth={2} />
         </div>
-        {status === 'pending_user' && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b', animation: 'rfpPulse 1.6s ease-in-out infinite' }} />}
-        {isClickable && <ChevronRight size={14} color="#ccc" style={{ flexShrink: 0 }} />}
+        {status === 'pending' && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#9ca3af', animation: 'rfpPulse 1.6s ease-in-out infinite' }} />}
+        {(isClickable && hasReasoning) && <ChevronRight size={14} color="#ccc" style={{ flexShrink: 0 }} />}
       </div>
       <div style={{ fontSize: compact ? 10.5 : 11.5, fontWeight: 700, color: titleColor, lineHeight: 1.3, marginTop: 3, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{title}</div>
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <div style={{ fontSize: 9.5, color: status === 'pending_user' ? '#92400e' : '#999' }}>{actor}</div>
-        {time && <div style={{ fontSize: 9.5, color: status === 'pending_user' ? '#b45309' : '#aaa' }}>{time}</div>}
+        <div style={{ fontSize: 9.5, color: status === 'pending' ? '#4b5563' : (status === 'complete' || status === 'current') ? '#666' : '#9ca3af' }}>{actor}</div>
+        {time && <div style={{ fontSize: 9.5, color: status === 'pending' ? '#6b7280' : (status === 'complete' || status === 'current') ? '#888' : '#9ca3af' }}>{time}</div>}
         <div style={{ background: badgeBg, color: badgeColor, borderRadius: 20, padding: '2px 7px', fontSize: 8.5, fontWeight: 700, textTransform: 'uppercase', display: 'inline-flex', alignSelf: 'flex-start', marginTop: 4 }}>{badgeText}</div>
       </div>
     </div>
@@ -968,14 +975,9 @@ function EditModal({ onClose, onSave }) {
 
 const REASONING_MAP = {
   1: ['Reading uploaded PR document', 'Extracting 21 procurement fields', '14 fields auto-extracted with high confidence', 'Creating document folder in SharePoint', 'Linking PR metadata to folder'],
-  2: ['Analysing spend value: ₹45,00,000', 'Threshold check: exceeds ₹10L complex limit', 'Multi-phase engagement detected', 'Decision: Complex procurement'],
-  3: ['Budget nature: ongoing operational spend', 'No capital asset creation involved', 'Decision: OpEx'],
-  4: ['Category: Technology and Consulting', 'Not directly linked to production output', 'Decision: Indirect Spend'],
-  5: ['PR classified as Complex', 'Value above threshold - manager approval required', 'Routing to: Sarah Chen (L2 approver)', 'SLA target: 15 July 2026'],
-  6: ['Approved budget for Engineering: ₹60,00,000', 'PR value: ₹45,00,000', 'Remaining headroom: ₹15,00,000', 'Budget check: PASSED'],
-  7: ['Cost centre ENG-402 validated', 'CapEx/OpEx classification confirmed: OpEx', 'Finance policy check: PASSED'],
-  8: ['Vendor compliance status: all 5 vendors active', 'Policy 4.2 check: RFP required for complex', 'Compliance check: PASSED'],
-  9: ['Queried vendor database: 847 vendors', 'Applied AWS partner filter + UAE location', '5 vendors shortlisted by confidence score'],
+  2: ['Analysing spend value: ₹45,00,000', 'Threshold check: exceeds ₹10L complex limit', 'Cost centre ENG-402 validated', 'Finance policy check: PASSED', 'Decision: Complex procurement'],
+  5: ['Approved budget for Engineering: ₹60,00,000', 'PR value: ₹45,00,000', 'Remaining headroom: ₹15,00,000', 'Budget check: PASSED'],
+  7: ['Queried vendor database: 847 vendors', 'Applied AWS partner filter + UAE location', '5 vendors shortlisted by confidence score'],
   10: ['RFP template selected: Technology Consulting Standard v2.1', 'Evaluation Criteria generated: 5 criteria', 'Budget estimation complete: ₹45,00,000'],
 };
 
@@ -2359,15 +2361,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
               {/* OVERVIEW */}
               {activeTab === 'overview' && (
-                <div style={{ display: 'flex', flex: 1 }}>
-                  <div style={{ flex: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, width: '100%' }}>
+                <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+                  <div style={{ flex: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, minWidth: 0 }}>
                     <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden' }}>
                       <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROCUREMENT WORKFLOW — COMPLEX PR</div>
                         <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'var(--text-tertiary)' }}>
-                          {[['#7c7cff', 'AI Action'], ['#0052cc', 'User Action'], ['#f59e0b', 'Pending'], ['#ccc', 'Upcoming']].map(([c, l]) => (
-                            <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: c, opacity: c === '#ccc' ? 0.5 : 1 }} />{l}</div>
-                          ))}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: '#7c7cff' }} />AI Action</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: '#22c55e' }} />User Action</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: '#9ca3af' }} />Pending</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', border: '1px dashed #d1d5db', background: '#fff' }} />Upcoming</div>
                         </div>
                       </div>
                       <div style={{ background: '#f8f8fc', backgroundImage: 'radial-gradient(circle,#d0d0e0 1px,transparent 1px)', backgroundSize: '22px 22px', padding: '28px 36px', overflowX: 'auto', minWidth: '100%' }}>
@@ -2375,10 +2378,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           {WORKFLOW_GROUPS.map((group, gi) => (
                             <React.Fragment key={group.id}>
                               {gi > 0 && <Arrow dashed={group.nodes ? group.nodes[0].status === 'waiting' : group.node.status === 'waiting'} />}
-                              {group.type === 'single' ? <NodeCard node={group.node} onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} /> : (
+                              {group.type === 'single' ? <NodeCard node={group.node} hasReasoning={!!REASONING_MAP[group.node.id]} onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} /> : (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: 7, alignSelf: 'center' }}>
                                   <div style={{ fontSize: 8.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#bbb', paddingLeft: 2, marginBottom: 2 }}>{group.label}</div>
-                                  {group.nodes.map(n => <NodeCard key={n.id} node={n} compact onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} />)}
+                                  {group.nodes.map(n => <NodeCard key={n.id} node={n} compact hasReasoning={!!REASONING_MAP[n.id]} onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} />)}
                                 </div>
                               )}
                             </React.Fragment>

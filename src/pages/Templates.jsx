@@ -383,7 +383,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
       searchPlaceholder={null}
     >
       <style dangerouslySetInnerHTML={{ __html: css }} />
-      <div className="custom-scroll" style={{ padding: 24, background: 'var(--bg-default)', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="custom-scrollbar" style={{ padding: 24, background: 'var(--bg-default)', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
 
         {/* TOP BAR & FILTERS */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24, flexWrap: 'wrap', gap: 16 }}>
@@ -613,7 +613,7 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
               <button onClick={() => setShowUploadModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex', padding: 4 }}><X size={18} /></button>
             </div>
 
-            <div className="custom-scroll" style={{ padding: '24px 32px 32px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="custom-scrollbar" style={{ padding: '24px 32px 32px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', marginBottom: 6 }}>Template Name <span style={{ color: '#dc2626' }}>*</span></div>
                 <input

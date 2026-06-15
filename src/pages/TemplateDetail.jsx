@@ -262,7 +262,7 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
         )}
 
         {/* EDITOR CANVAS */}
-        <div className="custom-scroll" style={{ flex: 1, background: '#f3f4f6', overflowY: 'auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div className="custom-scrollbar" style={{ flex: 1, background: '#f3f4f6', overflowY: 'auto', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div style={{
             background: '#fff',
             width: '100%',
