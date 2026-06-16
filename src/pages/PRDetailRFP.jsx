@@ -46,90 +46,96 @@ const EMPTY_TABS = {
   invoices: { icon: DollarSign, color: '#6d28d9', title: 'Invoice Tracking', desc: 'Invoice management will be available once the engagement is active.' },
 };
 
-const WORKFLOW_GROUPS = [
-  { id: 'g1', type: 'single', node: { id: 1, status: 'complete', type: 'ai', title: 'Requisition Review SLA 3 Days', actor: 'AI Agent', time: '08 May · 09:12', icon: FileCheck } },
-  { id: 'g2', type: 'single', node: { id: 2, status: 'complete', type: 'ai', title: 'Auto Classification / Categorization / Policy Checks and Risk Analysis', actor: 'AI Agent', time: '08 May · 09:14', icon: Shield } },
-  { id: 'g3', type: 'single', node: { id: 3, status: 'complete', type: 'user', title: 'Valid PR?', actor: 'Procurement', time: '08 May · 09:15', icon: GitBranch } },
-  { id: 'g4', type: 'single', node: { id: 4, status: 'complete', type: 'user', title: 'Modify PR', actor: 'Requester', time: '08 May · 09:16', icon: Edit3 } },
-  { id: 'g5', type: 'single', node: { id: 5, status: 'complete', type: 'ai', title: 'Budget Check', actor: 'AI Agent', time: '08 May · 09:17', icon: Banknote } },
-  { id: 'g6', type: 'single', node: { id: 6, status: 'complete', type: 'user', title: 'Manage Budget Variation', actor: 'Finance', time: '08 May · 10:00', icon: AlertTriangle } },
-  { id: 'g7', type: 'single', node: { id: 7, status: 'complete', type: 'ai', title: 'Vendor Match', actor: 'AI Agent', time: '08 May · 10:05', icon: Users } },
-  { id: 'g8', type: 'single', node: { id: 8, status: 'complete', type: 'ai', title: 'Clarification / Requirements Gathering', actor: 'AI Agent', time: '08 May · 10:30', icon: HelpCircle } },
-  { id: 'g9', type: 'single', node: { id: 9, status: 'complete', type: 'ai', title: 'Supplier Research', actor: 'AI Agent', time: '09 May · 11:00', icon: Search } },
-  { id: 'g10', type: 'single', node: { id: 10, status: 'complete', type: 'ai', title: 'Generate RFP', actor: 'AI Agent', time: '10 May · 14:30', icon: Sparkles } },
-  { id: 'g11', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 11, status: 'complete', type: 'ai', title: 'Define Evaluation Criteria', actor: 'AI Agent', time: '10 May · 14:31', icon: Target },
-      { id: 12, status: 'complete', type: 'ai', title: 'Sourcing Strategy', actor: 'AI Agent', time: '10 May · 14:32', icon: Compass },
-  ]},
-  { id: 'g12', type: 'single', node: { id: 13, status: 'pending', type: 'user', title: 'Strategy?', actor: 'David Kim', time: 'Awaiting action', icon: GitBranch } },
-  { id: 'g13', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 14, status: 'waiting', type: 'user', title: 'Direct Award / single vendor proposal', actor: 'Procurement', time: null, icon: UserCheck },
-      { id: 15, status: 'waiting', type: 'ai', title: 'Publish RFP to Vendor Portal', actor: 'AI Agent', time: null, icon: Send },
-  ]},
-  { id: 'g14', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 16, status: 'waiting', type: 'ai', title: 'Waiting for Proposals submission', actor: 'AI Agent', time: null, icon: Clock },
-      { id: 17, status: 'waiting', type: 'ai', title: 'Pre-bid Clarification', actor: 'AI Agent', time: null, icon: MessageSquare },
-  ]},
-  { id: 'g15', type: 'single', node: { id: 18, status: 'waiting', type: 'ai', title: 'Receive & Score / Analyze proposal', actor: 'AI Agent', time: null, icon: BarChart2 } },
-  { id: 'g16', type: 'single', node: { id: 19, status: 'waiting', type: 'ai', title: 'Risk Assessment', actor: 'AI Agent', time: null, icon: Shield } },
-  { id: 'g17', type: 'single', node: { id: 20, status: 'waiting', type: 'ai', title: 'Vendor Presentation', actor: 'AI Agent', time: null, icon: Monitor } },
-  { id: 'g18', type: 'single', node: { id: 21, status: 'waiting', type: 'ai', title: 'Proposal Comparative Matrix', actor: 'AI Agent', time: null, icon: Grid } },
-  { id: 'g19', type: 'single', node: { id: 22, status: 'waiting', type: 'ai', title: 'Negotiation', actor: 'AI Agent', time: null, icon: MessageCircle } },
-  { id: 'g20', type: 'single', node: { id: 23, status: 'waiting', type: 'user', title: 'Award Project', actor: 'Procurement', time: null, icon: Award } },
-  { id: 'g21', type: 'single', node: { id: 24, status: 'waiting', type: 'ai', title: 'SOW Template recommendation', actor: 'AI Agent', time: null, icon: FileText } },
-  { id: 'g22', type: 'single', node: { id: 25, status: 'waiting', type: 'user', title: 'Draft SoW Accepted?', actor: 'David Kim', time: null, icon: FileCheck } },
-  { id: 'g23', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 26, status: 'waiting', type: 'user', title: 'Modify SoW / Negotiate', actor: 'David Kim', time: null, icon: Edit3 },
-      { id: 27, status: 'waiting', type: 'ai', title: 'SOW Cancelled', actor: 'AI Agent', time: null, icon: XCircle },
-  ]},
-  { id: 'g24', type: 'single', node: { id: 28, status: 'waiting', type: 'ai', title: 'SoW Accepted', actor: 'AI Agent', time: null, icon: CheckCircle } },
-  { id: 'g25', type: 'parallel', label: 'PARALLEL', nodes: [
-      { id: 29, status: 'waiting', type: 'user', title: 'Upload Signed SoW by Vendor', actor: 'Vendor', time: null, icon: Upload },
-      { id: 30, status: 'waiting', type: 'ai', title: 'Upload countersigned / Internal SoW', actor: 'AI Agent', time: null, icon: UploadCloud },
-  ]},
-  { id: 'g26', type: 'single', node: { id: 31, status: 'waiting', type: 'ai', title: 'PO Generation', actor: 'AI Agent', time: null, icon: PackageCheck } },
+const COMPLEX_NODES = [
+  { id: 0, title: 'Requisition Intake', type: 'ai', icon: Sparkles, c: 0, r: 1 },
+  { id: 1, title: 'Auto Classification Direct vs Indirect, CapEx vs OpEx Category and Subcategory', type: 'ai', icon: GitBranch, c: 1, r: 1 },
+  { id: 2, title: 'Submit PR', type: 'user', icon: User, c: 2, r: 1 },
+  { id: 3, title: 'Budget Check', type: 'ai', icon: Banknote, c: 3, r: 1 },
+  { id: 4, title: 'Adjust Budget', type: 'user', icon: Edit2, c: 3, r: 2 },
+  { id: 5, title: 'PR Submitted', type: 'ai', icon: CheckCircle, c: 4, r: 1 },
+  { id: 6, title: 'Sharepoint Folder Creation', type: 'ai', icon: Layers, c: 4, r: 2 },
+  { id: 7, title: 'Classification - Routine vs Complex', type: 'ai', icon: GitBranch, c: 5, r: 1 },
+  { id: 8, title: 'Supplier research', type: 'ai', icon: Search, c: 6, r: 1 },
+  { id: 9, title: 'RFP template selection', type: 'ai', icon: FileText, c: 6, r: 2 },
+  { id: 10, title: 'Generate RFP', type: 'ai', icon: Sparkles, c: 7, r: 1 },
+  { id: 11, title: 'Setting Evaluation Criteria', type: 'ai', icon: Target, c: 8, r: 0 },
+  { id: 12, title: 'Estimating Budget', type: 'ai', icon: Banknote, c: 8, r: 2 },
+  { id: 13, title: 'Publishing RFP', type: 'user', icon: Send, c: 9, r: 1 },
+  { id: 14, title: 'Upload single/Multiple vendor proposals', type: 'user', icon: Upload, c: 10, r: 0 },
+  { id: 15, title: 'Proposal Ingestion through Sharepoint folder', type: 'ai', icon: Layers, c: 10, r: 2 },
+  { id: 16, title: 'Analysis/ Batch Analysis of proposals', type: 'ai', icon: BarChart2, c: 11, r: 1 },
+  { id: 17, title: 'Scoring the Proposals against RFP', type: 'ai', icon: Award, c: 12, r: 0 },
+  { id: 18, title: 'Risk Identification', type: 'ai', icon: Shield, c: 12, r: 1 },
+  { id: 19, title: 'TCO Normalization', type: 'ai', icon: Scale, c: 12, r: 2 },
+  { id: 20, title: 'Ranked Proposal List', type: 'ai', icon: ListOrdered, c: 13, r: 1 },
+  { id: 21, title: 'Proposal Comparison Matrix', type: 'ai', icon: Grid, c: 14, r: 1 },
+  { id: 22, title: 'Negotiation', type: 'ai', icon: MessageCircle, c: 15, r: 1 },
+  { id: 23, title: 'Award Project', type: 'user', icon: Award, c: 16, r: 1 },
+  { id: 24, title: 'SoW Template recommendation', type: 'ai', icon: FileText, c: 17, r: 0 },
+  { id: 25, title: 'SoW Template Selection', type: 'user', icon: CheckCircle, c: 17, r: 2 },
+  { id: 26, title: 'SoW Draft Generated', type: 'ai', icon: FileCheck, c: 18, r: 1 },
+  { id: 27, title: 'SoW Cancelled', type: 'ai', icon: XCircle, c: 18, r: 0 },
+  { id: 28, title: 'SoW Accepted', type: 'ai', icon: CheckCircle, c: 19, r: 1 },
+  { id: 29, title: 'Upload Signed SoW by Vendor', type: 'user', icon: Upload, c: 20, r: 0 },
+  { id: 30, title: 'Sharepoint Ingestion of Signed SoW', type: 'ai', icon: Layers, c: 20, r: 2 },
+  { id: 31, title: 'Draft PO Generation', type: 'ai', icon: PackageCheck, c: 21, r: 1 },
+  { id: 32, title: 'PO Approval', type: 'user', icon: UserCheck, c: 22, r: 1 },
+  { id: 33, title: 'PO Created', type: 'ai', icon: CheckCircle, c: 23, r: 1 }
+].map(n => ({ ...n, status: 'complete', actor: n.type === 'ai' ? 'AI Agent' : 'Procurement', time: '08 May · 10:00' }));
+
+const EDGES = [
+  { f: 0, t: 1 }, { f: 1, t: 2 }, { f: 2, t: 3 }, { f: 3, t: 5, label: 'Passed' }, { f: 3, t: 4, label: 'Failed' }, { f: 4, t: 2 },
+  { f: 5, t: 7 }, { f: 5, t: 6 }, { f: 7, t: 8 }, { f: 7, t: 9 }, { f: 8, t: 10 }, { f: 9, t: 10 },
+  { f: 10, t: 11 }, { f: 10, t: 12 }, { f: 11, t: 13 }, { f: 12, t: 13 }, { f: 13, t: 14 }, { f: 13, t: 15 },
+  { f: 14, t: 16 }, { f: 15, t: 16 }, { f: 16, t: 17 }, { f: 16, t: 18 }, { f: 16, t: 19 },
+  { f: 17, t: 20 }, { f: 18, t: 20 }, { f: 19, t: 20 }, { f: 20, t: 21 }, { f: 21, t: 22 }, { f: 22, t: 23 },
+  { f: 23, t: 24 }, { f: 23, t: 25 }, { f: 24, t: 26 }, { f: 25, t: 26 }, { f: 26, t: 28, label: 'Accept SOW' },
+  { f: 26, t: 27, label: 'Cancel SOW' }, { f: 28, t: 29 }, { f: 28, t: 30 }, { f: 29, t: 31 }, { f: 30, t: 31 },
+  { f: 31, t: 32 }, { f: 32, t: 33 }
 ];
 
 function NodeCard({ node, compact = false, onNodeClick, hasReasoning }) {
-  const isClickable = node.status === 'complete' || node.status === 'current';
+  const isClickable = node.status === 'complete' || node.status === 'active';
   const { status, type, title, actor, time, icon: Icon } = node;
   const w = compact ? 140 : 160;
   
-  let bg = '#fff', border = '1px dashed #d1d5db', borderTop = '3px dashed #d1d5db';
-  let iconBg = '#f3f4f6', iconColor = '#9ca3af';
-  let badgeBg = '#f3f4f6', badgeColor = '#9ca3af', badgeText = 'UPCOMING';
-  let titleColor = '#9ca3af', opacity = 0.8, shadow = 'none';
+  let bg = '#f0f0f3', border = '1px dashed #d5d5d5', borderTop = 'none', shadow = 'none', opacity = 0.6;
+  let iconBg = 'rgba(124,124,255,0.07)', iconColor = '#aaa', iconAnim = 'none';
+  let badgeBg = '#e8e8eb', badgeColor = '#999', badgeText = 'QUEUED';
+  let titleColor = status === 'waiting' ? '#bbb' : '#1a1a1a';
+  let timeText = time || null;
 
-  if (status === 'complete' || status === 'current') {
-    opacity = 1; shadow = '0 1px 4px rgba(14,15,37,0.06)'; titleColor = '#1a1a1a';
-    if (type === 'ai') {
-      border = '1px solid rgba(124,124,255,0.2)'; borderTop = '3px solid #7c7cff'; iconBg = 'linear-gradient(135deg,#0052cc,#7c7cff)'; iconColor = '#fff';
-      badgeBg = 'rgba(34,197,94,0.08)'; badgeColor = '#15803d'; badgeText = 'DONE';
-    } else {
-      border = '1px solid rgba(34,197,94,0.2)'; borderTop = '3px solid #22c55e'; iconBg = 'linear-gradient(135deg,#22c55e,#16a34a)'; iconColor = '#fff';
-      badgeBg = 'rgba(34,197,94,0.08)'; badgeColor = '#15803d'; badgeText = 'DONE';
-    }
-    if (status === 'current') badgeText = 'IN PROGRESS';
-  } else if (status === 'pending') {
-    opacity = 1; bg = '#f9fafb'; titleColor = '#1a1a1a';
-    border = '1px solid #e5e7eb'; borderTop = '3px solid #9ca3af'; shadow = '0 1px 3px rgba(0,0,0,0.04)';
-    iconBg = '#e5e7eb'; iconColor = '#4b5563';
-    badgeBg = '#f3f4f6'; badgeColor = '#4b5563'; badgeText = 'PENDING';
+  if (status === 'active') {
+    bg = '#fff'; border = '1.5px solid #7c7cff'; borderTop = '1.5px solid #7c7cff';
+    shadow = '0 0 0 3px rgba(124,124,255,0.1)'; opacity = 1; titleColor = '#1a1a1a';
+    iconBg = 'linear-gradient(135deg, rgba(0,82,204,0.15), rgba(124,124,255,0.2))';
+    iconColor = '#7c7cff'; iconAnim = 'pulseRing 1.5s ease-in-out infinite';
+    badgeBg = 'rgba(124,124,255,0.1)'; badgeColor = '#5b5bd6'; badgeText = 'RUNNING'; timeText = 'Processing...';
+  } else if (status === 'complete') {
+    bg = '#fff'; opacity = 1; shadow = '0 1px 4px rgba(14,15,37,0.06)'; titleColor = '#1a1a1a';
+    if (type === 'ai') { border = '1px solid rgba(124,124,255,0.2)'; borderTop = '3px solid #7c7cff'; iconBg = 'linear-gradient(135deg, #0052cc, #7c7cff)'; iconColor = '#fff'; }
+    else if (type === 'user') { border = '1px solid rgba(34,197,94,0.2)'; borderTop = '3px solid #22c55e'; iconBg = 'linear-gradient(135deg, #22c55e, #16a34a)'; iconColor = '#fff'; }
+    else { border = '1px solid rgba(34,197,94,0.2)'; borderTop = '3px solid #22c55e'; iconBg = '#22c55e'; iconColor = '#fff'; }
+    badgeBg = 'rgba(34,197,94,0.08)'; badgeColor = '#15803d'; badgeText = 'DONE';
+  } else if (status === 'pending_user') {
+    bg = '#fffbf0'; border = '1.5px solid #f59e0b'; borderTop = '3px solid #f59e0b'; opacity = 1; titleColor = '#1a1a1a';
+    shadow = '0 2px 12px rgba(245,158,11,0.15)';
+    iconBg = 'linear-gradient(135deg, #f59e0b, #d97706)'; iconColor = '#fff';
+    badgeBg = 'rgba(245,158,11,0.15)'; badgeColor = '#b45309'; badgeText = 'AWAITING ACTION'; timeText = 'Awaiting action';
   }
 
   return (
-    <div style={{ width: w, minHeight: compact ? 130 : 152, borderRadius: 12, padding: compact ? '12px 10px 10px' : '13px 12px 11px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0, background: bg, border, borderTop, boxShadow: shadow, opacity, cursor: (isClickable && hasReasoning) ? 'pointer' : 'default', transition: 'all 0.2s ease' }} onClick={() => isClickable && hasReasoning && onNodeClick && onNodeClick(node)}>
+    <div style={{ width: w, minHeight: compact ? 130 : 152, borderRadius: 12, padding: compact ? '12px 10px 10px' : '13px 12px 11px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0, background: bg, border, borderTop, boxShadow: shadow, opacity, cursor: (isClickable && hasReasoning) ? 'pointer' : 'default', transition: 'all 0.35s ease' }} onClick={() => isClickable && hasReasoning && onNodeClick && onNodeClick(node)}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ width: compact ? 28 : 32, height: compact ? 28 : 32, borderRadius: 9, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <div style={{ width: compact ? 28 : 32, height: compact ? 28 : 32, borderRadius: 9, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, animation: iconAnim }}>
           <Icon size={compact ? 13 : 15} color={iconColor} strokeWidth={2} />
         </div>
-        {status === 'pending' && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#9ca3af', animation: 'rfpPulse 1.6s ease-in-out infinite' }} />}
         {(isClickable && hasReasoning) && <ChevronRight size={14} color="#ccc" style={{ flexShrink: 0 }} />}
       </div>
       <div style={{ fontSize: compact ? 10.5 : 11.5, fontWeight: 700, color: titleColor, lineHeight: 1.3, marginTop: 3, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{title}</div>
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <div style={{ fontSize: 9.5, color: status === 'pending' ? '#4b5563' : (status === 'complete' || status === 'current') ? '#666' : '#9ca3af' }}>{actor}</div>
-        {time && <div style={{ fontSize: 9.5, color: status === 'pending' ? '#6b7280' : (status === 'complete' || status === 'current') ? '#888' : '#9ca3af' }}>{time}</div>}
+        <div style={{ fontSize: 9.5, color: status === 'pending_user' ? '#92400e' : (status === 'complete' || status === 'active') ? '#666' : '#9ca3af' }}>{actor}</div>
+        {timeText && <div style={{ fontSize: 9.5, color: status === 'pending_user' ? '#b45309' : (status === 'complete' || status === 'active') ? '#888' : '#9ca3af' }}>{timeText}</div>}
         <div style={{ background: badgeBg, color: badgeColor, borderRadius: 20, padding: '2px 7px', fontSize: 8.5, fontWeight: 700, textTransform: 'uppercase', display: 'inline-flex', alignSelf: 'flex-start', marginTop: 4 }}>{badgeText}</div>
       </div>
     </div>
@@ -992,6 +998,35 @@ const SOW_CLAUSES = [
 ];
 
 export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState }) {
+  const [nodes, setNodes] = useState(COMPLEX_NODES.map(n => ({ ...n, status: 'waiting', time: null })));
+  
+  const upd = (ids, status) => {
+    setNodes(prev => prev.map(n => ids.includes(n.id) ? { ...n, status, time: 'Just now' } : n));
+  };
+
+  useEffect(() => {
+    const T = [
+      setTimeout(() => upd([0, 1], 'active'), 500),
+      setTimeout(() => upd([0, 1], 'complete'), 1500),
+      setTimeout(() => upd([2], 'active'), 2000),
+      setTimeout(() => upd([2], 'complete'), 3000),
+      setTimeout(() => upd([3], 'active'), 3500),
+      setTimeout(() => upd([3], 'complete'), 4500),
+      setTimeout(() => upd([5, 6], 'active'), 5000),
+      setTimeout(() => upd([5, 6], 'complete'), 6000),
+      setTimeout(() => upd([7], 'active'), 6500),
+      setTimeout(() => upd([7], 'complete'), 7500),
+      setTimeout(() => upd([8, 9], 'active'), 8000),
+      setTimeout(() => upd([8, 9], 'complete'), 9000),
+      setTimeout(() => upd([10], 'active'), 9500),
+      setTimeout(() => upd([10], 'complete'), 10500),
+      setTimeout(() => upd([11, 12], 'active'), 11000),
+      setTimeout(() => upd([11, 12], 'complete'), 12000),
+      setTimeout(() => upd([13], 'pending_user'), 12500),
+    ];
+    return () => T.forEach(clearTimeout);
+  }, []);
+
   const [showAddClauseModal, setShowAddClauseModal] = useState(false);
   const [clauseSearch, setClauseSearch] = useState('');
   const [clauseTypeFilter, setClauseTypeFilter] = useState('');
@@ -1346,6 +1381,9 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
   return (
     <>
+      <style>{`
+        @keyframes pulseRing { 0%,100%{box-shadow:0 0 0 0 rgba(124,124,255,0.4)} 50%{box-shadow:0 0 0 8px rgba(124,124,255,0)} }
+      `}</style>
       {saveToast && (
         <div style={{ position: 'fixed', top: 20, left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#f0fdf4', border: '1px solid rgba(34,197,94,0.25)', borderLeft: '4px solid #22c55e', borderRadius: 12, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 8px 32px rgba(14,15,37,0.1)', minWidth: 340, animation: 'toastIn 0.2s ease forwards' }}>
           <CheckCircle size={20} color="#22c55e" strokeWidth={2} style={{ flexShrink: 0 }} />
@@ -2369,22 +2407,62 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'var(--text-tertiary)' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: '#7c7cff' }} />AI Action</div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: '#22c55e' }} />User Action</div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: '#9ca3af' }} />Pending</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: '#f59e0b' }} />Pending</div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', border: '1px dashed #d1d5db', background: '#fff' }} />Upcoming</div>
                         </div>
                       </div>
-                      <div style={{ background: '#f8f8fc', backgroundImage: 'radial-gradient(circle,#d0d0e0 1px,transparent 1px)', backgroundSize: '22px 22px', padding: '28px 36px', overflowX: 'auto', minWidth: '100%' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', width: 'max-content', minHeight: 220 }}>
-                          {WORKFLOW_GROUPS.map((group, gi) => (
-                            <React.Fragment key={group.id}>
-                              {gi > 0 && <Arrow dashed={group.nodes ? group.nodes[0].status === 'waiting' : group.node.status === 'waiting'} />}
-                              {group.type === 'single' ? <NodeCard node={group.node} hasReasoning={!!REASONING_MAP[group.node.id]} onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} /> : (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 7, alignSelf: 'center' }}>
-                                  <div style={{ fontSize: 8.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#bbb', paddingLeft: 2, marginBottom: 2 }}>{group.label}</div>
-                                  {group.nodes.map(n => <NodeCard key={n.id} node={n} compact hasReasoning={!!REASONING_MAP[n.id]} onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} />)}
-                                </div>
-                              )}
-                            </React.Fragment>
+                      <div style={{ background: '#f8f8fc', backgroundImage: 'radial-gradient(circle,#d0d0e0 1px,transparent 1px)', backgroundSize: '22px 22px', padding: '0', overflowX: 'auto', minWidth: '100%' }}>
+                        <div style={{ position: 'relative', width: 40 + 24 * 206, height: 40 + 3 * 200, display: 'flex' }}>
+                          <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+                            <defs>
+                              <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#a8a8be" />
+                              </marker>
+                            </defs>
+                            {EDGES.map((edge, i) => {
+                              const f = COMPLEX_NODES.find(n => n.id === edge.f);
+                              const t = COMPLEX_NODES.find(n => n.id === edge.t);
+                              const getX = c => 40 + c * 206;
+                              const getY = r => 40 + r * 200;
+                              const sx = getX(f.c) + 160 - 2;
+                              const sy = getY(f.r) + 76;
+                              const ex = getX(t.c);
+                              const ey = getY(t.r) + 76;
+                              
+                              let d;
+                              let labelX = sx + 10;
+                              let labelY = sy - 8;
+                              
+                              if (f.c === t.c) { // vertical
+                                const syv = f.r < t.r ? getY(f.r) + 152 : getY(f.r);
+                                const eyv = f.r < t.r ? getY(t.r) : getY(t.r) + 152;
+                                d = `M ${getX(f.c) + 80} ${syv} L ${getX(t.c) + 80} ${eyv}`;
+                                labelX = getX(f.c) + 88;
+                                labelY = syv + 20;
+                              } else if (t.c < f.c) { // backward
+                                d = `M ${getX(f.c) + 80} ${getY(f.r) + 152} L ${getX(f.c) + 80} ${getY(f.r) + 152 + 20} L ${getX(t.c) + 80} ${getY(f.r) + 152 + 20} L ${getX(t.c) + 80} ${getY(t.r) + 152}`;
+                                labelX = getX(t.c) + 90;
+                                labelY = getY(f.r) + 152 + 15;
+                              } else if (t.c === f.c + 1 && f.r === t.r) { // direct right
+                                d = `M ${sx} ${sy} L ${ex} ${ey}`;
+                              } else { // right and up/down
+                                d = `M ${sx} ${sy} L ${sx + 20} ${sy} L ${sx + 20} ${ey} L ${ex} ${ey}`;
+                                labelX = sx + 25;
+                                labelY = ey - 8;
+                              }
+
+                              return (
+                                <React.Fragment key={i}>
+                                  <path d={d} stroke="#a8a8be" strokeWidth="2" fill="none" markerEnd="url(#arrowHead)" />
+                                  {edge.label && <text x={labelX} y={labelY} fontSize="10" fill="#a8a8be" fontWeight="700">{edge.label}</text>}
+                                </React.Fragment>
+                              );
+                            })}
+                          </svg>
+                          {nodes.map(node => (
+                            <div key={node.id} style={{ position: 'absolute', left: 40 + node.c * 206, top: 40 + node.r * 200, zIndex: 10 }}>
+                              <NodeCard node={node} hasReasoning={!!REASONING_MAP[node.id]} onNodeClick={(nd) => { setSelectedNode(nd); setPanelOpen(true); }} />
+                            </div>
                           ))}
                         </div>
                       </div>
