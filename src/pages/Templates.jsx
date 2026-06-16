@@ -320,9 +320,10 @@ export default function Templates({ setCurrentPage, onNavigate, activeNav, userR
     .pmenu-item { transition: background 0.1s ease; }
     .pmenu-item:hover { background: var(--bg-surface-2) !important; }
     .pmenu-danger:hover { background: var(--status-error-bg) !important; }
-    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: #eeeeee; border-radius: 4px; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #666666; border-radius: 4px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
   `;
 
   const anyFilterActive = activeFilters.Category.length > 0 || activeFilters.Status.length > 0 || activeFilters.Owner.length > 0 || tableSearch.length > 0;

@@ -332,6 +332,10 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
       from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
       to { opacity: 1; transform: translateX(-50%) translateY(0); }
     }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
   `;
 
   return (
