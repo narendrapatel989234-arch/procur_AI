@@ -4,32 +4,31 @@ import { ArrowLeft, Download, Sparkles, User, CheckCircle, Lock, ChevronRight, X
 const ICONS = { User, Sparkles, GitBranch, Banknote, Scale, Zap, ShieldCheck, PackageCheck, UserCheck, CheckCircle };
 
 const REASONING_MAP = {
-  1: ['Reading uploaded PR document', 'Extracting 21 procurement fields', '14 fields auto-extracted with high confidence', 'Creating document folder in SharePoint', 'Linking PR metadata to folder'],
-  2: ['Analysing spend value: Rs 45,00,000', 'Threshold check: exceeds Rs 10L complex limit', 'Multi-phase engagement detected', 'Decision: Complex procurement'],
-  3: ['Budget nature: ongoing operational spend', 'No capital asset creation involved', 'Decision: OpEx'],
-  4: ['Category: Technology and Consulting', 'Not directly linked to production output', 'Decision: Indirect Spend'],
-  5: ['PR classified as Complex', 'Value above threshold - manager approval required', 'Routing to: Sarah Chen (L2 approver)', 'SLA target: 15 July 2026'],
-  6: ['Queried vendor database: 847 vendors', 'Filtered by category: Technology Consulting', 'Applied location filter: Dubai / UAE', '5 vendors shortlisted by confidence score'],
-  7: ['Approved budget for Engineering: Rs 60,00,000', 'PR value: Rs 45,00,000', 'Remaining headroom: Rs 15,00,000', 'Budget check: PASSED'],
-  8: ['Cost centre ENG-402 validated', 'CapEx/OpEx classification confirmed: OpEx', 'Finance policy check: PASSED'],
-  9: ['Vendor compliance status: all 5 vendors active', 'Policy 4.2 check: RFP required for complex', 'No regulatory flags found', 'Compliance check: PASSED'],
-  10: ['Vendor finalized: TechDirect India', 'PO line items generated from PR fields', 'PO value: Rs 45,00,000', 'ERP sync: queued'],
+  0: ['1. Conversation/Chat: AI + Manual', '2. Form: Manual', '3. Document upload & Extraction: Manual + AI', '4. SharePoint data ingestion: AI + Manual.'],
+  1: ['Analysing direct vs indirect...', 'Determining capex vs opex...', 'Setting Category and sub category...'],
+  3: ['Budget check logic executed...', 'Approved budget: Rs 60,00,000', 'PR value: Rs 45,00,000', 'Remaining headroom: Rs 15,00,000'],
+  5: ['SharePoint folder created...', 'Metadata synced...'],
+  7: ['Classifying as Routine vs Complex...', 'Threshold check: Routine'],
+  8: ['Vendor Match: TechDirect India'],
+  9: ['PO draft generated automatically'],
+  11: ['Manager approved the PO'],
+  12: ['Manager rejected the PO'],
 };
 
 const INITIAL_NODES = [
-  { id: 0, type: 'pending_user', status: 'pending_user', title: 'PR Submitted', actor: 'David Kim', timestamp: 'Awaiting submission', icon: 'User' },
-  { id: 1, type: 'ai', status: 'waiting', title: 'AI Extraction & Folder Creation', actor: 'AI Agent', timestamp: null, icon: 'Sparkles' },
-  { id: 2, type: 'ai', status: 'waiting', title: 'Routine / Complex', actor: 'AI Agent', timestamp: null, icon: 'GitBranch' },
-  { id: 3, type: 'ai', status: 'waiting', title: 'CapEx / OpEx', actor: 'AI Agent', timestamp: null, icon: 'Banknote' },
-  { id: 4, type: 'ai', status: 'waiting', title: 'Direct / Indirect', actor: 'AI Agent', timestamp: null, icon: 'Scale' },
-  { id: 5, type: 'ai', status: 'waiting', title: 'Routing Decision', actor: 'AI Agent', timestamp: null, icon: 'GitBranch' },
-  { id: 6, type: 'ai', status: 'waiting', title: 'Vendor Identification', actor: 'AI Agent', timestamp: null, icon: 'Sparkles' },
-  { id: 7, type: 'ai', status: 'waiting', title: 'Budget Check', actor: 'AI Agent', timestamp: null, icon: 'Banknote' },
-  { id: 8, type: 'ai', status: 'waiting', title: 'Finance Validation', actor: 'AI Agent', timestamp: null, icon: 'Zap' },
-  { id: 9, type: 'ai', status: 'waiting', title: 'Compliance Check', actor: 'AI Agent', timestamp: null, icon: 'ShieldCheck' },
-  { id: 10, type: 'ai', status: 'waiting', title: 'PO Generated', actor: 'AI Agent', timestamp: null, icon: 'PackageCheck' },
-  { id: 11, type: 'pending_user', status: 'waiting', title: 'Manager Approval', actor: 'Sarah Chen', timestamp: null, icon: 'UserCheck' },
-  { id: 12, type: 'system', status: 'waiting', title: 'PO Issued', actor: 'System', timestamp: null, icon: 'CheckCircle' },
+  { id: 0, type: 'ai', status: 'complete', title: 'Requisition Intake', actor: 'Draft stage', timestamp: 'Just now', icon: 'Sparkles' },
+  { id: 1, type: 'ai', status: 'complete', title: 'Auto classification', actor: 'AI Agent', timestamp: 'Just now', icon: 'GitBranch' },
+  { id: 2, type: 'user', status: 'pending_user', title: 'Submit PR', actor: 'User', timestamp: 'Awaiting action', icon: 'User' },
+  { id: 3, type: 'ai', status: 'waiting', title: 'Budget Check', actor: 'AI Agent', timestamp: null, icon: 'Banknote' },
+  { id: 4, type: 'ai', status: 'waiting', title: 'PR Submitted', actor: 'System', timestamp: null, icon: 'CheckCircle' },
+  { id: 5, type: 'ai', status: 'waiting', title: 'Sharepoint Folder', actor: 'AI Agent', timestamp: null, icon: 'Layers' },
+  { id: 6, type: 'user', status: 'waiting', title: 'Adjust Budget', actor: 'User', timestamp: null, icon: 'Edit2' },
+  { id: 7, type: 'ai', status: 'waiting', title: 'Routine Vs complex', actor: 'AI Agent', timestamp: null, icon: 'GitBranch' },
+  { id: 8, type: 'ai', status: 'waiting', title: 'Vendor Matching', actor: 'AI Agent', timestamp: null, icon: 'Sparkles' },
+  { id: 9, type: 'ai', status: 'waiting', title: 'Auto PO generation', actor: 'AI Agent', timestamp: null, icon: 'PackageCheck' },
+  { id: 10, type: 'pending_user', status: 'waiting', title: 'Manager PO Approval', actor: 'Manager', timestamp: null, icon: 'UserCheck' },
+  { id: 11, type: 'ai', status: 'waiting', title: 'PO Approved', actor: 'System', timestamp: null, icon: 'CheckCircle' },
+  { id: 12, type: 'ai', status: 'waiting', title: 'Po Rejected', actor: 'System', timestamp: null, icon: 'X' },
 ];
 
 // Status badge config
@@ -685,35 +684,65 @@ export default function PRDetailDraft({ onNavigate, userRole, navState }) {
                   <div style={{ padding: '13px 20px', borderBottom: '1px solid #e5e5e5', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#999' }}>
                     PROCUREMENT WORKFLOW
                   </div>
-                  <div style={{ padding: '28px 32px', overflowX: 'auto', background: '#f8f8fc', backgroundImage: 'radial-gradient(circle, #d0d0e0 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', width: 'max-content', minHeight: 180 }}>
-                      <NodeCard node={g(0)} onNodeClick={handleNodeClick} />
-                      <Arrow />
-                      <NodeCard node={g(1)} onNodeClick={handleNodeClick} />
-                      <Arrow />
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignSelf: 'center' }}>
-                        <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#bbb', paddingLeft: 2 }}>PARALLEL</div>
-                        <NodeCard node={g(2)} onNodeClick={handleNodeClick} />
-                        <NodeCard node={g(3)} onNodeClick={handleNodeClick} />
-                        <NodeCard node={g(4)} onNodeClick={handleNodeClick} />
-                      </div>
-                      <Arrow />
-                      <NodeCard node={g(5)} onNodeClick={handleNodeClick} />
-                      <Arrow />
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignSelf: 'center' }}>
-                        <div style={{ fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#bbb', paddingLeft: 2 }}>PARALLEL</div>
-                        <NodeCard node={g(6)} onNodeClick={handleNodeClick} />
-                        <NodeCard node={g(7)} onNodeClick={handleNodeClick} />
-                        <NodeCard node={g(8)} onNodeClick={handleNodeClick} />
-                      </div>
-                      <Arrow />
-                      <NodeCard node={g(9)} onNodeClick={handleNodeClick} />
-                      <Arrow />
-                      <NodeCard node={g(10)} onNodeClick={handleNodeClick} />
-                      <Arrow />
-                      <NodeCard node={g(11)} onNodeClick={handleNodeClick} />
-                      <Arrow />
-                      <NodeCard node={g(12)} onNodeClick={handleNodeClick} />
+                  <div style={{ padding: '0', overflowX: 'auto', background: '#f8f8fc', backgroundImage: 'radial-gradient(circle, #d0d0e0 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+                    <div style={{ position: 'relative', width: 2092, height: 660, display: 'flex' }}>
+
+                      {/* SVG Arrows Layer */}
+                      <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+                        <defs>
+                          <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#a8a8be" />
+                          </marker>
+                        </defs>
+
+                        {/* Main sequence: 0->1, 1->2, 2->3, 3->4, 4->7, 7->8, 8->9, 9->10 */}
+                        {[[0, 1], [1, 2], [2, 3], [3, 4], [4, 7], [7, 8], [8, 9], [9, 10]].map(([from, to]) => {
+                          const getX = c => 40 + c * 206;
+                          const LAYOUT = { 0: { c: 0 }, 1: { c: 1 }, 2: { c: 2 }, 3: { c: 3 }, 4: { c: 4 }, 7: { c: 5 }, 8: { c: 6 }, 9: { c: 7 }, 10: { c: 8 } };
+                          return (
+                            <path key={from} d={`M ${getX(LAYOUT[from].c) + 158} 320 L ${getX(LAYOUT[to].c)} 320`} stroke="#a8a8be" strokeWidth="2" fill="none" markerEnd="url(#arrowHead)" />
+                          );
+                        })}
+
+                        {/* Budget Check (3) -> Adjust Budget (6) */}
+                        <path d="M 737 400 L 737 440" stroke="#a8a8be" strokeWidth="2" fill="none" markerEnd="url(#arrowHead)" />
+                        <text x="745" y="420" fontSize="10" fill="#bbb" fontWeight="700">FAILED</text>
+
+                        {/* Budget Check (3) -> PR Submitted (4) PASSED text */}
+                        <text x="824" y="312" fontSize="10" fill="#22c55e" fontWeight="800">PASSED</text>
+
+                        {/* PR Submitted (4) -> Sharepoint (5) */}
+                        <path d="M 943 400 L 943 440" stroke="#a8a8be" strokeWidth="2" fill="none" markerEnd="url(#arrowHead)" />
+
+                        {/* Adjust Budget (6) -> Submit PR (2) Loop Back */}
+                        <path d="M 737 600 L 737 620 L 531 620 L 531 408" stroke="#a8a8be" strokeWidth="2" fill="none" markerEnd="url(#arrowHead)" />
+
+                        {/* Manager PO (10) -> Approved (11) */}
+                        <path d="M 1846 320 L 1870 320 L 1870 120 L 1894 120" stroke="#a8a8be" strokeWidth="2" fill="none" markerEnd="url(#arrowHead)" />
+
+                        {/* Manager PO (10) -> Rejected (12) */}
+                        <path d="M 1846 320 L 1870 320 L 1870 520 L 1894 520" stroke="#a8a8be" strokeWidth="2" fill="none" markerEnd="url(#arrowHead)" />
+                      </svg>
+
+                      {/* Nodes Layer */}
+                      {INITIAL_NODES.map(node => {
+                        const LAYOUT = {
+                          0: { c: 0, r: 1 }, 1: { c: 1, r: 1 }, 2: { c: 2, r: 1 },
+                          3: { c: 3, r: 1 }, 4: { c: 4, r: 1 }, 5: { c: 4, r: 2 },
+                          6: { c: 3, r: 2 }, 7: { c: 5, r: 1 }, 8: { c: 6, r: 1 },
+                          9: { c: 7, r: 1 }, 10: { c: 8, r: 1 }, 11: { c: 9, r: 0 },
+                          12: { c: 9, r: 2 }
+                        };
+                        const loc = LAYOUT[node.id];
+                        if (!loc) return null;
+                        const left = 40 + loc.c * 206;
+                        const top = 40 + loc.r * 200;
+                        return (
+                          <div key={node.id} style={{ position: 'absolute', left, top, zIndex: 10 }}>
+                            <NodeCard node={g(node.id)} onNodeClick={handleNodeClick} />
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
