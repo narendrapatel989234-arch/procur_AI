@@ -20,6 +20,7 @@ import {
 const STATUS_CONFIG = {
   'Pending RFP Approval': { bg: '#fff7ed', color: '#b45309', border: 'rgba(180,83,9,0.2)' },
   'RFP Published': { bg: '#ede9fe', color: '#6d28d9', border: 'rgba(109,40,217,0.2)' },
+  'Evaluation In Progress': { bg: '#e0e7ff', color: '#4338ca', border: 'rgba(67,56,202,0.2)' },
   'Vendor Finalized': { bg: '#dcfce7', color: '#166534', border: 'rgba(22,101,52,0.2)' },
   'SoW Draft': { bg: '#fffbeb', color: '#b45309', border: 'rgba(251,191,36,0.4)' },
   'SoW Accepted': { bg: '#eff6ff', color: '#1d4ed8', border: 'rgba(37,99,235,0.2)' },
@@ -988,13 +989,13 @@ const REASONING_MAP = {
 };
 
 const SOW_CLAUSES = [
-  { id: 'CLS-101', desc: 'Defines the ownership rights of any intellectual property developed during the course of the engagement, ensuring all IP is transferred to the buyer upon completion.', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
-  { id: 'CLS-102', desc: 'Obligates both parties to protect sensitive business information and trade secrets from unauthorized disclosure.', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
-  { id: 'CLS-103', desc: 'Outlines the payment schedule and specific milestones that must be met before payments are released.', type: 'Payment Terms', geo: 'UAE', risk: 'Low' },
-  { id: 'CLS-104', desc: 'Details the conditions under which the contract can be terminated and the procedures for transitioning services.', type: 'Termination', geo: 'Global', risk: 'High' },
-  { id: 'CLS-105', desc: 'Specifies the limits of liability for both parties and details indemnification obligations for third-party claims.', type: 'Liability', geo: 'Global', risk: 'High' },
-  { id: 'CLS-106', desc: 'Establishes the process for resolving disputes, including escalation procedures and potential arbitration or mediation.', type: 'Indemnity', geo: 'UAE', risk: 'Medium' },
-  { id: 'CLS-107', desc: 'Defines the required performance levels, service availability, and penalties for failing to meet the SLA.', type: 'Warranty', geo: 'Global', risk: 'Low' },
+  { id: 'CLS-101', desc: 'Defines the ownership rights of any intellectual property developed during the course of the engagement, ensuring all IP is transferred to the buyer upon completion.', cat: 'Legal', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
+  { id: 'CLS-102', desc: 'Obligates both parties to protect sensitive business information and trade secrets from unauthorized disclosure.', cat: 'Legal', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
+  { id: 'CLS-103', desc: 'Outlines the payment schedule and specific milestones that must be met before payments are released.', cat: 'Financial', type: 'Payment Terms', geo: 'UAE', risk: 'Low' },
+  { id: 'CLS-104', desc: 'Details the conditions under which the contract can be terminated and the procedures for transitioning services.', cat: 'Legal', type: 'Termination', geo: 'Global', risk: 'High' },
+  { id: 'CLS-105', desc: 'Specifies the limits of liability for both parties and details indemnification obligations for third-party claims.', cat: 'Legal', type: 'Liability', geo: 'Global', risk: 'High' },
+  { id: 'CLS-106', desc: 'Establishes the process for resolving disputes, including escalation procedures and potential arbitration or mediation.', cat: 'Legal', type: 'Indemnity', geo: 'UAE', risk: 'Medium' },
+  { id: 'CLS-107', desc: 'Defines the required performance levels, service availability, and penalties for failing to meet the SLA.', cat: 'Operational', type: 'Warranty', geo: 'Global', risk: 'Low' },
 ];
 
 export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState }) {
@@ -1029,6 +1030,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
   const [showAddClauseModal, setShowAddClauseModal] = useState(false);
   const [clauseSearch, setClauseSearch] = useState('');
+  const [activeClauseFilterDrop, setActiveClauseFilterDrop] = useState(null);
+  const [clauseCategoryFilter, setClauseCategoryFilter] = useState('');
   const [clauseTypeFilter, setClauseTypeFilter] = useState('');
   const [geoFilter, setGeoFilter] = useState('');
   const [riskFilter, setRiskFilter] = useState('');
@@ -1235,7 +1238,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [suppFileDrag, setSuppFileDrag] = useState(null);
   const [matrixExpanded, setMatrixExpanded] = useState({ g1: true, g2: true, g3: true, g4: true, g5: true, g6: true, g7: true });
 
-  const prStatus = sowSigned ? 'SoW Active' : sowAccepted ? 'SoW Accepted' : sowStage === 'drafting' ? 'SoW Draft' : selectedAwardVendor ? 'Vendor Finalized' : published ? 'RFP Published' : 'Pending RFP Approval';
+  const prStatus = sowSigned ? 'SoW Active' : sowAccepted ? 'SoW Accepted' : sowStage === 'drafting' ? 'SoW Draft' : selectedAwardVendor ? 'Vendor Finalized' : (published && proposals.length > 0) ? 'Evaluation In Progress' : published ? 'RFP Published' : 'Pending RFP Approval';
   const statusCfg = STATUS_CONFIG[prStatus];
   const handlePublish = () => { setShowPublishConfirm(false); setPublished(true); setActiveTab('proposals'); };
 
@@ -4454,29 +4457,49 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
               </div>
 
-              <select value={clauseTypeFilter} onChange={e => setClauseTypeFilter(e.target.value)} style={{ padding: '10px 32px 10px 14px', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 13, outline: 'none', background: '#fff', color: '#1a1a1a', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center', cursor: 'pointer' }}>
-                <option value="">Clause Type</option>
-                <option value="Payment Terms">Payment Terms</option>
-                <option value="Liability">Liability</option>
-                <option value="Warranty">Warranty</option>
-                <option value="Indemnity">Indemnity</option>
-                <option value="Termination">Termination</option>
-                <option value="Confidentiality">Confidentiality</option>
-              </select>
+              <div style={{ width: 160 }}>
+                <EDrop
+                  open={activeClauseFilterDrop === 'category'}
+                  onToggle={() => setActiveClauseFilterDrop(activeClauseFilterDrop === 'category' ? null : 'category')}
+                  value={clauseCategoryFilter || 'All'}
+                  options={['All', 'Legal', 'Financial', 'Operational', 'Compliance']}
+                  onChange={val => { setClauseCategoryFilter(val === 'All' ? '' : val); setActiveClauseFilterDrop(null); }}
+                  renderOption={(val, isBtn) => isBtn ? (val === 'All' ? 'Clause Category' : `Category: ${val}`) : val}
+                />
+              </div>
 
-              <select value={geoFilter} onChange={e => setGeoFilter(e.target.value)} style={{ padding: '10px 32px 10px 14px', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 13, outline: 'none', background: '#fff', color: '#1a1a1a', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center', cursor: 'pointer' }}>
-                <option value="">Geography</option>
-                <option value="Global">Global</option>
-                <option value="UAE">UAE</option>
-                <option value="KSA">KSA</option>
-              </select>
+              <div style={{ width: 160 }}>
+                <EDrop
+                  open={activeClauseFilterDrop === 'type'}
+                  onToggle={() => setActiveClauseFilterDrop(activeClauseFilterDrop === 'type' ? null : 'type')}
+                  value={clauseTypeFilter || 'All'}
+                  options={['All', 'Payment Terms', 'Liability', 'Warranty', 'Indemnity', 'Termination', 'Confidentiality', 'Data Privacy', 'Insurance']}
+                  onChange={val => { setClauseTypeFilter(val === 'All' ? '' : val); setActiveClauseFilterDrop(null); }}
+                  renderOption={(val, isBtn) => isBtn ? (val === 'All' ? 'Clause Type' : `Type: ${val}`) : val}
+                />
+              </div>
 
-              <select value={riskFilter} onChange={e => setRiskFilter(e.target.value)} style={{ padding: '10px 32px 10px 14px', border: '1px solid var(--border-subtle)', borderRadius: 8, fontSize: 13, outline: 'none', background: '#fff', color: '#1a1a1a', appearance: 'none', backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23666%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center', cursor: 'pointer' }}>
-                <option value="">Risk Level</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </select>
+              <div style={{ width: 140 }}>
+                <EDrop
+                  open={activeClauseFilterDrop === 'geo'}
+                  onToggle={() => setActiveClauseFilterDrop(activeClauseFilterDrop === 'geo' ? null : 'geo')}
+                  value={geoFilter || 'All'}
+                  options={['All', 'Global', 'UAE', 'KSA']}
+                  onChange={val => { setGeoFilter(val === 'All' ? '' : val); setActiveClauseFilterDrop(null); }}
+                  renderOption={(val, isBtn) => isBtn ? (val === 'All' ? 'Geography' : `Geo: ${val}`) : val}
+                />
+              </div>
+
+              <div style={{ width: 140 }}>
+                <EDrop
+                  open={activeClauseFilterDrop === 'risk'}
+                  onToggle={() => setActiveClauseFilterDrop(activeClauseFilterDrop === 'risk' ? null : 'risk')}
+                  value={riskFilter || 'All'}
+                  options={['All', 'High', 'Medium', 'Low']}
+                  onChange={val => { setRiskFilter(val === 'All' ? '' : val); setActiveClauseFilterDrop(null); }}
+                  renderOption={(val, isBtn) => isBtn ? (val === 'All' ? 'Risk Level' : `Risk: ${val}`) : val}
+                />
+              </div>
 
             </div>
 
@@ -4507,6 +4530,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                       <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE DESCRIPTION</th>
 
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE CATEGORY</th>
+
                       <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>TYPE</th>
 
                       <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>GEOGRAPHY</th>
@@ -4521,6 +4546,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                     {SOW_CLAUSES.filter(c =>
                       (c.id.toLowerCase().includes(clauseSearch.toLowerCase()) || c.desc.toLowerCase().includes(clauseSearch.toLowerCase())) &&
+                      (clauseCategoryFilter === '' || c.cat === clauseCategoryFilter) &&
                       (clauseTypeFilter === '' || c.type === clauseTypeFilter) &&
                       (geoFilter === '' || c.geo === geoFilter) &&
                       (riskFilter === '' || c.risk === riskFilter)
@@ -4550,6 +4576,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               {c.desc}
                             </div>
                           </td>
+
+                          <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.cat}</td>
 
                           <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.type}</td>
 

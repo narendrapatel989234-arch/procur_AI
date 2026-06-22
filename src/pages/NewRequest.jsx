@@ -554,7 +554,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
   const [wandingSection, setWandingSection] = useState(null);
 
   const handleWandClick = () => {
-    setWandingSection('General Info');
+    setWandingSection('Category Info');
     setTimeout(() => {
       setWandingSection(null);
       setFReqTitle('MacBook Pro Units — Q3 Engineering Batch');
@@ -1944,12 +1944,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                   <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 16, padding: 28, boxShadow: '0 1px 4px rgba(14,15,37,0.04)' }}>
 
                     {/* ── SECTION 1: GENERAL INFO ── */}
-                    <SectionLabel
-                      showWand
-                      wandDisabled={!isAnyFieldFilled}
-                      isWanding={wandingSection === 'General Info'}
-                      onWandClick={handleWandClick}
-                    >General Info</SectionLabel>
+                    <SectionLabel>General Info</SectionLabel>
 
                     {/* Requisition ID — read only */}
                     <div style={{ marginBottom: 16 }}>
@@ -2015,7 +2010,12 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                     <Divider />
 
                     {/* ── SECTION 2: CATEGORY INFO ── */}
-                    <SectionLabel>Category Info</SectionLabel>
+                    <SectionLabel
+                      showWand
+                      wandDisabled={!isAnyFieldFilled}
+                      isWanding={wandingSection === 'Category Info'}
+                      onWandClick={handleWandClick}
+                    >Category Info</SectionLabel>
 
                     {/* Procurement Category */}
                     <div style={{ marginBottom: 16 }}>
@@ -2082,7 +2082,8 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                       {aiFilledFields.has('fReqDesc') && <AiFilledTag />}
                     </div>
 
-                    {/* Attachments */}
+                    {/* Attachments (Hidden) */}
+                    {false && (
                     <div style={{ marginBottom: 16 }}>
                       <FL>Attachments</FL>
                       {uploadedFiles.length > 0 && (
@@ -2138,6 +2139,7 @@ export default function NewRequest({ setCurrentPage, onNavigate, activeNav, user
                       )}
                       <input type="file" accept=".pdf,.docx,.ppt,.pptx" style={{ display: 'none' }} ref={formFileInputRef} onChange={handleFormFileSelect} />
                     </div>
+                    )}
 
                     <Divider />
 

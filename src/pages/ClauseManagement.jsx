@@ -6,18 +6,24 @@ import {
 } from 'lucide-react';
 
 const INITIAL_CLAUSE_ROWS = [
-  { id: 'CLS-101', name: 'Standard Payment Terms 30 Days', type: 'Payment Terms', geography: 'Global', risk: 'Low', version: 'v1.2', description: 'This clause outlines the standard payment terms for all vendors, specifying a net 30-day payment cycle from the date of invoice receipt. It includes penalties for late payments and details the required format for invoice submissions to ensure timely processing and compliance with internal financial policies.' },
-  { id: 'CLS-102', name: 'Limitation of Liability Capped', type: 'Liability', geography: 'North America', risk: 'Medium', version: 'v2.0', description: 'Sets a cap on the maximum liability exposure for the company in the event of a breach of contract or negligence. The cap is generally tied to the total contract value or a fixed amount, excluding cases of gross negligence, willful misconduct, or breaches of confidentiality obligations.' },
-  { id: 'CLS-103', name: 'Software Warranty 90 Days', type: 'Warranty', geography: 'Global', risk: 'Low', version: 'v1.1', description: 'Provides a standard 90-day warranty period for all customized software deliverables. During this period, the vendor is obligated to fix any defects, bugs, or non-conformities at no additional cost. It also details the procedure for reporting issues and the expected response times.' },
-  { id: 'CLS-104', name: 'Mutual Indemnification', type: 'Indemnity', geography: 'EMEA', risk: 'High', version: 'v3.1', description: 'A mutual indemnification clause where both parties agree to hold each other harmless against third-party claims arising from intellectual property infringement, bodily injury, or property damage caused by the indemnifying party’s negligence or willful misconduct.' },
-  { id: 'CLS-105', name: 'Termination for Convenience 60 Days', type: 'Termination', geography: 'Global', risk: 'Medium', version: 'v1.0', description: 'Allows either party to terminate the agreement for any reason without cause by providing a 60-day written notice. It covers the rights and obligations of both parties upon termination, including the payment for services rendered up to the termination date and the return of confidential information.' },
-  { id: 'CLS-106', name: 'Strict Confidentiality NDA', type: 'Confidentiality', geography: 'APAC', risk: 'High', version: 'v2.2', description: 'Defines what constitutes confidential information and imposes strict obligations on the receiving party to protect it. It specifies the duration of the confidentiality obligations, permitted disclosures (e.g., to legally compelled entities), and the consequences of a breach.' },
-  { id: 'CLS-107', name: 'Extended Payment Terms 60 Days', type: 'Payment Terms', geography: 'EMEA', risk: 'Medium', version: 'v1.0', description: 'Similar to standard payment terms but extends the payment cycle to 60 days. Typically used for strategic vendors or specific regional requirements where extended credit periods are standard practice. Requires higher level approval before inclusion.' },
-  { id: 'CLS-108', name: 'Unlimited Liability (Data Breach)', type: 'Liability', geography: 'Global', risk: 'High', version: 'v1.5', description: 'Specifies that liability is uncapped in cases involving a data breach or violation of data privacy regulations (like GDPR or CCPA). It mandates that the vendor assumes full financial responsibility for any damages, fines, and remediation costs resulting from such a breach.' },
+  { id: 'CLS-101', name: 'Standard Payment Terms 30 Days', category: 'Commercial', type: 'Payment Terms', geography: 'Global', risk: 'Low', version: 'v1.2', description: 'This clause outlines the standard payment terms for all vendors, specifying a net 30-day payment cycle from the date of invoice receipt. It includes penalties for late payments and details the required format for invoice submissions to ensure timely processing and compliance with internal financial policies.' },
+  { id: 'CLS-102', name: 'Limitation of Liability Capped', category: 'Legal', type: 'Limitation of Liability', geography: 'North America', risk: 'Medium', version: 'v2.0', description: 'Sets a cap on the maximum liability exposure for the company in the event of a breach of contract or negligence. The cap is generally tied to the total contract value or a fixed amount, excluding cases of gross negligence, willful misconduct, or breaches of confidentiality obligations.' },
+  { id: 'CLS-103', name: 'Software Warranty 90 Days', category: 'Delivery', type: 'Acceptance Criteria', geography: 'Global', risk: 'Low', version: 'v1.1', description: 'Provides a standard 90-day warranty period for all customized software deliverables. During this period, the vendor is obligated to fix any defects, bugs, or non-conformities at no additional cost. It also details the procedure for reporting issues and the expected response times.' },
+  { id: 'CLS-104', name: 'Mutual Indemnification', category: 'Legal', type: 'Indemnity', geography: 'EMEA', risk: 'High', version: 'v3.1', description: 'A mutual indemnification clause where both parties agree to hold each other harmless against third-party claims arising from intellectual property infringement, bodily injury, or property damage caused by the indemnifying party’s negligence or willful misconduct.' },
+  { id: 'CLS-105', name: 'Termination for Convenience 60 Days', category: 'Legal', type: 'Governing Law', geography: 'Global', risk: 'Medium', version: 'v1.0', description: 'Allows either party to terminate the agreement for any reason without cause by providing a 60-day written notice. It covers the rights and obligations of both parties upon termination, including the payment for services rendered up to the termination date and the return of confidential information.' },
+  { id: 'CLS-106', name: 'Strict Confidentiality NDA', category: 'Compliance', type: 'Confidentiality', geography: 'APAC', risk: 'High', version: 'v2.2', description: 'Defines what constitutes confidential information and imposes strict obligations on the receiving party to protect it. It specifies the duration of the confidentiality obligations, permitted disclosures (e.g., to legally compelled entities), and the consequences of a breach.' },
+  { id: 'CLS-107', name: 'Extended Payment Terms 60 Days', category: 'Commercial', type: 'Payment Terms', geography: 'EMEA', risk: 'Medium', version: 'v1.0', description: 'Similar to standard payment terms but extends the payment cycle to 60 days. Typically used for strategic vendors or specific regional requirements where extended credit periods are standard practice. Requires higher level approval before inclusion.' },
+  { id: 'CLS-108', name: 'Unlimited Liability (Data Breach)', category: 'Legal', type: 'Liability', geography: 'Global', risk: 'High', version: 'v1.5', description: 'Specifies that liability is uncapped in cases involving a data breach or violation of data privacy regulations (like GDPR or CCPA). It mandates that the vendor assumes full financial responsibility for any damages, fines, and remediation costs resulting from such a breach.' },
 ];
 
 const FILTER_OPTIONS = {
-  'Clause type': ['Payment Terms', 'Liability', 'Warranty', 'Indemnity', 'Termination', 'Confidentiality'],
+  'Clause category': ['Commercial', 'Legal', 'Delivery', 'Compliance'],
+  'Clause type': [
+    'Payment Terms', 'Pricing & Fees', 'Taxes', 'Penalties & Credits', 'Discounts & Incentives',
+    'Liability', 'Limitation of Liability', 'Indemnity', 'Governing Law', 'Dispute Resolution',
+    'Scope of Work', 'Deliverables', 'Milestones', 'Acceptance Criteria', 'Change Management',
+    'Data Protection', 'Confidentiality', 'Security Compliance', 'Data Residency', 'Audit Rights'
+  ],
   'Geography': ['Global', 'North America', 'EMEA', 'APAC'],
   'Risk level': ['Low', 'Medium', 'High'],
 };
@@ -189,6 +195,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
 
   const [openFilter, setOpenFilter] = useState(null);
   const [activeFilters, setActiveFilters] = useState({
+    'Clause category': [],
     'Clause type': [],
     'Geography': [],
     'Risk level': []
@@ -206,12 +213,14 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
   const [clauseToView, setClauseToView] = useState(null);
 
   const [editClauseNo, setEditClauseNo] = useState('');
+  const [editClauseCategory, setEditClauseCategory] = useState('');
   const [editClauseType, setEditClauseType] = useState('');
   const [editClauseDesc, setEditClauseDesc] = useState('');
   const [editClauseGeo, setEditClauseGeo] = useState('');
   const [editClauseRisk, setEditClauseRisk] = useState('');
 
   const [newClauseNo, setNewClauseNo] = useState('');
+  const [newClauseCategory, setNewClauseCategory] = useState('');
   const [newClauseType, setNewClauseType] = useState('');
   const [newClauseDesc, setNewClauseDesc] = useState('');
   const [newClauseGeo, setNewClauseGeo] = useState('');
@@ -237,7 +246,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
   };
 
   const handleClearAllFilters = () => {
-    setActiveFilters({ 'Clause type': [], 'Geography': [], 'Risk level': [] });
+    setActiveFilters({ 'Clause category': [], 'Clause type': [], 'Geography': [], 'Risk level': [] });
     setTableSearch('');
   };
 
@@ -273,6 +282,9 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
         );
       }
 
+      if (activeFilters['Clause category'].length > 0) {
+        filtered = filtered.filter(r => activeFilters['Clause category'].includes(r.category));
+      }
       if (activeFilters['Clause type'].length > 0) {
         filtered = filtered.filter(r => activeFilters['Clause type'].includes(r.type));
       }
@@ -420,6 +432,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                 <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
                   {[
                     { label: 'Clause No', key: 'id', width: 100 },
+                    { label: 'Clause Category', key: 'category', width: 140 },
                     { label: 'Clause Type', key: 'type', width: 140 },
                     { label: 'Clause Description', key: 'name', width: 300 },
                     { label: 'Geography', key: 'geography', width: 120 },
@@ -444,21 +457,21 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
               </thead>
               <tbody style={{ position: 'relative' }}>
                 {tableScrollable && (
-                  <td colSpan={7} style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 8, background: 'linear-gradient(to right, rgba(0,0,0,0.03), transparent)', pointerEvents: 'none', border: 'none', padding: 0 }} />
+                  <td colSpan={8} style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 8, background: 'linear-gradient(to right, rgba(0,0,0,0.03), transparent)', pointerEvents: 'none', border: 'none', padding: 0 }} />
                 )}
                 {isSearching ? (
                   Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                      {Array.from({ length: 7 }).map((_, j) => (
+                      {Array.from({ length: 8 }).map((_, j) => (
                         <td key={j} style={{ padding: '16px 20px' }}>
-                          <div className="skeleton-box" style={{ height: 16, width: j === 2 ? '80%' : '60%' }} />
+                          <div className="skeleton-box" style={{ height: 16, width: j === 3 ? '80%' : '60%' }} />
                         </td>
                       ))}
                     </tr>
                   ))
                 ) : displayedRows.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
+                    <td colSpan={8} style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
                       No clauses found matching your search.
                     </td>
                   </tr>
@@ -469,6 +482,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                       <tr key={row.id} className="tptr" style={{ borderBottom: idx < displayedRows.length - 1 ? '1px solid var(--border-subtle)' : 'none', cursor: 'pointer' }} onClick={() => {
                         setClauseToView(row);
                         setEditClauseNo(row.id);
+                        setEditClauseCategory(row.category);
                         setEditClauseType(row.type);
                         setEditClauseDesc(row.description);
                         setEditClauseGeo(row.geography);
@@ -478,6 +492,9 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                       }}>
                         <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
                           {row.id}
+                        </td>
+                        <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
+                          {row.category}
                         </td>
                         <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
                           {row.type}
@@ -517,6 +534,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                                   setOpenActionId(null);
                                   setClauseToView(row);
                                   setEditClauseNo(row.id);
+                                  setEditClauseCategory(row.category);
                                   setEditClauseType(row.type);
                                   setEditClauseDesc(row.description);
                                   setEditClauseGeo(row.geography);
@@ -585,6 +603,11 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
               </div>
 
               <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause category <span style={{ color: '#ef4444' }}>*</span></label>
+                <CustomSelect label="Select clause category" options={FILTER_OPTIONS['Clause category']} value={newClauseCategory} onChange={setNewClauseCategory} />
+              </div>
+
+              <div>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause type <span style={{ color: '#ef4444' }}>*</span></label>
                 <CustomSelect label="Select clause type" options={FILTER_OPTIONS['Clause type']} value={newClauseType} onChange={setNewClauseType} />
               </div>
@@ -607,11 +630,12 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
 
             <div style={{ padding: '24px 32px', borderTop: '1px solid var(--border-subtle)', display: 'flex', gap: 16 }}>
               <button
-                disabled={!(newClauseNo.trim() && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk)}
+                disabled={!(newClauseNo.trim() && newClauseCategory && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk)}
                 onClick={() => {
                   const newClause = {
                     id: newClauseNo.trim(),
                     name: 'New Clause',
+                    category: newClauseCategory,
                     type: newClauseType,
                     geography: newClauseGeo,
                     risk: newClauseRisk,
@@ -625,8 +649,8 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                   setShowToaster(true);
                   setTimeout(() => setShowToaster(false), 3000);
                 }}
-                style={{ flex: 1, padding: '0 16px', height: 42, background: (newClauseNo.trim() && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk) ? '#0052cc' : 'var(--bg-surface-2)', border: 'none', borderRadius: 8, color: (newClauseNo.trim() && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk) ? '#fff' : 'var(--text-tertiary)', fontSize: 14, fontWeight: 600, cursor: (newClauseNo.trim() && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk) ? 'pointer' : 'default', transition: 'box-shadow 0.15s ease' }}
-                onMouseEnter={e => { if (newClauseNo.trim() && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk) e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)' }}
+                style={{ flex: 1, padding: '0 16px', height: 42, background: (newClauseNo.trim() && newClauseCategory && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk) ? '#0052cc' : 'var(--bg-surface-2)', border: 'none', borderRadius: 8, color: (newClauseNo.trim() && newClauseCategory && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk) ? '#fff' : 'var(--text-tertiary)', fontSize: 14, fontWeight: 600, cursor: (newClauseNo.trim() && newClauseCategory && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk) ? 'pointer' : 'default', transition: 'box-shadow 0.15s ease' }}
+                onMouseEnter={e => { if (newClauseNo.trim() && newClauseCategory && newClauseType && newClauseDesc.trim() && newClauseGeo && newClauseRisk) e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)' }}
                 onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
               >
                 Create
@@ -651,6 +675,15 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
               <div>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause No. {(!isViewOnly) && <span style={{ color: '#ef4444' }}>*</span>}</label>
                 <input type="text" value={editClauseNo} disabled={isViewOnly} onChange={e => setEditClauseNo(e.target.value)} style={{ width: '100%', padding: '12px 14px', background: isViewOnly ? 'var(--bg-surface-1)' : '#fff', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', color: 'var(--text-primary)', transition: 'border-color 0.15s ease' }} onFocus={e => !isViewOnly && (e.currentTarget.style.borderColor = '#7c7cff')} onBlur={e => e.currentTarget.style.borderColor = 'var(--border-default)'} />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>Clause category {(!isViewOnly) && <span style={{ color: '#ef4444' }}>*</span>}</label>
+                {isViewOnly ? (
+                  <input type="text" value={editClauseCategory} disabled style={{ width: '100%', padding: '12px 14px', background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', borderRadius: 8, fontSize: 14, outline: 'none', color: 'var(--text-primary)' }} />
+                ) : (
+                  <CustomSelect label="Select clause category" options={FILTER_OPTIONS['Clause category']} value={editClauseCategory} onChange={setEditClauseCategory} />
+                )}
               </div>
 
               <div>
@@ -695,11 +728,12 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
               ) : (
                 <>
                   <button
-                    disabled={!(editClauseNo.trim() && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk)}
+                    disabled={!(editClauseNo.trim() && editClauseCategory && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk)}
                     onClick={() => {
                       setClauses(prev => prev.map(c => c.id === clauseToView.id ? {
                         ...c,
                         id: editClauseNo.trim(),
+                        category: editClauseCategory,
                         type: editClauseType,
                         geography: editClauseGeo,
                         risk: editClauseRisk,
@@ -710,8 +744,8 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                       setShowToaster(true);
                       setTimeout(() => setShowToaster(false), 3000);
                     }}
-                    style={{ flex: 1, padding: '0 16px', height: 42, background: (editClauseNo.trim() && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk) ? '#0052cc' : 'var(--bg-surface-2)', border: 'none', borderRadius: 8, color: (editClauseNo.trim() && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk) ? '#fff' : 'var(--text-tertiary)', fontSize: 14, fontWeight: 600, cursor: (editClauseNo.trim() && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk) ? 'pointer' : 'default', transition: 'box-shadow 0.15s ease' }}
-                    onMouseEnter={e => { if (editClauseNo.trim() && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk) e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)' }}
+                    style={{ flex: 1, padding: '0 16px', height: 42, background: (editClauseNo.trim() && editClauseCategory && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk) ? '#0052cc' : 'var(--bg-surface-2)', border: 'none', borderRadius: 8, color: (editClauseNo.trim() && editClauseCategory && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk) ? '#fff' : 'var(--text-tertiary)', fontSize: 14, fontWeight: 600, cursor: (editClauseNo.trim() && editClauseCategory && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk) ? 'pointer' : 'default', transition: 'box-shadow 0.15s ease' }}
+                    onMouseEnter={e => { if (editClauseNo.trim() && editClauseCategory && editClauseType && editClauseDesc.trim() && editClauseGeo && editClauseRisk) e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)' }}
                     onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
                   >
                     Save
