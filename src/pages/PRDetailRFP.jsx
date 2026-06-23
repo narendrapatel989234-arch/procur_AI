@@ -99,7 +99,7 @@ function NodeCard({ node, compact = false, onNodeClick, hasReasoning }) {
   const isClickable = node.status === 'complete' || node.status === 'active';
   const { status, type, title, actor, time, icon: Icon } = node;
   const w = compact ? 140 : 160;
-  
+
   let bg = '#f0f0f3', border = '1px dashed #d5d5d5', borderTop = 'none', shadow = 'none', opacity = 0.6;
   let iconBg = 'rgba(124,124,255,0.07)', iconColor = '#aaa', iconAnim = 'none';
   let badgeBg = '#e8e8eb', badgeColor = '#999', badgeText = 'QUEUED';
@@ -1000,7 +1000,7 @@ const SOW_CLAUSES = [
 
 export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState }) {
   const [nodes, setNodes] = useState(COMPLEX_NODES.map(n => ({ ...n, status: 'waiting', time: null })));
-  
+
   const upd = (ids, status) => {
     setNodes(prev => prev.map(n => ids.includes(n.id) ? { ...n, status, time: 'Just now' } : n));
   };
@@ -2431,11 +2431,11 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               const sy = getY(f.r) + 76;
                               const ex = getX(t.c);
                               const ey = getY(t.r) + 76;
-                              
+
                               let d;
                               let labelX = sx + 10;
                               let labelY = sy - 8;
-                              
+
                               if (f.c === t.c) { // vertical
                                 const syv = f.r < t.r ? getY(f.r) + 152 : getY(f.r);
                                 const eyv = f.r < t.r ? getY(t.r) : getY(t.r) + 152;
@@ -3721,7 +3721,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>Upload Signed SoW Document</div>
                             <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginBottom: 16 }}>Please upload the final signed Statement of Work to proceed to Purchase Order generation.</div>
                             {!sowSigned ? (
-                              <div 
+                              <div
                                 onClick={() => signedSowFileRef.current?.click()}
                                 style={{ padding: '32px 24px', border: '2px dashed var(--border-default)', borderRadius: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', background: '#fafafa', transition: 'all 0.2s' }}
                                 onMouseEnter={e => { e.currentTarget.style.borderColor = '#0052cc'; e.currentTarget.style.background = '#f0f4ff'; }}
@@ -3779,7 +3779,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         {/* CANCEL SOW */}
                         {sowStage === 'drafting' && (
                           <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                            <button disabled={sowAccepted} onClick={() => { setShowCancelSowToast(true); setTimeout(() => onNavigate('Dashboard'), 1500); }} style={{ padding: '10px 20px', border: '1px solid #ef4444', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 600, cursor: sowAccepted ? 'not-allowed' : 'pointer', color: '#ef4444', opacity: sowAccepted ? 0.5 : 1, transition: 'all 0.2s' }} onMouseEnter={e => { if(!sowAccepted) e.currentTarget.style.background = '#fef2f2' }} onMouseLeave={e => { if(!sowAccepted) e.currentTarget.style.background = '#fff' }}>
+                            <button disabled={sowAccepted} onClick={() => { setShowCancelSowToast(true); setTimeout(() => onNavigate('Dashboard'), 1500); }} style={{ padding: '10px 20px', border: '1px solid #ef4444', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 600, cursor: sowAccepted ? 'not-allowed' : 'pointer', color: '#ef4444', opacity: sowAccepted ? 0.5 : 1, transition: 'all 0.2s' }} onMouseEnter={e => { if (!sowAccepted) e.currentTarget.style.background = '#fef2f2' }} onMouseLeave={e => { if (!sowAccepted) e.currentTarget.style.background = '#fff' }}>
                               Cancel SoW
                             </button>
                           </div>
@@ -4526,13 +4526,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                       </th>
 
-                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE NO.</th>
-
-                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE DESCRIPTION</th>
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE ID</th>
 
                       <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE CATEGORY</th>
 
-                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>TYPE</th>
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE TYPE</th>
+
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE DESCRIPTION</th>
 
                       <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>GEOGRAPHY</th>
 
@@ -4571,15 +4571,15 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                           <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)', fontWeight: 600 }}>{c.id}</td>
 
+                          <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.cat}</td>
+
+                          <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.type}</td>
+
                           <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>
                             <div style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.5, minWidth: 200, maxWidth: 350 }}>
                               {c.desc}
                             </div>
                           </td>
-
-                          <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.cat}</td>
-
-                          <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.type}</td>
 
                           <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.geo}</td>
 
