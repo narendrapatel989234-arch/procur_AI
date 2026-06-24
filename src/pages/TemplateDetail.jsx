@@ -9,7 +9,7 @@ import TaskList from '@tiptap/extension-task-list';
 import {
   ChevronRight, ChevronDown, Undo, Redo, Bold, Italic, Strikethrough, Underline as UnderlineIcon, Eraser,
   AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, Minus, LineChart,
-  Save, Plus, CheckSquare, Pencil, CheckCircle, X
+  Save, Plus, CheckSquare, Pencil, CheckCircle, X, Sparkles, ArrowUp, MessageSquare, Search, TrendingUp, RefreshCw
 } from 'lucide-react';
 
 export default function TemplateDetail({ onNavigate, activeNav }) {
@@ -18,6 +18,10 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
   const [zoom, setZoom] = useState(100);
   const [showHeadingMenu, setShowHeadingMenu] = useState(false);
   const [showListMenu, setShowListMenu] = useState(false);
+  const [aiInputValue, setAiInputValue] = useState('');
+  const [showAiMenu, setShowAiMenu] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const aiMenuRef = useRef(null);
 
   const [activeState, setActiveState] = useState({
     bold: false,
@@ -99,6 +103,9 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
       if (listMenuRef.current && !listMenuRef.current.contains(event.target)) {
         setShowListMenu(false);
       }
+      if (aiMenuRef.current && !aiMenuRef.current.contains(event.target)) {
+        setShowAiMenu(false);
+      }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -108,6 +115,33 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
     setMode('view');
     setToast({ message: 'Saved changes to the document' });
     setTimeout(() => setToast(null), 3000);
+  };
+
+  const handleAiAction = (action) => {
+    setShowAiMenu(false);
+    if (!aiInputValue.trim() && !action) return;
+    
+    setAiLoading(true);
+    setTimeout(() => {
+      setAiLoading(false);
+      setAiInputValue('');
+      
+      const targetAction = action || 'paragraph'; // default behavior for just submitting input
+      
+      if (targetAction === 'comment') {
+        editor?.chain().focus().insertContent('<blockquote><strong>AI Comment:</strong> Please ensure the scope includes the latest compliance requirements.</blockquote><p></p>').run();
+      } else if (targetAction === 'paragraph') {
+        editor?.chain().focus().insertContent('<p>Additionally, the vendor must provide comprehensive documentation and training materials upon successful deployment, ensuring seamless hand-off to the internal team.</p>').run();
+      } else if (targetAction === 'proofread') {
+        editor?.chain().focus().insertContent(' This section has been proofread for clarity and enterprise standards.').run();
+      } else if (targetAction === 'adjust') {
+        editor?.chain().focus().insertContent(' The selection has been adjusted to adopt a more formal tone.').run();
+      } else if (targetAction === 'component') {
+        editor?.chain().focus().insertContent('<div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 8px; margin: 16px 0;"><strong>Approval Matrix:</strong><br/>Level 1: Department Head<br/>Level 2: Procurement Director</div><p></p>').run();
+      } else if (targetAction === 'justify') {
+        editor?.chain().focus().insertContent(' <em>(Edit justified: Aligning with the updated Q3 procurement guidelines.)</em>').run();
+      }
+    }, 1500);
   };
 
   const breadcrumb = (
@@ -159,7 +193,7 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
           <button onClick={() => setToast(null)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex' }}><X size={16} color="#15803d" opacity={0.5} /></button>
         </div>
       )}
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', position: 'relative' }}>
 
         {/* TOOLBAR RIBBON */}
         {mode === 'edit' && (
@@ -285,21 +319,75 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
             </div>
 
             {/* UNIFIED TIPTAP EDITOR */}
-            <div className="unified-tiptap" style={{ fontSize: 15, color: '#334155', lineHeight: 1.7, fontFamily: 'inherit' }}>
+            <div className="unified-tiptap" style={{ fontSize: 15, color: '#334155', lineHeight: 1.7, fontFamily: 'inherit', flex: 1 }}>
               <EditorContent editor={editor} />
             </div>
 
           </div>
         </div>
+
+        {/* AI TOOLKIT INPUT */}
+        {mode === 'edit' && (
+          <div ref={aiMenuRef} style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 750, zIndex: 100 }}>
+            {showAiMenu && !aiLoading && (
+              <div style={{ position: 'absolute', bottom: 'calc(100% + 12px)', left: 0, background: '#fff', borderRadius: 16, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', border: '1px solid var(--border-subtle)', padding: '16px 0', width: 280, zIndex: 50 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', padding: '0 20px', marginBottom: 12 }}>AI Toolkit examples</div>
+                
+                <div className="ai-menu-item" onClick={() => handleAiAction('comment')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <MessageSquare size={16} /> <span style={{ fontSize: 14 }}>Add AI comment</span>
+                </div>
+                <div className="ai-menu-item" onClick={() => handleAiAction('paragraph')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <Plus size={16} /> <span style={{ fontSize: 14 }}>Add new paragraph</span>
+                </div>
+                <div className="ai-menu-item" onClick={() => handleAiAction('proofread')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <Search size={16} /> <span style={{ fontSize: 14 }}>Proofread</span>
+                </div>
+                <div className="ai-menu-item" onClick={() => handleAiAction('adjust')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <Pencil size={16} /> <span style={{ fontSize: 14 }}>Adjust text selection</span>
+                </div>
+                <div className="ai-menu-item" onClick={() => handleAiAction('component')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <TrendingUp size={16} /> <span style={{ fontSize: 14 }}>Add custom component</span>
+                </div>
+                <div className="ai-menu-item" onClick={() => handleAiAction('justify')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <CheckSquare size={16} /> <span style={{ fontSize: 14 }}>Justify edit</span>
+                </div>
+              </div>
+            )}
+            
+            <div style={{ position: 'relative', background: '#fff', borderRadius: 12, border: '1.5px solid rgba(124,124,255,0.4)', boxShadow: '0 8px 30px rgba(124,124,255,0.15)', overflow: 'hidden', transition: 'border-color 0.2s', display: 'flex', alignItems: 'center', padding: '12px 18px' }}>
+              {aiLoading ? (
+                <RefreshCw size={18} color="#7c7cff" style={{ flexShrink: 0, marginRight: 10, animation: 'spin 1s linear infinite' }} />
+              ) : (
+                <Sparkles size={18} color="#7c7cff" style={{ flexShrink: 0, marginRight: 10 }} />
+              )}
+              <input
+                type="text"
+                placeholder="Tell AI what else needs to be changed..."
+                value={aiInputValue}
+                onChange={(e) => setAiInputValue(e.target.value)}
+                onFocus={() => setShowAiMenu(true)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleAiAction(); }}
+                disabled={aiLoading}
+                style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1, fontSize: 14, color: aiLoading ? '#999' : '#1a1a1a', fontFamily: 'inherit' }}
+              />
+              <button onClick={() => handleAiAction()} disabled={aiLoading || !aiInputValue.trim()} style={{ background: aiInputValue.trim() && !aiLoading ? '#0052cc' : '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: aiInputValue.trim() && !aiLoading ? 'pointer' : 'not-allowed', flexShrink: 0, marginLeft: 10, transition: 'background 0.2s' }}>
+                <ArrowUp size={16} color={aiInputValue.trim() && !aiLoading ? '#fff' : '#6b7280'} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <style dangerouslySetInnerHTML={{
         __html: `
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-12px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .ai-menu-item { transition: background 0.15s ease; }
+        .ai-menu-item:hover { background: var(--bg-surface-2); }
         .unified-tiptap .ProseMirror {
           outline: none;
           min-height: 800px;

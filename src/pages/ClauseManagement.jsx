@@ -505,9 +505,10 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                 <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)' }}>
                   {[
                     { label: 'Clause ID', key: 'id', width: 100 },
+                    { label: 'Clause Title', key: 'name', width: 200 },
                     { label: 'Clause Category', key: 'category', width: 140 },
                     { label: 'Clause Type', key: 'type', width: 140 },
-                    { label: 'Clause Description', key: 'name', width: 300 },
+                    { label: 'Clause Description', key: 'description', width: 300 },
                     { label: 'Geography', key: 'geography', width: 120 },
                     { label: 'Risk level', key: 'risk', width: 120 },
                     { label: 'Actions', key: null, width: 80 }
@@ -536,7 +537,7 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                     <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                       {Array.from({ length: 8 }).map((_, j) => (
                         <td key={j} style={{ padding: '16px 20px' }}>
-                          <div className="skeleton-box" style={{ height: 16, width: j === 3 ? '80%' : '60%' }} />
+                          <div className="skeleton-box" style={{ height: 16, width: j === 4 ? '80%' : '60%' }} />
                         </td>
                       ))}
                     </tr>
@@ -565,6 +566,9 @@ export default function ClauseManagement({ setCurrentPage, onNavigate, activeNav
                       }}>
                         <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
                           {row.id}
+                        </td>
+                        <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>
+                          {row.name}
                         </td>
                         <td style={{ padding: '13px 16px', fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>
                           {row.category}

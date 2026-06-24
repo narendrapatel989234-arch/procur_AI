@@ -989,13 +989,13 @@ const REASONING_MAP = {
 };
 
 const SOW_CLAUSES = [
-  { id: 'CLS-101', desc: 'Defines the ownership rights of any intellectual property developed during the course of the engagement, ensuring all IP is transferred to the buyer upon completion.', cat: 'Legal', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
-  { id: 'CLS-102', desc: 'Obligates both parties to protect sensitive business information and trade secrets from unauthorized disclosure.', cat: 'Legal', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
-  { id: 'CLS-103', desc: 'Outlines the payment schedule and specific milestones that must be met before payments are released.', cat: 'Financial', type: 'Payment Terms', geo: 'UAE', risk: 'Low' },
-  { id: 'CLS-104', desc: 'Details the conditions under which the contract can be terminated and the procedures for transitioning services.', cat: 'Legal', type: 'Termination', geo: 'Global', risk: 'High' },
-  { id: 'CLS-105', desc: 'Specifies the limits of liability for both parties and details indemnification obligations for third-party claims.', cat: 'Legal', type: 'Liability', geo: 'Global', risk: 'High' },
-  { id: 'CLS-106', desc: 'Establishes the process for resolving disputes, including escalation procedures and potential arbitration or mediation.', cat: 'Legal', type: 'Indemnity', geo: 'UAE', risk: 'Medium' },
-  { id: 'CLS-107', desc: 'Defines the required performance levels, service availability, and penalties for failing to meet the SLA.', cat: 'Operational', type: 'Warranty', geo: 'Global', risk: 'Low' },
+  { id: 'CLS-101', title: 'Intellectual Property Rights', desc: 'Defines the ownership rights of any intellectual property developed during the course of the engagement, ensuring all IP is transferred to the buyer upon completion.', cat: 'Legal', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
+  { id: 'CLS-102', title: 'Strict Confidentiality NDA', desc: 'Obligates both parties to protect sensitive business information and trade secrets from unauthorized disclosure.', cat: 'Legal', type: 'Confidentiality', geo: 'Global', risk: 'Medium' },
+  { id: 'CLS-103', title: 'Standard Payment Terms 30 Days', desc: 'Outlines the payment schedule and specific milestones that must be met before payments are released.', cat: 'Financial', type: 'Payment Terms', geo: 'UAE', risk: 'Low' },
+  { id: 'CLS-104', title: 'Termination for Convenience', desc: 'Details the conditions under which the contract can be terminated and the procedures for transitioning services.', cat: 'Legal', type: 'Termination', geo: 'Global', risk: 'High' },
+  { id: 'CLS-105', title: 'Limitation of Liability', desc: 'Specifies the limits of liability for both parties and details indemnification obligations for third-party claims.', cat: 'Legal', type: 'Liability', geo: 'Global', risk: 'High' },
+  { id: 'CLS-106', title: 'Dispute Resolution', desc: 'Establishes the process for resolving disputes, including escalation procedures and potential arbitration or mediation.', cat: 'Legal', type: 'Indemnity', geo: 'UAE', risk: 'Medium' },
+  { id: 'CLS-107', title: 'Service Level Agreement', desc: 'Defines the required performance levels, service availability, and penalties for failing to meet the SLA.', cat: 'Operational', type: 'Warranty', geo: 'Global', risk: 'Low' },
 ];
 
 export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState }) {
@@ -3696,10 +3696,12 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                               <History size={13} /> Version History
                             </button>
-                            <button style={btnGhost} onClick={() => { setNewVersionNote(''); setShowNewVersionModal(true); }}
-                              onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                              <Plus size={13} /> New Version
-                            </button>
+                            {!sowAccepted && (
+                              <button style={btnGhost} onClick={() => { setNewVersionNote(''); setShowNewVersionModal(true); }}
+                                onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                <Plus size={13} /> New Version
+                              </button>
+                            )}
                             {!isSowEditing && (
                               sowAccepted ? (
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px', borderRadius: 8, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', fontSize: 12, fontWeight: 600, color: '#15803d' }}>
@@ -4528,6 +4530,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                       <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE ID</th>
 
+                      <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE TITLE</th>
+
                       <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE CATEGORY</th>
 
                       <th style={{ padding: '12px 16px', fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>CLAUSE TYPE</th>
@@ -4570,6 +4574,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </td>
 
                           <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)', fontWeight: 600 }}>{c.id}</td>
+
+                          <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)', fontWeight: 600 }}>{c.title}</td>
 
                           <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)' }}>{c.cat}</td>
 
