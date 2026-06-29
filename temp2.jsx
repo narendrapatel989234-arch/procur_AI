@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+﻿import React, { useState, useRef, useEffect, useCallback } from 'react';
 import MainLayout from '../layouts/MainLayout.jsx';
 import {
   ArrowLeft, Download, Sparkles, User, CheckCircle,
@@ -90,7 +90,7 @@ const COMPLEX_NODES = [
   { id: 31, title: 'Draft PO Generation', type: 'ai', icon: PackageCheck, c: 21, r: 1 },
   { id: 32, title: 'PO Approval', type: 'user', icon: UserCheck, c: 22, r: 1 },
   { id: 33, title: 'PO Created', type: 'ai', icon: CheckCircle, c: 23, r: 1 }
-].map(n => ({ ...n, status: 'complete', actor: n.type === 'ai' ? 'AI Agent' : 'Procurement', time: '08 May · 10:00' }));
+].map(n => ({ ...n, status: 'complete', actor: n.type === 'ai' ? 'AI Agent' : 'Procurement', time: '08 May ┬╖ 10:00' }));
 
 const EDGES = [
   { f: 0, t: 1 }, { f: 1, t: 2 }, { f: 2, t: 3 }, { f: 3, t: 5, label: 'Passed' }, { f: 3, t: 4, label: 'Failed' }, { f: 4, t: 2 },
@@ -160,29 +160,29 @@ function Arrow({ dashed = false }) {
   );
 }
 
-/* ════════════════════════════════════════
+/* ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ
    WYSIWYG EDITOR
-════════════════════════════════════════ */
+ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ */
 const INITIAL_HTML = `<h2>1. Introduction &amp; Background</h2>
 <p>DDAIS Group invites qualified technology consulting firms to submit proposals for the provision of AWS Cloud Migration Consulting Services. This Request for Proposal (RFP) outlines the scope of work, evaluation criteria, and submission requirements.</p>
 <p>DDAIS Group is undertaking a strategic initiative to migrate its existing on-premise infrastructure to Amazon Web Services (AWS). The engagement requires a team of senior cloud architects with demonstrable experience in large-scale enterprise migrations, security hardening, and post-migration optimisation.</p>
 <h2>2. Scope of Work</h2>
 <p>The selected vendor will be required to deliver the following:</p>
-<p><strong>Phase 1 — Assessment &amp; Architecture Design (Months 1–2)</strong></p>
+<p><strong>Phase 1 ΓÇö Assessment &amp; Architecture Design (Months 1ΓÇô2)</strong></p>
 <ul><li>Comprehensive assessment of existing on-premise infrastructure</li><li>AWS architecture design and migration strategy documentation</li><li>Risk assessment and mitigation plan</li><li>Stakeholder alignment workshops (minimum 3 sessions)</li></ul>
-<p><strong>Phase 2 — Migration Execution (Months 3–5)</strong></p>
-<ul><li>Phased migration of workloads to AWS (non-production → production)</li><li>Data migration with zero-downtime requirements</li><li>Security configuration and IAM policy implementation</li><li>Network topology redesign (VPC, subnets, security groups)</li></ul>
-<p><strong>Phase 3 — Stabilisation &amp; Handover (Month 6)</strong></p>
+<p><strong>Phase 2 ΓÇö Migration Execution (Months 3ΓÇô5)</strong></p>
+<ul><li>Phased migration of workloads to AWS (non-production ΓåÆ production)</li><li>Data migration with zero-downtime requirements</li><li>Security configuration and IAM policy implementation</li><li>Network topology redesign (VPC, subnets, security groups)</li></ul>
+<p><strong>Phase 3 ΓÇö Stabilisation &amp; Handover (Month 6)</strong></p>
 <ul><li>Post-migration performance optimisation</li><li>Knowledge transfer sessions for internal IT team</li><li>Final documentation and runbook delivery</li><li>30-day hypercare support</li></ul>
 <h2>3. Vendor Eligibility Requirements</h2>
 <p>Vendors must meet <strong>ALL</strong> of the following criteria to be considered:</p>
 <ul><li>Minimum 5 years of experience in cloud consulting engagements</li><li>AWS Premier or Advanced Partner status (mandatory)</li><li>At least 3 completed enterprise migration projects of similar scale (&gt;500 VMs)</li><li>Presence or operations capability in UAE / Dubai</li><li>ISO 27001 certified or equivalent information security certification</li><li>Minimum team: 3 Senior Cloud Architects + 2 Security Engineers + 1 Project Manager</li></ul>
 <h2>4. Commercial Terms</h2>
-<p><strong>Pricing Model:</strong> Time &amp; Materials (T&amp;M)<br/><strong>Estimated Budget:</strong> ₹45,00,000 / AED 2,000,000<br/><strong>Payment:</strong> Monthly invoicing against verified milestones<br/><strong>Currency:</strong> AED (preferred) or USD</p>
+<p><strong>Pricing Model:</strong> Time &amp; Materials (T&amp;M)<br/><strong>Estimated Budget:</strong> Γé╣45,00,000 / AED 2,000,000<br/><strong>Payment:</strong> Monthly invoicing against verified milestones<br/><strong>Currency:</strong> AED (preferred) or USD</p>
 <ul><li>Daily rates per resource level (Junior / Senior / Principal)</li><li>Estimated total resource days per phase</li><li>Travel and expenses policy (if applicable)</li><li>Any licensing or tooling costs separate from professional services</li></ul>
 <h2>5. Evaluation Criteria</h2>
 <p>Proposals will be scored across the following dimensions:</p>
-<ul><li>Technical Competency — <strong>30 points</strong></li><li>Relevant Experience — <strong>25 points</strong></li><li>Team Composition &amp; CVs — <strong>20 points</strong></li><li>Commercial Proposal — <strong>15 points</strong></li><li>Approach &amp; Methodology — <strong>10 points</strong></li></ul>
+<ul><li>Technical Competency ΓÇö <strong>30 points</strong></li><li>Relevant Experience ΓÇö <strong>25 points</strong></li><li>Team Composition &amp; CVs ΓÇö <strong>20 points</strong></li><li>Commercial Proposal ΓÇö <strong>15 points</strong></li><li>Approach &amp; Methodology ΓÇö <strong>10 points</strong></li></ul>
 <p>Vendors scoring below 60 points will not be considered. DDAIS Group reserves the right to negotiate with the top 2 vendors.</p>
 <h2>6. Submission Requirements &amp; Deadline</h2>
 <p><strong>Deadline:</strong> 15 June 2026, 17:00 GST &nbsp;|&nbsp; <strong>Validity:</strong> 90 days from submission</p>
@@ -194,7 +194,7 @@ const WYSIWYGEditor = ({
   setHtmlContent,
   docType = 'Request for Proposal',
   docTitle = 'AWS Cloud Migration Consulting Services',
-  docSubtitle = 'DDAIS Group · Procurement Division · RFP-2026-004',
+  docSubtitle = 'DDAIS Group ┬╖ Procurement Division ┬╖ RFP-2026-004',
   version = 'V1.1',
   onAddClauseClick,
   hideEditButton = false
@@ -509,7 +509,6 @@ const WYSIWYGEditor = ({
 
         </div>
       )}
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
       <div className="custom-scrollbar" style={{ flex: 1, background: isEditing ? '#f3f4f6' : '#fff', overflowY: 'auto', padding: isEditing ? '40px 20px' : '0 52px 52px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div style={{
@@ -534,7 +533,7 @@ const WYSIWYGEditor = ({
         </div>
       </div>
 
-      {isEditing && docType !== 'Statement of Work' && (
+      {isEditing && (
         <div ref={aiMenuRef} style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 750, zIndex: 100 }}>
           {showAiMenu && !aiLoading && (
             <div style={{ position: 'absolute', bottom: 'calc(100% + 12px)', left: 0, background: '#fff', borderRadius: 16, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', border: '1px solid var(--border-subtle)', padding: '16px 0', width: 280, zIndex: 50 }}>
@@ -590,8 +589,14 @@ const WYSIWYGEditor = ({
 
       {/* CONTEXT MENU */}
       {contextMenu.visible && (
-        <div ref={contextMenuRef} style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', width: 280, zIndex: 10000, padding: '8px 0', overflow: 'hidden' }}
+        <div ref={contextMenuRef} style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', width: 260, zIndex: 10000, padding: '8px 0', overflow: 'hidden' }}
           onMouseLeave={() => setContextMenu({ visible: false, x: 0, y: 0 })}>
+
+          {!hasSelection && (
+            <div style={{ padding: '10px 16px', fontSize: 12, color: '#b45309', background: '#fffbeb', borderBottom: '1px solid #fef3c7', marginBottom: 4, lineHeight: 1.4 }}>
+              Please select the respective text or section to proceed with AI actions
+            </div>
+          )}
 
           {aiDropdownOptions.map(opt => {
             const isEnabled = hasSelection || opt.alwaysEnabled;
@@ -603,46 +608,34 @@ const WYSIWYGEditor = ({
                   setContextMenu({ visible: false, x: 0, y: 0 });
                   setRightPane({ visible: true, action: opt.id, title: opt.label, selectedText: selText });
                 }}
-                style={{ padding: '10px 16px', display: 'flex', flexDirection: 'column', gap: 4, cursor: isEnabled ? 'pointer' : 'not-allowed', transition: 'background 0.15s' }}
+                style={{ padding: '10px 16px', fontSize: 13, color: isEnabled ? 'var(--text-primary)' : '#94a3b8', cursor: isEnabled ? 'pointer' : 'not-allowed', display: 'flex', alignItems: 'center', gap: 12, transition: 'background 0.15s' }}
                 onMouseEnter={e => { if (isEnabled) e.currentTarget.style.background = '#f8fafc' }}
                 onMouseLeave={e => { if (isEnabled) e.currentTarget.style.background = 'transparent' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13, color: isEnabled ? 'var(--text-primary)' : '#94a3b8' }}>
-                  <opt.icon size={15} color={isEnabled ? '#7c7cff' : '#cbd5e1'} />
-                  <span style={{ fontWeight: 500 }}>{opt.label}</span>
-                </div>
-                {(!hasSelection && opt.id !== 'generate_section') && (
-                  <div style={{ fontSize: 10.5, color: '#b45309', paddingLeft: 27, lineHeight: 1.3 }}>
-                    Please select the respective text or section to proceed with AI actions
-                  </div>
-                )}
+                <opt.icon size={15} color={isEnabled ? '#7c7cff' : '#cbd5e1'} />
+                <span style={{ fontWeight: 500 }}>{opt.label}</span>
               </div>
             );
           })}
         </div>
-      )}      {/* RIGHT PANE inline */}
+      )}
+
+      {/* RIGHT PANE */}
       {rightPane.visible && (
-        <div style={{ width: 380, background: '#fff', borderLeft: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', flexShrink: 0, animation: 'slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-            {/* Header */}
-            <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, width: '100%' }}>
-                <X size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', flexShrink: 0 }} onClick={closeRightPane} />
-                <select value={rightPane.action} onChange={e => {
-                  const opt = aiDropdownOptions.find(o => o.id === e.target.value);
-                  if (opt) setRightPane({...rightPane, action: opt.id, title: opt.label, selectedText: rightPane.selectedText});
-                }} style={{ border: 'none', outline: 'none', background: 'transparent', fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', cursor: 'pointer', fontFamily: 'inherit', flex: 1 }}>
-                  {aiDropdownOptions.map(opt => (
-                    <option key={opt.id} value={opt.id}>{opt.label}</option>
-                  ))}
-                </select>
-              </div>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(0,0,0,0.3)', display: 'flex', justifyContent: 'flex-end', animation: 'fadeIn 0.2s ease' }}>
+          <div style={{ width: 500, background: '#fff', height: '100%', boxShadow: '-8px 0 24px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column', animation: 'slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+            <div style={{ padding: '24px 32px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Preview Panel</h2>
+              <button onClick={closeRightPane} style={{ background: 'var(--bg-surface-2)', border: 'none', width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                <X size={16} />
+              </button>
             </div>
 
-            <div className="custom-scrollbar" style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1, padding: '32px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
               {rightPane.action === 'generate_section' ? (
                 <>
                   {(rpState === 'generating' || rpState === 'regenerating' || rpState === 'generated') && (
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                      <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 12 }}>Generated Section</div>
+                      <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 16 }}>Generated Section</div>
 
                       {(rpState === 'generating' || rpState === 'regenerating') ? (
                         <div style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', borderRadius: 12, height: 280, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
@@ -652,54 +645,104 @@ const WYSIWYGEditor = ({
                           </div>
                         </div>
                       ) : (
-                        <div style={{ background: rpIsEditing ? '#fff' : 'var(--bg-surface-1)', border: `1px solid ${rpIsEditing ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 12, minHeight: 280, width: '100%', padding: rpIsEditing ? 0 : 16, display: 'flex', flexDirection: 'column', transition: 'all 0.2s' }}>
+                        <div style={{ background: rpIsEditing ? '#fff' : 'var(--bg-surface-1)', border: `1px solid ${rpIsEditing ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 12, minHeight: 280, width: '100%', padding: rpIsEditing ? 0 : 24, display: 'flex', flexDirection: 'column', transition: 'all 0.2s' }}>
                           {rpIsEditing ? (
                             <textarea
                               value={rpGeneratedText}
                               onChange={e => setRpGeneratedText(e.target.value)}
-                              style={{ flex: 1, width: '100%', padding: 16, fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, border: 'none', outline: 'none', background: 'transparent', resize: 'none', fontFamily: 'inherit' }}
+                              style={{ flex: 1, width: '100%', padding: 24, fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, border: 'none', outline: 'none', background: 'transparent', resize: 'none', fontFamily: 'inherit' }}
                             />
                           ) : (
-                            <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{rpGeneratedText}</div>
+                            <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{rpGeneratedText}</div>
                           )}
                         </div>
                       )}
 
                       {rpState === 'generated' && (
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 16 }}>
+                        <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
                           <button onClick={() => {
                             editor?.chain().focus().insertContent(`<p>${rpGeneratedText}</p>`).run();
                             closeRightPane();
                             setSowBanner({ visible: true, type: 'success', message: 'Section accepted and added to document.' });
                             setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
-                          }} style={{ padding: '0 12px', height: 36, background: '#0052cc', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>Accept</button>
+                          }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#0052cc', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>Accept</button>
 
                           <button onClick={() => {
                             closeRightPane();
                             setSowBanner({ visible: true, type: 'error', message: 'Generated section was rejected.' });
                             setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
-                          }} style={{ padding: '0 12px', height: 36, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--colors-red-500)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Reject</button>
+                          }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--colors-red-500)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Reject</button>
 
-                          <button onClick={() => setRpIsEditing(!rpIsEditing)} style={{ padding: '0 12px', height: 36, background: rpIsEditing ? '#f1f5f9' : '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>{rpIsEditing ? 'Done' : 'Edit'}</button>
+                          <button onClick={() => setRpIsEditing(!rpIsEditing)} style={{ flex: 1, padding: '0 16px', height: 42, background: rpIsEditing ? '#f1f5f9' : '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>{rpIsEditing ? 'Done' : 'Edit'}</button>
 
                           <button onClick={() => {
                             setRpIsEditing(false);
                             setRpState('regenerating');
                             setTimeout(() => { setRpState('generated'); }, 2000);
-                          }} style={{ padding: '0 12px', height: 36, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Regenerate</button>
+                          }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Regenerate</button>
                         </div>
                       )}
                     </div>
                   )}
+
+                  {/* Prompt Input Box */}
+                  <div style={{ marginTop: 'auto', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <textarea
+                      placeholder="Describe your requirement through a prompt"
+                      value={rpPrompt}
+                      onChange={(e) => setRpPrompt(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          if (rpPrompt.trim()) {
+                            setRpIsEditing(false);
+                            setRpState('generating');
+                            setTimeout(() => {
+                              setRpGeneratedText("1. Scope of Services\nThe Contractor agrees to provide the services specifically described in Exhibit A (the \"Services\"), which is attached hereto and incorporated by reference. The Contractor shall perform the Services in a professional and workmanlike manner, consistent with industry standards.");
+                              setRpState('generated');
+                            }, 2500);
+                          }
+                        }
+                      }}
+                      rows={1}
+                      style={{ border: 'none', outline: 'none', resize: 'none', width: '100%', fontSize: 14, color: 'var(--text-primary)', minHeight: 24, maxHeight: 120, fontFamily: 'inherit', lineHeight: 1.5 }}
+                    />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
+                      <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)' }}>
+                        <Plus size={18} />
+                      </button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ fontSize: 11, color: rpPrompt.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>
+                          {rpPrompt.length} / 20000
+                        </span>
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)' }}>
+                          <Mic size={18} strokeWidth={2} />
+                        </button>
+                        <button onClick={() => {
+                          if (!rpPrompt.trim()) return;
+                          setRpIsEditing(false);
+                          setRpState('generating');
+                          setTimeout(() => {
+                            setRpGeneratedText("1. Scope of Services\nThe Contractor agrees to provide the services specifically described in Exhibit A (the \"Services\"), which is attached hereto and incorporated by reference. The Contractor shall perform the Services in a professional and workmanlike manner, consistent with industry standards.");
+                            setRpState('generated');
+                          }, 2500);
+                        }} disabled={!rpPrompt.trim()} style={{ background: 'var(--bg-surface-2)', border: 'none', borderRadius: '50%', width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: rpPrompt.trim() ? 'pointer' : 'default', transition: 'all 0.2s', opacity: rpPrompt.trim() ? 1 : 0.6 }}>
+                          <Send size={15} color={rpPrompt.trim() ? '#0052cc' : 'var(--text-tertiary)'} style={{ marginLeft: -2, marginTop: 1 }} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </>
               ) : rightPane.action === 'rewrite_content' ? (
                 <>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    {/* Original Text Section */}
                     <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>Original Text</div>
-                    <div style={{ background: '#f8fafc', border: '1px solid var(--border-default)', borderRadius: 8, padding: 16, marginBottom: 20, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, maxHeight: 150, overflowY: 'auto', whiteSpace: 'pre-wrap' }}>
+                    <div style={{ background: '#f8fafc', border: '1px solid var(--border-default)', borderRadius: 8, padding: 16, marginBottom: 24, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, maxHeight: 150, overflowY: 'auto', whiteSpace: 'pre-wrap' }}>
                       {rightPane.selectedText || "No text selected."}
                     </div>
 
+                    {/* Rewritten Text Section */}
                     {(rpState === 'generating' || rpState === 'regenerating' || rpState === 'generated') && (
                       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                         <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 8 }}>Rewritten Text</div>
@@ -712,145 +755,136 @@ const WYSIWYGEditor = ({
                             </div>
                           </div>
                         ) : (
-                          <div style={{ background: rpIsEditing ? '#fff' : 'var(--bg-surface-1)', border: `1px solid ${rpIsEditing ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 12, minHeight: 200, width: '100%', padding: rpIsEditing ? 0 : 16, display: 'flex', flexDirection: 'column', transition: 'all 0.2s' }}>
+                          <div style={{ background: rpIsEditing ? '#fff' : 'var(--bg-surface-1)', border: `1px solid ${rpIsEditing ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 12, minHeight: 200, width: '100%', padding: rpIsEditing ? 0 : 20, display: 'flex', flexDirection: 'column', transition: 'all 0.2s' }}>
                             {rpIsEditing ? (
                               <textarea
                                 value={rpGeneratedText}
                                 onChange={e => setRpGeneratedText(e.target.value)}
-                                style={{ flex: 1, width: '100%', padding: 16, fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, border: 'none', outline: 'none', background: 'transparent', resize: 'none', fontFamily: 'inherit' }}
+                                style={{ flex: 1, width: '100%', padding: 20, fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, border: 'none', outline: 'none', background: 'transparent', resize: 'none', fontFamily: 'inherit' }}
                               />
                             ) : (
-                              <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{rpGeneratedText}</div>
+                              <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{rpGeneratedText}</div>
                             )}
                           </div>
                         )}
 
                         {rpState === 'generated' && (
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 16 }}>
+                          <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
                             <button onClick={() => {
                               editor?.chain().focus().insertContent(`<p>${rpGeneratedText}</p>`).run();
                               closeRightPane();
                               setSowBanner({ visible: true, type: 'success', message: 'Rewritten text accepted and added to document.' });
                               setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
-                            }} style={{ padding: '0 12px', height: 36, background: '#0052cc', border: 'none', borderRadius: 8, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>Accept</button>
+                            }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#0052cc', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>Accept</button>
 
                             <button onClick={() => {
                               closeRightPane();
                               setSowBanner({ visible: true, type: 'error', message: 'Rewritten text was rejected.' });
                               setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
-                            }} style={{ padding: '0 12px', height: 36, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--colors-red-500)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Reject</button>
+                            }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--colors-red-500)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Reject</button>
 
-                            <button onClick={() => setRpIsEditing(!rpIsEditing)} style={{ padding: '0 12px', height: 36, background: rpIsEditing ? '#f1f5f9' : '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>{rpIsEditing ? 'Done' : 'Edit'}</button>
+                            <button onClick={() => setRpIsEditing(!rpIsEditing)} style={{ flex: 1, padding: '0 16px', height: 42, background: rpIsEditing ? '#f1f5f9' : '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>{rpIsEditing ? 'Done' : 'Edit'}</button>
 
                             <button onClick={() => {
                               setRpIsEditing(false);
                               setRpState('regenerating');
                               setTimeout(() => { setRpState('generated'); }, 2000);
-                            }} style={{ padding: '0 12px', height: 36, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Regenerate</button>
+                            }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Regenerate</button>
                           </div>
                         )}
                       </div>
                     )}
                   </div>
-                </>
-              ) : (
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
-                  Feature coming soon...
-                </div>
-              )}
-            </div>
 
-            {/* Prompt Input Box */}
-            <div style={{ position: 'relative', marginTop: 'auto', padding: '16px 20px', background: '#fff', borderTop: '1px solid var(--border-subtle)', flexShrink: 0 }}>
-              {rightPane.action === 'rewrite_content' && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                  <div ref={toneMenuRef} style={{ position: 'relative' }}>
-                    <button
-                      onClick={() => setShowToneMenu(!showToneMenu)}
-                      style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', padding: '6px 12px', fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500, cursor: 'pointer', outline: 'none', display: 'flex', alignItems: 'center', gap: 6, borderRadius: 6, transition: 'all 0.2s' }}
-                      onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface-1)'}
-                    >
-                      {selectedTone || 'Select Tone'} <ChevronDown size={14} color="var(--text-tertiary)" />
-                    </button>
-
-                    {showToneMenu && (
-                      <div style={{ position: 'absolute', bottom: '100%', left: 0, marginBottom: 8, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 180, zIndex: 1000, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
-                        {[
-                          { id: 'simplify', label: 'Simplify' },
-                          { id: 'formalize', label: 'Formalize' },
-                          { id: 'assertive', label: 'Make More Assertive' },
-                          { id: 'legal', label: 'Align With Legal Tone' }
-                        ].map(tone => (
+                  {/* Prompt Input Box */}
+                  <div style={{ marginTop: 'auto', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <textarea
+                      placeholder="Describe your requirement through a prompt"
+                      value={rpPrompt}
+                      onChange={(e) => setRpPrompt(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          if (rpPrompt.trim()) {
+                            setRpIsEditing(false);
+                            setRpState('generating');
+                            setTimeout(() => {
+                              setRpGeneratedText("The selected text has been rewritten to align with the chosen tone and provide clearer, more direct instructions. The Contractor is required to comply with all stated deliverables and timelines as explicitly outlined in the revised project scope.");
+                              setRpState('generated');
+                            }, 2500);
+                          }
+                        }
+                      }}
+                      rows={1}
+                      style={{ border: 'none', outline: 'none', resize: 'none', width: '100%', fontSize: 14, color: 'var(--text-primary)', minHeight: 24, maxHeight: 120, fontFamily: 'inherit', lineHeight: 1.5 }}
+                    />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)' }}>
+                          <Plus size={18} />
+                        </button>
+                        <div ref={toneMenuRef} style={{ position: 'relative' }}>
                           <button
-                            key={tone.id}
-                            onClick={() => { setSelectedTone(tone.label); setShowToneMenu(false); }}
-                            style={{ padding: '8px 16px', background: selectedTone === tone.label ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', color: selectedTone === tone.label ? '#0052cc' : 'var(--text-primary)', fontSize: 13, transition: 'background 0.15s' }}
-                            onMouseEnter={e => { if (selectedTone !== tone.label) e.currentTarget.style.background = '#f1f5f9' }}
-                            onMouseLeave={e => { if (selectedTone !== tone.label) e.currentTarget.style.background = 'transparent' }}
+                            onClick={() => setShowToneMenu(!showToneMenu)}
+                            style={{ background: 'transparent', border: 'none', padding: '6px 12px', fontSize: 13, color: 'var(--text-secondary)', fontWeight: 500, cursor: 'pointer', outline: 'none', display: 'flex', alignItems: 'center', gap: 6, borderRadius: 6, transition: 'all 0.2s' }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                           >
-                            {tone.label}
+                            {selectedTone || 'Select Tone'} <ChevronDown size={14} color="var(--text-tertiary)" />
                           </button>
-                        ))}
+
+                          {showToneMenu && (
+                            <div style={{ position: 'absolute', bottom: '100%', left: 0, marginBottom: 8, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 180, zIndex: 1000, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
+                              {[
+                                { id: 'simplify', label: 'Simplify' },
+                                { id: 'formalize', label: 'Formalize' },
+                                { id: 'assertive', label: 'Make More Assertive' },
+                                { id: 'legal', label: 'Align With Legal Tone' }
+                              ].map(tone => (
+                                <button
+                                  key={tone.id}
+                                  onClick={() => { setSelectedTone(tone.label); setShowToneMenu(false); }}
+                                  style={{ padding: '8px 16px', background: selectedTone === tone.label ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', color: selectedTone === tone.label ? '#0052cc' : 'var(--text-primary)', fontSize: 13, transition: 'background 0.15s' }}
+                                  onMouseEnter={e => { if (selectedTone !== tone.label) e.currentTarget.style.background = '#f1f5f9' }}
+                                  onMouseLeave={e => { if (selectedTone !== tone.label) e.currentTarget.style.background = 'transparent' }}
+                                >
+                                  {tone.label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                </div>
-              )}
-              <div style={{ padding: '0 0 16px', background: '#fff' }}>
-                <div style={{ border: `1.5px solid ${rpPrompt ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: rpPrompt ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.04)' : '0 2px 8px rgba(14,15,37,0.04)', transition: 'border-color 0.15s, box-shadow 0.15s', background: '#fff' }}>
-                  <textarea
-                    value={rpPrompt}
-                    onChange={e => {
-                      setRpPrompt(e.target.value);
-                      e.target.style.height = 'auto';
-                      e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
-                    }}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        if (rpPrompt.trim()) {
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ fontSize: 11, color: rpPrompt.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>
+                          {rpPrompt.length} / 20000
+                        </span>
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)' }}>
+                          <Mic size={18} strokeWidth={2} />
+                        </button>
+                        <button onClick={() => {
+                          if (!rpPrompt.trim()) return;
                           setRpIsEditing(false);
                           setRpState('generating');
                           setTimeout(() => {
-                            setRpGeneratedText(rightPane.action === 'rewrite_content' ? "The selected text has been rewritten to align with the chosen tone and provide clearer, more direct instructions. The Contractor is required to comply with all stated deliverables and timelines as explicitly outlined in the revised project scope." : "1. Scope of Services\nThe Contractor agrees to provide the services specifically described in Exhibit A (the \"Services\"), which is attached hereto and incorporated by reference. The Contractor shall perform the Services in a professional and workmanlike manner, consistent with industry standards.");
+                            setRpGeneratedText("The selected text has been rewritten to align with the chosen tone and provide clearer, more direct instructions. The Contractor is required to comply with all stated deliverables and timelines as explicitly outlined in the revised project scope.");
                             setRpState('generated');
                           }, 2500);
-                        }
-                      }
-                    }}
-                    placeholder="Describe your requirement..."
-                    rows={1}
-                    style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', resize: 'none', minHeight: 24, maxHeight: 120, overflowY: 'auto', fontFamily: 'Inter, sans-serif', lineHeight: 1.5 }}
-                  />
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
-                    <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
-                      <Paperclip size={18} />
-                    </button>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{ fontSize: 11, color: rpPrompt.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{rpPrompt.length} / 20000</span>
-                      <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
-                        <Mic size={18} strokeWidth={2} />
-                      </button>
-                      <button onClick={() => {
-                        if (!rpPrompt.trim()) return;
-                        setRpIsEditing(false);
-                        setRpState('generating');
-                        setTimeout(() => {
-                          setRpGeneratedText(rightPane.action === 'rewrite_content' ? "The selected text has been rewritten to align with the chosen tone and provide clearer, more direct instructions. The Contractor is required to comply with all stated deliverables and timelines as explicitly outlined in the revised project scope." : "1. Scope of Services\nThe Contractor agrees to provide the services specifically described in Exhibit A (the \"Services\"), which is attached hereto and incorporated by reference. The Contractor shall perform the Services in a professional and workmanlike manner, consistent with industry standards.");
-                          setRpState('generated');
-                        }, 2500);
-                      }} style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: rpPrompt.trim() ? 'pointer' : 'not-allowed', background: rpPrompt.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: rpPrompt.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
-                        <Send size={15} color={rpPrompt.trim() ? '#fff' : 'var(--text-tertiary)'} />
-                      </button>
+                        }} disabled={!rpPrompt.trim()} style={{ background: rpPrompt.trim() ? '#0052cc' : 'var(--bg-surface-2)', border: 'none', borderRadius: '50%', width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: rpPrompt.trim() ? 'pointer' : 'default', transition: 'all 0.2s', opacity: rpPrompt.trim() ? 1 : 0.6 }}>
+                          <Send size={15} color={rpPrompt.trim() ? '#fff' : 'var(--text-tertiary)'} style={{ marginLeft: -2, marginTop: 1 }} />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </>
+              ) : (
+                <div style={{ fontSize: 15, color: 'var(--text-secondary)', textAlign: 'center', marginTop: 40 }}>Content will be provided later</div>
+              )}
             </div>
+          </div>
         </div>
       )}
-      </div>
 
       <style>{`
         @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
@@ -879,7 +913,7 @@ const WYSIWYGEditor = ({
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         @keyframes rfpPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
         @keyframes spin     { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-      `}</style>
+┬á ┬á ┬á `}</style>
     </div>
   );
 }
@@ -940,21 +974,17 @@ const NEGOTIATION_DATA = {
       'Rate card for Senior Architects is 10% above market average for UAE.',
       'Software licensing costs are bundled; request a line-item breakdown.',
       'Payment terms proposed are Net 30; our standard is Net 45. Push for Net 45.',
-      'Travel & Expenses (T&E) are uncapped. Negotiate a hard cap at 5% of total engagement value.',
-      'No explicit volume discounts mentioned. Request a tiered discount structure for extended usage.',
-      'Support and maintenance is charged at 22%. Push for 18% based on recent market benchmarks.',
-      'Implementation timeline risks are fully borne by the buyer. Negotiate shared risk via milestone penalties.',
-      'Year-on-year price increment is capped at 5%. Suggest limiting to 3% or pegging to local CPI.'
+      'Travel & Expenses (T&E) are uncapped. Negotiate a hard cap at 5% of total engagement value.'
     ],
     strategyBrief: {
       opening: 'Acknowledge strong technical fit but emphasize that commercials are currently uncompetitive compared to alternative bids.',
-      target: '₹42,00,000',
-      walkAway: '₹45,00,000',
+      target: 'Γé╣42,00,000',
+      walkAway: 'Γé╣45,00,000',
       concessions: [
         'Offer flexibility on start date in exchange for lower rate card.',
         'Concede Net 30 only if T&E is fully absorbed by vendor.'
       ],
-      batna: 'Award contract to Deloitte Technology (scored 88, priced at ₹40,50,000). Their technical score is slightly lower, but commercials are fully aligned with budget.'
+      batna: 'Award contract to Deloitte Technology (scored 88, priced at Γé╣40,50,000). Their technical score is slightly lower, but commercials are fully aligned with budget.'
     },
     clarificationQuestions: [
       {
@@ -974,10 +1004,10 @@ const NEGOTIATION_DATA = {
 };
 
 const COST_ITEMS = [
-  { phase: 'Phase 1 — Assessment', duration: '2 months', resources: '3 Architects', estimate: '₹10,00,000 - ₹14,00,000' },
-  { phase: 'Phase 2 — Migration', duration: '3 months', resources: '3 Architects + 2 Engineers', estimate: '₹20,00,000 - ₹30,00,000' },
-  { phase: 'Phase 3 — Stabilisation', duration: '1 month', resources: '2 Architects', estimate: '₹6,00,000 - ₹10,00,000' },
-  { phase: 'PM & Coordination', duration: '6 months', resources: '1 Project Manager', estimate: '₹2,00,000 - ₹4,00,000' },
+  { phase: 'Phase 1 ΓÇö Assessment', duration: '2 months', resources: '3 Architects', estimate: 'Γé╣10,00,000 - Γé╣14,00,000' },
+  { phase: 'Phase 2 ΓÇö Migration', duration: '3 months', resources: '3 Architects + 2 Engineers', estimate: 'Γé╣20,00,000 - Γé╣30,00,000' },
+  { phase: 'Phase 3 ΓÇö Stabilisation', duration: '1 month', resources: '2 Architects', estimate: 'Γé╣6,00,000 - Γé╣10,00,000' },
+  { phase: 'PM & Coordination', duration: '6 months', resources: '1 Project Manager', estimate: 'Γé╣2,00,000 - Γé╣4,00,000' },
 ];
 
 const SOW_TEMPLATES = [
@@ -1028,20 +1058,20 @@ const SOW_INITIAL_HTML = `<h2>1. Scope of Work</h2>
 <p><em>[Standard Confidentiality Clause]</em><br/><em>[Data Protection Clause - UAE Context]</em></p>`;
 
 const VERSION_HISTORY = [
-  { version: 'v1.2', date: '10 May 2026 · 14:32', author: 'AI Agent', note: 'Scoring criteria updated, budget estimation refined', active: true },
-  { version: 'v1.1', date: '09 May 2026 · 16:10', author: 'AI Agent', note: 'Supplier research findings incorporated', active: false },
-  { version: 'v1.0', date: '09 May 2026 · 11:00', author: 'AI Agent', note: 'Initial RFP generated from PR fields', active: false },
+  { version: 'v1.2', date: '10 May 2026 ┬╖ 14:32', author: 'AI Agent', note: 'Scoring criteria updated, budget estimation refined', active: true },
+  { version: 'v1.1', date: '09 May 2026 ┬╖ 16:10', author: 'AI Agent', note: 'Supplier research findings incorporated', active: false },
+  { version: 'v1.0', date: '09 May 2026 ┬╖ 11:00', author: 'AI Agent', note: 'Initial RFP generated from PR fields', active: false },
 ];
 const AUDIT_ENTRIES = [
-  { type: 'ai', title: 'RFP Generated (v1.2)', desc: 'AI updated RFP with refined evaluation criteria and budget estimation.', actor: 'AI Agent', time: '10 May · 14:32' },
-  { type: 'ai', title: 'Evaluation Criteria Finalised', desc: 'Evaluation criteria weights set: Technical 30%, Experience 25%, etc.', actor: 'AI Agent', time: '10 May · 14:31' },
-  { type: 'ai', title: 'Budget Estimation Complete', desc: 'AI estimated ₹45,00,000 based on T&M rates in UAE market.', actor: 'AI Agent', time: '10 May · 14:30' },
-  { type: 'ai', title: 'Supplier Research Complete', desc: '5 vendors shortlisted from 847 by AWS partner status and UAE presence.', actor: 'AI Agent', time: '09 May · 11:02' },
-  { type: 'ai', title: 'RFQ Template Selected', desc: 'Technology Consulting Standard v2.1 selected by AI.', actor: 'AI Agent', time: '09 May · 11:00' },
-  { type: 'ai', title: 'Compliance Validation Passed', desc: 'Policy §4.2 check passed. RFP mandatory for complex engagements >₹10L.', actor: 'AI Agent', time: '08 May · 09:17' },
-  { type: 'ai', title: 'Budget Check Passed', desc: 'Engineering cost centre budget headroom: ₹15,00,000.', actor: 'AI Agent', time: '08 May · 09:17' },
-  { type: 'ai', title: 'AI Classification: Complex', desc: 'Classified Complex (92% confidence). ₹45L exceeds ₹10L threshold.', actor: 'AI Agent', time: '08 May · 09:16' },
-  { type: 'user', title: 'PR Created', desc: 'PR-2026-004 created via document upload by David Kim.', actor: 'David Kim', time: '08 May · 09:12' },
+  { type: 'ai', title: 'RFP Generated (v1.2)', desc: 'AI updated RFP with refined evaluation criteria and budget estimation.', actor: 'AI Agent', time: '10 May ┬╖ 14:32' },
+  { type: 'ai', title: 'Evaluation Criteria Finalised', desc: 'Evaluation criteria weights set: Technical 30%, Experience 25%, etc.', actor: 'AI Agent', time: '10 May ┬╖ 14:31' },
+  { type: 'ai', title: 'Budget Estimation Complete', desc: 'AI estimated Γé╣45,00,000 based on T&M rates in UAE market.', actor: 'AI Agent', time: '10 May ┬╖ 14:30' },
+  { type: 'ai', title: 'Supplier Research Complete', desc: '5 vendors shortlisted from 847 by AWS partner status and UAE presence.', actor: 'AI Agent', time: '09 May ┬╖ 11:02' },
+  { type: 'ai', title: 'RFQ Template Selected', desc: 'Technology Consulting Standard v2.1 selected by AI.', actor: 'AI Agent', time: '09 May ┬╖ 11:00' },
+  { type: 'ai', title: 'Compliance Validation Passed', desc: 'Policy ┬º4.2 check passed. RFP mandatory for complex engagements >Γé╣10L.', actor: 'AI Agent', time: '08 May ┬╖ 09:17' },
+  { type: 'ai', title: 'Budget Check Passed', desc: 'Engineering cost centre budget headroom: Γé╣15,00,000.', actor: 'AI Agent', time: '08 May ┬╖ 09:17' },
+  { type: 'ai', title: 'AI Classification: Complex', desc: 'Classified Complex (92% confidence). Γé╣45L exceeds Γé╣10L threshold.', actor: 'AI Agent', time: '08 May ┬╖ 09:16' },
+  { type: 'user', title: 'PR Created', desc: 'PR-2026-004 created via document upload by David Kim.', actor: 'David Kim', time: '08 May ┬╖ 09:12' },
 ];
 
 const BIZ_UNITS = ['DDAIS', 'Finance', 'Engineering', 'Operations', 'Marketing', 'HR', 'Legal', 'Procurement', 'IT', 'Other'];
@@ -1206,7 +1236,7 @@ function EditModal({ onClose, onSave }) {
         <div style={{ padding: '20px 24px', borderBottom: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
           <div>
             <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a' }}>Edit Requisition Details</div>
-            <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>PR-2026-011 · AWS Cloud Migration Consulting</div>
+            <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>PR-2026-011 ┬╖ AWS Cloud Migration Consulting</div>
           </div>
           <button onClick={onClose} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 6, borderRadius: 8 }}><X size={18} /></button>
         </div>
@@ -1256,7 +1286,7 @@ function EditModal({ onClose, onSave }) {
           </div>
           <div>
             <EL required>Spend Category</EL>
-            <div style={{ padding: '9px 12px', background: '#f5f5f5', border: '1px solid #e8e8e8', borderRadius: 8, fontSize: 14, color: '#666' }}>{spendCategory || '—'}</div>
+            <div style={{ padding: '9px 12px', background: '#f5f5f5', border: '1px solid #e8e8e8', borderRadius: 8, fontSize: 14, color: '#666' }}>{spendCategory || 'ΓÇö'}</div>
             <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>Auto-selected based on category</div>
           </div>
           <div>
@@ -1303,7 +1333,7 @@ function EditModal({ onClose, onSave }) {
                 <Upload size={16} color="#7c7cff" strokeWidth={2} />
               </div>
               <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
-              <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX, XLSX · Max 25MB</div>
+              <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX, XLSX ┬╖ Max 25MB</div>
             </div>
             <input id="edit-modal-file-input" type="file" accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} />
             <div style={{ fontSize: 11, color: '#999', marginTop: 4 }}>Existing attachment: Q3_Procurement_Requirements.pdf</div>
@@ -1337,7 +1367,7 @@ function EditModal({ onClose, onSave }) {
           </div>
           <div>
             <EL>Pricing Model</EL>
-            <ETextarea value={fCostBreakdown} onChange={e => setFCostBreakdown(e.target.value)} placeholder="Describe pricing model — Fixed / T&M / Milestone" minHeight={70} />
+            <ETextarea value={fCostBreakdown} onChange={e => setFCostBreakdown(e.target.value)} placeholder="Describe pricing model ΓÇö Fixed / T&M / Milestone" minHeight={70} />
           </div>
 
           <Div />
@@ -1383,10 +1413,10 @@ function EditModal({ onClose, onSave }) {
 
 const REASONING_MAP = {
   1: ['Reading uploaded PR document', 'Extracting 21 procurement fields', '14 fields auto-extracted with high confidence', 'Creating document folder in SharePoint', 'Linking PR metadata to folder'],
-  2: ['Analysing spend value: ₹45,00,000', 'Threshold check: exceeds ₹10L complex limit', 'Cost centre ENG-402 validated', 'Finance policy check: PASSED', 'Decision: Complex procurement'],
-  5: ['Approved budget for Engineering: ₹60,00,000', 'PR value: ₹45,00,000', 'Remaining headroom: ₹15,00,000', 'Budget check: PASSED'],
+  2: ['Analysing spend value: Γé╣45,00,000', 'Threshold check: exceeds Γé╣10L complex limit', 'Cost centre ENG-402 validated', 'Finance policy check: PASSED', 'Decision: Complex procurement'],
+  5: ['Approved budget for Engineering: Γé╣60,00,000', 'PR value: Γé╣45,00,000', 'Remaining headroom: Γé╣15,00,000', 'Budget check: PASSED'],
   7: ['Queried vendor database: 847 vendors', 'Applied AWS partner filter + UAE location', '5 vendors shortlisted by confidence score'],
-  10: ['RFP template selected: Technology Consulting Standard v2.1', 'Evaluation Criteria generated: 5 criteria', 'Budget estimation complete: ₹45,00,000'],
+  10: ['RFP template selected: Technology Consulting Standard v2.1', 'Evaluation Criteria generated: 5 criteria', 'Budget estimation complete: Γé╣45,00,000'],
 };
 
 const SOW_CLAUSES = [
@@ -1455,7 +1485,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [chatMessages, setChatMessages] = useState([
     { role: 'user', text: 'Summarise the PO for me' },
     { role: 'status' },
-    { role: 'ai', text: 'PO-2026-00412 is for AWS Cloud Migration Consulting Services with Accenture Middle East. Total value: ₹45,00,000. Engagement covers 3 senior architects for 6 months across assessment, migration and support phases. Terms: Technology & Consulting. Awaiting approval from Sarah Chen.' }
+    { role: 'ai', text: 'PO-2026-00412 is for AWS Cloud Migration Consulting Services with Accenture Middle East. Total value: Γé╣45,00,000. Engagement covers 3 senior architects for 6 months across assessment, migration and support phases. Terms: Technology & Consulting. Awaiting approval from Sarah Chen.' }
   ]);
   const chatInputRef = useRef(null);
   const [chatCopiedMsgs, setChatCopiedMsgs] = useState(new Set());
@@ -1483,12 +1513,12 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [poChangeNo, setPoChangeNo] = useState('0');
   const [poInstructions, setPoInstructions] = useState('Please deliver all services as per the agreed Statement of Work. Engagement to commence on 01 June 2026.');
   const [poNumber, setPoNumber] = useState('PO-2026-00412');
-  const [poSpecialInstructions, setPoSpecialInstructions] = useState('• All invoices must reference the PO number.\\n• Invoices to be submitted monthly by the 25th.\\n• Work may not commence without a signed copy of this PO.\\n• Any changes to scope must be approved in writing.');
-  const [poTermsConditions, setPoTermsConditions] = useState('• Payment terms: Net 30 days from invoice date.\\n• All work must comply with DDAIS Group vendor code of conduct.\\n• The supplier shall maintain ISO 27001 certification throughout the engagement.\\n• Disputes to be resolved under UAE jurisdiction.\\n• This PO is subject to DDAIS Group standard procurement policy v4.2.');
+  const [poSpecialInstructions, setPoSpecialInstructions] = useState('ΓÇó All invoices must reference the PO number.\\nΓÇó Invoices to be submitted monthly by the 25th.\\nΓÇó Work may not commence without a signed copy of this PO.\\nΓÇó Any changes to scope must be approved in writing.');
+  const [poTermsConditions, setPoTermsConditions] = useState('ΓÇó Payment terms: Net 30 days from invoice date.\\nΓÇó All work must comply with DDAIS Group vendor code of conduct.\\nΓÇó The supplier shall maintain ISO 27001 certification throughout the engagement.\\nΓÇó Disputes to be resolved under UAE jurisdiction.\\nΓÇó This PO is subject to DDAIS Group standard procurement policy v4.2.');
 
   // PO line items
   const [poLineItems, setPoLineItems] = useState([
-    { ln: '1', matCode: 'DDD-NONCOD72415-1 (DDD-C24010)', prTaskNo: 'ADI23000727-2 / E00001-E01', prItem: 'N1', description: 'AWS Cloud Migration Consulting Services — Assessment, architecture design, migration execution and post-migration support as per agreed SOW', uom: 'Resources', quantity: '1', unitPrice: '45,00,000.00', amount: '45,00,000.00', delDate: '15-Jul-2026' },
+    { ln: '1', matCode: 'DDD-NONCOD72415-1 (DDD-C24010)', prTaskNo: 'ADI23000727-2 / E00001-E01', prItem: 'N1', description: 'AWS Cloud Migration Consulting Services ΓÇö Assessment, architecture design, migration execution and post-migration support as per agreed SOW', uom: 'Resources', quantity: '1', unitPrice: '45,00,000.00', amount: '45,00,000.00', delDate: '15-Jul-2026' },
   ]);
 
   const poTermsCatRef = useRef(null);
@@ -1522,8 +1552,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [showNegotGenerateModal, setShowNegotGenerateModal] = useState(null);
   const [negotGenerateNote, setNegotGenerateNote] = useState('');
   const [negotGenerating, setNegotGenerating] = useState(false);
-  const [regeneratedStrategyBrief, setRegeneratedStrategyBrief] = useState(null);
-  const [isRegeneratingStrategyBrief, setIsRegeneratingStrategyBrief] = useState(false);
   const [auditFilter, setAuditFilter] = useState('all');
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [published, setPublished] = useState(false);
@@ -1598,9 +1626,9 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const getCurrencySymbol = (cur) => {
     switch (cur) {
       case 'USD': return '$';
-      case 'EUR': return '€';
-      case 'GBP': return '£';
-      case 'INR': return '₹';
+      case 'EUR': return 'Γé¼';
+      case 'GBP': return '┬ú';
+      case 'INR': return 'Γé╣';
       case 'AED': default: return 'AED ';
     }
   };
@@ -2330,7 +2358,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             </div>
                             <div style={{ textAlign: 'center' }}>
                               <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
-                              <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT · Max 20MB</div>
+                              <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT ┬╖ Max 20MB</div>
                             </div>
                           </div>
                         ) : (
@@ -2374,7 +2402,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </div>
                           <div style={{ textAlign: 'center' }}>
                             <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files or click to upload</div>
-                            <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT · Max 20MB</div>
+                            <div style={{ fontSize: 12, color: '#999' }}>PDF, DOCX or PPT ┬╖ Max 20MB</div>
                           </div>
                         </div>
                         <input id={`supp-file-input-${form.id}`} type="file" multiple accept=".pdf,.docx,.ppt" style={{ display: 'none' }} onChange={e => {
@@ -2680,7 +2708,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           <div style={{ textAlign: 'center', marginBottom: 12 }}><div style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a' }}>Technical & Commercial Proposal</div></div>
                           <div style={{ textAlign: 'center', color: '#555', fontSize: 14, marginBottom: 6 }}>Version 1.0 &nbsp;|&nbsp; {showPreviewModal.uploadDate || '17 Sept 2025'}</div>
                           <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic', marginTop: 80 }}>Prepared in response to RFP-2026-004 issued by DDAIS Group</div>
-                          <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic' }}>Confidential — For Evaluation Purposes Only</div>
+                          <div style={{ textAlign: 'center', color: '#888', fontSize: 13, fontStyle: 'italic' }}>Confidential ΓÇö For Evaluation Purposes Only</div>
                         </div>
                       ) : (
                         <div>
@@ -2742,7 +2770,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   </div>
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>Drop files here or <span style={{ color: '#7c7cff', fontWeight: 600 }}>browse</span></div>
-                    <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX · Max 25MB</div>
+                    <div style={{ fontSize: 11, color: '#999', marginTop: 2 }}>PDF, DOCX, XLSX ┬╖ Max 25MB</div>
                   </div>
                 </div>
                 <input id="supp-doc-input" type="file" multiple accept=".pdf,.docx,.xlsx" style={{ display: 'none' }} onChange={e => { if (e.target.files.length > 0) setUploadForm(prev => ({ ...prev, supporting: [...(Array.isArray(prev.supporting) ? prev.supporting : []), ...Array.from(e.target.files)] })); }} />
@@ -2852,7 +2880,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   <div style={{ flex: 1, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, minWidth: 0 }}>
                     <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, overflow: 'hidden' }}>
                       <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROCUREMENT WORKFLOW — COMPLEX PR</div>
+                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>PROCUREMENT WORKFLOW ΓÇö COMPLEX PR</div>
                         <div style={{ display: 'flex', gap: 16, fontSize: 11, color: 'var(--text-tertiary)' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: '#7c7cff' }} />AI Action</div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><div style={{ width: 9, height: 9, borderRadius: '50%', background: '#22c55e' }} />User Action</div>
@@ -2926,7 +2954,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         </button>
                       </div>
                       <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '12px 0' }}>
-                        {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', '₹45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026'], ['Justification', 'Required for modernising backend systems'], ['Sourcing Method', 'Competitive tender'], ['Contract Reference', 'N/A'], ['Pricing Model', 'Time & Materials'], ['Timeline', '6 Months']].map(([l, v]) => (
+                        {[['Request Title', 'AWS Cloud Migration Consulting Services'], ['Category', 'Technology and Consulting'], ['Subcategory', 'Cloud & Infrastructure Services'], ['Cost Centre', 'Engineering'], ['CapEx / OpEx', 'OpEx'], ['Estimated Budget', 'Γé╣45,00,000'], ['Required By', '15 July 2026'], ['Delivery Location', 'Dubai, UAE'], ['Project Name', 'Infrastructure Modernisation 2026'], ['Justification', 'Required for modernising backend systems'], ['Sourcing Method', 'Competitive tender'], ['Contract Reference', 'N/A'], ['Pricing Model', 'Time & Materials'], ['Timeline', '6 Months']].map(([l, v]) => (
                           <React.Fragment key={l}><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', paddingRight: 16 }}>{l}</div><div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{v}</div></React.Fragment>
                         ))}
                         <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)' }}>Priority</div>
@@ -2991,7 +3019,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         </div>
                         <div>
                           <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>Technology Consulting Standard v2.1</div>
-                          <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template · Auto-selected by AI based on category and complexity</div>
+                          <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template ┬╖ Auto-selected by AI based on category and complexity</div>
                         </div>
                         <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: '#15803d', marginLeft: 8 }}>
                           <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> {published ? 'Published Version 1.0' : 'Current: v1.2'}
@@ -3165,7 +3193,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </div>
                           {costConfigData.map((item, i) => (
                             <div key={i} style={{ display: 'grid', gridTemplateColumns: '3fr 4fr 3fr', alignItems: 'center', padding: '12px 14px', borderBottom: i < costConfigData.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                              <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{item.p}{item.m ? ` — ${item.m}` : ''}</div>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>{item.p}{item.m ? ` ΓÇö ${item.m}` : ''}</div>
                               <div style={{ fontSize: 12, color: '#666', lineHeight: 1.5 }}>
                                 <div>{item.t}</div>
                                 <div>{item.r}</div>
@@ -3419,7 +3447,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                       <td style={{ padding: '14px 16px', textAlign: 'center' }}>
                                         {rank ? (
                                           <div style={{ width: 28, height: 28, borderRadius: '50%', background: rank === 1 ? 'linear-gradient(135deg,#f59e0b,#d97706)' : rank === 2 ? 'linear-gradient(135deg,#94a3b8,#64748b)' : rank === 3 ? 'linear-gradient(135deg,#b45309,#92400e)' : 'var(--bg-surface-2)', color: rank <= 3 ? '#fff' : 'var(--text-tertiary)', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>#{rank}</div>
-                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>ΓÇö</span>}
                                       </td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.vendorName}</td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.version}</td>
@@ -3438,17 +3466,17 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                           <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: prop.state === 'pass' ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', color: prop.state === 'pass' ? '#15803d' : '#dc2626', textTransform: 'capitalize', whiteSpace: 'nowrap' }}>
                                             {prop.state}
                                           </span>
-                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>ΓÇö</span>}
                                       </td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, color: '#0052cc', fontWeight: 500, whiteSpace: 'nowrap' }}><div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><FileText size={13} />{prop.fileName}</div></td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>{prop.techScore}</td>
-                                      <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#15803d', whiteSpace: 'nowrap' }}>{prop.commercial || '—'}</td>
+                                      <td style={{ padding: '14px 16px', fontSize: 13, fontWeight: 600, color: '#15803d', whiteSpace: 'nowrap' }}>{prop.commercial || 'ΓÇö'}</td>
                                       <td style={{ padding: '14px 16px' }}>
                                         {riskLevel ? (
                                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: riskColor.bg, color: riskColor.color, whiteSpace: 'nowrap' }}>
                                             <div style={{ width: 6, height: 6, borderRadius: '50%', background: riskColor.color }} />{riskLevel}
                                           </span>
-                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>—</span>}
+                                        ) : <span style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>ΓÇö</span>}
                                       </td>
                                       <td style={{ padding: '14px 16px', textAlign: 'center' }}>
                                         <div style={{ position: 'relative', display: 'inline-flex' }}>
@@ -3654,7 +3682,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                             if (risks.length === 0) return 'Pending';
                                             return (
                                               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                                                {risks.map((r, i) => <div key={i} style={{ fontSize: 12, color: '#b91c1c', lineHeight: 1.3 }}>• {r}</div>)}
+                                                {risks.map((r, i) => <div key={i} style={{ fontSize: 12, color: '#b91c1c', lineHeight: 1.3 }}>ΓÇó {r}</div>)}
                                               </div>
                                             );
                                           }
@@ -3767,7 +3795,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 const activeNegotProp = negotProposals.find(p => p.id === selectedNegotVendorId) || negotProposals[0];
                 const activeVendorKey = activeNegotProp ? activeNegotProp.vendorName : firstNegotKey;
                 const negotData = NEGOTIATION_DATA[activeVendorKey] || NEGOTIATION_DATA[firstNegotKey];
-                const activeStrategyBrief = regeneratedStrategyBrief || negotData.strategyBrief;
                 const activeDropdownLabel = activeNegotProp ? `${activeNegotProp.vendorName} ${activeNegotProp.version}` : activeVendorKey;
 
                 return (
@@ -3786,7 +3813,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         <div>
                           <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>{activeNegotProp?.vendorName || activeVendorKey}</div>
                           <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
-                            {activeNegotProp?.version} • Auto-selected by AI based on category and complexity
+                            {activeNegotProp?.version} ΓÇó Auto-selected by AI based on category and complexity
                           </div>
                         </div>
                       </div>
@@ -3903,55 +3930,31 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>STRATEGY BRIEF</span>
                               </div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                <button onClick={() => {
-                                  if (isRegeneratingStrategyBrief) return;
-                                  setIsRegeneratingStrategyBrief(true);
-                                  setTimeout(() => {
-                                    setRegeneratedStrategyBrief({
-                                      opening: "Revised anchor to push for more competitive commercial rates.",
-                                      target: "₹35,00,000",
-                                      walkAway: "₹40,00,000",
-                                      concessions: [
-                                        "Request enhanced SLA penalties if rates cannot be reduced further.",
-                                        "Propose longer contract term in exchange for a 10% rate reduction."
-                                      ],
-                                      batna: "Engage the second-ranked vendor for a parallel discussion to maintain competitive pressure."
-                                    });
-                                    setIsRegeneratingStrategyBrief(false);
-                                  }, 2000);
-                                }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1.5px solid transparent', background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box', fontSize: 12, fontWeight: 600, cursor: isRegeneratingStrategyBrief ? 'not-allowed' : 'pointer', color: '#0052cc', opacity: isRegeneratingStrategyBrief ? 0.7 : 1 }} onMouseEnter={e => { if(!isRegeneratingStrategyBrief) e.currentTarget.style.background = 'linear-gradient(#f8fafc, #f8fafc) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'; }} onMouseLeave={e => { if(!isRegeneratingStrategyBrief) e.currentTarget.style.background = 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'; }}>
-                                  <RefreshCw size={14} color="#0052cc" style={isRegeneratingStrategyBrief ? { animation: 'spin 1s linear infinite' } : {}} /> {isRegeneratingStrategyBrief ? 'Regenerating...' : 'Regenerate'}
+                                <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Regenerate Strategy Brief'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                  <RefreshCw size={14} /> Regenerate
                                 </button>
                               </div>
                             </div>
-                            <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 24, flex: 1, position: 'relative' }}>
-                              {isRegeneratingStrategyBrief && (
-                                <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(2px)', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '0 0 12px 12px' }}>
-                                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-                                    <RefreshCw size={24} color="#0052cc" style={{ animation: 'spin 1s linear infinite' }} />
-                                    <div style={{ fontSize: 13, fontWeight: 600, color: '#0052cc' }}>Generating new strategy...</div>
-                                  </div>
-                                </div>
-                              )}
+                            <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 24, flex: 1 }}>
                               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
                                   <div style={{ flex: 1, fontSize: 13, color: '#0052cc', fontWeight: 500, padding: '12px 16px', background: 'rgba(0,82,204,0.04)', borderRadius: 8, border: '1px solid rgba(0,82,204,0.2)', lineHeight: 1.5, boxSizing: 'border-box' }}>
-                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>₹38,00,000</div>
-                                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{activeStrategyBrief.opening}</div>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>Γé╣38,00,000</div>
+                                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{negotData.strategyBrief.opening}</div>
                                   </div>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Target Goal</div>
                                   <div style={{ flex: 1, fontSize: 13, color: '#15803d', fontWeight: 500, padding: '12px 16px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0', lineHeight: 1.5, boxSizing: 'border-box' }}>
-                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{activeStrategyBrief.target}</div>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.target}</div>
                                     <div style={{ fontSize: 11, color: '#166534' }}>Ideal settlement point.</div>
                                   </div>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Walk-Away Point</div>
                                   <div style={{ flex: 1, fontSize: 13, color: '#b91c1c', fontWeight: 500, padding: '12px 16px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca', lineHeight: 1.5, boxSizing: 'border-box' }}>
-                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{activeStrategyBrief.walkAway}</div>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.walkAway}</div>
                                     <div style={{ fontSize: 11, color: '#991b1b' }}>Maximum acceptable threshold.</div>
                                   </div>
                                 </div>
@@ -3960,13 +3963,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Concession Sequence</div>
                                 <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
                                   <ol style={{ margin: 0, paddingLeft: 20 }}>
-                                    {activeStrategyBrief.concessions.map((c, i) => <li key={i} style={{ marginBottom: 8 }}>{c}</li>)}
+                                    {negotData.strategyBrief.concessions.map((c, i) => <li key={i} style={{ marginBottom: 8 }}>{c}</li>)}
                                   </ol>
                                 </div>
                               </div>
                               <div>
                                 <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{activeStrategyBrief.batna}</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
                               </div>
                             </div>
                           </div>
@@ -4014,14 +4017,14 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           <div style={{ marginTop: 8, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                             <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>CLARIFICATION QUESTIONS (15 Questions max.)</div>
+                                <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>CLARIFICATION QUESTIONS (Hard stop at 15 Questions max.)</div>
                                 <div style={{ padding: '4px 10px', background: '#eef2ff', color: '#4f46e5', fontSize: 11, fontWeight: 600, borderRadius: 100, textTransform: 'uppercase', letterSpacing: 0.5, display: 'flex', alignItems: 'center', gap: 4 }}>
                                   <Sparkles size={12} /> AI Generated
                                 </div>
                               </div>
                               <div style={{ display: 'flex', gap: 8 }}>
-                                <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Clarification Questions'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1.5px solid transparent', background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#0052cc' }} onMouseEnter={e => e.currentTarget.style.background = 'linear-gradient(#f8fafc, #f8fafc) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'} onMouseLeave={e => e.currentTarget.style.background = 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'}>
-                                  <Sparkles size={14} color="#0052cc" /> Generate
+                                <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Clarification Questions'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                  <Sparkles size={14} /> Generate
                                 </button>
                               </div>
                             </div>
@@ -4055,8 +4058,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   TECHNICAL GAPS & CLARIFICATIONS
                                 </div>
                                 <div style={{ display: 'flex', gap: 8 }}>
-                                  <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Technical Gaps & Clarifications'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1.5px solid transparent', background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#0052cc' }} onMouseEnter={e => e.currentTarget.style.background = 'linear-gradient(#f8fafc, #f8fafc) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'} onMouseLeave={e => e.currentTarget.style.background = 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'}>
-                                    <Sparkles size={14} color="#0052cc" /> Generate
+                                  <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Technical Gaps & Clarifications'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                    <Sparkles size={14} /> Generate
                                   </button>
                                 </div>
                               </div>
@@ -4080,8 +4083,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   COMMERCIAL POINTERS
                                 </div>
                                 <div style={{ display: 'flex', gap: 8 }}>
-                                  <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Commercial Pointers'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1.5px solid transparent', background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#0052cc' }} onMouseEnter={e => e.currentTarget.style.background = 'linear-gradient(#f8fafc, #f8fafc) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'} onMouseLeave={e => e.currentTarget.style.background = 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'}>
-                                    <Sparkles size={14} color="#0052cc" /> Generate
+                                  <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Commercial Pointers'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                    <Sparkles size={14} /> Generate
                                   </button>
                                 </div>
                               </div>
@@ -4156,7 +4159,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 }}>
                                 {tmpl.recommended && (
                                   <div style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #10b981, #047857)', color: '#fff', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, padding: '6px 14px', borderRadius: 20, display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 12px rgba(16,185,129,0.3)', whiteSpace: 'nowrap' }}>
-                                    ✨ Top Recommendation
+                                    Γ£¿ Top Recommendation
                                   </div>
                                 )}
                                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 16, marginTop: tmpl.recommended ? 12 : 0 }}>
@@ -4217,7 +4220,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             </div>
                             <div>
                               <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{tmplTitle}</div>
-                              <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template · Auto-selected by AI based on category and complexity</div>
+                              <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>Template ┬╖ Auto-selected by AI based on category and complexity</div>
                             </div>
                             <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: '#15803d', marginLeft: 8 }}>
                               <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }} /> Current: v1.0
@@ -4280,7 +4283,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                   <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sowSignedFile?.name || 'Signed_SOW.pdf'}</div>
-                                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{sowSignedFile?.size ? `${(sowSignedFile.size / 1024).toFixed(1)} KB` : '1.2 MB'} · PDF</div>
+                                  <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>{sowSignedFile?.size ? `${(sowSignedFile.size / 1024).toFixed(1)} KB` : '1.2 MB'} ┬╖ PDF</div>
                                 </div>
                                 <div style={{ width: 140, display: 'flex', justifyContent: 'flex-end' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 600, color: '#15803d' }}>
@@ -4301,7 +4304,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           setHtmlContent={handleSowHtmlChange}
                           docType="Statement of Work"
                           docTitle={tmplTitle}
-                          docSubtitle="DDAIS Group · Procurement Division · PR-2026-004"
+                          docSubtitle="DDAIS Group ┬╖ Procurement Division ┬╖ PR-2026-004"
                           version="V1.0"
                           onAddClauseClick={() => {
                             setDraftSelectedClauses([...addedSowClauses]);
@@ -4372,9 +4375,9 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                         <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Purchase Order</div>
                         <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
                           <span style={{ color: '#0052cc', fontWeight: 600 }}>{poNumber}</span>
-                          <span>·</span>
+                          <span>┬╖</span>
                           <span>AI-generated</span>
-                          <span>·</span>
+                          <span>┬╖</span>
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 20, background: 'rgba(245,158,11,0.1)', color: '#b45309', fontSize: 11, fontWeight: 600 }}>
                             <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#b45309' }} />
                             Awaiting Approval
@@ -4407,7 +4410,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                   <div style={{ background: '#fff', border: '1px solid #e5e5e5', borderRadius: 14, padding: '20px 24px' }}>
 
-                    {/* ── BUYER INFO ── */}
+                    {/* ΓöÇΓöÇ BUYER INFO ΓöÇΓöÇ */}
                     <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>BUYER INFORMATION</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
@@ -4437,7 +4440,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                     <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
 
-                    {/* ── SUPPLIER INFO ── */}
+                    {/* ΓöÇΓöÇ SUPPLIER INFO ΓöÇΓöÇ */}
                     <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>SUPPLIER INFORMATION</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
@@ -4459,7 +4462,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                     <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
 
-                    {/* ── PO META ── */}
+                    {/* ΓöÇΓöÇ PO META ΓöÇΓöÇ */}
                     <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 14 }}>PO DETAILS</div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '14px 0', marginBottom: 20 }}>
@@ -4491,7 +4494,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                     <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
 
-                    {/* ── LINE ITEMS ── */}
+                    {/* ΓöÇΓöÇ LINE ITEMS ΓöÇΓöÇ */}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
                       <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb' }}>LINE ITEMS</div>
                     </div>
@@ -4517,7 +4520,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           ))}
                           <tr style={{ background: '#f5f5f7', borderTop: '2px solid #d0d0d0' }}>
                             <td colSpan={8} style={{ padding: '10px 12px', fontSize: 12, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid #e5e5e5' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
-                            <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 700, color: '#0052cc', borderRight: '1px solid #e5e5e5' }}>₹45,00,000.00</td>
+                            <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 700, color: '#0052cc', borderRight: '1px solid #e5e5e5' }}>Γé╣45,00,000.00</td>
                             <td />
                           </tr>
                         </tbody>
@@ -4526,7 +4529,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                     <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
 
-                    {/* ── SPECIAL INSTRUCTIONS ── */}
+                    {/* ΓöÇΓöÇ SPECIAL INSTRUCTIONS ΓöÇΓöÇ */}
                     <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 10 }}>SPECIAL INSTRUCTIONS TO SUPPLIER</div>
                     <div style={{ marginBottom: 20 }}>
                       <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poSpecialInstructions}</div>
@@ -4534,7 +4537,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
                     <div style={{ borderTop: '1px solid #f0f0f0', margin: '4px 0 20px' }} />
 
-                    {/* ── TERMS & CONDITIONS ── */}
+                    {/* ΓöÇΓöÇ TERMS & CONDITIONS ΓöÇΓöÇ */}
                     <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#bbb', marginBottom: 10 }}>TERMS & CONDITIONS</div>
                     <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a', lineHeight: 1.9, whiteSpace: 'pre-line' }}>{poTermsConditions}</div>
 
@@ -5183,8 +5186,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   <FileText size={16} color="#0052cc" />
                 </div>
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Purchase Order — {poNumber}</div>
-                  <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>{poSupplierName} · Issued {poIssueDate}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>Purchase Order ΓÇö {poNumber}</div>
+                  <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>{poSupplierName} ┬╖ Issued {poIssueDate}</div>
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -5272,7 +5275,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     ))}
                     <tr style={{ background: '#f0f4ff', borderTop: '2px solid #0052cc' }}>
                       <td colSpan={6} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#1a1a1a', textAlign: 'right', borderRight: '1px solid #ccc' }}>Total :- FORTY FIVE LAKH RUPEES AND ZERO</td>
-                      <td colSpan={2} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#0052cc' }}>₹45,00,000.00 INR</td>
+                      <td colSpan={2} style={{ padding: '8px', fontSize: 11, fontWeight: 700, color: '#0052cc' }}>Γé╣45,00,000.00 INR</td>
                     </tr>
                   </tbody>
                 </table>
@@ -5316,7 +5319,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             <div style={{ padding: '20px 24px', borderBottom: '1px solid #e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
               <div>
                 <div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a' }}>Edit Purchase Order</div>
-                <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>{poNumber} · AWS Cloud Migration Consulting</div>
+                <div style={{ fontSize: 12, color: '#999', marginTop: 2 }}>{poNumber} ┬╖ AWS Cloud Migration Consulting</div>
               </div>
               <button onClick={() => setShowPoEditModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999', display: 'flex', padding: 6, borderRadius: 8 }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}><X size={18} /></button>
             </div>
