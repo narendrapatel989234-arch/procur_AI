@@ -770,25 +770,25 @@ const WYSIWYGEditor = ({
 
                         {rpState === 'generated' && (
                           <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
-                            <button onClick={() => { 
-                              editor?.chain().focus().insertContent(`<p>${rpGeneratedText}</p>`).run(); 
+                            <button onClick={() => {
+                              editor?.chain().focus().insertContent(`<p>${rpGeneratedText}</p>`).run();
                               closeRightPane();
                               setSowBanner({ visible: true, type: 'success', message: 'Rewritten text accepted and added to document.' });
                               setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
                             }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#0052cc', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: 'pointer', transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>Accept</button>
-                            
+
                             <button onClick={() => {
                               closeRightPane();
                               setSowBanner({ visible: true, type: 'error', message: 'Rewritten text was rejected.' });
                               setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
                             }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--colors-red-500)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Reject</button>
-                            
+
                             <button onClick={() => setRpIsEditing(!rpIsEditing)} style={{ flex: 1, padding: '0 16px', height: 42, background: rpIsEditing ? '#f1f5f9' : '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>{rpIsEditing ? 'Done' : 'Edit'}</button>
-                            
-                            <button onClick={() => { 
+
+                            <button onClick={() => {
                               setRpIsEditing(false);
-                              setRpState('regenerating'); 
-                              setTimeout(() => { setRpState('generated'); }, 2000); 
+                              setRpState('regenerating');
+                              setTimeout(() => { setRpState('generated'); }, 2000);
                             }} style={{ flex: 1, padding: '0 16px', height: 42, background: '#fff', border: '1px solid var(--border-default)', borderRadius: 8, color: 'var(--text-secondary)', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Regenerate</button>
                           </div>
                         )}
@@ -798,7 +798,7 @@ const WYSIWYGEditor = ({
 
                   {/* Prompt Input Box */}
                   <div style={{ marginTop: 'auto', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-                    <textarea 
+                    <textarea
                       placeholder="Describe your requirement through a prompt"
                       value={rpPrompt}
                       onChange={(e) => setRpPrompt(e.target.value)}
@@ -824,7 +824,7 @@ const WYSIWYGEditor = ({
                           <Plus size={18} />
                         </button>
                         <div ref={toneMenuRef} style={{ position: 'relative' }}>
-                          <button 
+                          <button
                             onClick={() => setShowToneMenu(!showToneMenu)}
                             style={{ background: 'transparent', border: 'none', padding: '6px 12px', fontSize: 13, color: 'var(--text-secondary)', fontWeight: 500, cursor: 'pointer', outline: 'none', display: 'flex', alignItems: 'center', gap: 6, borderRadius: 6, transition: 'all 0.2s' }}
                             onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-1)'}
@@ -832,7 +832,7 @@ const WYSIWYGEditor = ({
                           >
                             {selectedTone || 'Select Tone'} <ChevronDown size={14} color="var(--text-tertiary)" />
                           </button>
-                          
+
                           {showToneMenu && (
                             <div style={{ position: 'absolute', bottom: '100%', left: 0, marginBottom: 8, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 180, zIndex: 1000, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
                               {[
@@ -958,10 +958,10 @@ const NEGOTIATION_DATA = {
       overall: 82
     },
     marketSignals: {
-      financial: { title: 'Financial Signals', icon: TrendingUp, desc: 'Q3 revenue up 8% YoY. Operating margins improved to 15.2%. No red flags in recent 10-K filings. Strong cash position suggests low pricing desperation.' },
-      market: { title: 'Market Position', icon: BarChart2, desc: 'Maintained leader status in Gartner Magic Quadrant for Cloud Services. High customer concentration in MEA public sector. Recently lost a major banking contract in UAE.' },
-      operational: { title: 'Operational & Capacity', icon: Briefcase, desc: 'Aggressive hiring in UAE delivery centers (+15% headcount in last quarter). Bench strength is healthy. No flagged project backlogs.' },
-      news: { title: 'News & Sentiment', icon: Globe, desc: 'Positive sentiment around recent AWS Premier Tier partner renewal. No significant litigation or ESG incidents reported in the last 12 months.' }
+      financial: { title: 'Financial Signals', icon: TrendingUp, desc: 'Q3 revenue up 8% YoY. Operating margins improved to 15.2%. No red flags in recent 10-K filings. Strong cash position suggests low pricing desperation. In addition to this, the vendor has recently raised an additional round of capital allowing for expanded R&D investments, specifically in AI and automation capabilities that they are looking to pilot with early-adopter clients. Analysts note that their cash reserves have grown by nearly 14% over the last fiscal year, buffering them against short-term market volatilities. Despite a broader economic slowdown affecting IT services overall, their diverse portfolio has insulated them, leading to a steady stream of recurring revenue. Their quarterly earnings call highlighted a strategic shift towards higher-margin consulting services, which may explain their slightly premium pricing in this bid. However, this financial stability also implies that they are highly unlikely to engage in a "race to the bottom" regarding pricing, preferring to compete on value and established track record. Negotiations on rate cards may face stiff resistance unless coupled with volume commitments or multi-year guarantees. Procurement should focus on securing favorable payment terms or performance-based holdbacks, which they are typically more amenable to given their robust liquidity.' },
+      market: { title: 'Market Position', icon: BarChart2, desc: 'Maintained leader status in Gartner Magic Quadrant for Cloud Services. High customer concentration in MEA public sector. Recently lost a major banking contract in UAE. This recent loss in the financial sector has reportedly increased their aggressive posturing to secure flagship enterprise accounts in the region to offset the revenue gap and maintain market share visibility. They are currently seeking high-profile referenceable clients, which presents a significant leverage point for our negotiation strategy. Competitor analysis shows that while they lead in overall market presence, boutique firms are aggressively challenging them on price and agility. Their market positioning relies heavily on their "end-to-end" transformation capabilities, which often leads to complex, heavily-staffed project structures. Analysts suggest that their aggressive land-and-expand strategy means they often underbid on initial phases, only to recoup margins via costly change requests later. It is highly recommended to establish strict guardrails around scope variations and fixed-price outcomes. Their strong brand presence means they are a safe bet for board-level approval, but this premium positioning comes with the expectation of premium pricing. Highlighting alternative bids from tier-2 agile providers during negotiations could compel them to offer strategic discounts.' },
+      operational: { title: 'Operational & Capacity', icon: Briefcase, desc: 'Aggressive hiring in UAE delivery centers (+15% headcount in last quarter). Bench strength is healthy. No flagged project backlogs. This recent influx of regional talent indicates a strategic focus on expanding their local delivery capabilities, shifting away from their traditional reliance on offshore centers. However, there is a risk that newly onboarded resources may lack the mature, cohesive delivery experience of established teams. They currently report an average bench utilization rate of 78%, suggesting they have immediate capacity to deploy resources for our project timeline without requiring extended onboarding or external contractor hiring. Their delivery model has recently been restructured to emphasize agile, cross-functional squads, which aligns well with our expected engagement model. Client feedback from similar implementations notes that while their senior architecture team is top-tier, mid-level development resources can sometimes suffer from high turnover, impacting project continuity. We should ensure the contract includes key personnel clauses that prevent swapping out lead architects without explicit approval. Furthermore, their operational playbook is highly standardized; while this ensures predictability, it may result in friction if our internal processes require high levels of customization or deviation from their standard operating procedures.' },
+      news: { title: 'News & Sentiment', icon: Globe, desc: 'Positive sentiment around recent AWS Premier Tier partner renewal. No significant litigation or ESG incidents reported in the last 12 months. Recent press releases highlight their new strategic alliance with leading cybersecurity firms, bolstering their credentials for secure enterprise migrations. The company has been actively publishing thought leadership on AI-driven digital transformation, generating significant positive PR in industry publications. Sentiment analysis across technical forums and business networks shows a 72% positive rating, slightly above the industry average, with frequent praise for their technical rigor and long-term stability. However, some recent news articles have highlighted minor internal restructuring in their MEA leadership team, which could potentially lead to short-term strategic realignment. They have also heavily marketed their new proprietary migration accelerators, which they claim reduce time-to-market by 30%; we should demand contractual SLA commitments tied to these marketed efficiencies. From an ESG perspective, they have recently committed to Net Zero by 2030, which aligns perfectly with our own corporate sustainability requirements and can be highlighted as a positive synergy in board presentations. Overall market sentiment positions them as a highly reliable, albeit expensive, strategic partner.' }
     },
     technicalGaps: [
       { type: 'gap', title: 'Data Migration Strategy', desc: 'The proposal lacks detailed rollback procedures during the cutover phase.' },
@@ -1549,6 +1549,9 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [showNewVersionModal, setShowNewVersionModal] = useState(false);
   const [newVersionNote, setNewVersionNote] = useState('');
   const [newVersionGenerating, setNewVersionGenerating] = useState(false);
+  const [showNegotGenerateModal, setShowNegotGenerateModal] = useState(null);
+  const [negotGenerateNote, setNegotGenerateNote] = useState('');
+  const [negotGenerating, setNegotGenerating] = useState(false);
   const [auditFilter, setAuditFilter] = useState('all');
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [published, setPublished] = useState(false);
@@ -1580,6 +1583,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [selectedMatrixProps, setSelectedMatrixProps] = useState([]);
   const [matrixDropOpen, setMatrixDropOpen] = useState(false);
   const matrixDropRef = useRef(null);
+
+  const [expandedMarketCards, setExpandedMarketCards] = useState({});
 
   const [suggestedVendors, setSuggestedVendors] = useState(VENDORS);
   const [showAddVendorModal, setShowAddVendorModal] = useState(false);
@@ -1853,11 +1858,49 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
         </div>
       )}
 
+      {showNegotGenerateModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => { if (!negotGenerating) setShowNegotGenerateModal(null); }}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 480, padding: '28px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 16 }} onClick={e => e.stopPropagation()}>
+            {(() => {
+              const isRegen = showNegotGenerateModal.startsWith('Regenerate');
+              const baseName = isRegen ? showNegotGenerateModal.replace('Regenerate ', '') : showNegotGenerateModal;
+              const title = isRegen ? showNegotGenerateModal : `Generate ${showNegotGenerateModal}`;
+              return (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                    <div><div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a' }}>{title}</div><div style={{ fontSize: 12, color: '#999', marginTop: 3 }}>Describe what should be {isRegen ? 'regenerated' : 'generated'}.</div></div>
+                    <button onClick={() => setShowNegotGenerateModal(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
+                  </div>
+                  <textarea value={negotGenerateNote} onChange={e => setNegotGenerateNote(e.target.value)} placeholder={`e.g. Expand on ${baseName.toLowerCase()}...`} autoFocus
+                    style={{ width: '100%', minHeight: 120, padding: '10px 12px', boxSizing: 'border-box', border: '1.5px solid #7c7cff', borderRadius: 10, fontSize: 13, color: '#1a1a1a', fontFamily: 'inherit', lineHeight: 1.6, outline: 'none', resize: 'vertical', boxShadow: '0 0 0 3px rgba(124,124,255,0.1)' }} />
+                  <div style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-subtle)', borderRadius: 10, padding: '10px 14px', display: 'flex', gap: 10 }}>
+                    <Sparkles size={14} color="#7c7cff" style={{ flexShrink: 0, marginTop: 1 }} />
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>AI will {isRegen ? 'regenerate' : 'generate'} the output as per your prompt.</div>
+                  </div>
+                </>
+              );
+            })()}
+            {negotGenerating && <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: 'rgba(124,124,255,0.06)', border: '1px solid rgba(124,124,255,0.15)', borderRadius: 10 }}>
+              <RefreshCw size={14} color="#7c7cff" style={{ animation: 'spin 1s linear infinite' }} />
+              <div style={{ fontSize: 13, fontWeight: 500, color: '#3d3db8' }}>Generating...</div>
+            </div>}
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button onClick={() => setShowNegotGenerateModal(null)} style={{ flex: 1, padding: '10px 0', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>Cancel</button>
+              <button onClick={() => { if (!negotGenerateNote.trim()) return; setNegotGenerating(true); setTimeout(() => { setNegotGenerating(false); setShowNegotGenerateModal(null); }, 2200); }}
+                disabled={!negotGenerateNote.trim() || negotGenerating}
+                style={{ flex: 1, padding: '10px 0', border: 'none', borderRadius: 10, background: negotGenerateNote.trim() && !negotGenerating ? '#0052cc' : 'var(--bg-surface-2)', fontSize: 13, fontWeight: 600, cursor: negotGenerateNote.trim() && !negotGenerating ? 'pointer' : 'not-allowed', color: negotGenerateNote.trim() && !negotGenerating ? '#fff' : 'var(--text-tertiary)', fontFamily: 'inherit' }}>
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}><Sparkles size={13} /> {showNegotGenerateModal && showNegotGenerateModal.startsWith('Regenerate') ? 'Regenerate' : 'Generate'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showNewVersionModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => { if (!newVersionGenerating) setShowNewVersionModal(false); }}>
           <div style={{ background: '#fff', borderRadius: 16, width: 480, padding: '28px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', gap: 16 }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-              <div><div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a' }}>Generate New Version</div><div style={{ fontSize: 12, color: '#999', marginTop: 3 }}>Describe what should change</div></div>
+              <div><div style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a' }}>Generate New Version</div><div style={{ fontSize: 12, color: '#999', marginTop: 3 }}>Describe what should be generated.</div></div>
               <button onClick={() => setShowNewVersionModal(false)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#999' }}><X size={18} /></button>
             </div>
             <textarea value={newVersionNote} onChange={e => setNewVersionNote(e.target.value)} placeholder="e.g. Update evaluation criteria weights..." autoFocus
@@ -3746,7 +3789,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
 
               {/* NEGOTIATIONS TAB */}
               {activeTab === 'negot' && proposals.some(p => p.status === 'Completed') && (() => {
-                const negotProposals = proposals.filter(p => p.status === 'Completed');
+                const negotProposals = proposals.filter(p => p.status === 'Completed').sort((a, b) => parseInt(b.techScore || 0) - parseInt(a.techScore || 0));
                 const firstNegotKey = Object.keys(NEGOTIATION_DATA)[0];
                 // selectedNegotVendorId now holds p.id
                 const activeNegotProp = negotProposals.find(p => p.id === selectedNegotVendorId) || negotProposals[0];
@@ -3757,57 +3800,43 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 return (
                   <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: 'transparent' }}>
 
-                    {/* STRATEGY BRIEF (MOVED TO TOP) */}
-                    <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 14, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                      <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>STRATEGY BRIEF</span>
+                    {/* NEW TOP BANNER */}
+                    <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 10, background: 'rgba(0,82,204,0.08)', color: '#0052cc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700 }}>
+                          {(() => {
+                            const ranked = [...proposals].sort((a, b) => parseInt(b.techScore || 0) - parseInt(a.techScore || 0));
+                            const rank = ranked.findIndex(p => p.id === activeNegotProp?.id) + 1;
+                            return `#${rank > 0 ? rank : 1}`;
+                          })()}
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <button onClick={() => {}} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                            <RefreshCw size={14} /> Regenerate
-                          </button>
-                          <button onClick={() => setShowAwardModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: 'none', background: '#0052cc', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#fff', boxShadow: '0 2px 8px rgba(0,82,204,0.2)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                            <Award size={14} /> Award Project
-                          </button>
+                        <div>
+                          <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>{activeNegotProp?.vendorName || activeVendorKey}</div>
+                          <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
+                            {activeNegotProp?.version} • Auto-selected by AI based on category and complexity
+                          </div>
                         </div>
                       </div>
-                      <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 24, flex: 1 }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
-                          <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
-                            <div style={{ flex: 1, fontSize: 13, color: '#0052cc', fontWeight: 500, padding: '12px 16px', background: 'rgba(0,82,204,0.04)', borderRadius: 8, border: '1px solid rgba(0,82,204,0.2)', lineHeight: 1.5, boxSizing: 'border-box' }}>
-                              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>₹38,00,000</div>
-                              <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{negotData.strategyBrief.opening}</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        {/* VENDOR SELECTION DROPDOWN */}
+                        <div style={{ position: 'relative' }} ref={negotVendorRef}>
+                          <button type="button" onClick={() => setNegotVendorOpen(!negotVendorOpen)} style={{ width: 240, padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', background: '#fff', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxSizing: 'border-box', fontWeight: 500 }}>
+                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{activeDropdownLabel}</span> <ChevronDown size={16} style={{ transform: negotVendorOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }} color="#666" />
+                          </button>
+                          {negotVendorOpen && (
+                            <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100, maxHeight: 300, overflowY: 'auto' }}>
+                              {negotProposals.map(p => (
+                                <div key={p.id} onClick={() => { setSelectedNegotVendorId(p.id); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                  {p.vendorName} {p.version}
+                                </div>
+                              ))}
                             </div>
-                          </div>
-                          <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Target Goal</div>
-                            <div style={{ flex: 1, fontSize: 13, color: '#15803d', fontWeight: 500, padding: '12px 16px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0', lineHeight: 1.5, boxSizing: 'border-box' }}>
-                              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.target}</div>
-                              <div style={{ fontSize: 11, color: '#166534' }}>Ideal settlement point.</div>
-                            </div>
-                          </div>
-                          <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Walk-Away Point</div>
-                            <div style={{ flex: 1, fontSize: 13, color: '#b91c1c', fontWeight: 500, padding: '12px 16px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca', lineHeight: 1.5, boxSizing: 'border-box' }}>
-                              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.walkAway}</div>
-                              <div style={{ fontSize: 11, color: '#991b1b' }}>Maximum acceptable threshold.</div>
-                            </div>
-                          </div>
+                          )}
                         </div>
-                        <div>
-                          <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Concession Sequence</div>
-                          <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                            <ol style={{ margin: 0, paddingLeft: 20 }}>
-                              {negotData.strategyBrief.concessions.map((c, i) => <li key={i} style={{ marginBottom: 8 }}>{c}</li>)}
-                            </ol>
-                          </div>
-                        </div>
-                        <div>
-                          <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
-                          <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
-                        </div>
+                        {/* AWARD PROJECT BUTTON */}
+                        <button onClick={() => setShowAwardModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#fff', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
+                          <Award size={16} /> Award Project
+                        </button>
                       </div>
                     </div>
 
@@ -3824,96 +3853,126 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </button>
                         </div>
 
-                      <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
-                        <div style={{ overflowX: 'auto' }}>
-                          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
-                            <thead>
-                              <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)', textAlign: 'left' }}>
-                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>VENDOR / PROPOSAL</th>
-                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>SENTIMENT SCORE</th>
-                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>RISKS IDENTIFIED</th>
-                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>GAPS & CLARIFICATIONS</th>
-                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>COMMERCIAL GAP</th>
-                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>BATNA STAT</th>
-                                <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>OVERALL SCORE</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {negotProposals.map((p, idx) => {
-                                const vData = NEGOTIATION_DATA[p.vendorName] || negotData;
-                                return (
-                                  <tr key={p.id} style={{ borderBottom: idx < negotProposals.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
-                                    <td style={{ padding: '14px 16px', fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
-                                      <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>{p.vendorName} {p.version}</div>
-                                    </td>
-                                    <td style={{ padding: '14px 16px' }}>
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                        <span style={{ fontSize: 15, fontWeight: 600, color: '#16a34a' }}>{vData.stats.sentiment.rating}</span>
-                                        <span style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>({vData.stats.sentiment.score})</span>
-                                      </div>
-                                    </td>
-                                    <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)' }}>
-                                      <div style={{ display: 'flex', gap: 20 }}>
-                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                          <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 15 }}>{vData.stats.risks.high}</div>
-                                          <div style={{ color: '#ef4444', fontSize: 13, fontWeight: 500 }}>High</div>
+                        <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                          <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 1000 }}>
+                              <thead>
+                                <tr style={{ background: 'var(--bg-surface-2)', borderBottom: '1px solid var(--border-subtle)', textAlign: 'left' }}>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>VENDOR / PROPOSAL</th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>SENTIMENT SCORE</th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>RISKS IDENTIFIED</th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>GAPS & CLARIFICATIONS</th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>COMMERCIAL GAP</th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>BATNA STAT</th>
+                                  <th style={{ padding: '12px 16px', fontSize: 11, fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>OVERALL SCORE</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {negotProposals.map((p, idx) => {
+                                  const vData = NEGOTIATION_DATA[p.vendorName] || negotData;
+                                  return (
+                                    <tr key={p.id} style={{ borderBottom: idx < negotProposals.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}>
+                                      <td style={{ padding: '14px 16px', fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
+                                        <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>{p.vendorName} {p.version}</div>
+                                      </td>
+                                      <td style={{ padding: '14px 16px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                          <span style={{ fontSize: 15, fontWeight: 600, color: '#16a34a' }}>{vData.stats.sentiment.rating}</span>
+                                          <span style={{ fontSize: 14, color: 'var(--text-tertiary)' }}>({vData.stats.sentiment.score})</span>
                                         </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                          <div style={{ color: '#f59e0b', fontWeight: 600, fontSize: 15 }}>{vData.stats.risks.medium}</div>
-                                          <div style={{ color: '#f59e0b', fontSize: 13, fontWeight: 500 }}>Med</div>
+                                      </td>
+                                      <td style={{ padding: '14px 16px', fontSize: 14, color: 'var(--text-primary)' }}>
+                                        <div style={{ display: 'flex', gap: 20 }}>
+                                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                            <div style={{ color: '#ef4444', fontWeight: 600, fontSize: 15 }}>{vData.stats.risks.high}</div>
+                                            <div style={{ color: '#ef4444', fontSize: 13, fontWeight: 500 }}>High</div>
+                                          </div>
+                                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                            <div style={{ color: '#f59e0b', fontWeight: 600, fontSize: 15 }}>{vData.stats.risks.medium}</div>
+                                            <div style={{ color: '#f59e0b', fontSize: 13, fontWeight: 500 }}>Med</div>
+                                          </div>
+                                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                            <div style={{ color: '#22c55e', fontWeight: 600, fontSize: 15 }}>{vData.stats.risks.low}</div>
+                                            <div style={{ color: '#22c55e', fontSize: 13, fontWeight: 500 }}>Low</div>
+                                          </div>
                                         </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                                          <div style={{ color: '#22c55e', fontWeight: 600, fontSize: 15 }}>{vData.stats.risks.low}</div>
-                                          <div style={{ color: '#22c55e', fontSize: 13, fontWeight: 500 }}>Low</div>
-                                        </div>
-                                      </div>
-                                    </td>
-                                    <td style={{ padding: '14px 16px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500 }}>{vData.stats.gaps} Questions</td>
-                                    <td style={{ padding: '14px 16px', fontSize: 15, color: 'var(--text-primary)' }}>
-                                      <div style={{ color: '#f59e0b', fontWeight: 600, marginBottom: 6 }}>{vData.stats.commercial.gap}</div>
-                                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{vData.stats.commercial.detail.replace(' target', '\ntarget')}</div>
-                                    </td>
-                                    <td style={{ padding: '14px 16px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500, lineHeight: 1.5 }}>
-                                      <div style={{ whiteSpace: 'pre-wrap' }}>{vData.stats.batna.replace(' - ', ' -\n').replace(' Viable', '\nViable')}</div>
-                                    </td>
-                                    <td style={{ padding: '14px 16px' }}>
-                                      <div style={{ color: '#16a34a', fontWeight: 700, fontSize: 16 }}>{p.techScore || vData.stats.overall}</div>
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
+                                      </td>
+                                      <td style={{ padding: '14px 16px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500 }}>{vData.stats.gaps} Questions</td>
+                                      <td style={{ padding: '14px 16px', fontSize: 15, color: 'var(--text-primary)' }}>
+                                        <div style={{ color: '#f59e0b', fontWeight: 600, marginBottom: 6 }}>{vData.stats.commercial.gap}</div>
+                                        <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{vData.stats.commercial.detail.replace(' target', '\ntarget')}</div>
+                                      </td>
+                                      <td style={{ padding: '14px 16px', fontSize: 15, color: 'var(--text-primary)', fontWeight: 500, lineHeight: 1.5 }}>
+                                        <div style={{ whiteSpace: 'pre-wrap' }}>{vData.stats.batna.replace(' - ', ' -\n').replace(' Viable', '\nViable')}</div>
+                                      </td>
+                                      <td style={{ padding: '14px 16px' }}>
+                                        <div style={{ color: '#16a34a', fontWeight: 700, fontSize: 16 }}>{p.techScore || vData.stats.overall}</div>
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       </div>
-                    </div>
                     )}
 
                     {/* SECTION 2: Vendor Proposal & Dropdown & Details */}
                     {negotData ? (
                       <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-                          <div>
-                            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>VENDOR PROPOSAL DETAILS</div>
-                            <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 4 }}>Detailed analysis and negotiation strategy for the selected vendor.</div>
-                          </div>
-                          <div style={{ position: 'relative' }} ref={negotVendorRef}>
-                            <button type="button" onClick={() => setNegotVendorOpen(!negotVendorOpen)} style={{ width: 240, padding: '10px 14px', border: '1px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#1a1a1a', fontFamily: 'inherit', background: '#fff', outline: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxSizing: 'border-box', fontWeight: 500 }}>
-                              <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{activeDropdownLabel}</span> <ChevronDown size={16} style={{ transform: negotVendorOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }} color="#666" />
-                            </button>
-                            {negotVendorOpen && (
-                              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100, maxHeight: 300, overflowY: 'auto' }}>
-                                {negotProposals.map(p => (
-                                  <div key={p.id} onClick={() => { setSelectedNegotVendorId(p.id); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                    {p.vendorName} {p.version}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+                          {/* STRATEGY BRIEF */}
+                          <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>STRATEGY BRIEF</span>
+                              </div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Regenerate Strategy Brief'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                  <RefreshCw size={14} /> Regenerate
+                                </button>
+                              </div>
+                            </div>
+                            <div style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 24, flex: 1 }}>
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
+                                  <div style={{ flex: 1, fontSize: 13, color: '#0052cc', fontWeight: 500, padding: '12px 16px', background: 'rgba(0,82,204,0.04)', borderRadius: 8, border: '1px solid rgba(0,82,204,0.2)', lineHeight: 1.5, boxSizing: 'border-box' }}>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>₹38,00,000</div>
+                                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{negotData.strategyBrief.opening}</div>
+                                  </div>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Target Goal</div>
+                                  <div style={{ flex: 1, fontSize: 13, color: '#15803d', fontWeight: 500, padding: '12px 16px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0', lineHeight: 1.5, boxSizing: 'border-box' }}>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.target}</div>
+                                    <div style={{ fontSize: 11, color: '#166534' }}>Ideal settlement point.</div>
+                                  </div>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Walk-Away Point</div>
+                                  <div style={{ flex: 1, fontSize: 13, color: '#b91c1c', fontWeight: 500, padding: '12px 16px', background: '#fef2f2', borderRadius: 8, border: '1px solid #fecaca', lineHeight: 1.5, boxSizing: 'border-box' }}>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{negotData.strategyBrief.walkAway}</div>
+                                    <div style={{ fontSize: 11, color: '#991b1b' }}>Maximum acceptable threshold.</div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Concession Sequence</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                                  <ol style={{ margin: 0, paddingLeft: 20 }}>
+                                    {negotData.strategyBrief.concessions.map((c, i) => <li key={i} style={{ marginBottom: 8 }}>{c}</li>)}
+                                  </ol>
+                                </div>
+                              </div>
+                              <div>
+                                <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{negotData.strategyBrief.batna}</div>
+                              </div>
+                            </div>
+                          </div>
 
                           {/* Market News and Sentiment (4 Cards) */}
                           <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
@@ -3932,7 +3991,21 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                         </div>
                                         <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>{signal.title}</div>
                                       </div>
-                                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{signal.desc} <span style={{ color: '#0052cc', fontWeight: 600, cursor: 'pointer', marginLeft: 4 }}>View More</span></div>
+                                      <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                                        {expandedMarketCards[key] ? (
+                                          <div style={{ maxHeight: 200, overflowY: 'auto', paddingRight: 8, paddingBottom: 4 }}>
+                                            {signal.desc}
+                                            <div style={{ marginTop: 8 }}>
+                                              <span onClick={() => setExpandedMarketCards(prev => ({ ...prev, [key]: false }))} style={{ color: '#0052cc', fontWeight: 600, cursor: 'pointer' }}>View Less</span>
+                                            </div>
+                                          </div>
+                                        ) : (
+                                          <div>
+                                            {signal.desc.length > 150 ? `${signal.desc.substring(0, 150)}...` : signal.desc}
+                                            {signal.desc.length > 150 && <span onClick={() => setExpandedMarketCards(prev => ({ ...prev, [key]: true }))} style={{ color: '#0052cc', fontWeight: 600, cursor: 'pointer', marginLeft: 4 }}>View More</span>}
+                                          </div>
+                                        )}
+                                      </div>
                                     </div>
                                   );
                                 })}
@@ -3950,11 +4023,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 </div>
                               </div>
                               <div style={{ display: 'flex', gap: 8 }}>
-                                <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Clarification Questions'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                                   <Sparkles size={14} /> Generate
-                                </button>
-                                <button onClick={() => setRightPane({ visible: true, action: 'generate_section', title: 'Generate Section' })} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: 'none', background: '#0052cc', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#fff', boxShadow: '0 2px 8px rgba(0,82,204,0.2)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                                  <Sparkles size={14} /> Generate with Prompt
                                 </button>
                               </div>
                             </div>
@@ -3988,15 +4058,12 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   TECHNICAL GAPS & CLARIFICATIONS
                                 </div>
                                 <div style={{ display: 'flex', gap: 8 }}>
-                                  <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                  <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Technical Gaps & Clarifications'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                                     <Sparkles size={14} /> Generate
-                                  </button>
-                                  <button onClick={() => setRightPane({ visible: true, action: 'generate_section', title: 'Generate Section' })} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: 'none', background: '#0052cc', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#fff', boxShadow: '0 2px 8px rgba(0,82,204,0.2)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                                    <Sparkles size={14} /> Generate with Prompt
                                   </button>
                                 </div>
                               </div>
-                              <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20, maxHeight: 400, overflowY: 'auto' }}>
+                              <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20, maxHeight: 250, overflowY: 'auto' }}>
                                 {negotData.technicalGaps.map((gap, i) => (
                                   <div key={i} style={{ display: 'flex', gap: 14 }}>
                                     <div style={{ width: 8, height: 8, borderRadius: '50%', background: gap.type === 'strength' ? '#22c55e' : gap.type === 'risk' ? '#ef4444' : gap.type === 'clarification' ? '#f59e0b' : '#7c7cff', marginTop: 6, flexShrink: 0 }} />
@@ -4016,15 +4083,12 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   COMMERCIAL POINTERS
                                 </div>
                                 <div style={{ display: 'flex', gap: 8 }}>
-                                  <button style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                                  <button onClick={() => { setNegotGenerateNote(''); setShowNegotGenerateModal('Commercial Pointers'); }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1px solid var(--border-default)', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: 'var(--text-secondary)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                                     <Sparkles size={14} /> Generate
-                                  </button>
-                                  <button onClick={() => setRightPane({ visible: true, action: 'generate_section', title: 'Generate Section' })} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: 'none', background: '#0052cc', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#fff', boxShadow: '0 2px 8px rgba(0,82,204,0.2)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                                    <Sparkles size={14} /> Generate with Prompt
                                   </button>
                                 </div>
                               </div>
-                              <div style={{ padding: '24px 24px 24px 24px', maxHeight: 400, overflowY: 'auto' }}>
+                              <div style={{ padding: '24px 24px 24px 24px', maxHeight: 250, overflowY: 'auto' }}>
                                 <ul style={{ margin: 0, paddingLeft: 20, color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.7, listStyleType: 'disc' }}>
                                   {negotData.commercialPointers.map((ptr, i) => (
                                     <li key={i} style={{ marginBottom: 14, paddingLeft: 8 }}>{ptr}</li>
