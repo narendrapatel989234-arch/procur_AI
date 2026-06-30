@@ -15,7 +15,7 @@ import {
   Palette, Table, Type, MoreVertical, File, AlertTriangle, Trash2,
   Mic, Paperclip, RotateCcw, ThumbsUp, ThumbsDown, Copy, Edit2, Share2, Pin, PinOff, MoreHorizontal, Check, BookOpen, Layers, Briefcase, Globe, MessageSquare, TrendingUp, AlertCircle, HelpCircle, Lock, Search, ArrowUpDown, Filter, ShieldCheck, PieChart, FileText as FileTextIcon,
   Edit3, Compass, Clock, Monitor, Grid, MessageCircle, XCircle, UploadCloud,
-  CheckSquare, Minus, Strikethrough, Eraser, ArrowUp, Maximize2
+  CheckSquare, Minus, Strikethrough, Eraser, ArrowUp, Maximize2, CornerDownRight
 } from 'lucide-react';
 
 import { useEditor, EditorContent } from '@tiptap/react';
@@ -285,7 +285,14 @@ const WYSIWYGEditor = ({
   const handleContextMenu = (e) => {
     if (!isEditing) return;
     e.preventDefault();
-    setContextMenu({ visible: true, x: e.clientX, y: e.clientY });
+    
+    let y = e.clientY;
+    const menuHeight = 260; // Approximate height of context menu
+    if (window.innerHeight - y < menuHeight) {
+      y = Math.max(10, window.innerHeight - menuHeight - 10);
+    }
+    
+    setContextMenu({ visible: true, x: e.clientX, y });
   };
 
   const closeRightPane = () => {
@@ -520,147 +527,261 @@ const WYSIWYGEditor = ({
       )}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
-      <div className="custom-scrollbar" style={{ flex: 1, background: isEditing ? '#f3f4f6' : '#fff', overflowY: 'auto', padding: isEditing ? '40px 20px' : '0 52px 52px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div style={{
-          background: '#fff',
-          width: '100%',
-          maxWidth: isEditing ? 850 : '100%',
-          minHeight: isEditing ? 600 : 'auto',
-          borderRadius: isEditing ? 8 : 0,
-          boxShadow: isEditing ? '0 4px 24px rgba(0,0,0,0.06)' : 'none',
-          padding: isEditing ? '40px 50px' : '20px 0',
-          display: 'flex',
-          flexDirection: 'column',
-          transform: isEditing ? `scale(${zoom / 100})` : 'scale(1)',
-          transformOrigin: 'top center',
-          transition: 'transform 0.2s ease-out'
-        }}>
+        <div className="custom-scrollbar" style={{ flex: 1, background: isEditing ? '#f3f4f6' : '#fff', overflowY: 'auto', padding: isEditing ? '40px 20px' : '0 52px 52px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{
+            background: '#fff',
+            width: '100%',
+            maxWidth: isEditing ? 850 : '100%',
+            minHeight: isEditing ? 600 : 'auto',
+            borderRadius: isEditing ? 8 : 0,
+            boxShadow: isEditing ? '0 4px 24px rgba(0,0,0,0.06)' : 'none',
+            padding: isEditing ? '40px 50px' : '20px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            transform: isEditing ? `scale(${zoom / 100})` : 'scale(1)',
+            transformOrigin: 'top center',
+            transition: 'transform 0.2s ease-out'
+          }}>
 
-          <div className="unified-tiptap" onContextMenu={handleContextMenu} style={{ fontSize: 15, color: '#334155', lineHeight: 1.7, fontFamily: 'inherit', flex: 1 }}>
-            <EditorContent editor={editor} />
-          </div>
-
-        </div>
-      </div>
-
-      {isEditing && docType !== 'Statement of Work' && (
-        <div ref={aiMenuRef} style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 750, zIndex: 100 }}>
-          {showAiMenu && !aiLoading && (
-            <div style={{ position: 'absolute', bottom: 'calc(100% + 12px)', left: 0, background: '#fff', borderRadius: 16, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', border: '1px solid var(--border-subtle)', padding: '16px 0', width: 280, zIndex: 50 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', padding: '0 20px', marginBottom: 12 }}>AI Toolkit examples</div>
-
-              <div className="ai-menu-item" onClick={() => handleAiAction('comment')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                <MessageSquare size={16} /> <span style={{ fontSize: 14 }}>Add AI comment</span>
-              </div>
-              <div className="ai-menu-item" onClick={() => handleAiAction('paragraph')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                <Plus size={16} /> <span style={{ fontSize: 14 }}>Add new paragraph</span>
-              </div>
-              <div className="ai-menu-item" onClick={() => handleAiAction('proofread')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                <Search size={16} /> <span style={{ fontSize: 14 }}>Proofread</span>
-              </div>
-              <div className="ai-menu-item" onClick={() => handleAiAction('adjust')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                <Pencil size={16} /> <span style={{ fontSize: 14 }}>Adjust text selection</span>
-              </div>
-              <div className="ai-menu-item" onClick={() => handleAiAction('component')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                <TrendingUp size={16} /> <span style={{ fontSize: 14 }}>Add custom component</span>
-              </div>
-              <div className="ai-menu-item" onClick={() => handleAiAction('justify')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                <CheckSquare size={16} /> <span style={{ fontSize: 14 }}>Justify edit</span>
-              </div>
+            <div className="unified-tiptap" onContextMenu={handleContextMenu} style={{ fontSize: 15, color: '#334155', lineHeight: 1.7, fontFamily: 'inherit', flex: 1 }}>
+              <EditorContent editor={editor} />
             </div>
-          )}
 
-          <div style={{ position: 'relative', background: '#fff', borderRadius: 12, border: '1.5px solid rgba(124,124,255,0.4)', boxShadow: '0 8px 30px rgba(124,124,255,0.15)', overflow: 'hidden', transition: 'border-color 0.2s', display: 'flex', alignItems: 'center', padding: '12px 18px' }}>
-            {aiLoading ? (
-              <RefreshCw size={18} color="#7c7cff" style={{ flexShrink: 0, marginRight: 10, animation: 'spin 1s linear infinite' }} />
-            ) : (
-              <Sparkles size={18} color="#7c7cff" style={{ flexShrink: 0, marginRight: 10 }} />
-            )}
-            <input
-              type="text"
-              placeholder="Tell AI what else needs to be changed..."
-              value={aiInputValue}
-              onChange={(e) => setAiInputValue(e.target.value)}
-              onFocus={() => setShowAiMenu(true)}
-              onKeyDown={(e) => { if (e.key === 'Enter') handleAiAction(); }}
-              disabled={aiLoading}
-              style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit' }}
-            />
-            <button
-              onClick={() => handleAiAction()}
-              disabled={!aiInputValue.trim() || aiLoading}
-              style={{ background: '#7c7cff', border: 'none', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: (!aiInputValue.trim() || aiLoading) ? 'not-allowed' : 'pointer', opacity: (!aiInputValue.trim() || aiLoading) ? 0.5 : 1, transition: 'all 0.2s' }}
-            >
-              <ArrowUp size={16} color="#fff" />
-            </button>
           </div>
         </div>
-      )}
 
-      {/* CONTEXT MENU */}
-      {contextMenu.visible && (
-        <div ref={contextMenuRef} style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', width: 280, zIndex: 10000, padding: '8px 0', overflow: 'hidden' }}
-          onMouseLeave={() => setContextMenu({ visible: false, x: 0, y: 0 })}>
+        {isEditing && docType !== 'Statement of Work' && (
+          <div ref={aiMenuRef} style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 750, zIndex: 100 }}>
+            {showAiMenu && !aiLoading && (
+              <div style={{ position: 'absolute', bottom: 'calc(100% + 12px)', left: 0, background: '#fff', borderRadius: 16, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', border: '1px solid var(--border-subtle)', padding: '16px 0', width: 280, zIndex: 50 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', padding: '0 20px', marginBottom: 12 }}>AI Toolkit examples</div>
 
-          {aiDropdownOptions.map(opt => {
-            const isEnabled = hasSelection || opt.alwaysEnabled;
-            return (
-              <div key={opt.id}
-                onClick={() => {
-                  if (!isEnabled) return;
-                  const selText = editor && !editor.state.selection.empty ? editor.state.doc.textBetween(editor.state.selection.from, editor.state.selection.to, ' ') : '';
-                  setContextMenu({ visible: false, x: 0, y: 0 });
-                  setRightPane({ visible: true, action: opt.id, title: opt.label, selectedText: selText });
-                }}
-                style={{ padding: '10px 16px', display: 'flex', flexDirection: 'column', gap: 4, cursor: isEnabled ? 'pointer' : 'not-allowed', transition: 'background 0.15s' }}
-                onMouseEnter={e => { if (isEnabled) e.currentTarget.style.background = '#f8fafc' }}
-                onMouseLeave={e => { if (isEnabled) e.currentTarget.style.background = 'transparent' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13, color: isEnabled ? 'var(--text-primary)' : '#94a3b8' }}>
-                  <opt.icon size={15} color={isEnabled ? '#7c7cff' : '#cbd5e1'} />
-                  <span style={{ fontWeight: 500 }}>{opt.label}</span>
+                <div className="ai-menu-item" onClick={() => handleAiAction('comment')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <MessageSquare size={16} /> <span style={{ fontSize: 14 }}>Add AI comment</span>
                 </div>
-                {(!hasSelection && opt.id !== 'generate_section') && (
-                  <div style={{ fontSize: 10.5, color: '#b45309', paddingLeft: 27, lineHeight: 1.3 }}>
-                    Please select the respective text or section to proceed with AI actions
-                  </div>
-                )}
+                <div className="ai-menu-item" onClick={() => handleAiAction('paragraph')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <Plus size={16} /> <span style={{ fontSize: 14 }}>Add new paragraph</span>
+                </div>
+                <div className="ai-menu-item" onClick={() => handleAiAction('proofread')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <Search size={16} /> <span style={{ fontSize: 14 }}>Proofread</span>
+                </div>
+                <div className="ai-menu-item" onClick={() => handleAiAction('adjust')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <Pencil size={16} /> <span style={{ fontSize: 14 }}>Adjust text selection</span>
+                </div>
+                <div className="ai-menu-item" onClick={() => handleAiAction('component')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <TrendingUp size={16} /> <span style={{ fontSize: 14 }}>Add custom component</span>
+                </div>
+                <div className="ai-menu-item" onClick={() => handleAiAction('justify')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
+                  <CheckSquare size={16} /> <span style={{ fontSize: 14 }}>Justify edit</span>
+                </div>
               </div>
-            );
-          })}
-        </div>
-      )}      {/* RIGHT PANE inline */}
-      {rightPane.visible && (
-        <>
-        <div onClick={closeRightPane} style={{ position: 'fixed', inset: 0, background: 'rgba(14,15,37,0.3)', zIndex: 9999, backdropFilter: 'blur(2px)', animation: 'fadeIn 0.2s ease' }} />
-        <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 450, background: '#fff', display: 'flex', flexDirection: 'column', zIndex: 10000, boxShadow: '-8px 0 32px rgba(0,0,0,0.1)', animation: 'slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>
-            {/* Header */}
-            <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, width: '100%' }}>
-                <X size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', flexShrink: 0 }} onClick={closeRightPane} />
-                <div style={{ position: 'relative', flex: 1 }} ref={rpDropdownRef}>
-                  <button onClick={() => setRpDropdownOpen(!rpDropdownOpen)} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 12px', background: 'transparent', border: 'none', fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', cursor: 'pointer', fontFamily: 'inherit', outline: 'none' }}>
-                    {rightPane.title} <ChevronDown size={16} color="var(--text-tertiary)" />
-                  </button>
-                  {rpDropdownOpen && (
-                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100, padding: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      {aiDropdownOptions.map(opt => (
-                        <div key={opt.id} onClick={() => { setRightPane({...rightPane, action: opt.id, title: opt.label, selectedText: rightPane.selectedText}); setRpDropdownOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, cursor: 'pointer', borderRadius: 4, color: 'var(--text-primary)', background: rightPane.action === opt.id ? 'var(--bg-surface-1)' : 'transparent', display: 'flex', alignItems: 'center' }} onMouseEnter={e => { if(rightPane.action !== opt.id) e.currentTarget.style.background = '#f8fafc' }} onMouseLeave={e => { if(rightPane.action !== opt.id) e.currentTarget.style.background = 'transparent' }}>
-                          {opt.label}
-                        </div>
-                      ))}
+            )}
+
+            <div style={{ position: 'relative', background: '#fff', borderRadius: 12, border: '1.5px solid rgba(124,124,255,0.4)', boxShadow: '0 8px 30px rgba(124,124,255,0.15)', overflow: 'hidden', transition: 'border-color 0.2s', display: 'flex', alignItems: 'center', padding: '12px 18px' }}>
+              {aiLoading ? (
+                <RefreshCw size={18} color="#7c7cff" style={{ flexShrink: 0, marginRight: 10, animation: 'spin 1s linear infinite' }} />
+              ) : (
+                <Sparkles size={18} color="#7c7cff" style={{ flexShrink: 0, marginRight: 10 }} />
+              )}
+              <input
+                type="text"
+                placeholder="Tell AI what else needs to be changed..."
+                value={aiInputValue}
+                onChange={(e) => setAiInputValue(e.target.value)}
+                onFocus={() => setShowAiMenu(true)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleAiAction(); }}
+                disabled={aiLoading}
+                style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', fontFamily: 'inherit' }}
+              />
+              <button
+                onClick={() => handleAiAction()}
+                disabled={!aiInputValue.trim() || aiLoading}
+                style={{ background: '#7c7cff', border: 'none', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: (!aiInputValue.trim() || aiLoading) ? 'not-allowed' : 'pointer', opacity: (!aiInputValue.trim() || aiLoading) ? 0.5 : 1, transition: 'all 0.2s' }}
+              >
+                <ArrowUp size={16} color="#fff" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* CONTEXT MENU */}
+        {contextMenu.visible && (
+          <div ref={contextMenuRef} style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', width: 280, zIndex: 10000, padding: '8px 0', overflow: 'hidden' }}
+            onMouseLeave={() => setContextMenu({ visible: false, x: 0, y: 0 })}>
+
+            {aiDropdownOptions.map(opt => {
+              const isEnabled = hasSelection || opt.alwaysEnabled;
+              return (
+                <div key={opt.id}
+                  onClick={() => {
+                    if (!isEnabled) return;
+                    const selText = editor && !editor.state.selection.empty ? editor.state.doc.textBetween(editor.state.selection.from, editor.state.selection.to, ' ') : '';
+                    setContextMenu({ visible: false, x: 0, y: 0 });
+                    setRightPane({ visible: true, action: opt.id, title: opt.label, selectedText: selText });
+                  }}
+                  style={{ padding: '10px 16px', display: 'flex', flexDirection: 'column', gap: 4, cursor: isEnabled ? 'pointer' : 'not-allowed', transition: 'background 0.15s' }}
+                  onMouseEnter={e => { if (isEnabled) e.currentTarget.style.background = '#f8fafc' }}
+                  onMouseLeave={e => { if (isEnabled) e.currentTarget.style.background = 'transparent' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13, color: isEnabled ? 'var(--text-primary)' : '#94a3b8' }}>
+                    <opt.icon size={15} color={isEnabled ? '#7c7cff' : '#cbd5e1'} />
+                    <span style={{ fontWeight: 500 }}>{opt.label}</span>
+                  </div>
+                  {(!hasSelection && opt.id !== 'generate_section') && (
+                    <div style={{ fontSize: 10.5, color: '#b45309', paddingLeft: 27, lineHeight: 1.3 }}>
+                      Please select the text/section to proceed
                     </div>
                   )}
                 </div>
+              );
+            })}
+          </div>
+        )}      {/* RIGHT PANE inline */}
+        {rightPane.visible && (
+          <>
+            <div onClick={closeRightPane} style={{ position: 'fixed', inset: 0, background: 'rgba(14,15,37,0.3)', zIndex: 9999, backdropFilter: 'blur(2px)', animation: 'fadeIn 0.2s ease' }} />
+            <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 450, background: '#fff', display: 'flex', flexDirection: 'column', zIndex: 10000, boxShadow: '-8px 0 32px rgba(0,0,0,0.1)', animation: 'slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+              {/* Header */}
+              <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, width: '100%' }}>
+                  <X size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', flexShrink: 0 }} onClick={closeRightPane} />
+                  <div style={{ position: 'relative' }} ref={rpDropdownRef}>
+                    <button onClick={() => setRpDropdownOpen(!rpDropdownOpen)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 8, padding: '6px 12px', background: 'transparent', border: 'none', fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', cursor: 'pointer', fontFamily: 'inherit', outline: 'none' }}>
+                      {rightPane.title} <ChevronDown size={16} color="var(--text-tertiary)" />
+                    </button>
+                    {rpDropdownOpen && (
+                      <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100, padding: 4, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 'max-content' }}>
+                        {aiDropdownOptions.map(opt => (
+                          <div key={opt.id} onClick={() => { setRightPane({ ...rightPane, action: opt.id, title: opt.label, selectedText: rightPane.selectedText }); setRpDropdownOpen(false); }} style={{ padding: '8px 12px', fontSize: 13, cursor: 'pointer', borderRadius: 4, color: 'var(--text-primary)', background: rightPane.action === opt.id ? 'var(--bg-surface-1)' : 'transparent', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }} onMouseEnter={e => { if (rightPane.action !== opt.id) e.currentTarget.style.background = '#f8fafc' }} onMouseLeave={e => { if (rightPane.action !== opt.id) e.currentTarget.style.background = 'transparent' }}>
+                            {opt.label}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="custom-scrollbar" style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-              {(rightPane.action === 'generate_section' || rightPane.action === 'expand') ? (
-                <>
-                  {((rightPane.action === 'expand' && rightPane.selectedText) || rpState !== 'idle') && (
+              <div className="custom-scrollbar" style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                {(rightPane.action === 'generate_section' || rightPane.action === 'expand') ? (
+                  <>
+                    {((rightPane.action === 'expand' && rightPane.selectedText) || rpState !== 'idle') && (
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        {/* Selected Text User Bubble (For Expand) */}
+                        {(rightPane.action === 'expand' && rightPane.selectedText) && (
+                          <div style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '85%', animation: 'chatFadeIn 0.2s ease forwards' }}>
+                            <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
+                              {rightPane.selectedText}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* User Prompt Bubble */}
+                        {rpSubmittedPrompt && (
+                          <div style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '85%', animation: 'chatFadeIn 0.2s ease forwards', marginTop: rightPane.action === 'expand' ? -8 : 0 }}>
+                            <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
+                              {rpSubmittedPrompt}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* AI Response Bubble */}
+                        {(rpState === 'generating' || rpState === 'regenerating' || rpState === 'generated') && (
+                          <div style={{ alignSelf: 'flex-start', maxWidth: '95%', display: 'flex', flexDirection: 'column', gap: 6, animation: 'chatFadeIn 0.2s ease forwards', width: '100%' }}>
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, width: '100%' }}>
+                              <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                                <Sparkles size={12} color="#fff" strokeWidth={2} />
+                              </div>
+
+                              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                {(rpState === 'generating' || rpState === 'regenerating') ? (
+                                  <div style={{ height: 60, width: '100%', display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <RefreshCw size={18} color="var(--text-secondary)" className="spin-animation" />
+                                    <div style={{ fontSize: 14, color: 'var(--text-secondary)', fontWeight: 500 }}>
+                                      {rpState === 'regenerating' ? 'Regenerating...' : 'Generating...'}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div style={{ minHeight: 60, width: '100%', display: 'flex', flexDirection: 'column' }}>
+                                    {rpIsEditing ? (
+                                      <textarea
+                                        value={rpGeneratedText}
+                                        onChange={e => setRpGeneratedText(e.target.value)}
+                                        style={{ flex: 1, width: '100%', padding: '12px 16px', fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, border: '1px solid #7c7cff', borderRadius: 8, outline: 'none', background: '#fff', resize: 'vertical', fontFamily: 'inherit', minHeight: 120 }}
+                                      />
+                                    ) : (
+                                      <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{rpGeneratedText}</div>
+                                    )}
+                                  </div>
+                                )}
+
+                                {/* Action Buttons */}
+                                {rpState === 'generated' && (
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 4 }}>
+                                    {rpIsEditing ? (
+                                      <div style={{ display: 'flex', gap: 8 }}>
+                                        <button onClick={() => setRpIsEditing(false)} style={{ padding: '0 16px', height: 32, background: '#0052cc', border: 'none', borderRadius: 6, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>Save</button>
+                                        <button onClick={() => { setRpGeneratedText(rpOriginalText); setRpIsEditing(false); }} style={{ padding: '0 16px', height: 32, background: 'transparent', border: '1px solid var(--border-default)', borderRadius: 6, color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>Cancel</button>
+                                      </div>
+                                    ) : (
+                                      <>
+                                        <div style={{ display: 'flex', gap: 8 }}>
+                                          <button onClick={() => {
+                                            editor?.chain().focus().insertContent(`<p>${rpGeneratedText}</p>`).run();
+                                            closeRightPane();
+                                          }} style={{ padding: '0 16px', height: 32, background: '#0052cc', border: 'none', borderRadius: 6, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
+                                            <Check size={15} strokeWidth={2.5} /> Accept
+                                          </button>
+
+                                          <button onClick={() => {
+                                            closeRightPane();
+                                          }} style={{ padding: '0 16px', height: 32, background: 'transparent', border: '1px solid var(--border-default)', borderRadius: 6, color: 'var(--colors-red-500)', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = '#fff0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                            <X size={15} strokeWidth={2.5} /> Reject
+                                          </button>
+                                        </div>
+
+                                        <div style={{ width: 1, height: 20, background: 'var(--border-subtle)' }} />
+
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                          <button
+                                            title="Edit"
+                                            onClick={() => { setRpOriginalText(rpGeneratedText); setRpIsEditing(true); }}
+                                            style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                                            onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)' }}
+                                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent' }}
+                                          >
+                                            <Edit3 size={15} />
+                                          </button>
+
+                                          <button
+                                            title="Regenerate"
+                                            onClick={() => {
+                                              setRpIsEditing(false);
+                                              setRpState('regenerating');
+                                              setTimeout(() => { setRpState('generated'); }, 2000);
+                                            }}
+                                            style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                                            onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)' }}
+                                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent' }}
+                                          >
+                                            <RefreshCw size={15} />
+                                          </button>
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                ) : (rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'improve_legal' || rightPane.action === 'expand') ? (
+                  <>
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                      {/* Selected Text User Bubble (For Expand) */}
-                      {(rightPane.action === 'expand' && rightPane.selectedText) && (
+                      {/* Selected Text as User Input Bubble */}
+                      {rightPane.selectedText && (
                         <div style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '85%', animation: 'chatFadeIn 0.2s ease forwards' }}>
                           <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
                             {rightPane.selectedText}
@@ -668,42 +789,49 @@ const WYSIWYGEditor = ({
                         </div>
                       )}
 
-                      {/* User Prompt Bubble */}
-                      {rpSubmittedPrompt && (
-                        <div style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '85%', animation: 'chatFadeIn 0.2s ease forwards', marginTop: rightPane.action === 'expand' ? -8 : 0 }}>
+                      {/* Additional User Prompt Bubble (Only shows if they typed something) */}
+                      {(rpState !== 'idle') && rpSubmittedPrompt && (
+                        <div style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '85%', animation: 'chatFadeIn 0.2s ease forwards', marginTop: -8 }}>
                           <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
                             {rpSubmittedPrompt}
                           </div>
                         </div>
                       )}
-
-                      {/* AI Response Bubble */}
                       {(rpState === 'generating' || rpState === 'regenerating' || rpState === 'generated') && (
-                        <div style={{ alignSelf: 'flex-start', maxWidth: '95%', display: 'flex', flexDirection: 'column', gap: 6, animation: 'chatFadeIn 0.2s ease forwards', width: '100%' }}>
+                        <div style={{ alignSelf: 'flex-start', maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: 6, animation: 'chatFadeIn 0.2s ease forwards', width: '100%' }}>
                           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, width: '100%' }}>
                             <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
                               <Sparkles size={12} color="#fff" strokeWidth={2} />
                             </div>
-                            
+
                             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
                               {(rpState === 'generating' || rpState === 'regenerating') ? (
                                 <div style={{ height: 60, width: '100%', display: 'flex', alignItems: 'center', gap: 12 }}>
                                   <RefreshCw size={18} color="var(--text-secondary)" className="spin-animation" />
                                   <div style={{ fontSize: 14, color: 'var(--text-secondary)', fontWeight: 500 }}>
-                                    {rpState === 'regenerating' ? 'Regenerating...' : 'Generating...'}
+                                    {rpState === 'regenerating' ? 'Regenerating...' : rightPane.action === 'summarize' ? 'Summarizing text...' : rightPane.action === 'improve_legal' ? 'Improving legal language...' : 'Rewriting text...'}
                                   </div>
                                 </div>
                               ) : (
-                                <div style={{ minHeight: 60, width: '100%', display: 'flex', flexDirection: 'column' }}>
-                                  {rpIsEditing ? (
-                                    <textarea
-                                      value={rpGeneratedText}
-                                      onChange={e => setRpGeneratedText(e.target.value)}
-                                      style={{ flex: 1, width: '100%', padding: '12px 16px', fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, border: '1px solid #7c7cff', borderRadius: 8, outline: 'none', background: '#fff', resize: 'vertical', fontFamily: 'inherit', minHeight: 120 }}
-                                    />
-                                  ) : (
-                                    <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{rpGeneratedText}</div>
-                                  )}
+                                <div style={{ minHeight: 60, width: '100%', display: 'flex', flexDirection: 'column', background: 'var(--bg-surface-1)', borderRadius: 12, border: '1px solid var(--border-default)', overflow: 'hidden' }}>
+                                  {/* Original Text Section */}
+                                  <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-default)', background: '#fff' }}>
+                                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Original</div>
+                                    <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{rightPane.selectedText}</div>
+                                  </div>
+                                  {/* Rewritten Text Section */}
+                                  <div style={{ padding: rpIsEditing ? 0 : '12px 16px' }}>
+                                    {!rpIsEditing && <div style={{ fontSize: 12, fontWeight: 600, color: '#7c7cff', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{rightPane.action === 'summarize' ? 'Summary' : rightPane.action === 'improve_legal' ? 'Legal Version' : 'Rewritten'}</div>}
+                                    {rpIsEditing ? (
+                                      <textarea
+                                        value={rpGeneratedText}
+                                        onChange={e => setRpGeneratedText(e.target.value)}
+                                        style={{ flex: 1, width: '100%', padding: '12px 16px', fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, border: 'none', borderTop: '2px solid #7c7cff', outline: 'none', background: '#fff', resize: 'vertical', fontFamily: 'inherit', minHeight: 120 }}
+                                      />
+                                    ) : (
+                                      <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{rpGeneratedText}</div>
+                                    )}
+                                  </div>
                                 </div>
                               )}
 
@@ -719,18 +847,21 @@ const WYSIWYGEditor = ({
                                     <>
                                       <div style={{ display: 'flex', gap: 8 }}>
                                         <button onClick={() => {
-                                          editor?.chain().focus().insertContent(`<p>${rpGeneratedText}</p>`).run();
+                                          let textToInsert = rpGeneratedText;
+                                          if (rightPane.action === 'improve_legal') {
+                                            const match = rpGeneratedText.match(/\*\*Legal Version:\*\*\n([\s\S]*?)\n\n\*\*AI Explanation:\*\*/);
+                                            if (match && match[1]) {
+                                              textToInsert = match[1];
+                                            }
+                                          }
+                                          editor?.chain().focus().insertContent(`<p>${textToInsert}</p>`).run();
                                           closeRightPane();
-                                          setSowBanner({ visible: true, type: 'success', message: 'Accepted and added to document.' });
-                                          setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
                                         }} style={{ padding: '0 16px', height: 32, background: '#0052cc', border: 'none', borderRadius: 6, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
                                           <Check size={15} strokeWidth={2.5} /> Accept
                                         </button>
 
                                         <button onClick={() => {
                                           closeRightPane();
-                                          setSowBanner({ visible: true, type: 'error', message: 'Generated section was rejected.' });
-                                          setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
                                         }} style={{ padding: '0 16px', height: 32, background: 'transparent', border: '1px solid var(--border-default)', borderRadius: 6, color: 'var(--colors-red-500)', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = '#fff0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                                           <X size={15} strokeWidth={2.5} /> Reject
                                         </button>
@@ -742,13 +873,13 @@ const WYSIWYGEditor = ({
                                         <button
                                           title="Edit"
                                           onClick={() => { setRpOriginalText(rpGeneratedText); setRpIsEditing(true); }}
-                                          style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                                          style={{ border: 'none', background: rpIsEditing ? 'rgba(124,124,255,0.08)' : 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: rpIsEditing ? '#7c7cff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
                                           onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)' }}
-                                          onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent' }}
+                                          onMouseLeave={e => { if (!rpIsEditing) { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent' } }}
                                         >
                                           <Edit3 size={15} />
                                         </button>
-                                        
+
                                         <button
                                           title="Regenerate"
                                           onClick={() => {
@@ -772,280 +903,158 @@ const WYSIWYGEditor = ({
                         </div>
                       )}
                     </div>
-                  )}
-                </>
-              ) : (rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'improve_legal') ? (
-                <>
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                    {/* Selected Text as User Input Bubble */}
-                    {rightPane.selectedText && (
-                      <div style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '85%', animation: 'chatFadeIn 0.2s ease forwards' }}>
-                        <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
-                          {rightPane.selectedText}
+                  </>
+                ) : (
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
+                    Feature coming soon...
+                  </div>
+                )}
+              </div>
+
+              {/* Prompt Input Box */}
+              <div style={{ position: 'relative', marginTop: 'auto', padding: '16px 20px', background: '#fff', borderTop: '1px solid var(--border-subtle)', flexShrink: 0 }}>
+                <div style={{ padding: '0 0 16px', background: '#fff' }}>
+                  <div style={{ border: `1.5px solid ${rpPrompt ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: rpPrompt ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.04)' : '0 2px 8px rgba(14,15,37,0.04)', transition: 'border-color 0.15s, box-shadow 0.15s', background: '#fff' }}>
+                    {rightPane.selectedText && rpState === 'idle' && (
+                      <div style={{ background: 'var(--bg-surface-2)', borderRadius: 8, padding: '8px 12px', display: 'flex', gap: 8, alignItems: 'flex-start', border: '1px solid var(--border-default)' }}>
+                        <CornerDownRight size={14} color="var(--text-tertiary)" style={{ flexShrink: 0, marginTop: 2 }} />
+                        <div style={{ flex: 1, fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                          "{rightPane.selectedText}"
                         </div>
+                        <button onClick={() => setRightPane(prev => ({ ...prev, selectedText: '' }))} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', flexShrink: 0 }}>
+                          <X size={14} />
+                        </button>
                       </div>
                     )}
+                    <textarea
+                      value={rpPrompt}
+                      onChange={e => {
+                        setRpPrompt(e.target.value);
+                        e.target.style.height = 'auto';
+                        e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                      }}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          if (rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') {
+                            setRpSubmittedPrompt(rpPrompt);
+                            setRpPrompt('');
+                            setRpIsEditing(false);
+                            setRpState('generating');
+                            setTimeout(() => {
+                              setRpGeneratedText((rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'improve_legal') ? (rightPane.action === 'improve_legal' ? "**Legal Version:**\nThe Contractor shall perform the Services in a professional and workmanlike manner, in strict adherence to industry standards and the specifications set forth in Exhibit A.\n\n**AI Explanation:**\n- Replaced ambiguous language with 'strict adherence'.\n- Explicitly linked performance obligations to 'Exhibit A' to ensure enforceability." : (rightPane.action === 'summarize' ? "Here is the summary:\n\n• Outlines core project objectives.\n• Ensures strict compliance with timeline milestones." : "The selected text has been rewritten to align with the chosen tone and provide clearer, more direct instructions. The Contractor is required to comply with all stated deliverables and timelines as explicitly outlined in the revised project scope.")) : rightPane.action === 'expand' ? "This expanded section builds upon the core requirements explicitly detailed in the selected text. It ensures that all vendor obligations are comprehensive and fully encompass any future deliverables expected during the execution of this phase." : "1. Scope of Services\nThe Contractor agrees to provide the services specifically described in Exhibit A (the \"Services\"), which is attached hereto and incorporated by reference. The Contractor shall perform the Services in a professional and workmanlike manner, consistent with industry standards.");
+                              setRpState('generated');
+                            }, 2500);
+                          }
+                        }
+                      }}
+                      placeholder={rightPane.action === 'rewrite_content' ? "Add instructions for rewrite (optional)..." : rightPane.action === 'summarize' ? "Add instructions for summary (optional)..." : rightPane.action === 'improve_legal' ? "Add instructions for legal improvement (optional)..." : rightPane.action === 'expand' ? "Add instructions to expand (optional)..." : "Describe your requirement..."}
+                      rows={1}
+                      style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', resize: 'none', minHeight: 24, maxHeight: 120, overflowY: 'auto', fontFamily: 'Inter, sans-serif', lineHeight: 1.5 }}
+                    />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
+                          <Paperclip size={18} />
+                        </button>
 
-                    {/* Additional User Prompt Bubble (Only shows if they typed something) */}
-                    {(rpState !== 'idle') && rpSubmittedPrompt && (
-                      <div style={{ position: 'relative', alignSelf: 'flex-end', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, maxWidth: '85%', animation: 'chatFadeIn 0.2s ease forwards', marginTop: -8 }}>
-                        <div style={{ alignSelf: 'flex-end', background: 'rgba(0,82,204,0.05)', border: '1px solid rgba(0,82,204,0.1)', borderRadius: '14px 14px 4px 14px', padding: '10px 14px', fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
-                          {rpSubmittedPrompt}
-                        </div>
-                      </div>
-                    )}
+                        {/* Tone Dropdown placed next to attachment for rewrite_content */}
+                        {rightPane.action === 'rewrite_content' && (
+                          <div ref={toneMenuRef} style={{ position: 'relative' }}>
+                            <button
+                              onClick={() => setShowToneMenu(!showToneMenu)}
+                              style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', padding: '4px 10px', fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500, cursor: 'pointer', outline: 'none', display: 'flex', alignItems: 'center', gap: 4, borderRadius: 6, transition: 'all 0.2s' }}
+                              onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+                              onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface-1)'}
+                            >
+                              {selectedTone || 'Select Tone'} <ChevronDown size={14} color="var(--text-tertiary)" />
+                            </button>
 
-                    {(rpState === 'generating' || rpState === 'regenerating' || rpState === 'generated') && (
-                      <div style={{ alignSelf: 'flex-start', maxWidth: '100%', display: 'flex', flexDirection: 'column', gap: 6, animation: 'chatFadeIn 0.2s ease forwards', width: '100%' }}>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, width: '100%' }}>
-                          <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'linear-gradient(135deg, #0052cc, #7c7cff)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                            <Sparkles size={12} color="#fff" strokeWidth={2} />
-                          </div>
-                          
-                          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                            {(rpState === 'generating' || rpState === 'regenerating') ? (
-                              <div style={{ height: 60, width: '100%', display: 'flex', alignItems: 'center', gap: 12 }}>
-                                <RefreshCw size={18} color="var(--text-secondary)" className="spin-animation" />
-                                <div style={{ fontSize: 14, color: 'var(--text-secondary)', fontWeight: 500 }}>
-                                  {rpState === 'regenerating' ? 'Regenerating...' : rightPane.action === 'summarize' ? 'Summarizing text...' : rightPane.action === 'improve_legal' ? 'Improving legal language...' : 'Rewriting text...'}
-                                </div>
-                              </div>
-                            ) : (
-                              <div style={{ minHeight: 60, width: '100%', display: 'flex', flexDirection: 'column', background: 'var(--bg-surface-1)', borderRadius: 12, border: '1px solid var(--border-default)', overflow: 'hidden' }}>
-                                {/* Original Text Section */}
-                                <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-default)', background: '#fff' }}>
-                                  <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Original</div>
-                                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{rightPane.selectedText}</div>
-                                </div>
-                                {/* Rewritten Text Section */}
-                                <div style={{ padding: rpIsEditing ? 0 : '12px 16px' }}>
-                                  {!rpIsEditing && <div style={{ fontSize: 12, fontWeight: 600, color: '#7c7cff', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{rightPane.action === 'summarize' ? 'Summary' : rightPane.action === 'improve_legal' ? 'Legal Version' : 'Rewritten'}</div>}
-                                  {rpIsEditing ? (
-                                    <textarea
-                                      value={rpGeneratedText}
-                                      onChange={e => setRpGeneratedText(e.target.value)}
-                                      style={{ flex: 1, width: '100%', padding: '12px 16px', fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, border: 'none', borderTop: '2px solid #7c7cff', outline: 'none', background: '#fff', resize: 'vertical', fontFamily: 'inherit', minHeight: 120 }}
-                                    />
-                                  ) : (
-                                    <div style={{ fontSize: 14, color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{rpGeneratedText}</div>
-                                  )}
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Action Buttons */}
-                            {rpState === 'generated' && (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 4 }}>
-                                {rpIsEditing ? (
-                                  <div style={{ display: 'flex', gap: 8 }}>
-                                    <button onClick={() => setRpIsEditing(false)} style={{ padding: '0 16px', height: 32, background: '#0052cc', border: 'none', borderRadius: 6, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>Save</button>
-                                    <button onClick={() => { setRpGeneratedText(rpOriginalText); setRpIsEditing(false); }} style={{ padding: '0 16px', height: 32, background: 'transparent', border: '1px solid var(--border-default)', borderRadius: 6, color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>Cancel</button>
-                                  </div>
-                                ) : (
-                                  <>
-                                    <div style={{ display: 'flex', gap: 8 }}>
-                                      <button onClick={() => {
-                                        let textToInsert = rpGeneratedText;
-                                        if (rightPane.action === 'improve_legal') {
-                                          const match = rpGeneratedText.match(/\*\*Legal Version:\*\*\n([\s\S]*?)\n\n\*\*AI Explanation:\*\*/);
-                                          if (match && match[1]) {
-                                            textToInsert = match[1];
-                                          }
-                                        }
-                                        editor?.chain().focus().insertContent(`<p>${textToInsert}</p>`).run();
-                                        closeRightPane();
-                                        setSowBanner({ visible: true, type: 'success', message: rightPane.action === 'summarize' ? 'Summary accepted and replaced in document.' : rightPane.action === 'improve_legal' ? 'Improved language accepted and replaced in document.' : 'Rewritten text accepted and replaced in document.' });
-                                        setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
-                                      }} style={{ padding: '0 16px', height: 32, background: '#0052cc', border: 'none', borderRadius: 6, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
-                                        <Check size={15} strokeWidth={2.5} /> Accept
-                                      </button>
-
-                                      <button onClick={() => {
-                                        closeRightPane();
-                                        setSowBanner({ visible: true, type: 'error', message: rightPane.action === 'summarize' ? 'Summary was rejected.' : rightPane.action === 'improve_legal' ? 'Improved language was rejected.' : 'Rewritten text was rejected.' });
-                                        setTimeout(() => setSowBanner({ visible: false, type: '', message: '' }), 4000);
-                                      }} style={{ padding: '0 16px', height: 32, background: 'transparent', border: '1px solid var(--border-default)', borderRadius: 6, color: 'var(--colors-red-500)', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = '#fff0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                                        <X size={15} strokeWidth={2.5} /> Reject
-                                      </button>
-                                    </div>
-
-                                    <div style={{ width: 1, height: 20, background: 'var(--border-subtle)' }} />
-
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                                      <button
-                                        title="Edit"
-                                        onClick={() => { setRpOriginalText(rpGeneratedText); setRpIsEditing(true); }}
-                                        style={{ border: 'none', background: rpIsEditing ? 'rgba(124,124,255,0.08)' : 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: rpIsEditing ? '#7c7cff' : 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
-                                        onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)' }}
-                                        onMouseLeave={e => { if(!rpIsEditing){ e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent' } }}
-                                      >
-                                        <Edit3 size={15} />
-                                      </button>
-                                      
-                                      <button
-                                        title="Regenerate"
-                                        onClick={() => {
-                                          setRpIsEditing(false);
-                                          setRpState('regenerating');
-                                          setTimeout(() => { setRpState('generated'); }, 2000);
-                                        }}
-                                        style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
-                                        onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)' }}
-                                        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent' }}
-                                      >
-                                        <RefreshCw size={15} />
-                                      </button>
-                                    </div>
-                                  </>
-                                )}
+                            {showToneMenu && (
+                              <div style={{ position: 'absolute', bottom: '100%', left: 0, marginBottom: 8, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 180, zIndex: 1000, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
+                                {[
+                                  { id: 'simplify', label: 'Simplify' },
+                                  { id: 'formalize', label: 'Formalize' },
+                                  { id: 'assertive', label: 'Make More Assertive' },
+                                  { id: 'legal', label: 'Align With Legal Tone' }
+                                ].map(tone => (
+                                  <button
+                                    key={tone.id}
+                                    onClick={() => { setSelectedTone(tone.label); setShowToneMenu(false); }}
+                                    style={{ padding: '8px 16px', background: selectedTone === tone.label ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', color: selectedTone === tone.label ? '#0052cc' : 'var(--text-primary)', fontSize: 13, transition: 'background 0.15s' }}
+                                    onMouseEnter={e => { if (selectedTone !== tone.label) e.currentTarget.style.background = '#f1f5f9' }}
+                                    onMouseLeave={e => { if (selectedTone !== tone.label) e.currentTarget.style.background = 'transparent' }}
+                                  >
+                                    {tone.label}
+                                  </button>
+                                ))}
                               </div>
                             )}
                           </div>
-                        </div>
-                      </div>
-                      )}
-                    </div>
-                </>
-              ) : (
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', fontSize: 14 }}>
-                  Feature coming soon...
-                </div>
-              )}
-            </div>
+                        )}
 
-            {/* Prompt Input Box */}
-            <div style={{ position: 'relative', marginTop: 'auto', padding: '16px 20px', background: '#fff', borderTop: '1px solid var(--border-subtle)', flexShrink: 0 }}>
-              <div style={{ padding: '0 0 16px', background: '#fff' }}>
-                <div style={{ border: `1.5px solid ${rpPrompt ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: rpPrompt ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.04)' : '0 2px 8px rgba(14,15,37,0.04)', transition: 'border-color 0.15s, box-shadow 0.15s', background: '#fff' }}>
-                  <textarea
-                    value={rpPrompt}
-                    onChange={e => {
-                      setRpPrompt(e.target.value);
-                      e.target.style.height = 'auto';
-                      e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
-                    }}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        if (rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') {
+                        {/* Summary Dropdown */}
+                        {rightPane.action === 'summarize' && (
+                          <div ref={summaryMenuRef} style={{ position: 'relative' }}>
+                            <button
+                              onClick={() => setShowSummaryMenu(!showSummaryMenu)}
+                              style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', padding: '4px 10px', fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500, cursor: 'pointer', outline: 'none', display: 'flex', alignItems: 'center', gap: 4, borderRadius: 6, transition: 'all 0.2s' }}
+                              onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+                              onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface-1)'}
+                            >
+                              {selectedSummaryFormat || 'Select Type'} <ChevronDown size={14} color="var(--text-tertiary)" />
+                            </button>
+
+                            {showSummaryMenu && (
+                              <div style={{ position: 'absolute', bottom: '100%', left: 0, marginBottom: 8, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 220, zIndex: 1000, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
+                                {[
+                                  { id: 'exec', label: 'Executive Summary' },
+                                  { id: 'bullet', label: 'Bullet Summary' },
+                                  { id: 'obligations', label: 'Key Obligations' },
+                                  { id: 'paragraph', label: 'One Paragraph Summary' }
+                                ].map(format => (
+                                  <button
+                                    key={format.id}
+                                    onClick={() => { setSelectedSummaryFormat(format.label); setShowSummaryMenu(false); }}
+                                    style={{ padding: '8px 16px', background: selectedSummaryFormat === format.label ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', color: selectedSummaryFormat === format.label ? '#0052cc' : 'var(--text-primary)', fontSize: 13, transition: 'background 0.15s' }}
+                                    onMouseEnter={e => { if (selectedSummaryFormat !== format.label) e.currentTarget.style.background = '#f1f5f9' }}
+                                    onMouseLeave={e => { if (selectedSummaryFormat !== format.label) e.currentTarget.style.background = 'transparent' }}
+                                  >
+                                    {format.label}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ fontSize: 11, color: rpPrompt.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{rpPrompt.length} / 20000</span>
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                          <Mic size={18} strokeWidth={2} />
+                        </button>
+                        <button onClick={() => {
+                          if (!rpPrompt.trim() && rightPane.action !== 'rewrite_content' && rightPane.action !== 'summarize' && rightPane.action !== 'expand' && rightPane.action !== 'improve_legal') return;
                           setRpSubmittedPrompt(rpPrompt);
                           setRpPrompt('');
                           setRpIsEditing(false);
                           setRpState('generating');
                           setTimeout(() => {
-                            setRpGeneratedText((rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'improve_legal') ? (rightPane.action === 'improve_legal' ? "**Legal Version:**\nThe Contractor shall perform the Services in a professional and workmanlike manner, in strict adherence to industry standards and the specifications set forth in Exhibit A.\n\n**AI Explanation:**\n- Replaced ambiguous language with 'strict adherence'.\n- Explicitly linked performance obligations to 'Exhibit A' to ensure enforceability." :  (rightPane.action === 'summarize' ? "Here is the summary:\n\n• Outlines core project objectives.\n• Ensures strict compliance with timeline milestones." : "The selected text has been rewritten to align with the chosen tone and provide clearer, more direct instructions. The Contractor is required to comply with all stated deliverables and timelines as explicitly outlined in the revised project scope.")) : rightPane.action === 'expand' ? "This expanded section builds upon the core requirements explicitly detailed in the selected text. It ensures that all vendor obligations are comprehensive and fully encompass any future deliverables expected during the execution of this phase." : "1. Scope of Services\nThe Contractor agrees to provide the services specifically described in Exhibit A (the \"Services\"), which is attached hereto and incorporated by reference. The Contractor shall perform the Services in a professional and workmanlike manner, consistent with industry standards.");
+                            setRpGeneratedText((rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'improve_legal') ? (rightPane.action === 'improve_legal' ? "**Legal Version:**\nThe Contractor shall perform the Services in a professional and workmanlike manner, in strict adherence to industry standards and the specifications set forth in Exhibit A.\n\n**AI Explanation:**\n- Replaced ambiguous language with 'strict adherence'.\n- Explicitly linked performance obligations to 'Exhibit A' to ensure enforceability." : (rightPane.action === 'summarize' ? "Here is the summary:\n\n• Outlines core project objectives.\n• Ensures strict compliance with timeline milestones." : "The selected text has been rewritten to align with the chosen tone and provide clearer, more direct instructions. The Contractor is required to comply with all stated deliverables and timelines as explicitly outlined in the revised project scope.")) : "1. Scope of Services\nThe Contractor agrees to provide the services specifically described in Exhibit A (the \"Services\"), which is attached hereto and incorporated by reference. The Contractor shall perform the Services in a professional and workmanlike manner, consistent with industry standards.");
                             setRpState('generated');
                           }, 2500);
-                        }
-                      }
-                    }}
-                    placeholder={rightPane.action === 'rewrite_content' ? "Add instructions for rewrite (optional)..." : rightPane.action === 'summarize' ? "Add instructions for summary (optional)..." : rightPane.action === 'improve_legal' ? "Add instructions for legal improvement (optional)..." : rightPane.action === 'expand' ? "Add instructions to expand (optional)..." : "Describe your requirement..."}
-                    rows={1}
-                    style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', resize: 'none', minHeight: 24, maxHeight: 120, overflowY: 'auto', fontFamily: 'Inter, sans-serif', lineHeight: 1.5 }}
-                  />
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
-                        <Paperclip size={18} />
-                      </button>
-
-                      {/* Tone Dropdown placed next to attachment for rewrite_content */}
-                      {rightPane.action === 'rewrite_content' && (
-                        <div ref={toneMenuRef} style={{ position: 'relative' }}>
-                          <button
-                            onClick={() => setShowToneMenu(!showToneMenu)}
-                            style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', padding: '4px 10px', fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500, cursor: 'pointer', outline: 'none', display: 'flex', alignItems: 'center', gap: 4, borderRadius: 6, transition: 'all 0.2s' }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface-1)'}
-                          >
-                            {selectedTone || 'Select Tone'} <ChevronDown size={14} color="var(--text-tertiary)" />
-                          </button>
-                          
-                          {showToneMenu && (
-                            <div style={{ position: 'absolute', bottom: '100%', left: 0, marginBottom: 8, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 180, zIndex: 1000, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
-                              {[
-                                { id: 'simplify', label: 'Simplify' },
-                                { id: 'formalize', label: 'Formalize' },
-                                { id: 'assertive', label: 'Make More Assertive' },
-                                { id: 'legal', label: 'Align With Legal Tone' }
-                              ].map(tone => (
-                                <button
-                                  key={tone.id}
-                                  onClick={() => { setSelectedTone(tone.label); setShowToneMenu(false); }}
-                                  style={{ padding: '8px 16px', background: selectedTone === tone.label ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', color: selectedTone === tone.label ? '#0052cc' : 'var(--text-primary)', fontSize: 13, transition: 'background 0.15s' }}
-                                  onMouseEnter={e => { if (selectedTone !== tone.label) e.currentTarget.style.background = '#f1f5f9' }}
-                                  onMouseLeave={e => { if (selectedTone !== tone.label) e.currentTarget.style.background = 'transparent' }}
-                                >
-                                  {tone.label}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Summary Dropdown */}
-                      {rightPane.action === 'summarize' && (
-                        <div ref={summaryMenuRef} style={{ position: 'relative' }}>
-                          <button
-                            onClick={() => setShowSummaryMenu(!showSummaryMenu)}
-                            style={{ background: 'var(--bg-surface-1)', border: '1px solid var(--border-default)', padding: '4px 10px', fontSize: 12, color: 'var(--text-secondary)', fontWeight: 500, cursor: 'pointer', outline: 'none', display: 'flex', alignItems: 'center', gap: 4, borderRadius: 6, transition: 'all 0.2s' }}
-                            onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
-                            onMouseLeave={e => e.currentTarget.style.background = 'var(--bg-surface-1)'}
-                          >
-                            {selectedSummaryFormat || 'Select Type'} <ChevronDown size={14} color="var(--text-tertiary)" />
-                          </button>
-                          
-                          {showSummaryMenu && (
-                            <div style={{ position: 'absolute', bottom: '100%', left: 0, marginBottom: 8, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 220, zIndex: 1000, padding: '4px 0', display: 'flex', flexDirection: 'column' }}>
-                              {[
-                                { id: 'exec', label: 'Executive Summary' },
-                                { id: 'bullet', label: 'Bullet Summary' },
-                                { id: 'obligations', label: 'Key Obligations' },
-                                { id: 'paragraph', label: 'One Paragraph Summary' }
-                              ].map(format => (
-                                <button
-                                  key={format.id}
-                                  onClick={() => { setSelectedSummaryFormat(format.label); setShowSummaryMenu(false); }}
-                                  style={{ padding: '8px 16px', background: selectedSummaryFormat === format.label ? '#f8fafc' : 'transparent', border: 'none', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', color: selectedSummaryFormat === format.label ? '#0052cc' : 'var(--text-primary)', fontSize: 13, transition: 'background 0.15s' }}
-                                  onMouseEnter={e => { if (selectedSummaryFormat !== format.label) e.currentTarget.style.background = '#f1f5f9' }}
-                                  onMouseLeave={e => { if (selectedSummaryFormat !== format.label) e.currentTarget.style.background = 'transparent' }}
-                                >
-                                  {format.label}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{ fontSize: 11, color: rpPrompt.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{rpPrompt.length} / 20000</span>
-                      <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
-                        <Mic size={18} strokeWidth={2} />
-                      </button>
-                      <button onClick={() => {
-                        if (!rpPrompt.trim() && rightPane.action !== 'rewrite_content' && rightPane.action !== 'summarize' && rightPane.action !== 'expand' && rightPane.action !== 'improve_legal') return;
-                        setRpSubmittedPrompt(rpPrompt);
-                        setRpPrompt('');
-                        setRpIsEditing(false);
-                        setRpState('generating');
-                        setTimeout(() => {
-                          setRpGeneratedText((rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'improve_legal') ? (rightPane.action === 'improve_legal' ? "**Legal Version:**\nThe Contractor shall perform the Services in a professional and workmanlike manner, in strict adherence to industry standards and the specifications set forth in Exhibit A.\n\n**AI Explanation:**\n- Replaced ambiguous language with 'strict adherence'.\n- Explicitly linked performance obligations to 'Exhibit A' to ensure enforceability." :  (rightPane.action === 'summarize' ? "Here is the summary:\n\n• Outlines core project objectives.\n• Ensures strict compliance with timeline milestones." : "The selected text has been rewritten to align with the chosen tone and provide clearer, more direct instructions. The Contractor is required to comply with all stated deliverables and timelines as explicitly outlined in the revised project scope.")) : "1. Scope of Services\nThe Contractor agrees to provide the services specifically described in Exhibit A (the \"Services\"), which is attached hereto and incorporated by reference. The Contractor shall perform the Services in a professional and workmanlike manner, consistent with industry standards.");
-                          setRpState('generated');
-                        }, 2500);
-                      }} style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: (rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') ? 'pointer' : 'not-allowed', background: (rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: (rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
-                        <Send size={15} color={(rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') ? '#fff' : 'var(--text-tertiary)'} />
-                      </button>
+                        }} style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: (rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') ? 'pointer' : 'not-allowed', background: (rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: (rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
+                          <Send size={15} color={(rpPrompt.trim() || rightPane.action === 'rewrite_content' || rightPane.action === 'summarize' || rightPane.action === 'expand' || rightPane.action === 'improve_legal') ? '#fff' : 'var(--text-tertiary)'} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-        </div>
-      </>)}
+            </div>
+          </>)}
 
       </div>
 
@@ -1638,6 +1647,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [hasSavedSow, setHasSavedSow] = useState(false);
   const [sowAccepted, setSowAccepted] = useState(false);
   const [showCancelSowToast, setShowCancelSowToast] = useState(false);
+  const [showCancelConfirmModal, setShowCancelConfirmModal] = useState(false);
   const [sowSigned, setSowSigned] = useState(false);
   const [sowSignedFile, setSowSignedFile] = useState(null);
   const signedSowFileRef = useRef(null);
@@ -1703,6 +1713,18 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [chatMenuOpen]);
+
+  const [showSowHeaderMenu, setShowSowHeaderMenu] = useState(false);
+  const sowHeaderMenuRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutsideSow(event) {
+      if (sowHeaderMenuRef.current && !sowHeaderMenuRef.current.contains(event.target)) setShowSowHeaderMenu(false);
+    }
+    document.addEventListener('mousedown', handleClickOutsideSow);
+    return () => document.removeEventListener('mousedown', handleClickOutsideSow);
+  }, []);
+
   const [saveToast, setSaveToast] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
@@ -2094,6 +2116,32 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
         </div>
       )}
       {/* MODALS */}
+
+      {showCancelConfirmModal && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowCancelConfirmModal(false)}>
+          <div style={{ background: '#fff', borderRadius: 16, width: 500, maxWidth: '90vw', padding: '40px 36px', boxShadow: '0 20px 60px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 12 }} onClick={e => e.stopPropagation()}>
+            <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', marginBottom: 6 }}>
+              <AlertCircle size={24} strokeWidth={2} />
+            </div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a' }}>Cancel Request?</div>
+            <div style={{ fontSize: 13, color: '#666', lineHeight: 1.6, marginBottom: 8 }}>Are you sure you want to cancel this request? This action cannot be undone and you will be redirected to the dashboard.</div>
+            <div style={{ display: 'flex', gap: 10, width: '100%' }}>
+              <button onClick={() => setShowCancelConfirmModal(false)} style={{ flex: 1, padding: '11px', border: '1px solid #e0e0e0', borderRadius: 10, background: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', color: '#4a4a4a', fontFamily: 'inherit' }}>No, keep it</button>
+              <button
+                onClick={() => {
+                  setShowCancelConfirmModal(false);
+                  setShowCancelSowToast(true);
+                  setTimeout(() => onNavigate('Dashboard'), 1500);
+                }}
+                style={{ flex: 1, padding: '11px', border: 'none', borderRadius: 10, background: '#ef4444', fontSize: 13, fontWeight: 600, cursor: 'pointer', color: '#fff', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+                onMouseEnter={e => e.currentTarget.style.background = '#dc2626'} onMouseLeave={e => e.currentTarget.style.background = '#ef4444'}
+              >
+                Yes, cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showApproveModal && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 600, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setShowApproveModal(false)}>
@@ -3013,6 +3061,22 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     <Sparkles size={10} strokeWidth={2.5} /> Complex
                   </div>
                   <div style={{ background: statusCfg.bg, border: `1px solid ${statusCfg.border}`, color: statusCfg.color, borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 600 }}>{prStatus}</div>
+                  
+                  <div style={{ flex: 1 }} />
+                  {activeTab === 'sow' && sowStage === 'drafting' && (
+                    <div style={{ position: 'relative' }} ref={sowHeaderMenuRef}>
+                      <button onClick={() => setShowSowHeaderMenu(!showSowHeaderMenu)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 8, color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                        <MoreVertical size={18} />
+                      </button>
+                      {showSowHeaderMenu && (
+                        <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 8px 30px rgba(0,0,0,0.12)', width: 160, zIndex: 1000, padding: '4px 0' }}>
+                          <button disabled={sowAccepted} onClick={() => { setShowSowHeaderMenu(false); setShowCancelConfirmModal(true); }} style={{ width: '100%', padding: '8px 16px', background: 'transparent', border: 'none', textAlign: 'left', cursor: sowAccepted ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', color: '#ef4444', fontSize: 13, fontWeight: 500, opacity: sowAccepted ? 0.5 : 1 }} onMouseEnter={e => { if (!sowAccepted) e.currentTarget.style.background = '#fef2f2' }} onMouseLeave={e => { if (!sowAccepted) e.currentTarget.style.background = 'transparent' }}>
+                            Cancel Request
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
                   {[[User, 'David Kim'], [Calendar, 'Created 08 May 2026'], [Building, 'Engineering'], [Tag, 'Technology and Consulting'], [MapPin, 'Dubai, UAE']].map(([Icon, text]) => (
@@ -4116,7 +4180,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                     });
                                     setIsRegeneratingStrategyBrief(false);
                                   }, 2000);
-                                }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1.5px solid transparent', background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box', fontSize: 12, fontWeight: 600, cursor: isRegeneratingStrategyBrief ? 'not-allowed' : 'pointer', color: '#0052cc', opacity: isRegeneratingStrategyBrief ? 0.7 : 1 }} onMouseEnter={e => { if(!isRegeneratingStrategyBrief) e.currentTarget.style.background = 'linear-gradient(#f8fafc, #f8fafc) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'; }} onMouseLeave={e => { if(!isRegeneratingStrategyBrief) e.currentTarget.style.background = 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'; }}>
+                                }} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 6, border: '1.5px solid transparent', background: 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box', fontSize: 12, fontWeight: 600, cursor: isRegeneratingStrategyBrief ? 'not-allowed' : 'pointer', color: '#0052cc', opacity: isRegeneratingStrategyBrief ? 0.7 : 1 }} onMouseEnter={e => { if (!isRegeneratingStrategyBrief) e.currentTarget.style.background = 'linear-gradient(#f8fafc, #f8fafc) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'; }} onMouseLeave={e => { if (!isRegeneratingStrategyBrief) e.currentTarget.style.background = 'linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #0052cc, #7c7cff) border-box'; }}>
                                   <RefreshCw size={14} color="#0052cc" style={isRegeneratingStrategyBrief ? { animation: 'spin 1s linear infinite' } : {}} /> {isRegeneratingStrategyBrief ? 'Regenerating...' : 'Regenerate'}
                                 </button>
                               </div>
@@ -4507,14 +4571,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           hideEditButton={sowAccepted}
                         />
 
-                        {/* CANCEL SOW */}
-                        {sowStage === 'drafting' && (
-                          <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                            <button disabled={sowAccepted} onClick={() => { setShowCancelSowToast(true); setTimeout(() => onNavigate('Dashboard'), 1500); }} style={{ padding: '10px 20px', border: '1px solid #ef4444', borderRadius: 8, background: '#fff', fontSize: 13, fontWeight: 600, cursor: sowAccepted ? 'not-allowed' : 'pointer', color: '#ef4444', opacity: sowAccepted ? 0.5 : 1, transition: 'all 0.2s' }} onMouseEnter={e => { if (!sowAccepted) e.currentTarget.style.background = '#fef2f2' }} onMouseLeave={e => { if (!sowAccepted) e.currentTarget.style.background = '#fff' }}>
-                              Cancel SoW
-                            </button>
-                          </div>
-                        )}
                       </div>
 
                       {/* VERSION PANE */}

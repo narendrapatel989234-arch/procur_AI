@@ -9,7 +9,8 @@ import TaskList from '@tiptap/extension-task-list';
 import {
   ChevronRight, ChevronDown, Undo, Redo, Bold, Italic, Strikethrough, Underline as UnderlineIcon, Eraser,
   AlignLeft, AlignCenter, AlignRight, AlignJustify, List, ListOrdered, Minus, LineChart,
-  Save, Plus, CheckSquare, Pencil, CheckCircle, X, Sparkles, ArrowUp, MessageSquare, Search, TrendingUp, RefreshCw
+  Save, Plus, CheckSquare, Pencil, CheckCircle, X, Sparkles, ArrowUp, MessageSquare, Search, TrendingUp, RefreshCw,
+  Check, Edit3, Send, FileText, Mic, Paperclip, CornerDownRight
 } from 'lucide-react';
 
 export default function TemplateDetail({ onNavigate, activeNav }) {
@@ -18,10 +19,15 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
   const [zoom, setZoom] = useState(100);
   const [showHeadingMenu, setShowHeadingMenu] = useState(false);
   const [showListMenu, setShowListMenu] = useState(false);
-  const [aiInputValue, setAiInputValue] = useState('');
-  const [showAiMenu, setShowAiMenu] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
-  const aiMenuRef = useRef(null);
+
+  const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
+  const [rightPane, setRightPane] = useState({ visible: false, action: null, title: '' });
+  const [rpState, setRpState] = useState('idle');
+  const [rpPrompt, setRpPrompt] = useState('');
+  const [rpSubmittedPrompt, setRpSubmittedPrompt] = useState('');
+  const [rpGeneratedText, setRpGeneratedText] = useState('');
+  const [rpIsEditing, setRpIsEditing] = useState(false);
+  const [rpOriginalText, setRpOriginalText] = useState('');
 
   const [activeState, setActiveState] = useState({
     bold: false,
@@ -94,6 +100,7 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
   // Handle clicking outside to close menus
   const headingMenuRef = useRef(null);
   const listMenuRef = useRef(null);
+  const contextMenuRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -103,13 +110,13 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
       if (listMenuRef.current && !listMenuRef.current.contains(event.target)) {
         setShowListMenu(false);
       }
-      if (aiMenuRef.current && !aiMenuRef.current.contains(event.target)) {
-        setShowAiMenu(false);
+      if (contextMenuRef.current && !contextMenuRef.current.contains(event.target)) {
+        if (contextMenu.visible) setContextMenu({ visible: false, x: 0, y: 0 });
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [contextMenu.visible]);
 
   const handleSave = () => {
     setMode('view');
@@ -117,31 +124,25 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleAiAction = (action) => {
-    setShowAiMenu(false);
-    if (!aiInputValue.trim() && !action) return;
-    
-    setAiLoading(true);
+  const handleContextMenu = (e) => {
+    if (mode !== 'edit') return;
+    e.preventDefault();
+    let y = e.clientY;
+    const menuHeight = 60; // 1 option height approx
+    if (window.innerHeight - y < menuHeight) {
+      y = Math.max(10, window.innerHeight - menuHeight - 10);
+    }
+    setContextMenu({ visible: true, x: e.clientX, y });
+  };
+
+  const closeRightPane = () => {
+    setRightPane({ visible: false, action: null, title: '' });
     setTimeout(() => {
-      setAiLoading(false);
-      setAiInputValue('');
-      
-      const targetAction = action || 'paragraph'; // default behavior for just submitting input
-      
-      if (targetAction === 'comment') {
-        editor?.chain().focus().insertContent('<blockquote><strong>AI Comment:</strong> Please ensure the scope includes the latest compliance requirements.</blockquote><p></p>').run();
-      } else if (targetAction === 'paragraph') {
-        editor?.chain().focus().insertContent('<p>Additionally, the vendor must provide comprehensive documentation and training materials upon successful deployment, ensuring seamless hand-off to the internal team.</p>').run();
-      } else if (targetAction === 'proofread') {
-        editor?.chain().focus().insertContent(' This section has been proofread for clarity and enterprise standards.').run();
-      } else if (targetAction === 'adjust') {
-        editor?.chain().focus().insertContent(' The selection has been adjusted to adopt a more formal tone.').run();
-      } else if (targetAction === 'component') {
-        editor?.chain().focus().insertContent('<div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 8px; margin: 16px 0;"><strong>Approval Matrix:</strong><br/>Level 1: Department Head<br/>Level 2: Procurement Director</div><p></p>').run();
-      } else if (targetAction === 'justify') {
-        editor?.chain().focus().insertContent(' <em>(Edit justified: Aligning with the updated Q3 procurement guidelines.)</em>').run();
-      }
-    }, 1500);
+      setRpState('idle');
+      setRpPrompt('');
+      setRpSubmittedPrompt('');
+      setRpGeneratedText('');
+    }, 300);
   };
 
   const breadcrumb = (
@@ -319,62 +320,197 @@ export default function TemplateDetail({ onNavigate, activeNav }) {
             </div>
 
             {/* UNIFIED TIPTAP EDITOR */}
-            <div className="unified-tiptap" style={{ fontSize: 15, color: '#334155', lineHeight: 1.7, fontFamily: 'inherit', flex: 1 }}>
+            <div className="unified-tiptap" onContextMenu={handleContextMenu} style={{ fontSize: 15, color: '#334155', lineHeight: 1.7, fontFamily: 'inherit', flex: 1 }}>
               <EditorContent editor={editor} />
             </div>
 
           </div>
         </div>
 
-        {/* AI TOOLKIT INPUT */}
-        {mode === 'edit' && (
-          <div ref={aiMenuRef} style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 750, zIndex: 100 }}>
-            {showAiMenu && !aiLoading && (
-              <div style={{ position: 'absolute', bottom: 'calc(100% + 12px)', left: 0, background: '#fff', borderRadius: 16, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', border: '1px solid var(--border-subtle)', padding: '16px 0', width: 280, zIndex: 50 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', padding: '0 20px', marginBottom: 12 }}>AI Toolkit examples</div>
-                
-                <div className="ai-menu-item" onClick={() => handleAiAction('comment')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                  <MessageSquare size={16} /> <span style={{ fontSize: 14 }}>Add AI comment</span>
-                </div>
-                <div className="ai-menu-item" onClick={() => handleAiAction('paragraph')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                  <Plus size={16} /> <span style={{ fontSize: 14 }}>Add new paragraph</span>
-                </div>
-                <div className="ai-menu-item" onClick={() => handleAiAction('proofread')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                  <Search size={16} /> <span style={{ fontSize: 14 }}>Proofread</span>
-                </div>
-                <div className="ai-menu-item" onClick={() => handleAiAction('adjust')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                  <Pencil size={16} /> <span style={{ fontSize: 14 }}>Adjust text selection</span>
-                </div>
-                <div className="ai-menu-item" onClick={() => handleAiAction('component')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                  <TrendingUp size={16} /> <span style={{ fontSize: 14 }}>Add custom component</span>
-                </div>
-                <div className="ai-menu-item" onClick={() => handleAiAction('justify')} style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}>
-                  <CheckSquare size={16} /> <span style={{ fontSize: 14 }}>Justify edit</span>
-                </div>
-              </div>
-            )}
-            
-            <div style={{ position: 'relative', background: '#fff', borderRadius: 12, border: '1.5px solid rgba(124,124,255,0.4)', boxShadow: '0 8px 30px rgba(124,124,255,0.15)', overflow: 'hidden', transition: 'border-color 0.2s', display: 'flex', alignItems: 'center', padding: '12px 18px' }}>
-              {aiLoading ? (
-                <RefreshCw size={18} color="#7c7cff" style={{ flexShrink: 0, marginRight: 10, animation: 'spin 1s linear infinite' }} />
-              ) : (
-                <Sparkles size={18} color="#7c7cff" style={{ flexShrink: 0, marginRight: 10 }} />
-              )}
-              <input
-                type="text"
-                placeholder="Tell AI what else needs to be changed..."
-                value={aiInputValue}
-                onChange={(e) => setAiInputValue(e.target.value)}
-                onFocus={() => setShowAiMenu(true)}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleAiAction(); }}
-                disabled={aiLoading}
-                style={{ border: 'none', outline: 'none', background: 'transparent', flex: 1, fontSize: 14, color: aiLoading ? '#999' : '#1a1a1a', fontFamily: 'inherit' }}
-              />
-              <button onClick={() => handleAiAction()} disabled={aiLoading || !aiInputValue.trim()} style={{ background: aiInputValue.trim() && !aiLoading ? '#0052cc' : '#f3f4f6', border: 'none', borderRadius: '50%', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: aiInputValue.trim() && !aiLoading ? 'pointer' : 'not-allowed', flexShrink: 0, marginLeft: 10, transition: 'background 0.2s' }}>
-                <ArrowUp size={16} color={aiInputValue.trim() && !aiLoading ? '#fff' : '#6b7280'} />
-              </button>
+        {/* CONTEXT MENU */}
+        {contextMenu.visible && (
+          <div ref={contextMenuRef} style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 12, boxShadow: '0 12px 40px rgba(0,0,0,0.12)', width: 280, zIndex: 10000, padding: '8px 0', overflow: 'hidden' }}
+            onMouseLeave={() => setContextMenu({ visible: false, x: 0, y: 0 })}>
+            <div
+              onClick={() => {
+                setContextMenu({ visible: false, x: 0, y: 0 });
+                setRightPane({ visible: true, action: 'generate_section', title: 'Generate Section' });
+              }}
+              style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', color: 'var(--text-secondary)' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+            >
+              <FileText size={16} />
+              <span style={{ fontSize: 14 }}>Generate Section</span>
             </div>
           </div>
+        )}
+
+        {/* RIGHT PANE */}
+        {rightPane.visible && (
+          <>
+            <div onClick={closeRightPane} style={{ position: 'fixed', inset: 0, background: 'rgba(14,15,37,0.3)', zIndex: 9999, backdropFilter: 'blur(2px)', animation: 'fadeIn 0.2s ease' }} />
+            <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 450, background: '#fff', display: 'flex', flexDirection: 'column', zIndex: 10000, boxShadow: '-8px 0 32px rgba(0,0,0,0.1)', animation: 'slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+              {/* Header */}
+              <div style={{ height: 56, minHeight: 56, background: '#fff', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', flexShrink: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0, width: '100%' }}>
+                  <X size={18} color="var(--text-tertiary)" style={{ cursor: 'pointer', flexShrink: 0 }} onClick={closeRightPane} />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 8, padding: '6px 12px', background: 'transparent', border: 'none', fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'inherit' }}>
+                    {rightPane.title}
+                  </div>
+                </div>
+              </div>
+
+              <div className="custom-scrollbar" style={{ flex: 1, padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {rpState !== 'idle' && (
+                    <>
+                      {/* User Prompt Bubble */}
+                      <div style={{ alignSelf: 'flex-end', background: '#0052cc', color: '#fff', padding: '10px 14px', borderRadius: '14px 14px 4px 14px', fontSize: 14, maxWidth: '85%', boxShadow: '0 2px 8px rgba(0,82,204,0.15)', animation: 'chatFadeIn 0.2s ease forwards' }}>
+                        {rpSubmittedPrompt}
+                      </div>
+
+                      {/* AI Response Bubble */}
+                      <div style={{ alignSelf: 'flex-start', background: '#f3f4f6', border: '1px solid #e5e7eb', color: '#1a1a1a', padding: '14px', borderRadius: '14px 14px 14px 4px', fontSize: 14, maxWidth: '90%', lineHeight: 1.55, animation: 'chatFadeIn 0.3s ease forwards' }}>
+                        {rpState === 'generating' || rpState === 'regenerating' ? (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#666' }}>
+                            <RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} />
+                            <span>{rpState === 'generating' ? 'Generating section...' : 'Regenerating section...'}</span>
+                          </div>
+                        ) : (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                            {rpIsEditing ? (
+                              <textarea
+                                value={rpGeneratedText}
+                                onChange={e => setRpGeneratedText(e.target.value)}
+                                style={{ width: '100%', minHeight: 120, padding: 12, border: '1px solid #cbd5e1', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', resize: 'vertical', outline: 'none' }}
+                                autoFocus
+                              />
+                            ) : (
+                              <div style={{ whiteSpace: 'pre-wrap' }} dangerouslySetInnerHTML={{ __html: rpGeneratedText.replace(/\n/g, '<br/>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+                            )}
+                            {/* Action Buttons */}
+                            {rpState === 'generated' && (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 4 }}>
+                                {rpIsEditing ? (
+                                  <div style={{ display: 'flex', gap: 8 }}>
+                                    <button onClick={() => setRpIsEditing(false)} style={{ padding: '0 16px', height: 32, background: '#0052cc', border: 'none', borderRadius: 6, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>Save</button>
+                                    <button onClick={() => { setRpGeneratedText(rpOriginalText); setRpIsEditing(false); }} style={{ padding: '0 16px', height: 32, background: 'transparent', border: '1px solid var(--border-default)', borderRadius: 6, color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-surface-2)'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>Cancel</button>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <div style={{ display: 'flex', gap: 8 }}>
+                                      <button onClick={() => {
+                                        editor?.chain().focus().insertContent(`<p>${rpGeneratedText}</p>`).run();
+                                        closeRightPane();
+                                      }} style={{ padding: '0 16px', height: 32, background: '#0052cc', border: 'none', borderRadius: 6, color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'box-shadow 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,82,204,0.3)'} onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
+                                        <Check size={15} strokeWidth={2.5} /> Accept
+                                      </button>
+                                      <button onClick={() => {
+                                        closeRightPane();
+                                      }} style={{ padding: '0 16px', height: 32, background: 'transparent', border: '1px solid var(--border-default)', borderRadius: 6, color: 'var(--colors-red-500)', fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, transition: 'background 0.15s' }} onMouseEnter={e => e.currentTarget.style.background = '#fff0f0'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                                        <X size={15} strokeWidth={2.5} /> Reject
+                                      </button>
+                                    </div>
+                                    <div style={{ width: 1, height: 20, background: 'var(--border-subtle)' }} />
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                      <button
+                                        title="Edit"
+                                        onClick={() => { setRpOriginalText(rpGeneratedText); setRpIsEditing(true); }}
+                                        style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                                        onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)' }}
+                                        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent' }}
+                                      >
+                                        <Edit3 size={15} />
+                                      </button>
+                                      <button
+                                        title="Regenerate"
+                                        onClick={() => {
+                                          setRpIsEditing(false);
+                                          setRpState('regenerating');
+                                          setTimeout(() => { setRpState('generated'); }, 2000);
+                                        }}
+                                        style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 6, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }}
+                                        onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)' }}
+                                        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent' }}
+                                      >
+                                        <RefreshCw size={15} />
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Prompt Input Box */}
+              <div style={{ position: 'relative', marginTop: 'auto', padding: '16px 20px', background: '#fff', borderTop: '1px solid var(--border-subtle)', flexShrink: 0 }}>
+                <div style={{ padding: '0 0 16px', background: '#fff' }}>
+                  <div style={{ border: `1.5px solid ${rpPrompt ? '#7c7cff' : 'var(--border-default)'}`, borderRadius: 14, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: rpPrompt ? '0 0 0 3px rgba(124,124,255,0.09), 0 2px 8px rgba(14,15,37,0.04)' : '0 2px 8px rgba(14,15,37,0.04)', transition: 'border-color 0.15s, box-shadow 0.15s', background: '#fff' }}>
+                    <textarea
+                      value={rpPrompt}
+                      onChange={e => {
+                        setRpPrompt(e.target.value);
+                        e.target.style.height = 'auto';
+                        e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                      }}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          if (rpPrompt.trim()) {
+                            setRpSubmittedPrompt(rpPrompt);
+                            setRpPrompt('');
+                            setRpIsEditing(false);
+                            setRpState('generating');
+                            setTimeout(() => {
+                              setRpGeneratedText("1. Objective\nThis section describes the objectives for the deliverables as outlined in the prompt provided.\n\n2. Requirements\nAll requirements must be fulfilled according to the timeline.");
+                              setRpState('generated');
+                            }, 2500);
+                          }
+                        }
+                      }}
+                      placeholder={"Describe your requirement..."}
+                      rows={1}
+                      style={{ width: '100%', border: 'none', outline: 'none', background: 'transparent', fontSize: 14, color: 'var(--text-primary)', resize: 'none', minHeight: 24, maxHeight: 120, overflowY: 'auto', fontFamily: 'Inter, sans-serif', lineHeight: 1.5 }}
+                    />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 2 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; e.currentTarget.style.color = '#7c7cff'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}>
+                          <Paperclip size={18} />
+                        </button>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ fontSize: 11, color: rpPrompt.length > 18000 ? '#ef4444' : 'var(--text-tertiary)' }}>{rpPrompt.length} / 20000</span>
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-tertiary)', transition: 'all 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = '#7c7cff'; e.currentTarget.style.background = 'rgba(124,124,255,0.08)'; }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-tertiary)'; e.currentTarget.style.background = 'transparent'; }}>
+                          <Mic size={18} strokeWidth={2} />
+                        </button>
+                        <button onClick={() => {
+                          if (!rpPrompt.trim()) return;
+                          setRpSubmittedPrompt(rpPrompt);
+                          setRpPrompt('');
+                          setRpIsEditing(false);
+                          setRpState('generating');
+                          setTimeout(() => {
+                            setRpGeneratedText("1. Objective\nThis section describes the objectives for the deliverables as outlined in the prompt provided.\n\n2. Requirements\nAll requirements must be fulfilled according to the timeline.");
+                            setRpState('generated');
+                          }, 2500);
+                        }} style={{ width: 34, height: 34, borderRadius: '50%', border: 'none', cursor: rpPrompt.trim() ? 'pointer' : 'not-allowed', background: rpPrompt.trim() ? 'linear-gradient(135deg, #0052cc, #7c7cff)' : 'var(--bg-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: rpPrompt.trim() ? '0 2px 8px rgba(0,82,204,0.3)' : 'none', transition: 'all 0.15s ease' }}>
+                          <Send size={15} color={rpPrompt.trim() ? '#fff' : 'var(--text-tertiary)'} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
 
