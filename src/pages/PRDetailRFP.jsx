@@ -188,6 +188,41 @@ const INITIAL_HTML = `<h2>1. Introduction &amp; Background</h2>
 <p><strong>Deadline:</strong> 15 June 2026, 17:00 GST &nbsp;|&nbsp; <strong>Validity:</strong> 90 days from submission</p>
 <ul><li>Technical Proposal (max 40 pages, PDF)</li><li>Commercial Proposal (separate sealed document)</li><li>Company Profile &amp; Credentials</li><li>CVs of proposed team members</li><li>Reference letters from at least 2 comparable projects</li><li>Valid trade licence and ISO certification copies</li></ul>`;
 
+const ProcessingStatus = () => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const startTime = Date.now();
+    const duration = 8000;
+    
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const currentProgress = Math.min(100, Math.floor((elapsed / duration) * 100));
+      setProgress(currentProgress);
+      
+      if (currentProgress >= 100) {
+        clearInterval(interval);
+      }
+    }, 50);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div style={{ width: '100%', minWidth: '120px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '13px', fontWeight: 500, color: '#a16207' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} /> Processing...
+        </span>
+        <span>{progress}%</span>
+      </div>
+      <div style={{ width: '100%', height: '4px', background: 'rgba(245,158,11,0.2)', borderRadius: '2px', overflow: 'hidden' }}>
+        <div style={{ width: `${progress}%`, height: '100%', background: '#d97706', transition: 'width 0.1s linear', borderRadius: '2px' }} />
+      </div>
+    </div>
+  );
+};
+
 const WYSIWYGEditor = ({
   isEditing,
   htmlContent,
@@ -1930,7 +1965,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
           }
           return p;
         }));
-      }, 3000);
+      }, 8000);
       return;
     }
 
@@ -1981,7 +2016,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
         }
         return p;
       }));
-    }, 3000);
+    }, 8000);
   };
 
   // Handle special signals from WYSIWYGEditor
@@ -3687,9 +3722,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                       <td style={{ padding: '14px 16px', fontSize: 13, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>{prop.uploadDate}</td>
                                       <td style={{ padding: '14px 16px', fontSize: 13, whiteSpace: 'nowrap' }}>
                                         {prop.status === 'Processing' ? (
-                                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#a16207', fontWeight: 500 }}>
-                                            <RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} /> {prop.status}
-                                          </div>
+                                          <ProcessingStatus />
                                         ) : (
                                           <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{prop.status}</span>
                                         )}
