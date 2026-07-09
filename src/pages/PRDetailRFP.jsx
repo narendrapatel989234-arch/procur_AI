@@ -1192,10 +1192,42 @@ const NEGOTIATION_DATA = {
       target: '₹42,00,000',
       walkAway: '₹45,00,000',
       concessions: [
-        'Offer flexibility on start date in exchange for lower rate card.',
-        'Concede Net 30 only if T&E is fully absorbed by vendor.'
+        {
+          title: 'Payment Terms',
+          items: [
+            'Accelerate milestone payments',
+            'Maintain overall contract value'
+          ]
+        },
+        {
+          title: 'Scope Flexibility',
+          items: [
+            'Minor support extensions',
+            'Limited onboarding assistance'
+          ]
+        },
+        {
+          title: 'Commercial Trade-offs',
+          items: [
+            'Optional features as value-add',
+            'AMC cap reduction'
+          ]
+        }
       ],
-      batna: 'Award contract to Deloitte Technology (scored 88, priced at ₹40,50,000). Their technical score is slightly lower, but commercials are fully aligned with budget.'
+      batna: {
+        vendor: VENDORS[0].name,
+        score: '8.4/10',
+        strengths: [
+          'Proven commerce platform expertise',
+          'Strong public-sector references',
+          'Competitive commercial bid'
+        ],
+        risks: [
+          'Lower AI personalization capability',
+          'Weaker UX differentiation'
+        ],
+        price: 'AED 4.38M'
+      }
     },
     clarificationQuestions: [
       {
@@ -4206,10 +4238,41 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                       target: "₹35,00,000",
                                       walkAway: "₹40,00,000",
                                       concessions: [
-                                        "Request enhanced SLA penalties if rates cannot be reduced further.",
-                                        "Propose longer contract term in exchange for a 10% rate reduction."
+                                        {
+                                          title: "Payment Terms",
+                                          items: [
+                                            "Request enhanced SLA penalties",
+                                            "Propose longer contract term"
+                                          ]
+                                        },
+                                        {
+                                          title: "Scope Flexibility",
+                                          items: [
+                                            "Offer reduced onboarding support",
+                                            "Limit custom integrations"
+                                          ]
+                                        },
+                                        {
+                                          title: "Commercial Trade-offs",
+                                          items: [
+                                            "Exchange rate reduction for multi-year lock-in",
+                                            "Waive implementation fees"
+                                          ]
+                                        }
                                       ],
-                                      batna: "Engage the second-ranked vendor for a parallel discussion to maintain competitive pressure."
+                                      batna: {
+                                        vendor: 'Infosys',
+                                        score: '8.2/10',
+                                        strengths: [
+                                          'Deep domain expertise',
+                                          'Stronger AI personalization capability'
+                                        ],
+                                        risks: [
+                                          'Higher commercial bid',
+                                          'Longer deployment timeline'
+                                        ],
+                                        price: 'AED 4.85M'
+                                      }
                                     });
                                     setIsRegeneratingStrategyBrief(false);
                                   }, 2000);
@@ -4232,7 +4295,10 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
                                   <div style={{ flex: 1, fontSize: 13, color: '#0052cc', fontWeight: 500, padding: '12px 16px', background: 'rgba(0,82,204,0.04)', borderRadius: 8, border: '1px solid rgba(0,82,204,0.2)', lineHeight: 1.5, boxSizing: 'border-box' }}>
                                     <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>₹38,00,000</div>
-                                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{activeStrategyBrief.opening}</div>
+                                    <ul style={{ margin: 0, paddingLeft: 16, fontSize: 11, color: 'var(--text-secondary)', listStyleType: 'disc' }}>
+                                      <li>82% of Benchmark</li>
+                                      <li>Aggressive entry position</li>
+                                    </ul>
                                   </div>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -4253,14 +4319,54 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                               <div>
                                 <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Concession Sequence</div>
                                 <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                                  <ol style={{ margin: 0, paddingLeft: 20 }}>
-                                    {activeStrategyBrief.concessions.map((c, i) => <li key={i} style={{ marginBottom: 8 }}>{c}</li>)}
+                                  <ol style={{ margin: 0, paddingLeft: 20, listStyleType: 'lower-alpha' }}>
+                                    {activeStrategyBrief.concessions.map((group, i) => (
+                                      <li key={i} style={{ marginBottom: 12 }}>
+                                        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{group.title}</span>
+                                        <ul style={{ margin: 0, paddingLeft: 20, marginTop: 4, listStyleType: 'disc' }}>
+                                          {group.items.map((item, j) => (
+                                            <li key={j} style={{ marginBottom: 4 }}>{item}</li>
+                                          ))}
+                                        </ul>
+                                      </li>
+                                    ))}
                                   </ol>
                                 </div>
                               </div>
                               <div>
                                 <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
-                                <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '16px', background: '#fff', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>{activeStrategyBrief.batna}</div>
+                                <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '24px', borderRadius: 8, border: '1px solid var(--border-subtle)' }}>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                                    
+                                    <div style={{ fontSize: 14, fontWeight: 700 }}>
+                                      <span style={{ color: 'var(--text-primary)' }}>Overall Score: </span><span style={{ color: 'var(--colors-blue-500)' }}>{activeStrategyBrief.batna.score}</span>
+                                    </div>
+                                    
+                                    <div style={{ display: 'flex', gap: 16 }}>
+                                      <div style={{ flex: 1, background: 'var(--colors-green-50)', border: '1px solid var(--colors-green-200)', borderRadius: 8, padding: '16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--colors-green-900)' }}>Strengths</div>
+                                        <ul style={{ margin: 0, paddingLeft: 20, listStyleType: 'disc', color: 'var(--colors-green-700)' }}>
+                                          {activeStrategyBrief.batna.strengths.map((str, i) => (
+                                            <li key={i} style={{ marginBottom: 6 }}>{str}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+
+                                      <div style={{ flex: 1, background: 'var(--colors-red-50)', border: '1px solid var(--colors-red-200)', borderRadius: 8, padding: '16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--colors-red-900)' }}>Risks</div>
+                                        <ul style={{ margin: 0, paddingLeft: 20, listStyleType: 'disc', color: 'var(--colors-red-700)' }}>
+                                          {activeStrategyBrief.batna.risks.map((risk, i) => (
+                                            <li key={i} style={{ marginBottom: 6 }}>{risk}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    </div>
+
+                                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+                                      Competitive Price: <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>{activeStrategyBrief.batna.price}</span>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
