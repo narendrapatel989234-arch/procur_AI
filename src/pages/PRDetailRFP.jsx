@@ -194,17 +194,17 @@ const ProcessingStatus = () => {
   useEffect(() => {
     const startTime = Date.now();
     const duration = 8000;
-    
+
     const interval = setInterval(() => {
       const elapsed = Date.now() - startTime;
       const currentProgress = Math.min(100, Math.floor((elapsed / duration) * 100));
       setProgress(currentProgress);
-      
+
       if (currentProgress >= 100) {
         clearInterval(interval);
       }
     }, 50);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -320,13 +320,13 @@ const WYSIWYGEditor = ({
   const handleContextMenu = (e) => {
     if (!isEditing) return;
     e.preventDefault();
-    
+
     let y = e.clientY;
     const menuHeight = 260; // Approximate height of context menu
     if (window.innerHeight - y < menuHeight) {
       y = Math.max(10, window.innerHeight - menuHeight - 10);
     }
-    
+
     setContextMenu({ visible: true, x: e.clientX, y });
   };
 
@@ -1842,16 +1842,16 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [matrixDropOpen, setMatrixDropOpen] = useState(false);
   const matrixDropRef = useRef(null);
   const [negotiatedPrices, setNegotiatedPrices] = useState({
-    '0': 'AED 50,000',
-    '1': 'AED 45,000',
-    '2': 'AED 49,500',
-    '3': 'AED 51,000'
+    '0': '',
+    '1': '',
+    '2': '',
+    '3': ''
   });
   const [discountAchieved, setDiscountAchieved] = useState({
-    '0': 'AED 0',
-    '1': 'AED 3,000',
-    '2': 'AED 2,500',
-    '3': 'AED 4,000'
+    '0': '',
+    '1': '',
+    '2': '',
+    '3': ''
   });
 
 
@@ -1876,11 +1876,21 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [negotVendorOpen, setNegotVendorOpen] = useState(false);
   const negotVendorRef = useRef(null);
 
+  const [negotMatrixDropOpen, setNegotMatrixDropOpen] = useState(false);
+  const negotMatrixDropRef = useRef(null);
+  const [selectedNegotMatrixProps, setSelectedNegotMatrixProps] = useState([]);
+
+  const [activeNegotCurrDrop, setActiveNegotCurrDrop] = useState(null);
+  const negotCurrDropRef = useRef(null);
+  const [negotCurrencies, setNegotCurrencies] = useState({});
+
   useEffect(() => {
     const handleDocClick = (e) => {
       if (costCurrencyRef.current && !costCurrencyRef.current.contains(e.target)) setCostCurrencyOpen(false);
       if (negotVendorRef.current && !negotVendorRef.current.contains(e.target)) setNegotVendorOpen(false);
       if (matrixDropRef.current && !matrixDropRef.current.contains(e.target)) setMatrixDropOpen(false);
+      if (negotMatrixDropRef.current && !negotMatrixDropRef.current.contains(e.target)) setNegotMatrixDropOpen(false);
+      if (negotCurrDropRef.current && !negotCurrDropRef.current.contains(e.target)) setActiveNegotCurrDrop(null);
     };
     document.addEventListener('mousedown', handleDocClick);
     return () => document.removeEventListener('mousedown', handleDocClick);
@@ -3141,7 +3151,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     <Sparkles size={10} strokeWidth={2.5} /> Complex
                   </div>
                   <div style={{ background: statusCfg.bg, border: `1px solid ${statusCfg.border}`, color: statusCfg.color, borderRadius: 20, padding: '3px 12px', fontSize: 11, fontWeight: 600 }}>{prStatus}</div>
-                  
+
                   <div style={{ flex: 1 }} />
                   {activeTab === 'sow' && sowStage === 'drafting' && (
                     <div style={{ position: 'relative' }} ref={sowHeaderMenuRef}>
@@ -4101,27 +4111,34 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
               {/* NEGOTIATIONS TAB */}
               {activeTab === 'negot' && proposals.some(p => p.status === 'Completed') && (() => {
                 const negotProposals = proposals.filter(p => p.status === 'Completed').sort((a, b) => parseInt(b.techScore || 0) - parseInt(a.techScore || 0));
+
+                const latestProposalsMap = new Map();
+                negotProposals.forEach(p => {
+                  const existing = latestProposalsMap.get(p.vendorName);
+                  if (!existing || (p.version || 'v1.0').localeCompare(existing.version || 'v1.0') > 0) {
+                    latestProposalsMap.set(p.vendorName, p);
+                  }
+                });
+                const latestProposals = Array.from(latestProposalsMap.values()).sort((a, b) => parseInt(b.techScore || 0) - parseInt(a.techScore || 0));
+
                 const firstNegotKey = Object.keys(NEGOTIATION_DATA)[0];
-                // selectedNegotVendorId now holds p.id
-                const activeNegotProp = negotProposals.find(p => p.id === selectedNegotVendorId) || negotProposals[0];
+                const activeNegotProp = latestProposals.find(p => p.id === selectedNegotVendorId) || latestProposals[0];
                 const activeVendorKey = activeNegotProp ? activeNegotProp.vendorName : firstNegotKey;
                 const negotData = NEGOTIATION_DATA[activeVendorKey] || NEGOTIATION_DATA[firstNegotKey];
                 const activeStrategyBrief = regeneratedStrategyBrief || negotData.strategyBrief;
                 const activeDropdownLabel = activeNegotProp ? `${activeNegotProp.vendorName} ${activeNegotProp.version}` : activeVendorKey;
 
-                const comparisonProps = [
-                  { vendorName: negotProposals[0]?.vendorName || 'Vendor A', version: 'v1.0' },
-                  { vendorName: negotProposals[0]?.vendorName || 'Vendor A', version: 'v2.0' },
-                  { vendorName: negotProposals[1]?.vendorName || 'Vendor B', version: 'v1.0' },
-                  { vendorName: negotProposals[2]?.vendorName || 'Vendor C', version: 'v1.0' }
-                ];
-                
+                const defaultNegotMatrixProps = latestProposals.slice(0, 2).map(p => p.id);
+                const activeNegotComparisonIds = selectedNegotMatrixProps.length > 0 ? selectedNegotMatrixProps : defaultNegotMatrixProps;
+                const comparisonProps = latestProposals.filter(p => activeNegotComparisonIds.includes(p.id));
+                const colsCount = Math.max(comparisonProps.length, 2);
+
                 const negotComparisonRows = [
                   { label: 'Implementation Cost', vals: ['AED 50,000', 'AED 45,000', 'AED 48,000', 'AED 47,000'] },
                   { label: 'Licensing Cost', vals: ['Included', 'Included', 'AED 2,000', 'Included'] },
                   { label: 'Cloud / Infrastructure Cost', vals: ['AED 3,500', 'AED 3,000', 'AED 3,500', 'AED 3,000'] },
                   { label: 'Support & Maintenance', vals: ['Included (Basic)', 'Included (1 Year Free ProSupport)', 'AED 2,500', 'Included (3 Year ADP Coverage)'] },
-                  { label: 'Resource Rates', vals: ['AED 1,800', 'AED 1,500', 'AED 2,000', 'AED 1,500'] },
+                  { label: 'Resource Rates (Blended Price)', vals: ['AED 1,800', 'AED 1,500', 'AED 2,000', 'AED 1,500'] },
                   { label: 'Training & Change Management', vals: ['AED 2,000', 'Included', 'Included', 'AED 1,000'] },
                   { label: 'Security & Compliance', vals: ['Included', 'Included', 'Included', 'Included'] },
                   { label: 'Commercial Flexibility/Payment terms', vals: ['Monthly Billing', 'Quarterly Billing', 'Annual Upfront', 'Quarterly Billing'] },
@@ -4136,8 +4153,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                   { label: 'Overall Assessment', vals: ['Higher Initial Cost', 'Lowest Cost + Best Support', 'Strong Hardware Bundle', 'Strong Protection & Benefits'] },
                   { label: 'Rank - TBD', vals: ['', '', '', ''] }
                 ];
-                
-                const colsCount = 4;
+
+
 
                 return (
                   <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: 'transparent' }}>
@@ -4146,9 +4163,42 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
                         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>Price Break Down and Vendor Comparison For Negotiation</div>
-                        <button onClick={() => setShowAwardModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#fff', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                          <Award size={16} /> Award Project
-                        </button>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          {/* Compare Proposals Dropdown */}
+                          <div style={{ position: 'relative', width: 260 }} ref={negotMatrixDropRef}>
+                            <button onClick={() => setNegotMatrixDropOpen(!negotMatrixDropOpen)} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 12px', background: '#fff', border: '1px solid var(--border-default)', borderRadius: 6, fontSize: 13, fontWeight: 500, color: 'var(--text-secondary)', cursor: 'pointer', fontFamily: 'inherit' }}>
+                              Compare Proposals ({activeNegotComparisonIds.length}) <ChevronDown size={14} style={{ transform: negotMatrixDropOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                            </button>
+                            {negotMatrixDropOpen && (
+                              <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, width: '100%', background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 10, padding: 8, display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 300, overflowY: 'auto' }}>
+                                <div style={{ maxHeight: 240, overflowY: 'auto', padding: '4px 0' }}>
+                                  {latestProposals.map(p => {
+                                    const isSelected = activeNegotComparisonIds.includes(p.id);
+                                    return (
+                                      <div key={p.id} onClick={() => {
+                                        if (isSelected) {
+                                          if (activeNegotComparisonIds.length > 1) {
+                                            setSelectedNegotMatrixProps(activeNegotComparisonIds.filter(id => id !== p.id));
+                                          }
+                                        } else if (activeNegotComparisonIds.length < 4) {
+                                          setSelectedNegotMatrixProps([...activeNegotComparisonIds, p.id]);
+                                        }
+                                      }} style={{ padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12, cursor: activeNegotComparisonIds.length >= 4 && !isSelected ? 'not-allowed' : 'pointer', background: isSelected ? 'rgba(0,82,204,0.04)' : '#fff', opacity: activeNegotComparisonIds.length >= 4 && !isSelected ? 0.5 : 1 }}>
+                                        <div style={{ width: 16, height: 16, borderRadius: 4, border: `1.5px solid ${isSelected ? '#0052cc' : '#ccc'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: isSelected ? '#0052cc' : '#fff' }}>
+                                          {isSelected && <Check size={12} color="#fff" strokeWidth={3} />}
+                                        </div>
+                                        <div style={{ flex: 1, fontSize: 13, color: 'var(--text-primary)', fontWeight: isSelected ? 600 : 400 }}>{p.vendorName} {p.version}</div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          <button onClick={() => setShowAwardModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#fff', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
+                            <Award size={16} /> Award Project
+                          </button>
+                        </div>
                       </div>
                       <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
                         <div style={{ overflowX: 'auto' }}>
@@ -4175,14 +4225,38 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                     if (row.isEditable) {
                                       const val = row.stateKey === 'negotiatedPrices' ? negotiatedPrices[cIdx] : discountAchieved[cIdx];
                                       const setVal = row.stateKey === 'negotiatedPrices' ? setNegotiatedPrices : setDiscountAchieved;
+                                      const isDiscountDisabled = row.stateKey === 'discountAchieved' && !negotiatedPrices[cIdx];
                                       return (
                                         <div key={cIdx} style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', borderRight: cIdx === colsCount - 1 ? 'none' : '1px solid var(--border-subtle)' }}>
-                                          <input
-                                            type="text"
-                                            value={val || ''}
-                                            onChange={(e) => setVal(prev => ({ ...prev, [cIdx]: e.target.value }))}
-                                            style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid #e0e0e0', borderRadius: 4, background: '#fff', color: 'var(--text-primary)', outline: 'none' }}
-                                          />
+                                          <div style={{ display: 'flex', width: '100%', border: '1px solid #e0e0e0', borderRadius: 8, overflow: 'hidden', opacity: isDiscountDisabled ? 0.6 : 1, background: isDiscountDisabled ? '#f5f5f5' : '#fff' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', padding: '9px 12px', background: isDiscountDisabled ? '#f5f5f5' : '#fff', fontSize: 14, color: '#1a1a1a', borderRight: '1px solid #e0e0e0', cursor: isDiscountDisabled ? 'not-allowed' : 'default' }}>
+                                              AED
+                                            </div>
+                                            <input
+                                              type="text"
+                                              value={val || ''}
+                                              onChange={(e) => {
+                                                const newVal = e.target.value;
+                                                if (row.stateKey === 'negotiatedPrices') {
+                                                  setNegotiatedPrices(prev => ({ ...prev, [cIdx]: newVal }));
+                                                  const initialQuoteRow = negotComparisonRows.find(r => r.label === 'Initial Quote');
+                                                  const initialQuoteStr = initialQuoteRow?.vals?.[cIdx] || '';
+                                                  const initialQuoteNum = parseFloat(initialQuoteStr.replace(/[^0-9.]/g, ''));
+                                                  const negotiatedNum = parseFloat(newVal.replace(/[^0-9.]/g, ''));
+                                                  if (!isNaN(initialQuoteNum) && !isNaN(negotiatedNum)) {
+                                                    setDiscountAchieved(prev => ({ ...prev, [cIdx]: (initialQuoteNum - negotiatedNum).toLocaleString('en-US') }));
+                                                  } else if (!newVal) {
+                                                    setDiscountAchieved(prev => ({ ...prev, [cIdx]: '' }));
+                                                  }
+                                                } else {
+                                                  setDiscountAchieved(prev => ({ ...prev, [cIdx]: newVal }));
+                                                }
+                                              }}
+                                              disabled={isDiscountDisabled}
+                                              placeholder={row.stateKey === 'negotiatedPrices' ? 'Enter the amount' : '0.00'}
+                                              style={{ flex: 1, padding: '9px 12px', fontSize: 14, border: 'none', background: 'transparent', color: '#1a1a1a', outline: 'none', width: '100%', minWidth: 0, cursor: isDiscountDisabled ? 'not-allowed' : 'text' }}
+                                            />
+                                          </div>
                                         </div>
                                       );
                                     }
@@ -4203,13 +4277,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                     {/* NEW TOP BANNER */}
                     <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                        <div style={{ width: 44, height: 44, borderRadius: 10, background: 'rgba(0,82,204,0.08)', color: '#0052cc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700 }}>
-                          {(() => {
-                            const ranked = [...proposals].sort((a, b) => parseInt(b.techScore || 0) - parseInt(a.techScore || 0));
-                            const rank = ranked.findIndex(p => p.id === activeNegotProp?.id) + 1;
-                            return `#${rank > 0 ? rank : 1}`;
-                          })()}
-                        </div>
                         <div>
                           <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)' }}>{activeNegotProp?.vendorName || activeVendorKey}</div>
                           <div style={{ fontSize: 13, color: 'var(--text-tertiary)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -4225,7 +4292,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                           </button>
                           {negotVendorOpen && (
                             <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: 4, background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 8, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', zIndex: 100, maxHeight: 300, overflowY: 'auto' }}>
-                              {negotProposals.map(p => (
+                              {latestProposals.map(p => (
                                 <div key={p.id} onClick={() => { setSelectedNegotVendorId(p.id); setNegotVendorOpen(false); }} style={{ padding: '10px 14px', fontSize: 13, cursor: 'pointer', color: 'var(--text-primary)', transition: 'background 0.15s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                                   {p.vendorName} {p.version}
                                 </div>
@@ -4457,11 +4524,11 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                 <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>BATNA (With Reasoning)</div>
                                 <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.6, padding: '24px', borderRadius: 8, border: '1px solid var(--border-subtle)' }}>
                                   <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                                    
+
                                     <div style={{ fontSize: 14, fontWeight: 700 }}>
                                       <span style={{ color: 'var(--text-primary)' }}>Overall Score: </span><span style={{ color: 'var(--colors-blue-500)' }}>{activeStrategyBrief.batna.score}</span>
                                     </div>
-                                    
+
                                     <div style={{ display: 'flex', gap: 16 }}>
                                       <div style={{ flex: 1, background: 'var(--colors-green-50)', border: '1px solid var(--colors-green-200)', borderRadius: 8, padding: '16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
                                         <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--colors-green-900)' }}>Strengths</div>
@@ -5422,17 +5489,27 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12, margin: '16px 0' }}>
-              {proposals.filter(p => p.status === 'Completed').map(p => (
-                <div key={p.id} onClick={() => setSelectedAwardVendor(p.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', border: `1px solid ${selectedAwardVendor === p.id ? '#0052cc' : 'var(--border-subtle)'}`, borderRadius: 10, background: selectedAwardVendor === p.id ? 'rgba(0,82,204,0.04)' : '#fff', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                  <div style={{ width: 16, height: 16, borderRadius: '50%', border: `1.5px solid ${selectedAwardVendor === p.id ? '#0052cc' : '#ccc'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: '#fff' }}>
-                    {selectedAwardVendor === p.id && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#0052cc' }} />}
+              {(() => {
+                const completed = proposals.filter(p => p.status === 'Completed');
+                const latestMap = new Map();
+                completed.forEach(p => {
+                  const existing = latestMap.get(p.vendorName);
+                  if (!existing || (p.version || 'v1.0').localeCompare(existing.version || 'v1.0') > 0) {
+                    latestMap.set(p.vendorName, p);
+                  }
+                });
+                return Array.from(latestMap.values()).sort((a, b) => parseInt(b.techScore || 0) - parseInt(a.techScore || 0)).map(p => (
+                  <div key={p.id} onClick={() => setSelectedAwardVendor(p.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', border: `1px solid ${selectedAwardVendor === p.id ? '#0052cc' : 'var(--border-subtle)'}`, borderRadius: 10, background: selectedAwardVendor === p.id ? 'rgba(0,82,204,0.04)' : '#fff', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                    <div style={{ width: 16, height: 16, borderRadius: '50%', border: `1.5px solid ${selectedAwardVendor === p.id ? '#0052cc' : '#ccc'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: '#fff' }}>
+                      {selectedAwardVendor === p.id && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#0052cc' }} />}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName} {p.version}</div>
+                      <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>Tech Score: <span style={{ fontWeight: 600 }}>{p.techScore}</span></div>
+                    </div>
                   </div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{p.vendorName} {p.version}</div>
-                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>Tech Score: <span style={{ fontWeight: 600 }}>{p.techScore}</span></div>
-                  </div>
-                </div>
-              ))}
+                ));
+              })()}
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 16 }}>
