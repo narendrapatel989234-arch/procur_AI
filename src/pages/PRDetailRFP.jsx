@@ -1189,8 +1189,8 @@ const NEGOTIATION_DATA = {
     ],
     strategyBrief: {
       opening: 'Acknowledge strong technical fit but emphasize that commercials are currently uncompetitive compared to alternative bids.',
-      target: '₹42,00,000',
-      walkAway: '₹45,00,000',
+      target: 'AED 4,200,000',
+      walkAway: 'AED 4,500,000',
       concessions: [
         {
           title: 'Payment Terms',
@@ -1841,6 +1841,19 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
   const [selectedMatrixProps, setSelectedMatrixProps] = useState([]);
   const [matrixDropOpen, setMatrixDropOpen] = useState(false);
   const matrixDropRef = useRef(null);
+  const [negotiatedPrices, setNegotiatedPrices] = useState({
+    '0': 'AED 50,000',
+    '1': 'AED 45,000',
+    '2': 'AED 49,500',
+    '3': 'AED 51,000'
+  });
+  const [discountAchieved, setDiscountAchieved] = useState({
+    '0': 'AED 0',
+    '1': 'AED 3,000',
+    '2': 'AED 2,500',
+    '3': 'AED 4,000'
+  });
+
 
   const [expandedMarketCards, setExpandedMarketCards] = useState({});
 
@@ -4096,8 +4109,96 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                 const activeStrategyBrief = regeneratedStrategyBrief || negotData.strategyBrief;
                 const activeDropdownLabel = activeNegotProp ? `${activeNegotProp.vendorName} ${activeNegotProp.version}` : activeVendorKey;
 
+                const comparisonProps = [
+                  { vendorName: negotProposals[0]?.vendorName || 'Vendor A', version: 'v1.0' },
+                  { vendorName: negotProposals[0]?.vendorName || 'Vendor A', version: 'v2.0' },
+                  { vendorName: negotProposals[1]?.vendorName || 'Vendor B', version: 'v1.0' },
+                  { vendorName: negotProposals[2]?.vendorName || 'Vendor C', version: 'v1.0' }
+                ];
+                
+                const negotComparisonRows = [
+                  { label: 'Implementation Cost', vals: ['AED 50,000', 'AED 45,000', 'AED 48,000', 'AED 47,000'] },
+                  { label: 'Licensing Cost', vals: ['Included', 'Included', 'AED 2,000', 'Included'] },
+                  { label: 'Cloud / Infrastructure Cost', vals: ['AED 3,500', 'AED 3,000', 'AED 3,500', 'AED 3,000'] },
+                  { label: 'Support & Maintenance', vals: ['Included (Basic)', 'Included (1 Year Free ProSupport)', 'AED 2,500', 'Included (3 Year ADP Coverage)'] },
+                  { label: 'Resource Rates', vals: ['AED 1,800', 'AED 1,500', 'AED 2,000', 'AED 1,500'] },
+                  { label: 'Training & Change Management', vals: ['AED 2,000', 'Included', 'Included', 'AED 1,000'] },
+                  { label: 'Security & Compliance', vals: ['Included', 'Included', 'Included', 'Included'] },
+                  { label: 'Commercial Flexibility/Payment terms', vals: ['Monthly Billing', 'Quarterly Billing', 'Annual Upfront', 'Quarterly Billing'] },
+                  { label: 'Initial Quote', vals: ['AED 55,000', 'AED 48,000', 'AED 52,000', 'AED 55,000'] },
+                  { label: 'Final Negotiated Price', isEditable: true, stateKey: 'negotiatedPrices' },
+                  { label: 'Discount Achieved', isEditable: true, stateKey: 'discountAchieved' },
+                  { label: 'Value-Added Benefits', vals: ['None', '1 Year Free Dell ProSupport', '8 Free Docking Stations', '3 Years ADP + 8 Laptop Bags'] },
+                  { label: 'Deployment / Setup Services', vals: ['Chargeable', 'Free Device Configuration', 'Chargeable', 'Free Imaging & Setup'] },
+                  { label: 'Warranty', vals: ['1 Year', '3 Years', '4 Years (Extended)', '3 Years'] },
+                  { label: 'Delivery Timeline', vals: ['4 Weeks', '2 Weeks', '3 Weeks', '2 Weeks'] },
+                  { label: 'Total Cost of Ownership (TCO) - 1 Year', vals: ['AED 58,500', 'AED 49,500', 'AED 58,000', 'AED 52,500'] },
+                  { label: 'Overall Assessment', vals: ['Higher Initial Cost', 'Lowest Cost + Best Support', 'Strong Hardware Bundle', 'Strong Protection & Benefits'] },
+                  { label: 'Rank - TBD', vals: ['', '', '', ''] }
+                ];
+                
+                const colsCount = 4;
+
                 return (
                   <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24, minHeight: '80vh', background: 'transparent' }}>
+
+                    {/* PRICE BREAKDOWN & VENDOR COMPARISON */}
+                    <div style={{ background: '#fff', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.6, color: 'var(--text-tertiary)' }}>Price Break Down and Vendor Comparison For Negotiation</div>
+                        <button onClick={() => setShowAwardModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#fff', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
+                          <Award size={16} /> Award Project
+                        </button>
+                      </div>
+                      <div style={{ border: '1px solid var(--border-subtle)', borderRadius: 10, overflow: 'hidden' }}>
+                        <div style={{ overflowX: 'auto' }}>
+                          <div style={{ minWidth: 250 + (colsCount * 250) }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: `250px repeat(${colsCount}, 1fr)`, borderBottom: '2px solid var(--border-subtle)', background: 'var(--bg-surface-1)' }}>
+                              <div style={{ padding: '16px 20px', fontWeight: 600, color: 'var(--text-secondary)', fontSize: 13, display: 'flex', alignItems: 'center' }}>Cost Area / Negotiation Criteria</div>
+                              {Array.from({ length: colsCount }).map((_, i) => {
+                                const p = comparisonProps[i];
+                                return (
+                                  <div key={i} style={{ padding: '16px 20px', borderLeft: '1px solid var(--border-subtle)' }}>
+                                    <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{p ? p.vendorName : `Vendor ${String.fromCharCode(65 + i)}`}</div>
+                                    {p && <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 2 }}>{p.version}</div>}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                              {negotComparisonRows.map((row, rIdx) => (
+                                <div key={rIdx} style={{ display: 'grid', gridTemplateColumns: `250px repeat(${colsCount}, 1fr)`, borderBottom: rIdx === negotComparisonRows.length - 1 ? 'none' : '1px solid var(--border-subtle)', background: '#fff' }}>
+                                  <div style={{ padding: '12px 20px', fontSize: 13, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', borderRight: '1px solid var(--border-subtle)', fontWeight: 700 }}>
+                                    {row.label}
+                                  </div>
+                                  {Array.from({ length: colsCount }).map((_, cIdx) => {
+                                    if (row.isEditable) {
+                                      const val = row.stateKey === 'negotiatedPrices' ? negotiatedPrices[cIdx] : discountAchieved[cIdx];
+                                      const setVal = row.stateKey === 'negotiatedPrices' ? setNegotiatedPrices : setDiscountAchieved;
+                                      return (
+                                        <div key={cIdx} style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', borderRight: cIdx === colsCount - 1 ? 'none' : '1px solid var(--border-subtle)' }}>
+                                          <input
+                                            type="text"
+                                            value={val || ''}
+                                            onChange={(e) => setVal(prev => ({ ...prev, [cIdx]: e.target.value }))}
+                                            style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid #e0e0e0', borderRadius: 4, background: '#fff', color: 'var(--text-primary)', outline: 'none' }}
+                                          />
+                                        </div>
+                                      );
+                                    }
+                                    return (
+                                      <div key={cIdx} style={{ padding: '12px 20px', fontSize: 13, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', borderRight: cIdx === colsCount - 1 ? 'none' : '1px solid var(--border-subtle)' }}>
+                                        {row.vals[cIdx] || ''}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     {/* NEW TOP BANNER */}
                     <div style={{ background: '#fff', border: '1px solid var(--border-default)', borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
@@ -4132,10 +4233,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                             </div>
                           )}
                         </div>
-                        {/* AWARD PROJECT BUTTON */}
-                        <button onClick={() => setShowAwardModal(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderRadius: 8, border: 'none', background: '#0052cc', fontSize: 14, fontWeight: 600, cursor: 'pointer', color: '#fff', boxShadow: '0 3px 12px rgba(0,82,204,0.25)' }} onMouseEnter={e => e.currentTarget.style.background = '#0041a3'} onMouseLeave={e => e.currentTarget.style.background = '#0052cc'}>
-                          <Award size={16} /> Award Project
-                        </button>
                       </div>
                     </div>
 
@@ -4235,8 +4332,8 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   setTimeout(() => {
                                     setRegeneratedStrategyBrief({
                                       opening: "Revised anchor to push for more competitive commercial rates.",
-                                      target: "₹35,00,000",
-                                      walkAway: "₹40,00,000",
+                                      target: "AED 3,500,000",
+                                      walkAway: "AED 4,000,000",
                                       concessions: [
                                         {
                                           title: "Payment Terms",
@@ -4290,11 +4387,34 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                   </div>
                                 </div>
                               )}
+                              {activeNegotProp?.version !== 'v1.0' && (
+                                <div style={{ marginBottom: 24 }}>
+                                  <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Overview of Changes in {activeNegotProp?.vendorName || activeVendorKey} {activeNegotProp?.version}</div>
+                                  <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                                    <ul style={{ margin: 0, paddingLeft: 20, listStyleType: 'disc' }}>
+                                      <li style={{ marginBottom: 12 }}>
+                                        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Pricing Model Revisions</span>
+                                        <ul style={{ margin: 0, paddingLeft: 20, marginTop: 4, listStyleType: 'circle' }}>
+                                          <li style={{ marginBottom: 4 }}>Shifted from Time & Materials to Fixed Price for Phase 1.</li>
+                                          <li style={{ marginBottom: 4 }}>15% volume discount applied on cloud infrastructure rates.</li>
+                                        </ul>
+                                      </li>
+                                      <li style={{ marginBottom: 12 }}>
+                                        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Scope Adjustments</span>
+                                        <ul style={{ margin: 0, paddingLeft: 20, marginTop: 4, listStyleType: 'circle' }}>
+                                          <li style={{ marginBottom: 4 }}>Added 30-day hypercare support at no additional cost.</li>
+                                          <li style={{ marginBottom: 4 }}>Removed custom API integration from initial delivery scope.</li>
+                                        </ul>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              )}
                               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                                   <div style={{ fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 8 }}>Opening Position</div>
                                   <div style={{ flex: 1, fontSize: 13, color: '#0052cc', fontWeight: 500, padding: '12px 16px', background: 'rgba(0,82,204,0.04)', borderRadius: 8, border: '1px solid rgba(0,82,204,0.2)', lineHeight: 1.5, boxSizing: 'border-box' }}>
-                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>₹38,00,000</div>
+                                    <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>AED 3,800,000</div>
                                     <ul style={{ margin: 0, paddingLeft: 16, fontSize: 11, color: 'var(--text-secondary)', listStyleType: 'disc' }}>
                                       <li>82% of Benchmark</li>
                                       <li>Aggressive entry position</li>
