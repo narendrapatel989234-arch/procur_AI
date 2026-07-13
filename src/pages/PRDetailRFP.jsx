@@ -4225,7 +4225,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                     if (row.isEditable) {
                                       const val = row.stateKey === 'negotiatedPrices' ? negotiatedPrices[cIdx] : discountAchieved[cIdx];
                                       const setVal = row.stateKey === 'negotiatedPrices' ? setNegotiatedPrices : setDiscountAchieved;
-                                      const isDiscountDisabled = row.stateKey === 'discountAchieved' && !negotiatedPrices[cIdx];
+                                      const isDiscountDisabled = row.stateKey === 'discountAchieved';
                                       return (
                                         <div key={cIdx} style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', borderRight: cIdx === colsCount - 1 ? 'none' : '1px solid var(--border-subtle)' }}>
                                           <div style={{ display: 'flex', width: '100%', border: '1px solid #e0e0e0', borderRadius: 8, overflow: 'hidden', opacity: isDiscountDisabled ? 0.6 : 1, background: isDiscountDisabled ? '#f5f5f5' : '#fff' }}>
@@ -4248,8 +4248,6 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                                   } else if (!newVal) {
                                                     setDiscountAchieved(prev => ({ ...prev, [cIdx]: '' }));
                                                   }
-                                                } else {
-                                                  setDiscountAchieved(prev => ({ ...prev, [cIdx]: newVal }));
                                                 }
                                               }}
                                               disabled={isDiscountDisabled}
