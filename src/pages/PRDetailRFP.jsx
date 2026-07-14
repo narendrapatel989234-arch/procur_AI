@@ -4237,7 +4237,7 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                       
                                       return (
                                         <div key={cIdx} style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', borderRight: cIdx === colsCount - 1 ? 'none' : '1px solid var(--border-subtle)' }}>
-                                          <div style={{ display: 'flex', width: '100%', border: '1px solid #e0e0e0', borderRadius: 8, overflow: 'hidden', opacity: isInputDisabled && row.stateKey === 'discountAchieved' ? 0.6 : 1, background: isInputDisabled ? '#f5f5f5' : '#fff' }}>
+                                          <div style={{ display: 'flex', width: '100%', border: '1px solid #e0e0e0', borderRadius: 8, overflow: 'hidden', opacity: isInputDisabled && (row.stateKey === 'discountAchieved' || !!selectedAwardVendor) ? 0.6 : 1, background: isInputDisabled ? '#f5f5f5' : '#fff' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', padding: '9px 12px', background: isInputDisabled ? '#f5f5f5' : '#fff', fontSize: 14, color: '#1a1a1a', borderRight: '1px solid #e0e0e0', cursor: isInputDisabled ? 'not-allowed' : 'default' }}>
                                               AED
                                             </div>
@@ -4263,13 +4263,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                               placeholder={row.stateKey === 'negotiatedPrices' ? 'Enter the amount' : '0.00'}
                                               style={{ flex: 1, padding: '9px 12px', fontSize: 14, border: 'none', background: 'transparent', color: '#1a1a1a', outline: 'none', width: '100%', minWidth: 0, cursor: isInputDisabled ? 'not-allowed' : 'text' }}
                                             />
-                                            {row.stateKey === 'negotiatedPrices' && (
+                                            {row.stateKey === 'negotiatedPrices' && !selectedAwardVendor && (
                                               <button 
                                                 onClick={() => setSavedNegotiatedPrices(prev => ({ ...prev, [cIdx]: !prev[cIdx] }))}
-                                                disabled={!val || !!selectedAwardVendor}
-                                                style={{ padding: '0 12px', border: 'none', borderLeft: '1px solid #e0e0e0', background: (!val || !!selectedAwardVendor) ? '#f5f5f5' : '#fff', cursor: (!val || !!selectedAwardVendor) ? 'not-allowed' : 'pointer', color: (!val || !!selectedAwardVendor) ? '#999' : '#0052cc', fontWeight: 600, fontSize: 13, transition: 'all 0.15s ease', outline: 'none' }}
-                                                onMouseEnter={e => { if(val && !selectedAwardVendor) e.currentTarget.style.background = '#f0f4ff'; }}
-                                                onMouseLeave={e => { if(val && !selectedAwardVendor) e.currentTarget.style.background = '#fff'; }}
+                                                disabled={!val}
+                                                style={{ padding: '0 12px', border: 'none', borderLeft: '1px solid #e0e0e0', background: !val ? '#f5f5f5' : '#fff', cursor: !val ? 'not-allowed' : 'pointer', color: !val ? '#999' : '#0052cc', fontWeight: 600, fontSize: 13, transition: 'all 0.15s ease', outline: 'none' }}
+                                                onMouseEnter={e => { if(val) e.currentTarget.style.background = '#f0f4ff'; }}
+                                                onMouseLeave={e => { if(val) e.currentTarget.style.background = '#fff'; }}
                                               >
                                                 {isSaved ? 'Edit' : 'Save'}
                                               </button>
