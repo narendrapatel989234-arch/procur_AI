@@ -1847,6 +1847,12 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
     '2': '',
     '3': ''
   });
+  const [savedNegotiatedPrices, setSavedNegotiatedPrices] = useState({
+    '0': false,
+    '1': false,
+    '2': false,
+    '3': false
+  });
   const [discountAchieved, setDiscountAchieved] = useState({
     '0': '',
     '1': '',
@@ -4226,10 +4232,13 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                       const val = row.stateKey === 'negotiatedPrices' ? negotiatedPrices[cIdx] : discountAchieved[cIdx];
                                       const setVal = row.stateKey === 'negotiatedPrices' ? setNegotiatedPrices : setDiscountAchieved;
                                       const isDiscountDisabled = row.stateKey === 'discountAchieved';
+                                      const isSaved = row.stateKey === 'negotiatedPrices' && savedNegotiatedPrices[cIdx];
+                                      const isInputDisabled = isDiscountDisabled || (row.stateKey === 'negotiatedPrices' && (isSaved || !!selectedAwardVendor));
+                                      
                                       return (
                                         <div key={cIdx} style={{ padding: '12px 20px', display: 'flex', alignItems: 'center', borderRight: cIdx === colsCount - 1 ? 'none' : '1px solid var(--border-subtle)' }}>
-                                          <div style={{ display: 'flex', width: '100%', border: '1px solid #e0e0e0', borderRadius: 8, overflow: 'hidden', opacity: isDiscountDisabled ? 0.6 : 1, background: isDiscountDisabled ? '#f5f5f5' : '#fff' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', padding: '9px 12px', background: isDiscountDisabled ? '#f5f5f5' : '#fff', fontSize: 14, color: '#1a1a1a', borderRight: '1px solid #e0e0e0', cursor: isDiscountDisabled ? 'not-allowed' : 'default' }}>
+                                          <div style={{ display: 'flex', width: '100%', border: '1px solid #e0e0e0', borderRadius: 8, overflow: 'hidden', opacity: isInputDisabled && row.stateKey === 'discountAchieved' ? 0.6 : 1, background: isInputDisabled ? '#f5f5f5' : '#fff' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', padding: '9px 12px', background: isInputDisabled ? '#f5f5f5' : '#fff', fontSize: 14, color: '#1a1a1a', borderRight: '1px solid #e0e0e0', cursor: isInputDisabled ? 'not-allowed' : 'default' }}>
                                               AED
                                             </div>
                                             <input
@@ -4250,10 +4259,21 @@ export default function PRDetailRFP({ onNavigate, activeNav, userRole, navState 
                                                   }
                                                 }
                                               }}
-                                              disabled={isDiscountDisabled}
+                                              disabled={isInputDisabled}
                                               placeholder={row.stateKey === 'negotiatedPrices' ? 'Enter the amount' : '0.00'}
-                                              style={{ flex: 1, padding: '9px 12px', fontSize: 14, border: 'none', background: 'transparent', color: '#1a1a1a', outline: 'none', width: '100%', minWidth: 0, cursor: isDiscountDisabled ? 'not-allowed' : 'text' }}
+                                              style={{ flex: 1, padding: '9px 12px', fontSize: 14, border: 'none', background: 'transparent', color: '#1a1a1a', outline: 'none', width: '100%', minWidth: 0, cursor: isInputDisabled ? 'not-allowed' : 'text' }}
                                             />
+                                            {row.stateKey === 'negotiatedPrices' && (
+                                              <button 
+                                                onClick={() => setSavedNegotiatedPrices(prev => ({ ...prev, [cIdx]: !prev[cIdx] }))}
+                                                disabled={!val || !!selectedAwardVendor}
+                                                style={{ padding: '0 12px', border: 'none', borderLeft: '1px solid #e0e0e0', background: (!val || !!selectedAwardVendor) ? '#f5f5f5' : '#fff', cursor: (!val || !!selectedAwardVendor) ? 'not-allowed' : 'pointer', color: (!val || !!selectedAwardVendor) ? '#999' : '#0052cc', fontWeight: 600, fontSize: 13, transition: 'all 0.15s ease', outline: 'none' }}
+                                                onMouseEnter={e => { if(val && !selectedAwardVendor) e.currentTarget.style.background = '#f0f4ff'; }}
+                                                onMouseLeave={e => { if(val && !selectedAwardVendor) e.currentTarget.style.background = '#fff'; }}
+                                              >
+                                                {isSaved ? 'Edit' : 'Save'}
+                                              </button>
+                                            )}
                                           </div>
                                         </div>
                                       );
